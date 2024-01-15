@@ -5,6 +5,10 @@ import { ConfigProjectModule } from "./config/config.module";
 import { TypeormModule } from "./typeorm/typeorm.module";
 import { AuthModule } from "./auth/auth.module";
 import { UserModule } from "./user/user.module";
+import { RecruitController } from "./recruit/recruit.controller";
+import { RecruitModule } from "./recruit/recruit.module";
+import { MatchModule } from "./match/match.module";
+import { RecruitService } from "./recruit/recruit.service";
 
 @Module({
     imports: [
@@ -12,8 +16,10 @@ import { UserModule } from "./user/user.module";
         TypeormModule.forRoot(),
         AuthModule,
         UserModule,
+        RecruitModule,
+        MatchModule,
     ],
-    controllers: [AppController],
+    controllers: [AppController, RecruitController],
     providers: [AppService],
 })
 export class AppModule {}
