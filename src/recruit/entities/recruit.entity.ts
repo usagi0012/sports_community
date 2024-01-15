@@ -1,24 +1,26 @@
 import { User } from "src/user/entities/user.entity";
+import { Match } from "src/match/entities/match.entity";
 import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
     JoinColumn,
     ManyToOne,
+    OneToMany,
 } from "typeorm";
 
-enum Region {}
+export enum Region {}
 
-enum Rule {
+export enum Rule {
     threeOnThree = "3대3",
     fourOnFour = "4대4",
     fiveOnFive = "5대5",
     clubMatch = "동아리전",
 }
 
-enum Status {
+export enum Status {
     Recruiting = "모집중",
-    complete = "모집완료",
+    Complete = "모집완료",
 }
 
 @Entity()
@@ -63,10 +65,17 @@ export class Recruit {
         type: "enum",
         enum: Status,
     })
+    @Column({
+        type: "enum",
+        enum: Status,
+        default: Status.Recruiting,
+    })
     status: Status;
 
     @ManyToOne(() => User, (user) => user.recruits)
     @JoinColumn({ name: "userId" })
     user: User;
-    matches: any;
+
+    @OneToMany(() => Match, (match) => match.recruit)
+    matches: Match[];
 }
