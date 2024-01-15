@@ -11,8 +11,8 @@ import {
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { accessTokenGuard } from "src/auth/guard/access-token.guard";
-import { UserId } from "src/auth/decorators/userId.decorator";
+import { accessTokenGuard } from "../auth/guard/access-token.guard";
+import { UserId } from "../auth/decorators/userId.decorator";
 import { ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller("user")
