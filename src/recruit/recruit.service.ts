@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+    Injectable,
+    NotFoundException,
+    UnauthorizedException,
+} from "@nestjs/common";
 import { Recruit } from "./entities/recruit.entity";
 import { RecruitDTO, UpdateDto } from "./dto/recruit.dto";
 import { Repository } from "typeorm";
@@ -11,11 +15,31 @@ export class RecruitService {
         private recruitRepository: Repository<Recruit>,
     ) {}
 
-    async postRecruit(hostid: number, recruitDTO: RecruitDTO) {
-        const newRecruit = this.recruitRepository.create({
-            hostid: hostid,
-            ...recruitDTO,
-        });
+    // async postcolumn(
+    //     boardid: number,
+    //     userId: number,
+    //     postColumnDto: PostColumnDto,
+    //   ) {
+    //     const maxOrderColumn = await this.boardcolumnRepository.findOne({
+    //       where: { board_id: boardid },
+    //       order: { order: 'DESC' },
+    //     });
+
+    //     const order = maxOrderColumn ? maxOrderColumn.order + 1 : 1;
+
+    //     const boardColumn = this.boardcolumnRepository.create({
+    //       name: postColumnDto.name,
+    //       order: order,
+    //       board_id: boardid,
+    //       user_id: userId,
+    //     });
+
+    //     await this.boardcolumnRepository.save(boardColumn);
+    //     return boardColumn;
+    //   }
+
+    async postRecruit(recruitDTO: RecruitDTO) {
+        const newRecruit = this.recruitRepository.create(recruitDTO);
 
         await this.recruitRepository.save(newRecruit);
     }
@@ -35,7 +59,7 @@ export class RecruitService {
 
         return findRecruit;
     }
-    async putRecruit(hostid: number, recruitDTO: RecruitDTO, id: number) {
+    async putRecruit(recruitDTO: RecruitDTO, id: number) {
         const existingRecruit = await this.recruitRepository.findOne({
             where: {
                 id: id,
@@ -47,8 +71,6 @@ export class RecruitService {
                 `Recruit with id ${id} 을 찾을 수 없습니다.`,
             );
         }
-
-        await this.checkhost(hostid, id);
 
         existingRecruit.title = recruitDTO.title;
         existingRecruit.region = recruitDTO.region;
@@ -66,7 +88,7 @@ export class RecruitService {
         return updatedRecruit;
     }
 
-    async updateRecruit(hostid: number, updateDto: UpdateDto, id: number) {
+    async updateRecruit(updateDto: UpdateDto, id: number) {
         const existingRecruit = await this.recruitRepository.findOne({
             where: {
                 id: id,
@@ -79,8 +101,6 @@ export class RecruitService {
             );
         }
 
-        await this.checkhost(hostid, id);
-
         existingRecruit.status = updateDto.status;
 
         const updatedRecruit =
@@ -89,7 +109,7 @@ export class RecruitService {
         return updatedRecruit;
     }
 
-    async deleteRecruit(hostid: number, id: number) {
+    async deleteRecruit(id: number) {
         const existingRecruit = await this.recruitRepository.findOne({
             where: {
                 id: id,
@@ -102,19 +122,6 @@ export class RecruitService {
             );
         }
 
-        await this.checkhost(hostid, id);
-
         await this.recruitRepository.remove(existingRecruit);
-    }
-    private async checkhost(hostid: number, id: number) {
-        const checkrecruit = await this.recruitRepository.findOne({
-            where: {
-                id: id,
-            },
-        });
-
-        if (hostid !== checkrecruit.hostid) {
-            throw new NotFoundException("호스트가 아닙니다.");
-        }
     }
 }
