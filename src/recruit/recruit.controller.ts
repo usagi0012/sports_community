@@ -11,6 +11,8 @@ import {
 import { RecruitDTO, UpdateDto } from "./dto/recruit.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { RecruitService } from "./recruit.service";
+import { UserInfo } from "src/utils/userInfo.decorator";
+import { User } from "src/entity/user.entity";
 
 @Controller("recruit")
 @UseGuards(AuthGuard("jwt"))
@@ -19,8 +21,9 @@ export class RecruitController {
 
     //모집 글 등록
     @Post("")
-    async postRecruit(@Body() recruitDTO: RecruitDTO) {
-        return await this.recruitService.postRecruit(recruitDTO);
+    async postRecruit(@UserInfo() user: User, @Body() recruitDTO: RecruitDTO) {
+        const hostid = user.id;
+        return await this.recruitService.postRecruit(hostid, recruitDTO);
     }
     //모집 글 조회
     @Get("")
@@ -35,18 +38,30 @@ export class RecruitController {
 
     //모집 글 수정
     @Put(":id")
-    async putRecruit(@Body() recruitDTO: RecruitDTO, @Param("id") id: number) {
-        return await this.recruitService.putRecruit(recruitDTO, id);
+    async putRecruit(
+        @UserInfo() user: User,
+        @Body() recruitDTO: RecruitDTO,
+        @Param("id") id: number,
+    ) {
+        const hostid = user.id;
+
+        return await this.recruitService.putRecruit(hostid, recruitDTO, id);
     }
 
     //모집 글 status 수정
     @Put("status/:id")
-    async updateRecruit(@Body() updateDto: UpdateDto, @Param("id") id: number) {
-        return await this.recruitService.updateRecruit(updateDto, id);
+    async updateRecruit(
+        @UserInfo() user: User,
+        @Body() updateDto: UpdateDto,
+        @Param("id") id: number,
+    ) {
+        const hostid = user.id;
+        return await this.recruitService.updateRecruit(hostid, updateDto, id);
     }
     //모집 글 삭제
     @Get(":id")
-    async deleteRecruit(@Param("id") id: number) {
-        return await this.recruitService.deleteRecruit(id);
+    async deleteRecruit(@UserInfo() user: User, @Param("id") id: number) {
+        const hostid = user.id;
+        return await this.recruitService.deleteRecruit(hostid, id);
     }
 }
