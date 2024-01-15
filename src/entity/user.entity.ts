@@ -40,10 +40,6 @@ export class User {
     @DeleteDateColumn()
     deletedAt: Date;
 
-    @OneToOne(() => UserProfile, (userProfile) => userProfile.user)
-    @JoinColumn()
-    userProfile: UserProfile;
-
     @OneToMany(() => UserCalender, (userCalender) => userCalender.user)
     userCalender: UserCalender[];
 }

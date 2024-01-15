@@ -24,7 +24,7 @@ export class UserPosition {
     @Column({ nullable: true })
     foward: boolean;
 
-    @OneToOne(() => UserProfile, (userProfile) => userProfile.userPosition)
+    @OneToOne(() => UserProfile)
     @JoinColumn()
     userProfile: UserProfile;
 }

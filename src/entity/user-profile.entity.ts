@@ -42,7 +42,7 @@ export class UserProfile {
     @Column()
     height: number;
 
-    @OneToOne(() => User)
+    @OneToOne(() => User, { eager: true })
     @JoinColumn()
     user: User;
 
@@ -51,8 +51,4 @@ export class UserProfile {
 
     @UpdateDateColumn()
     updatedAt: Date;
-
-    @OneToOne(() => UserPosition, (userPosition) => userPosition.userProfile)
-    @JoinColumn()
-    userPosition: UserPosition;
 }
