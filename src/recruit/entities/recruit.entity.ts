@@ -29,9 +29,6 @@ export class Recruit {
     id: number;
 
     @Column()
-    hostid: number;
-
-    @Column()
     title: string;
 
     @Column({
