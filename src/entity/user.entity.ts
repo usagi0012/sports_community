@@ -6,6 +6,8 @@ import {
     UpdateDateColumn,
     OneToOne,
     Relation,
+    ManyToOne,
+    JoinTable,
 } from "typeorm";
 import { Club } from "./club.entity";
 
@@ -16,13 +18,16 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column({ nullable: true })
+    clubId?: number;
+
     @Column({ unique: true })
     email: string;
 
-    @Column()
+    @Column({ select: false })
     password: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, select: false })
     currentRefreshToken?: string;
 
     @Column()
@@ -34,6 +39,7 @@ export class User {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @OneToOne(() => Club, (club) => club.users, { cascade: true })
-    clubs: Relation<Club>[];
+    @ManyToOne(() => Club, (club) => club.users)
+    @JoinTable()
+    club?: Club;
 }
