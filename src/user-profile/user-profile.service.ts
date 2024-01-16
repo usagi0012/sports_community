@@ -68,10 +68,10 @@ export class UserProfileService {
     //id를 이용해서 프로필 찾기
     async findOne(userId) {
         const userProfile = await this.userProfileRepository.findOne({
-            where: { id: userId },
+            where: { userId },
         });
         if (!userProfile) {
-            throw new NotFoundException("없는 사용자입니다.");
+            throw new NotFoundException("프로필 정보가 없습니다.");
         }
         delete userProfile.user;
         return {
@@ -93,13 +93,15 @@ export class UserProfileService {
         });
         //프로필이 존재하는지 확인
         const existingProfile = await this.userProfileRepository.findOne({
-            where: { id: userId },
+            where: { userId },
         });
         if (!existingProfile) {
             throw new NotFoundException("프로필을 먼저 작성해주세요");
         }
-        if (existingNickname) {
-            throw new BadRequestException("이미 존재하는 닉네임입니다");
+        if (updateUserProfileDto.nickname) {
+            if (existingNickname) {
+                throw new BadRequestException("이미 존재하는 닉네임입니다");
+            }
         }
         //성별은 바꿀수 없음
         if (gender) {
@@ -108,7 +110,7 @@ export class UserProfileService {
             }
         }
         await this.userProfileRepository.update(
-            { id: userId },
+            { userId },
             {
                 nickname,
                 description,
@@ -118,7 +120,7 @@ export class UserProfileService {
             },
         );
         const updatedProfile = await this.userProfileRepository.findOne({
-            where: { id: userId },
+            where: { userId },
         });
         delete updatedProfile.user;
         return {
