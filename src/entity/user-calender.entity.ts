@@ -38,4 +38,7 @@ export class UserCalender {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @Column({ select: false }) // 필요한 경우에만 선택적으로 가져올 수 있도록 설정
+    userId: number; // user.id를 저장하는 필드 추가
 }
