@@ -2,9 +2,11 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
+import { Userscore } from "./personal.assessment.entity";
 
 @Entity({
     name: "users", // 데이터베이스 테이블의 이름
@@ -30,4 +32,7 @@ export class User {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @OneToOne(() => Userscore, (userscroe) => userscroe.user, { cascade: true })
+    userscore: Userscore;
 }
