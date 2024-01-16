@@ -10,7 +10,6 @@ cd $PROJECT_ROOT
 node -v
 pm2 -v
 npm -v
-whoami
 
 pm2 delete $APP_NAME
 pm2 start npm --name $APP_NAME -- start
