@@ -18,7 +18,6 @@ export enum Rule {
     threeOnThree = "3대3",
     fourOnFour = "4대4",
     fiveOnFive = "5대5",
-    clubMatch = "동아리전",
 }
 
 export enum Status {

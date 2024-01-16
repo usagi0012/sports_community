@@ -6,9 +6,11 @@ import {
     Put,
     Post,
     UseGuards,
+    Delete,
 } from "@nestjs/common";
 
-import { RecruitDTO, UpdateDto } from "./dto/recruit.dto";
+import { RecruitDTO, UpdateDto, PutDTO } from "./dto/recruit.dto";
+import { MatchUpdateDto } from "./dto/checkmatch.dto";
 import { RecruitService } from "./recruit.service";
 import { User } from "../entity/user.entity";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
@@ -45,12 +47,12 @@ export class RecruitController {
     @Put(":id")
     async putRecruit(
         @UserId() userId: number,
-        @Body() recruitDTO: RecruitDTO,
+        @Body() putDTO: PutDTO,
         @Param("id") id: number,
     ) {
         const hostId = userId;
 
-        return await this.recruitService.putRecruit(hostId, recruitDTO, id);
+        return await this.recruitService.putRecruit(hostId, putDTO, id);
     }
 
     //모집 글 status 수정
@@ -64,9 +66,37 @@ export class RecruitController {
         return await this.recruitService.updateRecruit(hostId, updateDto, id);
     }
     //모집 글 삭제
-    @Get(":id")
+    @Delete(":id")
     async deleteRecruit(@UserId() userId: number, @Param("id") id: number) {
         const hostId = userId;
         return await this.recruitService.deleteRecruit(hostId, id);
+    }
+
+    // 내 모집글
+    @Get("my/recruit")
+    async myRecruit(@UserId() userId: number) {
+        return await this.recruitService.myRecruit(userId);
+    }
+
+    // 내 모집글 상세 조회
+    @Get("my/recruit/:id")
+    async findMyRecruit(@UserId() userId: number, @Param("id") id: number) {
+        return await this.recruitService.findMyRecruit(userId, id);
+    }
+
+    // 호스트 매치 상세조회
+    @Get("my/match/:matchid")
+    async checkMatch(@UserId() userId: number, @Param("matchid") id: number) {
+        return await this.recruitService.checkMatch(userId, id);
+    }
+
+    // 모집글 승인/거절
+    @Put("my/match/:matchid")
+    async putMatch(
+        @UserId() userId: number,
+        @Param("matchid") id: number,
+        @Body() matchUpdateDto: MatchUpdateDto,
+    ) {
+        return await this.recruitService.putMatch(userId, matchUpdateDto, id);
     }
 }

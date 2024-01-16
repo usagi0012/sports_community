@@ -5,6 +5,8 @@ import {
     IsNumber,
     IsDate,
     IsString,
+    IsEmpty,
+    IsOptional,
 } from "class-validator";
 import { Region, Rule, Status } from "../../entity/recruit.entity";
 
@@ -50,4 +52,41 @@ export class UpdateDto {
     @IsNotEmpty()
     @IsEnum(Status)
     status: Status;
+}
+export class PutDTO {
+    @IsOptional()
+    @IsString()
+    title: string;
+
+    @IsOptional()
+    @IsEnum(Region)
+    region: Region;
+
+    @IsOptional()
+    @IsString()
+    gps: string;
+
+    @IsOptional()
+    @IsString()
+    content: string;
+
+    @IsOptional()
+    @IsDate()
+    gamedate: Date;
+
+    @IsOptional()
+    @IsNumber()
+    runtime: number;
+
+    @IsOptional()
+    @IsEnum(Rule)
+    rule: Rule;
+
+    @IsOptional()
+    @IsBoolean()
+    group: boolean;
+
+    @IsOptional()
+    @IsNumber()
+    totalmember: number;
 }
