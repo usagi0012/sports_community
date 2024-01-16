@@ -2,7 +2,7 @@
 
 PROJECT_ROOT="/home/ubuntu/app"
 APP_NAME="project"
-PM2_PATH="/home/ubuntu/.nvm/versions/node/v21.5.0/bin/pm2"
+PM2_PATH="/home/ubuntu/.nvm/versions/node/v20.11.0/bin/pm2"
 
 TIME_NOW=$(date +%c)
 
