@@ -10,6 +10,7 @@ import {
     Relation,
 } from "typeorm";
 import { User } from "./user.entity";
+import { toUSVString } from "util";
 
 @Entity({
     name: "clubs", // 데이터베이스 테이블의 이름
@@ -31,7 +32,7 @@ export class Club {
     description: string;
 
     @Column()
-    master: string;
+    masterId: number;
 
     @Column()
     score?: string;
@@ -42,7 +43,6 @@ export class Club {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @OneToMany(() => User, (user) => user.clubs)
-    @JoinTable()
-    users: Relation<User>[];
+    @OneToMany(() => User, (user) => user.club, { cascade: true })
+    users: User[];
 }
