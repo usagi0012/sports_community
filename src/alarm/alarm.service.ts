@@ -4,7 +4,6 @@ import { Observable, Subject, filter, map } from "rxjs";
 @Injectable()
 export class Alarmservice {
     private users$: Subject<any> = new Subject();
-
     private observer = this.users$.asObservable();
 
     emitCardChangeEvent(userId: number) {

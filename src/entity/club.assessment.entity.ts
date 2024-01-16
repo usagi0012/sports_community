@@ -34,5 +34,5 @@ export class Clubscore {
     count: number;
 
     @OneToMany(() => Clubtag, (clubtag) => clubtag.clubscore)
-    tag: Clubtag;
+    tag: Clubtag[];
 }
