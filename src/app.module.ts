@@ -7,6 +7,11 @@ import { AuthModule } from "./auth/auth.module";
 import { UserModule } from "./user/user.module";
 import { UserProfileModule } from "./user-profile/user-profile.module";
 import { UserCalenderModule } from './user-calender/user-calender.module';
+import { RecruitController } from "./recruit/recruit.controller";
+import { RecruitModule } from "./recruit/recruit.module";
+import { MatchModule } from "./match/match.module";
+import { RecruitService } from "./recruit/recruit.service";
+
 
 @Module({
     imports: [
@@ -16,8 +21,10 @@ import { UserCalenderModule } from './user-calender/user-calender.module';
         UserModule,
         UserProfileModule,
         UserCalenderModule,
+        RecruitModule,
+        MatchModule,
     ],
-    controllers: [AppController],
+    controllers: [AppController, RecruitController],
     providers: [AppService],
 })
 export class AppModule {}

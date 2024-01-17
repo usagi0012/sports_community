@@ -4,6 +4,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserCalender } from "src/entity/user-calender.entity";
 import { UserPosition } from "src/entity/user-position.entity";
 import { UserProfile } from "src/entity/user-profile.entity";
+import { Match } from "../entity/match.entity";
+import { Recruit } from "../entity/recruit.entity";
 import { User } from "src/entity/user.entity";
 
 @Module({})
@@ -17,7 +19,14 @@ export class TypeormModule {
                 username: configService.get<string>("DATABASE_USERNAME"),
                 password: configService.get<string>("DATABASE_PASSWORD"),
                 database: configService.get<string>("DATABASE_NAME"),
-                entities: [User, UserCalender, UserPosition, UserProfile],
+                entities: [
+                    User,
+                    UserCalender,
+                    UserPosition,
+                    UserProfile,
+                    Recruit,
+                    Match,
+                ],
                 synchronize: true,
             }),
             inject: [ConfigService],
