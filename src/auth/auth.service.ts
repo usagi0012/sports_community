@@ -4,7 +4,7 @@ import {
     NotFoundException,
     UnauthorizedException,
 } from "@nestjs/common";
-import { UserService } from "src/user/user.service";
+import { UserService } from "../user/user.service";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { LoginUserDto } from "./dto/login-user.dto";
 import { ConfigService } from "@nestjs/config";
