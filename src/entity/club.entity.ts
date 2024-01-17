@@ -12,7 +12,9 @@ import {
 import { User } from "./user.entity";
 import { toUSVString } from "util";
 import { ClubMatch } from "./club_match.entity";
-import { IsNumber } from "class-validator";
+import { IsNumber } from "class-validator
+import { ClubApplication } from "./club-application.entity";
+
 
 @Entity({
     name: "clubs", // 데이터베이스 테이블의 이름
@@ -53,4 +55,11 @@ export class Club {
 
     @OneToMany(() => ClubMatch, (match) => match.guestClub)
     guestMatches: ClubMatch[];
+
+    @OneToMany(
+        () => ClubApplication,
+        (clubApplication) => clubApplication.club,
+        { cascade: true },
+    )
+    clubApplications: ClubApplication[];
 }

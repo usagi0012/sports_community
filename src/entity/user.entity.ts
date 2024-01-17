@@ -17,6 +17,7 @@ import { UserCalender } from "./user-calender.entity";
 import { UserProfile } from "./user-profile.entity";
 import { Recruit } from "./recruit.entity";
 import { Match } from "./match.entity";
+import { ClubApplication } from "./club-application.entity";
 
 @Entity({
     name: "users",
@@ -49,6 +50,9 @@ export class User {
     @ManyToOne(() => Club, (club) => club.users, { onDelete: "SET NULL" })
     @JoinTable()
     club: Club;
+
+    @OneToOne(() => ClubApplication, (clubApplication) => clubApplication.user)
+    clubApplication: ClubApplication;
 
     @DeleteDateColumn()
     deletedAt: Date;
