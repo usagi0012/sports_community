@@ -18,7 +18,10 @@ import { UserProfile } from "./user-profile.entity";
 import { Recruit } from "./recruit.entity";
 import { Match } from "./match.entity";
 import { ClubApplication } from "./club-application.entity";
+<<<<<<< HEAD
 import { UserPosition } from "./user-position.entity";
+=======
+>>>>>>> ac3b4c1ce6086aa7463b44ba1ae6d1becd8cd882
 
 @Entity({
     name: "users",

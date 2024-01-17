@@ -58,6 +58,9 @@ export class UserPositionService {
             where: userId,
             relations: ["user"],
         });
+        if (findPositionByUserId.length < 1) {
+            throw new NotFoundException("등록된 포지션 정보가 없습니다.");
+        }
         return {
             statusCode: 200,
             message: "포지션 조회를 성공했습니다.",
@@ -67,7 +70,6 @@ export class UserPositionService {
 
     //포지션 수정하기
     async update(userId, updateUserPositionDto: UpdateUserPositionDto) {
-        console.log(updateUserPositionDto);
         const { guard, forward, center } = updateUserPositionDto;
         const user = await this.userRepository.find({
             where: { id: userId },
@@ -102,13 +104,13 @@ export class UserPositionService {
         };
     }
 
-    // //포지션 삭제
-    // async remove(userId) {
-    //     console.log(userId);
-    //     const userPosition = await this.userPositionRepository.findOne({
-    //         where: { userId },
-    //     });
-    //     console.log(userPosition);
-    //     await this.userPositionRepository.remove(userPosition);
-    // }
+    //포지션 삭제
+    async remove(userId) {
+        console.log(userId);
+        const userPosition = await this.userPositionRepository.findOne({
+            where: { userId },
+        });
+        console.log(userPosition);
+        await this.userPositionRepository.remove(userPosition);
+    }
 }

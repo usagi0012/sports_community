@@ -17,17 +17,19 @@ import { UpdateUserPositionDto } from "./dto/update-user-position.dto";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 
-// @ApiBearerAuth()
-// @UseGuards(AuthGuard("accessToken"))
+@ApiBearerAuth()
+@UseGuards(AuthGuard("accessToken"))
 @Controller("/user/me/position")
 export class UserPositionController {
     constructor(private readonly userPositionService: UserPositionService) {}
 
     //선호 포지션 등록하기
-    @Post("1")
-    create(@Req() req: any) {
+    @Post("")
+    create(
+        @Req() req: any,
+        @Body() createUserPositionDto: CreateUserPositionDto,
+    ) {
         const userId = +req.user.userId;
-        const createUserPositionDto: CreateUserPositionDto = req.body;
         return this.userPositionService.create(userId, createUserPositionDto);
     }
 
@@ -39,19 +41,19 @@ export class UserPositionController {
     }
 
     //선호 포지션 수정하기
-    @Post()
-    update(@Body() updateUserPositionDto: UpdateUserPositionDto) {
-        console.log(updateUserPositionDto.center);
-        console.log(updateUserPositionDto);
-        // const userId = +req.user.userId;
-        return "1";
-        // return this.userPositionService.update(+userId, updateUserPositionDto);
+    @Put()
+    update(
+        @Req() req: any,
+        @Body() updateUserPositionDto: UpdateUserPositionDto,
+    ) {
+        const userId = +req.user.userId;
+        return this.userPositionService.update(+userId, updateUserPositionDto);
     }
 
-    //포지션삭제
-    // @Delete()
-    // remove(@Req() req: any) {
-    //     const userId = +req.user.userId;
-    //     return this.userPositionService.remove(+userId);
-    // }
+    //포지션삭제;
+    @Delete()
+    remove(@Req() req: any) {
+        const userId = +req.user.userId;
+        return this.userPositionService.remove(+userId);
+    }
 }

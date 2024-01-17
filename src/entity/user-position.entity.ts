@@ -24,7 +24,7 @@ export class UserPosition {
     @Column()
     forward: boolean;
 
-    @ManyToOne(() => User)
+    @OneToOne(() => User)
     @JoinColumn()
     user: User;
 
