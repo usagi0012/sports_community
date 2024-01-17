@@ -19,7 +19,7 @@ export class User {
     id: number;
 
     @Column({ nullable: true })
-    clubId?: number;
+    clubId: number;
 
     @Column({ unique: true })
     email: string;
@@ -41,5 +41,5 @@ export class User {
 
     @ManyToOne(() => Club, (club) => club.users)
     @JoinTable()
-    club?: Club;
+    club: Club;
 }

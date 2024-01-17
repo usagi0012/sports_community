@@ -41,7 +41,8 @@ export class UserService {
     async findUserById(id: number) {
         return await this.userRepository.findOne({
             where: { id },
-            select: ["id", "email", "name", "createdAt", "updatedAt"],
+            relations: { club: true },
+            select: ["id", "email", "name", "createdAt", "updatedAt", "clubId"],
         });
     }
 
