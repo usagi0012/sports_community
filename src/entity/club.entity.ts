@@ -11,6 +11,8 @@ import {
 } from "typeorm";
 import { User } from "./user.entity";
 import { toUSVString } from "util";
+import { ClubMatch } from "./club_match.entity";
+import { IsNumber } from "class-validator";
 
 @Entity({
     name: "clubs", // 데이터베이스 테이블의 이름
@@ -45,4 +47,10 @@ export class Club {
 
     @OneToMany(() => User, (user) => user.club, { cascade: true })
     users: User[];
+
+    @OneToMany(() => ClubMatch, (match) => match.hostClub)
+    hostedMatches: ClubMatch[];
+
+    @OneToMany(() => ClubMatch, (match) => match.guestClub)
+    guestMatches: ClubMatch[];
 }

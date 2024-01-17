@@ -12,6 +12,7 @@ import { RecruitController } from "./recruit/recruit.controller";
 import { RecruitModule } from "./recruit/recruit.module";
 import { MatchModule } from "./match/match.module";
 import { RecruitService } from "./recruit/recruit.service";
+import { ClubMatchModule } from './club_match/club_match.module';
 
 @Module({
     imports: [
@@ -24,6 +25,7 @@ import { RecruitService } from "./recruit/recruit.service";
         UserCalenderModule,
         RecruitModule,
         MatchModule,
+        ClubMatchModule,
     ],
     controllers: [AppController, RecruitController],
     providers: [AppService],
