@@ -1,13 +1,6 @@
 import { DynamicModule, Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { UserCalender } from "../entity/user-calender.entity";
-import { UserPosition } from "../entity/user-position.entity";
-import { UserProfile } from "../entity/user-profile.entity";
-import { Match } from "../entity/match.entity";
-import { Recruit } from "../entity/recruit.entity";
-import { User } from "../entity/user.entity";
-
 @Module({})
 export class TypeormModule {
     static forRoot(): DynamicModule {
