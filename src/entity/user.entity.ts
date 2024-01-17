@@ -11,9 +11,11 @@ import {
 } from "typeorm";
 import { UserCalender } from "./user-calender.entity";
 import { UserProfile } from "./user-profile.entity";
+import { Recruit } from "./recruit.entity";
+import { Match } from "./match.entity";
 
 @Entity({
-    name: "users", // 데이터베이스 테이블의 이름
+    name: "users",
 })
 export class User {
     @PrimaryGeneratedColumn()
@@ -42,4 +44,10 @@ export class User {
 
     @OneToMany(() => UserCalender, (userCalender) => userCalender.user)
     userCalender: UserCalender[];
+
+    @OneToMany(() => Recruit, (recruit) => recruit.user)
+    recruits: Recruit[];
+    @OneToMany(() => Match, (match) => match.user)
+    matches: Match[];
+
 }
