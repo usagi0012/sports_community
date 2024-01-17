@@ -7,10 +7,18 @@ import {
     SwaggerModule,
 } from "@nestjs/swagger";
 import { ConfigService } from "@nestjs/config";
+import { SocketIoAdapter } from "./adapters/socket-io.adapters";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import { join } from "path";
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
+    app.useWebSocketAdapter(new SocketIoAdapter(app));
+    app.useStaticAssets(join(__dirname, "..", "public")); //html,js,css (바닐라)
+    app.setBaseViewsDir(join(__dirname, "..", "views"));
+    app.setViewEngine("ejs");
 
+    app.setGlobalPrefix("api", { exclude: ["/view/chat"] });
     app.enableCors({
         origin: true,
         credentials: true,
@@ -38,12 +46,12 @@ async function bootstrap() {
         .setVersion("1.0")
         .addTag("webtoon")
         .addBearerAuth(
-            { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
-            'accessToken',
+            { type: "http", scheme: "bearer", bearerFormat: "Token" },
+            "accessToken",
         )
         .addBearerAuth(
-            { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
-            'refreshToken',
+            { type: "http", scheme: "bearer", bearerFormat: "Token" },
+            "refreshToken",
         )
         .build();
     const document = SwaggerModule.createDocument(app, config);
