@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { User } from "./user.entity";
 import { toUSVString } from "util";
+import { ClubApplication } from "./club-application.entity";
 
 @Entity({
     name: "clubs", // 데이터베이스 테이블의 이름
@@ -45,4 +46,11 @@ export class Club {
 
     @OneToMany(() => User, (user) => user.club, { cascade: true })
     users: User[];
+
+    @OneToMany(
+        () => ClubApplication,
+        (clubApplication) => clubApplication.club,
+        { cascade: true },
+    )
+    clubApplications: ClubApplication[];
 }
