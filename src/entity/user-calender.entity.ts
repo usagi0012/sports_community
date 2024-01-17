@@ -29,7 +29,7 @@ export class UserCalender {
     @Column()
     color: string;
 
-    @ManyToOne(() => User, (user) => user.userCalender)
+    @ManyToOne(() => User, (user) => user.userCalender, { onDelete: "CASCADE" })
     @JoinColumn()
     user: User;
 

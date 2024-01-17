@@ -39,7 +39,11 @@ export class AuthService {
             password: hashPassword,
         });
 
-        return userId;
+        return {
+            statusCode: 201,
+            message: "회원가입 완료되었습니다.",
+            data: { userId },
+        };
     }
 
     /// 로그인

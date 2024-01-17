@@ -7,13 +7,13 @@ import { partial } from "lodash";
 export class UpdateUserPositionDto extends PartialType(CreateUserPositionDto) {
     @ApiProperty({ description: "가드" })
     @IsBoolean()
-    guard: boolean;
+    guard?: boolean;
 
     @ApiProperty({ description: "포워드" })
     @IsBoolean()
-    forward: boolean;
+    forward?: boolean;
 
     @ApiProperty({ description: "센터" })
     @IsBoolean()
-    center: boolean;
+    center?: boolean;
 }

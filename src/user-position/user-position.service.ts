@@ -54,8 +54,15 @@ export class UserPositionService {
 
     //내 포지션 조회하기
     async findOne(userId) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+            relations: ["userPosition"],
+        });
+        if (user.id !== userId) {
+            throw new NotAcceptableException("권한이 없습니다.");
+        }
         const findPositionByUserId = await this.userPositionRepository.find({
-            where: userId,
+            where: { userId: user.id },
             relations: ["user"],
         });
         if (findPositionByUserId.length < 1) {

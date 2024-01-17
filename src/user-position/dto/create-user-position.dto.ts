@@ -4,13 +4,13 @@ import { IsBoolean } from "class-validator";
 export class CreateUserPositionDto {
     @ApiProperty({ description: "가드" })
     @IsBoolean()
-    guard: boolean;
+    guard?: boolean = false;
 
     @IsBoolean()
     @ApiProperty({ description: "포워드" })
-    forward: boolean;
+    forward?: boolean = false;
 
     @IsBoolean()
     @ApiProperty({ description: "센터" })
-    center: boolean;
+    center?: boolean = false;
 }
