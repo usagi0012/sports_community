@@ -39,7 +39,7 @@ export class User {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @ManyToOne(() => Club, (club) => club.users)
+    @ManyToOne(() => Club, (club) => club.users, { onDelete: "SET NULL" })
     @JoinTable()
     club: Club;
 }

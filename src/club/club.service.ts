@@ -37,20 +37,13 @@ export class ClubService {
     }
 
     async createClub(createClubDto: CreateClubDto, userId: number) {
-        console.log(userId);
         const user = await this.userService.findUserById(userId);
-        console.log(user);
-        console.log(user.club);
-        console.log(user.clubId);
         if (user.clubId) {
             throw new ConflictException("동아리는 하나만 가입할 수 있습니다.");
         }
 
-        const { name, region, description } = createClubDto;
         const club = await this.clubRepository.save({
-            name,
-            region,
-            description,
+            ...createClubDto,
             users: [user],
             masterId: user.id,
         });
@@ -89,8 +82,8 @@ export class ClubService {
         if (club.masterId !== user.id) {
             throw new UnauthorizedException("삭제할 권한이 없습니다.");
         }
-
         await this.clubRepository.delete({ id });
+
         return {
             message: "동아리가 성공적으로 삭제되었습니다.",
         };
