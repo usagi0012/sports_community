@@ -8,7 +8,6 @@ import {
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
-    OneToOne,
     Relation,
     ManyToOne,
     JoinTable,
@@ -61,5 +60,4 @@ export class User {
     recruits: Recruit[];
     @OneToMany(() => Match, (match) => match.user)
     matches: Match[];
-
 }
