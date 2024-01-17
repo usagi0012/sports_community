@@ -10,6 +10,7 @@ import {
     JoinTable,
 } from "typeorm";
 import { Club } from "./club.entity";
+import { ClubApplication } from "./club-application.entity";
 
 @Entity({
     name: "users", // 데이터베이스 테이블의 이름
@@ -39,7 +40,10 @@ export class User {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @ManyToOne(() => Club, (club) => club.users)
+    @ManyToOne(() => Club, (club) => club.users, { onDelete: "SET NULL" })
     @JoinTable()
     club?: Club;
+
+    @OneToOne(() => ClubApplication, (clubApplication) => clubApplication.user)
+    clubApplication: ClubApplication;
 }

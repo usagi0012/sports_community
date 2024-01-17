@@ -8,6 +8,7 @@ import { ClubApplication } from "src/entity/club-application.entity";
 import { Repository } from "typeorm";
 import { ApplicationDto } from "./dto/application.dto";
 import { Club } from "src/entity/club.entity";
+import { User } from "src/entity/user.entity";
 
 @Injectable()
 export class ApplyingClubService {
@@ -16,7 +17,8 @@ export class ApplyingClubService {
         private readonly clubApplicationRepository: Repository<ClubApplication>,
         @InjectRepository(Club)
         private readonly ClubRepository: Repository<Club>,
-        //user-club 레퍼지토리 생성하기
+        @InjectRepository(User)
+        private readonly UserRepository: Repository<User>,
     ) {}
 
     // 동호회 지원서 생성
@@ -31,11 +33,22 @@ export class ApplyingClubService {
             throw new BadRequestException("지원서 신청은 한 곳만 가능합니다.");
         }
 
-        // 이미 가입된 동호회가 있을 경우 에러 발생
-        const registeredUser = await this.userClubRepository.findOne({
-            where: { userId },
+        // 가입하려는 동호회가 없을 경우 에러 발생
+        const club = await this.ClubRepository.findOne({
+            where: { id: clubId },
         });
-        if (registeredUser) {
+
+        if (!club) {
+            throw new NotFoundException(
+                "가입하려는 동호회가 존재하지 않습니다.",
+            );
+        }
+
+        // 이미 가입된 동호회가 있을 경우 에러 발생
+        const user = await this.UserRepository.findOne({
+            where: { id: userId },
+        });
+        if (user.clubId) {
             throw new BadRequestException("이미 가입된 동호회가 존재합니다.");
         }
 
@@ -60,12 +73,13 @@ export class ApplyingClubService {
     // 동호회 지원서 수정
     async updateApplyingClub(applicationDto: ApplicationDto, userId) {
         const { message, clubId } = applicationDto;
-        await this.findApplicationByUserId(userId);
+        const application = await this.findApplicationByUserId(userId);
 
+        const applicationId = application.id;
         // 여기에 userId 넣어도 되나? 테이블의 primary key 안 넣어도 되나?
         // userId가 unique값이라 넣어보긴 함. 테스트해보기
         const updatedApplication = await this.clubApplicationRepository.update(
-            userId,
+            applicationId,
             { message },
         );
 
@@ -76,7 +90,6 @@ export class ApplyingClubService {
     async deleteApplyingClub(userId) {
         await this.findApplicationByUserId(userId);
 
-        // 이것도 보통 테이블 primary key: 키값 넣어야 하는데 update와 마찬가지로 작성함
         const deletedApplication = await this.clubApplicationRepository.delete({
             userId,
         });

@@ -10,17 +10,21 @@ import {
 import { ApplyingClubService } from "./applying-club.service";
 import { ApplicationDto } from "./dto/application.dto";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
+import { UserId } from "src/auth/decorators/userId.decorator";
+import { ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller("applying-club")
 export class ApplyingClubController {
     constructor(private readonly applyingClubService: ApplyingClubService) {}
 
-    @UseGuards(accessTokenGuard) // 우리 프로젝트랑 다른데 access토큰 가드가 맞겠지? PR전에 확인하기
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
     @Post()
-    async postApplyingClub(@Body() applicationDto: ApplicationDto) {
+    async postApplyingClub(
+        @UserId() userId: number,
+        @Body() applicationDto: ApplicationDto,
+    ) {
         try {
-            // userId 부분도 확인하기
-            // const user = req.user.id;
             // clubId 쿼리로 가져올까..
             const application = await this.applyingClubService.postApplyingClub(
                 applicationDto,
@@ -41,14 +45,14 @@ export class ApplyingClubController {
         }
     }
 
+    @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Get()
-    async getApplyingClub() {
+    async getApplyingClub(@UserId() userId: number) {
         try {
-            // const userId = req.user.id;
             const application =
                 await this.applyingClubService.getApplyingClub(userId);
-
+            console.log(userId);
             return {
                 statusCode: 200,
                 message: "동호회 지원서 조회에 성공했습니다.",
@@ -63,12 +67,14 @@ export class ApplyingClubController {
         }
     }
 
+    @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Put()
-    async updateApplyingClub(@Body() applicationDto: ApplicationDto) {
+    async updateApplyingClub(
+        @UserId() userId: number,
+        @Body() applicationDto: ApplicationDto,
+    ) {
         try {
-            // userId 부분도 확인하기
-            // const user = req.user.id;
             // clubId 쿼리로 가져와야하나..
             const updatedApplication =
                 await this.applyingClubService.updateApplyingClub(
@@ -90,12 +96,11 @@ export class ApplyingClubController {
         }
     }
 
+    @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Delete()
-    async deleteApplyingClub() {
+    async deleteApplyingClub(@UserId() userId: number) {
         try {
-            // userId 부분도 확인하기
-            // const user = req.user.id;
             // clubId 쿼리로 가져와야하나..
             const deletedApplication =
                 await this.applyingClubService.deleteApplyingClub(userId);

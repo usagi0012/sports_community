@@ -6,8 +6,12 @@ import {
     UpdateDateColumn,
     OneToOne,
     Relation,
+    JoinTable,
+    ManyToOne,
+    JoinColumn,
 } from "typeorm";
 import { Club } from "./club.entity";
+import { User } from "./user.entity";
 
 enum ClubApplicationStatus {
     BEFORE_APPLICATION = "신청 접수중",
@@ -15,7 +19,7 @@ enum ClubApplicationStatus {
     APPLICATION_COMPLETED = "신청 완료",
 }
 @Entity({
-    name: "users", // 데이터베이스 테이블의 이름
+    name: "clubApplications",
 })
 export class ClubApplication {
     @PrimaryGeneratedColumn()
@@ -37,9 +41,19 @@ export class ClubApplication {
     })
     status: ClubApplicationStatus;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "datetime", nullable: false })
     createdAt: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: "datetime", nullable: false })
     updatedAt: Date;
+
+    //user 테이블과 연결하기
+    @OneToOne(() => User, (user) => user.clubApplication)
+    @JoinColumn({ name: "userId" })
+    user: User;
+
+    //club 테이블과 연결하기
+    @ManyToOne(() => Club, (club) => club.clubApplications)
+    @JoinColumn({ name: "clubId" })
+    club: Club;
 }
