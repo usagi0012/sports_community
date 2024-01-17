@@ -7,18 +7,21 @@ import {
     Param,
     Delete,
     UseGuards,
+    Put,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { accessTokenGuard } from "src/auth/guard/access-token.guard";
-import { UserId } from "src/auth/decorators/userId.decorator";
+import { accessTokenGuard } from "../auth/guard/access-token.guard";
+import { UserId } from "../auth/decorators/userId.decorator";
 import { ApiBearerAuth } from "@nestjs/swagger";
+import { ChangeUserDto } from "./dto/change-user.dto";
 
 @Controller("user")
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+    //전체 유저정보 조회
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Get("")
@@ -26,10 +29,27 @@ export class UserController {
         return this.userService.findAll();
     }
 
+    //내 정보 조회
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Get("me")
     findUserById(@UserId() id: string) {
         return this.userService.findUserById(+id);
+    }
+
+    //내 정보 수정
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Put("me")
+    updateUserById(@UserId() id: string, @Body() changeUserDto: ChangeUserDto) {
+        return this.userService.updateUser(+id, changeUserDto);
+    }
+
+    //내 정보 삭제
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Delete("me")
+    deleteUserById(@UserId() id: string) {
+        return this.userService.deleteUserById(+id);
     }
 }
