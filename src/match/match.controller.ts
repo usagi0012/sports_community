@@ -10,8 +10,8 @@ import {
 
 import { MatchService } from "./match.service";
 import { MatchDTO } from "./dto/match.dto";
-import { accessTokenGuard } from "src/auth/guard/access-token.guard";
-import { UserId } from "src/auth/decorators/userId.decorator";
+import { accessTokenGuard } from "../auth/guard/access-token.guard";
+import { UserId } from "../auth/decorators/userId.decorator";
 import { ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller("match")

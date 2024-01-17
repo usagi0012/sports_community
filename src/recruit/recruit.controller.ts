@@ -13,8 +13,8 @@ import { RecruitDTO, UpdateDto, PutDTO } from "./dto/recruit.dto";
 import { MatchUpdateDto } from "./dto/checkmatch.dto";
 import { RecruitService } from "./recruit.service";
 import { User } from "../entity/user.entity";
-import { accessTokenGuard } from "src/auth/guard/access-token.guard";
-import { UserId } from "src/auth/decorators/userId.decorator";
+import { accessTokenGuard } from "../auth/guard/access-token.guard";
+import { UserId } from "../auth/decorators/userId.decorator";
 import { ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller("recruit")

@@ -1,9 +1,9 @@
 import { MatchDTO } from "./dto/match.dto";
-import { Match, MatchStatus } from "src/entity/match.entity";
+import { Match, MatchStatus } from "../entity/match.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Recruit, Status } from "src/entity/recruit.entity";
+import { Recruit, Status } from "../entity/recruit.entity";
 
 @Injectable()
 export class MatchService {

@@ -1,11 +1,10 @@
-import { match } from "assert";
-import { UserId } from "src/auth/decorators/userId.decorator";
+import { UserId } from "../auth/decorators/userId.decorator";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Recruit, Status } from "../entity/recruit.entity";
 import { RecruitDTO, UpdateDto, PutDTO } from "./dto/recruit.dto";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Match, MatchStatus } from "src/entity/match.entity";
+import { Match, MatchStatus } from "../entity/match.entity";
 import { MatchUpdateDto } from "./dto/checkmatch.dto";
 
 @Injectable()
