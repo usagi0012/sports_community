@@ -28,7 +28,7 @@ export class User {
     id: number;
 
     @Column({ nullable: true })
-    clubId: number;
+    clubId?: number;
 
     @Column({ unique: true })
     email: string;
@@ -55,8 +55,8 @@ export class User {
     @OneToOne(() => ClubApplication, (clubApplication) => clubApplication.user)
     clubApplication: ClubApplication;
 
-    @DeleteDateColumn()
-    deletedAt: Date;
+    @DeleteDateColumn({ nullable: true })
+    deletedAt?: Date;
 
     @OneToMany(() => UserCalender, (userCalender) => userCalender.user)
     userCalender: UserCalender[];

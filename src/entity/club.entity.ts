@@ -33,6 +33,9 @@ export class Club {
     @Column()
     description: string;
 
+    @Column({ nullable: true })
+    image: string;
+
     @Column()
     masterId: number;
 
