@@ -14,6 +14,7 @@ import { MatchModule } from "./match/match.module";
 import { RecruitService } from "./recruit/recruit.service";
 import { ClubMatchModule } from './club_match/club_match.module';
 import { ApplyingClubModule } from "./applying-club/applying-club.module";
+import { UserPositionModule } from "./user-position/user-position.module";
 
 
 @Module({
@@ -29,6 +30,7 @@ import { ApplyingClubModule } from "./applying-club/applying-club.module";
         RecruitModule,
         MatchModule,
         ClubMatchModule,
+        UserPositionModule,
     ],
     controllers: [AppController, RecruitController],
     providers: [AppService],

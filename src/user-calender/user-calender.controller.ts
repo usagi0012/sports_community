@@ -29,7 +29,6 @@ export class UserCalenderController {
         @Body() createUserCalenderDto: CreateUserCalenderDto,
     ) {
         const userId = req.user.userId;
-        console.log(userId);
         return this.userCalenderService.create(userId, createUserCalenderDto);
     }
 
