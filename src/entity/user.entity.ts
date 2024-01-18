@@ -1,25 +1,42 @@
 import {
     Column,
     CreateDateColumn,
+    DeleteDateColumn,
     Entity,
+    JoinColumn,
+    OneToMany,
+    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
+    Relation,
+    ManyToOne,
+    JoinTable,
 } from "typeorm";
+import { Club } from "./club.entity";
+import { UserCalender } from "./user-calender.entity";
+import { UserProfile } from "./user-profile.entity";
+import { Recruit } from "./recruit.entity";
+import { Match } from "./match.entity";
+import { ClubApplication } from "./club-application.entity";
+import { UserPosition } from "./user-position.entity";
 
 @Entity({
-    name: "users", // 데이터베이스 테이블의 이름
+    name: "users",
 })
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column({ nullable: true })
+    clubId?: number;
+
     @Column({ unique: true })
     email: string;
 
-    @Column()
+    @Column({ select: false })
     password: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, select: false })
     currentRefreshToken?: string;
 
     @Column()
@@ -30,4 +47,25 @@ export class User {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @ManyToOne(() => Club, (club) => club.users, { onDelete: "SET NULL" })
+    @JoinTable()
+    club: Club;
+
+    @OneToOne(() => ClubApplication, (clubApplication) => clubApplication.user)
+    clubApplication: ClubApplication;
+
+    @DeleteDateColumn({ nullable: true })
+    deletedAt?: Date;
+
+    @OneToMany(() => UserCalender, (userCalender) => userCalender.user)
+    userCalender: UserCalender[];
+
+    @OneToMany(() => UserPosition, (userPosition) => userPosition.user)
+    userPosition: UserPosition[];
+
+    @OneToMany(() => Recruit, (recruit) => recruit.user)
+    recruits: Recruit[];
+    @OneToMany(() => Match, (match) => match.user)
+    matches: Match[];
 }

@@ -27,7 +27,9 @@ export class accessTokenStrategy extends PassportStrategy(
             const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
 
             await this.jwtService.verify(token, {
-                secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
+                secret: this.configService.get<string>(
+                    "JWT_ACCESS_TOKEN_SECRET",
+                ),
             });
 
             const user = payload;
