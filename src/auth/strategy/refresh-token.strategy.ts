@@ -14,7 +14,7 @@ export class refreshTokenStrategy extends PassportStrategy(
     constructor(
         private readonly configService: ConfigService,
         private readonly jwtService: JwtService,
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -29,12 +29,14 @@ export class refreshTokenStrategy extends PassportStrategy(
             const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
 
             await this.jwtService.verify(token, {
-                secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
+                secret: this.configService.get<string>(
+                    "JWT_REFRESH_TOKEN_SECRET",
+                ),
             });
 
             const user = {
                 ...payload,
-                refreshToken: token
+                refreshToken: token,
             };
 
             return user;
