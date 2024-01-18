@@ -16,6 +16,7 @@ import { ClubMatchModule } from './club_match/club_match.module';
 import { ApplyingClubModule } from "./applying-club/applying-club.module";
 import { AwsModule } from './aws/aws.module';
 import { UserPositionModule } from "./user-position/user-position.module";
+import { PlaceModule } from './place/place.module';
 
 @Module({
     imports: [
@@ -32,6 +33,7 @@ import { UserPositionModule } from "./user-position/user-position.module";
         AwsModule,
         ClubMatchModule,
         UserPositionModule,
+        PlaceModule,
     ],
     controllers: [AppController, RecruitController],
     providers: [AppService],
