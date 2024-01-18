@@ -74,7 +74,9 @@ export class UserCalenderService {
             where: { userId },
             relations: ["user"],
         });
-        console.log(findCalenderByUserId);
+        if (findCalenderByUserId.length < 1) {
+            throw new NotFoundException("등록된 일정이 없습니다.");
+        }
 
         return {
             statusCode: 200,

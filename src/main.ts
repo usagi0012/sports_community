@@ -38,12 +38,12 @@ async function bootstrap() {
         .setVersion("1.0")
         .addTag("webtoon")
         .addBearerAuth(
-            { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
-            'accessToken',
+            { type: "http", scheme: "bearer", bearerFormat: "Token" },
+            "accessToken",
         )
         .addBearerAuth(
-            { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
-            'refreshToken',
+            { type: "http", scheme: "bearer", bearerFormat: "Token" },
+            "refreshToken",
         )
         .build();
     const document = SwaggerModule.createDocument(app, config);

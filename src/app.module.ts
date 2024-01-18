@@ -12,8 +12,10 @@ import { RecruitController } from "./recruit/recruit.controller";
 import { RecruitModule } from "./recruit/recruit.module";
 import { MatchModule } from "./match/match.module";
 import { RecruitService } from "./recruit/recruit.service";
+import { ClubMatchModule } from './club_match/club_match.module';
 import { ApplyingClubModule } from "./applying-club/applying-club.module";
 import { AwsModule } from './aws/aws.module';
+import { UserPositionModule } from "./user-position/user-position.module";
 
 @Module({
     imports: [
@@ -28,6 +30,8 @@ import { AwsModule } from './aws/aws.module';
         RecruitModule,
         MatchModule,
         AwsModule,
+        ClubMatchModule,
+        UserPositionModule,
     ],
     controllers: [AppController, RecruitController],
     providers: [AppService],
