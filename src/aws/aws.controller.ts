@@ -28,9 +28,9 @@ export class AwsController {
     //     }
     // }
 
-    @Post()
-    @UseInterceptors(FileInterceptor("file"))
-    uploadFile(@UploadedFile() file: Express.Multer.File) {
-        return this.awsService.fileupload(file);
-    }
+    // @Post()
+    // @UseInterceptors(FileInterceptor("file"))
+    // uploadFile(@UploadedFile() file: Express.Multer.File) {
+    //     return this.awsService.fileupload(file);
+    // }
 }
