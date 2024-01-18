@@ -2,11 +2,13 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { Userscore } from "./personal.assessment.entity";
+import { Userscore } from "./userscore.entity";
+import { Personaltagcounter } from "./personaltagcounter.entity";
 
 @Entity({
     name: "users", // 데이터베이스 테이블의 이름
@@ -35,4 +37,11 @@ export class User {
 
     @OneToOne(() => Userscore, (userscroe) => userscroe.user, { cascade: true })
     userscore: Userscore;
+
+    @OneToMany(
+        () => Personaltagcounter,
+        (personaltagcounter) => personaltagcounter.user,
+        { cascade: true },
+    )
+    personaltagcounter: Personaltagcounter[];
 }

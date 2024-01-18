@@ -1,7 +1,7 @@
 import { PickType } from "@nestjs/swagger";
-import { Personaltag } from "src/entity/personal.assessment.tag.entity";
+import { Personaltagcounter } from "src/entity/personaltagcounter.entity";
 
-export class CreatePersonalTagDto extends PickType(Personaltag, [
+export class PersonalTagCounterDto extends PickType(Personaltagcounter, [
     "chisu",
     "curry",
     "daeman",

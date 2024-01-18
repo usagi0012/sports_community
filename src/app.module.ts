@@ -5,7 +5,8 @@ import { ConfigProjectModule } from "./config/config.module";
 import { TypeormModule } from "./typeorm/typeorm.module";
 import { AuthModule } from "./auth/auth.module";
 import { UserModule } from "./user/user.module";
-import { AssessmentModule } from "./assessment/assessment.module";
+import { PersonalassessmenttagModule } from "./personalassessmenttag/personalassessmenttag.module";
+import { ClubassessmenttagModule } from './clubassessmenttag/clubassessmenttag.module';
 
 @Module({
     imports: [
@@ -13,7 +14,8 @@ import { AssessmentModule } from "./assessment/assessment.module";
         TypeormModule.forRoot(),
         AuthModule,
         UserModule,
-        AssessmentModule,
+        PersonalassessmenttagModule,
+        ClubassessmenttagModule,
     ],
     controllers: [AppController],
     providers: [AppService],

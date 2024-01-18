@@ -1,46 +1,63 @@
 import { IsNotEmpty, IsNumber, Max, Min } from "class-validator";
-import { MAX_SCORE, MIN_SCORE } from "src/assessment/constants/score.constant";
 import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinColumn,
-    OneToMany,
-    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { Personaltag } from "./personal.assessment.tag.entity";
-import { User } from "./user.entity";
 
-@Entity({ name: "user_scroe" })
-export class Userscore {
+import { ApiProperty } from "@nestjs/swagger";
+import {
+    MAX_SCORE,
+    MIN_SCORE,
+} from "src/personalassessmenttag/constants/score.constant";
+
+@Entity({ name: "clubscore" })
+export class Clubscore {
     @PrimaryGeneratedColumn({ unsigned: true })
+    @ApiProperty({ description: "id" })
     id: number;
 
-    @Column({ unsigned: true })
-    tagId: number;
+    @IsNumber()
+    @Column()
+    clubId: number;
+
+    @IsNumber()
+    @Column()
+    @ApiProperty({ description: "성격" })
+    personality: number;
 
     @IsNotEmpty({ message: "개인성격 점수를 입력해주세요." })
     @Min(MIN_SCORE, { message: "최소 점수는 1입니다." })
     @Max(MAX_SCORE, { message: "최대 점수는 5입니다." })
     @IsNumber()
-    personality: number;
+    @ApiProperty({ description: "성격", default: 1 })
+    @Column({ default: 0 })
+    personalityAmount: number;
+
+    @IsNumber()
+    @Column({ default: 0 })
+    @ApiProperty({ description: "실력" })
+    ability: number;
 
     @IsNotEmpty({ message: "실력점수를 입력해주세요." })
     @Min(MIN_SCORE, { message: "최소 점수는 1입니다." })
     @Max(MAX_SCORE, { message: "최대 점수는 5입니다." })
     @IsNumber()
     @Column()
-    ability: number;
+    @ApiProperty({ description: "실력", default: 1 })
+    abilityAmount: number;
 
     @IsNotEmpty({ message: "MVP를 뽑아주세요." })
     @IsNumber()
     @Column()
+    @ApiProperty({ description: "MVP", default: 1 })
     mvp: number;
 
     @IsNumber()
-    @Column()
+    @Column({ default: 0 })
+    @ApiProperty({ description: "경기횟수" })
     count: number;
 
     @CreateDateColumn()
@@ -48,13 +65,4 @@ export class Userscore {
 
     @UpdateDateColumn()
     updatedAt: Date;
-
-    @OneToMany(() => Personaltag, (personaltag) => personaltag.userscore, {
-        cascade: true,
-    })
-    tag: Personaltag[];
-
-    @OneToOne(() => User, (user) => user.userscore)
-    @JoinColumn()
-    user: User;
 }
