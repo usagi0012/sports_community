@@ -42,7 +42,7 @@ export class UserProfile {
     @Column()
     height: number;
 
-    @OneToOne(() => User, { eager: true })
+    @OneToOne(() => User, { onDelete: "CASCADE" })
     @JoinColumn()
     user: User;
 

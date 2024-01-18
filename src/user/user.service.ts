@@ -50,6 +50,13 @@ export class UserService {
         });
     }
 
+    async logout(id: number) {
+        await this.update(id, {
+            currentRefreshToken: null,
+        });
+
+        return true;
+    }
     async findUserByIdAll(id: number) {
         return await this.userRepository.findOne({
             where: { id },
@@ -78,7 +85,8 @@ export class UserService {
                 ...updateUserDto,
             },
         );
-
+        const deletedToken = await this.findUserById(id);
+        console.log(deletedToken.currentRefreshToken, deletedToken);
         return result;
     }
 
@@ -155,41 +163,20 @@ export class UserService {
         };
     }
     //내 정보 삭제
-    async deleteUserById(
-        id: number,
-    ): Promise<{ statusCode: number; message: string }> {
-        const user = await this.findUserById(id);
+    async deleteUserById(userId) {
+        const user = await this.findUserById(userId);
 
         if (!user) {
-            console.log("사용자가 존재하지 않습니다.");
             throw new NotFoundException("존재하지 않는 사용자입니다.");
         }
 
-        const entityManager = this.userRepository.manager;
-
-        try {
-            // 트랜잭션 시작
-            await entityManager.transaction(async (manager: EntityManager) => {
-                // 유저 프로필 삭제
-                await manager.delete(UserProfile, { user });
-
-                // 유저 삭제
-                const result = await manager.delete(User, id);
-
-                // 삭제된 행이 없을 경우 에러 처리
-                if (result.affected === 0) {
-                    throw new NotFoundException("유저를 찾을 수 없습니다.");
-                }
-            });
-
-            return {
-                statusCode: 200,
-                message: "내 정보를 삭제했습니다.",
-            };
-        } catch (error) {
-            console.error(`트랜잭션 에러: ${error.message}`);
-            // 트랜잭션 롤백 등 추가적인 에러 처리
-            throw new Error(`트랜잭션 에러: ${error.message}`);
+        if (userId !== user.id) {
+            throw new NotFoundException("권한이 없습니다.");
         }
+        await this.userRepository.delete({ id: userId });
+        return {
+            statusCode: 200,
+            message: "탈퇴했습니다.",
+        };
     }
 }
