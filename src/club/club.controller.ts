@@ -54,12 +54,14 @@ export class ClubController {
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Put("/:clubId")
+    @UseInterceptors(FileInterceptor("file"))
     updateClub(
         @Param("clubId") id: string,
         @UserId() userId: number,
         @Body() updateClubDto: UpdateClubDto,
+        @UploadedFile() file: Express.Multer.File,
     ) {
-        return this.clubService.updateClub(+id, userId, updateClubDto);
+        return this.clubService.updateClub(+id, userId, updateClubDto, file);
     }
 
     //동아리 삭제
