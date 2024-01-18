@@ -10,6 +10,7 @@ import { UserService } from "../user/user.service";
 import { Repository } from "typeorm";
 import { CreateClubDto } from "./dto/createClub.dto";
 import { UpdateClubDto } from "./dto/updateClub.dto";
+import { AwsService } from "../aws/aws.service";
 
 @Injectable()
 export class ClubService {
@@ -17,6 +18,7 @@ export class ClubService {
         @InjectRepository(Club)
         private readonly clubRepository: Repository<Club>,
         private readonly userService: UserService,
+        private readonly awsService: AwsService,
     ) {}
 
     async getAllClubs() {
@@ -36,10 +38,24 @@ export class ClubService {
         return club;
     }
 
-    async createClub(createClubDto: CreateClubDto, userId: number) {
+    async createClub(
+        createClubDto: CreateClubDto,
+        userId: number,
+        file: Express.Multer.File,
+    ) {
         const user = await this.userService.findUserById(userId);
         if (user.clubId) {
             throw new ConflictException("동아리는 하나만 가입할 수 있습니다.");
+        }
+
+        if (file) {
+            const club = await this.clubRepository.save({
+                ...createClubDto,
+                users: [user],
+                masterId: user.id,
+                image: await this.awsService.fileupload(file),
+            });
+            return club;
         }
 
         const club = await this.clubRepository.save({
@@ -47,11 +63,15 @@ export class ClubService {
             users: [user],
             masterId: user.id,
         });
-
         return club;
     }
 
-    async updateClub(id: number, userId: number, updateClubDto: UpdateClubDto) {
+    async updateClub(
+        id: number,
+        userId: number,
+        updateClubDto: UpdateClubDto,
+        file: Express.Multer.File,
+    ) {
         const user = await this.userService.findUserById(userId);
         const club = await this.clubRepository.findOne({ where: { id } });
         if (!club) {
@@ -65,6 +85,7 @@ export class ClubService {
         club.name = updateClubDto.name;
         club.region = updateClubDto.region;
         club.description = updateClubDto.description;
+        club.image = await this.awsService.fileupload(file);
 
         await this.clubRepository.save(club);
 

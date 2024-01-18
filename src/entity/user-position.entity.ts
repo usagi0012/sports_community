@@ -2,11 +2,11 @@ import {
     Column,
     Entity,
     JoinColumn,
+    ManyToOne,
     OneToOne,
     PrimaryGeneratedColumn,
 } from "typeorm";
 import { User } from "./user.entity";
-import { UserProfile } from "./user-profile.entity";
 
 @Entity({
     name: "userPosition", // 데이터베이스 테이블의 이름
@@ -21,10 +21,13 @@ export class UserPosition {
     @Column()
     center: boolean;
 
-    @Column({ nullable: true })
-    foward: boolean;
+    @Column()
+    forward: boolean;
 
-    @OneToOne(() => UserProfile)
+    @OneToOne(() => User, { onDelete: "CASCADE" })
     @JoinColumn()
-    userProfile: UserProfile;
+    user: User;
+
+    @Column({ select: false }) // 필요한 경우에만 선택적으로 가져올 수 있도록 설정
+    userId: number; // user.id를 저장하는 필드 추가
 }

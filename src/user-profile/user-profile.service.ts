@@ -30,7 +30,6 @@ export class UserProfileService {
                 nickname: createUserProfileDto.nickname,
             },
         });
-
         //중복되는 닉네임 불가능
         if (existingNickname) {
             throw new BadRequestException("이미 존재하는 닉네임입니다");
@@ -90,6 +89,7 @@ export class UserProfileService {
             where: {
                 nickname: updateUserProfileDto.nickname,
             },
+            relations: ["user"],
         });
         //프로필이 존재하는지 확인
         const existingProfile = await this.userProfileRepository.findOne({
@@ -99,7 +99,7 @@ export class UserProfileService {
             throw new NotFoundException("프로필을 먼저 작성해주세요");
         }
         if (updateUserProfileDto.nickname) {
-            if (existingNickname) {
+            if (existingNickname && existingNickname.user.id !== userId) {
                 throw new BadRequestException("이미 존재하는 닉네임입니다");
             }
         }

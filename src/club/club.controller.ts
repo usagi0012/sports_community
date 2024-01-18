@@ -6,7 +6,9 @@ import {
     Param,
     Post,
     Put,
+    UploadedFile,
     UseGuards,
+    UseInterceptors,
 } from "@nestjs/common";
 import { ClubService } from "./club.service";
 import { accessTokenGuard } from "../auth/guard/access-token.guard";
@@ -14,6 +16,8 @@ import { UserId } from "../auth/decorators/userId.decorator";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { CreateClubDto } from "./dto/createClub.dto";
 import { UpdateClubDto } from "./dto/updateClub.dto";
+import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { error } from "console";
 
 @Controller("club")
 export class ClubController {
@@ -37,20 +41,27 @@ export class ClubController {
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Post()
-    createClub(@UserId() userId: number, @Body() createClubDto: CreateClubDto) {
-        return this.clubService.createClub(createClubDto, userId);
+    @UseInterceptors(FileInterceptor("file"))
+    createClub(
+        @UserId() userId: number,
+        @Body() createClubDto: CreateClubDto,
+        @UploadedFile() file: Express.Multer.File,
+    ) {
+        return this.clubService.createClub(createClubDto, userId, file);
     }
 
     //동아리 정보 수정
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Put("/:clubId")
+    @UseInterceptors(FileInterceptor("file"))
     updateClub(
         @Param("clubId") id: string,
         @UserId() userId: number,
         @Body() updateClubDto: UpdateClubDto,
+        @UploadedFile() file: Express.Multer.File,
     ) {
-        return this.clubService.updateClub(+id, userId, updateClubDto);
+        return this.clubService.updateClub(+id, userId, updateClubDto, file);
     }
 
     //동아리 삭제

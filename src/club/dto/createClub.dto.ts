@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum, IsString } from "class-validator";
+import multer from "multer";
 import { Region } from "src/enumtypes/clubregion.type";
 
 export class CreateClubDto {

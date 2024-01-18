@@ -13,8 +13,11 @@ import { RecruitModule } from "./recruit/recruit.module";
 import { MatchModule } from "./match/match.module";
 import { RecruitService } from "./recruit/recruit.service";
 import { ApplyingClubModule } from "./applying-club/applying-club.module";
+import { ClubMatchModule } from "./club_match/club_match.module";
 import { ChatBackEndModule } from "./chatBackEnd/chatBackEnd.module";
 import { ChatFrontEndModule } from "./chatFrontEnd/chatFrontEnd.module";
+import { AwsModule } from "./aws/aws.module";
+import { UserPositionModule } from "./user-position/user-position.module";
 
 @Module({
     imports: [
@@ -30,6 +33,9 @@ import { ChatFrontEndModule } from "./chatFrontEnd/chatFrontEnd.module";
         MatchModule,
         ChatBackEndModule,
         ChatFrontEndModule,
+        AwsModule,
+        ClubMatchModule,
+        UserPositionModule,
     ],
     controllers: [AppController, RecruitController],
     providers: [AppService],

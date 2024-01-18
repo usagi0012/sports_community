@@ -18,6 +18,7 @@ import { UserProfile } from "./user-profile.entity";
 import { Recruit } from "./recruit.entity";
 import { Match } from "./match.entity";
 import { ClubApplication } from "./club-application.entity";
+import { UserPosition } from "./user-position.entity";
 
 @Entity({
     name: "users",
@@ -27,7 +28,7 @@ export class User {
     id: number;
 
     @Column({ nullable: true })
-    clubId: number;
+    clubId?: number;
 
     @Column({ unique: true })
     email: string;
@@ -54,11 +55,14 @@ export class User {
     @OneToOne(() => ClubApplication, (clubApplication) => clubApplication.user)
     clubApplication: ClubApplication;
 
-    @DeleteDateColumn()
-    deletedAt: Date;
+    @DeleteDateColumn({ nullable: true })
+    deletedAt?: Date;
 
     @OneToMany(() => UserCalender, (userCalender) => userCalender.user)
     userCalender: UserCalender[];
+
+    @OneToMany(() => UserPosition, (userPosition) => userPosition.user)
+    userPosition: UserPosition[];
 
     @OneToMany(() => Recruit, (recruit) => recruit.user)
     recruits: Recruit[];

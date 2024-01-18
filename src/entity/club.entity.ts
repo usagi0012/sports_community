@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { User } from "./user.entity";
 import { toUSVString } from "util";
+import { ClubMatch } from "./club_match.entity";
 import { ClubApplication } from "./club-application.entity";
 
 @Entity({
@@ -32,6 +33,9 @@ export class Club {
     @Column()
     description: string;
 
+    @Column({ nullable: true })
+    image: string;
+
     @Column()
     masterId: number;
 
@@ -46,11 +50,16 @@ export class Club {
 
     @OneToMany(() => User, (user) => user.club, { cascade: true })
     users: User[];
-
     @OneToMany(
         () => ClubApplication,
         (clubApplication) => clubApplication.club,
         { cascade: true },
     )
     clubApplications: ClubApplication[];
+
+    @OneToMany(() => ClubMatch, (match) => match.hostClub)
+    hostedMatches: ClubMatch[];
+
+    @OneToMany(() => ClubMatch, (match) => match.guestClub)
+    guestMatches: ClubMatch[];
 }
