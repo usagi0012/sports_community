@@ -66,7 +66,12 @@ export class ClubService {
         return club;
     }
 
-    async updateClub(id: number, userId: number, updateClubDto: UpdateClubDto) {
+    async updateClub(
+        id: number,
+        userId: number,
+        updateClubDto: UpdateClubDto,
+        file: Express.Multer.File,
+    ) {
         const user = await this.userService.findUserById(userId);
         const club = await this.clubRepository.findOne({ where: { id } });
         if (!club) {
@@ -80,6 +85,7 @@ export class ClubService {
         club.name = updateClubDto.name;
         club.region = updateClubDto.region;
         club.description = updateClubDto.description;
+        club.image = await this.awsService.fileupload(file);
 
         await this.clubRepository.save(club);
 
