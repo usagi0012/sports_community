@@ -1,29 +1,27 @@
-import { Injectable, MessageEvent } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Observable, Subject, filter, map } from "rxjs";
+
+// MessageEvent를 재정의합니다.
+export interface CustomMessageEvent<T = any> {
+    data: T;
+}
 
 @Injectable()
 export class Alarmservice {
     private users$: Subject<any> = new Subject();
-    private observer = this.users$.asObservable();
 
-    emitCardChangeEvent(userId: number) {
-        // next를 통해 이벤트를생성
-        this.users$.next({ id: userId });
+    sendAlarm(userId: number, message: string): void {
+        // 알림 전송 로직
+        const eventData = { message };
+        const event: CustomMessageEvent = { data: eventData };
+
+        this.users$.next({ id: userId, event });
     }
 
-    sendClientAlarm(userId: number): Observable<any> {
-        // 이벤트 발생시 처리 로직
-        return this.observer.pipe(
-            // 유저 필터링
-            filter((user) => user.id === userId),
-            // 데이터 전송
-            map((user) => {
-                return {
-                    data: {
-                        message: "카드의 담당자가 사용자님으로 변경되었습니다.",
-                    },
-                } as MessageEvent;
-            }),
+    getAlarmObservable(userId: number): Observable<CustomMessageEvent> {
+        return this.users$.asObservable().pipe(
+            filter((userEvent) => userEvent.id === userId),
+            map((userEvent) => userEvent.event as CustomMessageEvent),
         );
     }
 }

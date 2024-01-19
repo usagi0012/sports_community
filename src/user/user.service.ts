@@ -85,8 +85,6 @@ export class UserService {
                 ...updateUserDto,
             },
         );
-        const deletedToken = await this.findUserById(id);
-        console.log(deletedToken.currentRefreshToken, deletedToken);
         return result;
     }
 
@@ -173,6 +171,10 @@ export class UserService {
         if (userId !== user.id) {
             throw new NotFoundException("권한이 없습니다.");
         }
+        const token = await this.update(userId, {
+            currentRefreshToken: null,
+        });
+        console.log(token);
         await this.userRepository.delete({ id: userId });
         return {
             statusCode: 200,

@@ -9,27 +9,40 @@ import {
     UseGuards,
     Req,
     Put,
+    UseInterceptors,
+    UploadedFile,
 } from "@nestjs/common";
 import { UserProfileService } from "./user-profile.service";
 import { CreateUserProfileDto } from "./dto/create-user-profile.dto";
 import { UpdateUserProfileDto } from "./dto/update-user-profile.dto";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
+import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { Alarmservice } from "src/alarm/alarm.service";
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard("accessToken"))
 @Controller("/user")
 export class UserProfileController {
-    constructor(private readonly userProfileService: UserProfileService) {}
+    constructor(
+        private readonly userProfileService: UserProfileService,
+        private readonly alarmService: Alarmservice,
+    ) {}
 
     //프로필 작성하기
     @Post("/me/profile")
+    @UseInterceptors(FileInterceptor("file"))
     create(
         @Req() req: any,
         @Body() createUserProfileDto: CreateUserProfileDto,
+        @UploadedFile() file: Express.Multer.File,
     ) {
         const userId = req.user.userId;
-        return this.userProfileService.create(+userId, createUserProfileDto);
+        return this.userProfileService.create(
+            +userId,
+            createUserProfileDto,
+            file,
+        );
     }
 
     //내 프로필 조회하기
@@ -46,11 +59,17 @@ export class UserProfileController {
     }
     //프로필 수정하기
     @Put("/me/profile")
+    @UseInterceptors(FileInterceptor("file"))
     update(
         @Req() req: any,
         @Body() updateUserProfileDto: UpdateUserProfileDto,
+        @UploadedFile() file: Express.Multer.File,
     ) {
         const userId = req.user.userId;
-        return this.userProfileService.update(+userId, updateUserProfileDto);
+        return this.userProfileService.update(
+            +userId,
+            updateUserProfileDto,
+            file,
+        );
     }
 }

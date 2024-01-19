@@ -12,11 +12,6 @@ export class CreateUserProfileDto {
     @ApiProperty({ description: "설명" })
     description?: string;
 
-    @IsOptional()
-    @IsString()
-    @ApiProperty({ description: "이미지" })
-    image: string;
-
     @IsNumber()
     @ApiProperty({ description: "키" })
     height: number;
