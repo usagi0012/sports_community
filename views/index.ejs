@@ -127,6 +127,7 @@
                 $(".roomName").text(myInfo.room.roomName);
             });
             socket.emit("getChatRoomList", null);
+            localStorage.setItem("socketId", socket.id);
         });
         socket.on("getMessage", function ({ id, nickname, message }) {
             let html = "";

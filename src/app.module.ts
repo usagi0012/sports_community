@@ -18,6 +18,7 @@ import { ChatBackEndModule } from "./chatBackEnd/chatBackEnd.module";
 import { ChatFrontEndModule } from "./chatFrontEnd/chatFrontEnd.module";
 import { AwsModule } from "./aws/aws.module";
 import { UserPositionModule } from "./user-position/user-position.module";
+import { ChatInvitationModule } from './chat-invitation/chat-invitation.module';
 
 @Module({
     imports: [
@@ -36,6 +37,7 @@ import { UserPositionModule } from "./user-position/user-position.module";
         AwsModule,
         ClubMatchModule,
         UserPositionModule,
+        ChatInvitationModule,
     ],
     controllers: [AppController, RecruitController],
     providers: [AppService],

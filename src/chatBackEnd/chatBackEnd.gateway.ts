@@ -10,6 +10,10 @@ import { Server, Socket } from "socket.io";
 import { ChatRoomService } from "./chatRoom.service";
 import { setInitDTO, chatRoomListDTO } from "./dto/chatBackEnd.dto";
 import { Observable, map, from } from "rxjs";
+import { UserId } from "src/auth/decorators/userId.decorator";
+import { UseGuards } from "@nestjs/common";
+import { accessTokenGuard } from "src/auth/guard/access-token.guard";
+import { ApiBearerAuth } from "@nestjs/swagger";
 
 @WebSocketGateway(5000, {
     cors: {
@@ -102,9 +106,12 @@ export class ChatBackEndGateway
     }
 
     //채팅방 생성하기
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
     @SubscribeMessage("createChatRoom")
-    createChatRoom(client: Socket, roomName: string) {
+    createChatRoom(client: Socket, roomName: string, @UserId() userId: number) {
         //이전 방이 만약 나 혼자있던 방이면 제거
+        console.log("userId", userId);
         if (
             client.data.roomId != "room:lobby" &&
             this.server.sockets.adapter.rooms.get(client.data.roomId).size == 1
@@ -112,7 +119,7 @@ export class ChatBackEndGateway
             this.ChatRoomService.deleteChatRoom(client.data.roomId);
         }
 
-        this.ChatRoomService.createChatRoom(client, roomName);
+        this.ChatRoomService.createChatRoom(client, roomName, userId);
         return {
             roomId: client.data.roomId,
             roomName: this.ChatRoomService.getChatRoom(client.data.roomId)

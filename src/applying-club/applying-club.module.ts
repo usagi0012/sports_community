@@ -7,10 +7,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ClubApplication } from "src/entity/club-application.entity";
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([User, Club, ClubApplication]),
-        // auth 관련해서 무슨 모듈 가져와야하지
-    ],
+    imports: [TypeOrmModule.forFeature([User, Club, ClubApplication])],
     controllers: [ApplyingClubController],
     providers: [ApplyingClubService],
 })
