@@ -14,9 +14,10 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { UserId } from "../auth/decorators/userId.decorator";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ChangeUserDto } from "./dto/change-user.dto";
 
+@ApiTags("개인 정보")
 @Controller("user")
 export class UserController {
     constructor(private readonly userService: UserService) {}

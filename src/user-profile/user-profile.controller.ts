@@ -15,11 +15,12 @@ import {
 import { UserProfileService } from "./user-profile.service";
 import { CreateUserProfileDto } from "./dto/create-user-profile.dto";
 import { UpdateUserProfileDto } from "./dto/update-user-profile.dto";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { Alarmservice } from "src/alarm/alarm.service";
 
+@ApiTags("개인 프로필")
 @ApiBearerAuth()
 @UseGuards(AuthGuard("accessToken"))
 @Controller("/user")

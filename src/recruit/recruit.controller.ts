@@ -15,8 +15,9 @@ import { RecruitService } from "./recruit.service";
 import { User } from "../entity/user.entity";
 import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { UserId } from "../auth/decorators/userId.decorator";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("매치 모집 글")
 @Controller("recruit")
 @ApiBearerAuth("accessToken")
 @UseGuards(accessTokenGuard)

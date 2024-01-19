@@ -11,8 +11,9 @@ import { ApplyingClubService } from "./applying-club.service";
 import { ApplicationDto } from "./dto/application.dto";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("동아리 신청")
 @Controller("applying-club")
 export class ApplyingClubController {
     constructor(private readonly applyingClubService: ApplyingClubService) {}

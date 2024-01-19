@@ -13,12 +13,13 @@ import {
 import { ClubService } from "./club.service";
 import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { UserId } from "../auth/decorators/userId.decorator";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CreateClubDto } from "./dto/createClub.dto";
 import { UpdateClubDto } from "./dto/updateClub.dto";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { error } from "console";
 
+@ApiTags("동아리")
 @Controller("club")
 export class ClubController {
     constructor(private readonly clubService: ClubService) {}
