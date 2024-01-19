@@ -18,12 +18,16 @@ import { UpdateUserProfileDto } from "./dto/update-user-profile.dto";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { Alarmservice } from "src/alarm/alarm.service";
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard("accessToken"))
 @Controller("/user")
 export class UserProfileController {
-    constructor(private readonly userProfileService: UserProfileService) {}
+    constructor(
+        private readonly userProfileService: UserProfileService,
+        private readonly alarmService: Alarmservice,
+    ) {}
 
     //프로필 작성하기
     @Post("/me/profile")

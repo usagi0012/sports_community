@@ -15,6 +15,7 @@ import { User } from "src/entity/user.entity";
 import { Repository } from "typeorm";
 import { NotFoundError } from "rxjs";
 import { AwsService } from "../aws/aws.service";
+import { Alarmservice } from "src/alarm/alarm.service";
 
 @Injectable()
 export class UserProfileService {
@@ -24,6 +25,7 @@ export class UserProfileService {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         private readonly awsService: AwsService,
+        private readonly alarmService: Alarmservice,
     ) {}
     //프로필 작성하기
     async create(
@@ -179,6 +181,7 @@ export class UserProfileService {
                 gender,
             },
         );
+
         const updatedProfile = await this.userProfileRepository.findOne({
             where: { userId },
             relations: ["user"],

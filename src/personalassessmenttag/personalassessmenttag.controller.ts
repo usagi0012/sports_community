@@ -13,6 +13,7 @@ import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";
 import { PersonalassessmenttagService } from "./personalassessmenttag.service";
 import { CreatePersonalAssessmentDto } from "./dto/create-personal-assessment.dto";
+import { Alarmservice } from "src/alarm/alarm.service";
 
 @ApiTags("개인평가지+태그")
 @ApiBearerAuth("accessToken")
@@ -21,6 +22,7 @@ import { CreatePersonalAssessmentDto } from "./dto/create-personal-assessment.dt
 export class PersonalassessmenttagController {
     constructor(
         private readonly personalassessmenttagService: PersonalassessmenttagService,
+        private readonly alarmService: Alarmservice,
     ) {}
 
     @Post("/personal")
@@ -33,7 +35,7 @@ export class PersonalassessmenttagController {
                 userId,
                 createPersonalAssessmentDto,
             );
-
+        this.alarmService.sendAlarm(userId, "평가지가 제출되었습니다.");
         return {
             statusCode: HttpStatus.CREATED,
             message: "개인 평가지가 제출되었습니다.",
@@ -51,6 +53,7 @@ export class PersonalassessmenttagController {
             personalTagCounterDto,
         );
 
+        this.alarmService.sendAlarm(userId, "개인 태그가 제출되었습니다.");
         return {
             statusCode: HttpStatus.CREATED,
             message: "개인 태그가 제출되었습니다.",
@@ -69,6 +72,7 @@ export class PersonalassessmenttagController {
                 createPersonalAssessmentDto,
             );
 
+        this.alarmService.sendAlarm(userId, "개인 평가지가 제출되었습니다.");
         return {
             statusCode: HttpStatus.OK,
             message: "개인 평가지가 수정되었습니다.",
@@ -86,6 +90,7 @@ export class PersonalassessmenttagController {
             personalTagCounterDto,
         );
 
+        this.alarmService.sendAlarm(userId, "개인 태그가 제출되었습니다.");
         return {
             statusCode: HttpStatus.OK,
             message: "개인 태그가 수정되었습니다.",
