@@ -28,7 +28,7 @@ export class PlaceController {
     getData() {
         try {
             return this.placeService.crawlSpaces(
-                "https://shareit-resource.shareit.kr/spaces?keyword&realTime=true&approve=true&region=-1&eventTypes=31&spaceThemeSeq&minPrice=0&maxPrice=-1&minPeople=0&minArea&maxArea&discount=0&page=1&sort=popularity&work=false&life=true&size=30&type=search",
+                "https://shareit-resource.shareit.kr/spaces?keyword&realTime=true&approve=true&region=-1&eventTypes=31&spaceThemeSeq&minPrice=0&maxPrice=-1&minPeople=0&minArea&maxArea&discount=0&sort=popularity&work=false&life=true&type=search",
             );
         } catch (error) {
             return { error: error.message };

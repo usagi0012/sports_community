@@ -15,7 +15,7 @@ export class PlaceService {
     async crawlSpaces(url: string) {
         try {
             const response = await axios
-                .get(url, {
+                .get(`${url}&size=2&page=2`, {
                     headers: {
                         "Content-Type": "application/json;charset=UTF-8",
                     },
