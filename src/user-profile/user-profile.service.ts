@@ -65,10 +65,10 @@ export class UserProfileService {
 
         //이미지 업로드할경우
         if (file) {
-            // const uploadedFilePath = await this.awsService.fileupload(file);
+            const uploadedFilePath = await this.awsService.fileupload(file);
             const newProfile = this.userProfileRepository.create({
                 ...createUserProfileDto,
-                // image: uploadedFilePath,
+                image: uploadedFilePath,
                 user: user,
             });
             const savedProfile =
@@ -152,12 +152,12 @@ export class UserProfileService {
         }
         //이미지 업로드할경우
         if (file) {
-            // const uploadedFilePath = await this.awsService.fileupload(file);
+            const uploadedFilePath = await this.awsService.fileupload(file);
             await this.userProfileRepository.update(
                 { userId: user.id }, // 첫 번째 매개변수: 업데이트할 엔터티를 식별하는 조건
                 {
                     ...updateUserProfileDto,
-                    // image: uploadedFilePath,
+                    image: uploadedFilePath,
                 },
             );
 
