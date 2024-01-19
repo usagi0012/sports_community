@@ -1,5 +1,6 @@
 import {
     BadRequestException,
+    ForbiddenException,
     Injectable,
     NotFoundException,
 } from "@nestjs/common";
@@ -9,6 +10,9 @@ import { Repository } from "typeorm";
 import { ApplicationDto } from "./dto/application.dto";
 import { Club } from "src/entity/club.entity";
 import { User } from "src/entity/user.entity";
+import { PermissionApplicationDto } from "./dto/permission-application.dto";
+import { ApplicationReviewDto } from "./dto/applicationReview.dto";
+import { ClubApplicationStatus } from "../entity/club-application.entity";
 
 @Injectable()
 export class ApplyingClubService {
@@ -21,7 +25,7 @@ export class ApplyingClubService {
         private readonly UserRepository: Repository<User>,
     ) {}
 
-    // 동호회 지원서 생성
+    // 동호회 신청서 생성
     async postApplyingClub(applicationDto: ApplicationDto, userId: number) {
         const { message, clubId } = applicationDto;
 
@@ -63,21 +67,32 @@ export class ApplyingClubService {
         return application;
     }
 
-    // 동호회 지원서 조회
+    // 내 신청서 조회
     async getApplyingClub(userId) {
         const application = await this.findApplicationByUserId(userId);
 
         return application;
     }
 
-    // 동호회 지원서 수정
-    async updateApplyingClub(applicationDto: ApplicationDto, userId) {
-        const { message, clubId } = applicationDto;
-        const application = await this.findApplicationByUserId(userId);
+    // 내 신청서 수정
+    async updateApplyingClub(
+        permissionApplicationDto: PermissionApplicationDto,
+        userId: number,
+        clubId: number,
+    ) {
+        const { message } = permissionApplicationDto;
 
+        const isApplication = await this.clubApplicationRepository.findOne({
+            where: { userId, clubId },
+        });
+
+        if (isApplication) {
+            throw new NotFoundException(
+                "해당 동호회에 대한 내 신청서가 존재하지 않습니다.",
+            );
+        }
+        const application = await this.findApplicationByUserId(userId);
         const applicationId = application.id;
-        // 여기에 userId 넣어도 되나? 테이블의 primary key 안 넣어도 되나?
-        // userId가 unique값이라 넣어보긴 함. 테스트해보기
         const updatedApplication = await this.clubApplicationRepository.update(
             applicationId,
             { message },
@@ -86,7 +101,7 @@ export class ApplyingClubService {
         return updatedApplication;
     }
 
-    // 동호회 지원서 삭제
+    // 내 신청서 삭제
     async deleteApplyingClub(userId) {
         await this.findApplicationByUserId(userId);
 
@@ -108,5 +123,63 @@ export class ApplyingClubService {
         }
 
         return application;
+    }
+
+    async getApplicationOfMyClub(clubId: number, userId: number) {
+        // 동호회 장이 아니면 열람 불가
+        const club = await this.ClubRepository.findOne({
+            where: { id: clubId },
+        });
+        if (club.masterId !== userId) {
+            throw new ForbiddenException("동아리 장만 조회할 수 있습니다.");
+        }
+        // const application = await this.clubApplicationRepository.find({where:{clubId}});
+        // if(!application) {
+        //     throw new NotFoundException("해당 동호회에 신청된 내역이 없습니다.")
+        // }
+
+        return club;
+    }
+
+    async reviewApplication(
+        applicationReviewDto: ApplicationReviewDto,
+        userId: number,
+        clubId: number,
+        applicationId: number,
+    ) {
+        const { permission } = applicationReviewDto;
+
+        const club = await this.ClubRepository.findOne({
+            where: { id: clubId },
+        });
+
+        if (club.masterId !== userId) {
+            throw new ForbiddenException(
+                "동아리 장만 승인/거절할 수 있습니다.",
+            );
+        }
+
+        if (!permission) {
+            // 승인을 거부했을 때의 로직.
+            // 동호회 신청서 삭제(해야하나? status를 만든 의미가 없는 것 같은데 그럼) - 한 번 물어보기.
+            // 동호회 신청 거절 알림
+        }
+
+        // 요청 승인시 신청서의 상태 -> "요청 승인"
+        const updatedApplication = await this.clubApplicationRepository.update(
+            applicationId,
+            { status: ClubApplicationStatus.APPLICATION_COMPLETED }, // 이 부분 수정 필요
+        );
+
+        const application = await this.clubApplicationRepository.findOne({
+            where: { id: applicationId },
+        });
+        const memberId = application.userId;
+
+        // 요청 승인시 user의 clubId를 승인한 club의 아이디로 변경
+        const joinedUser = await this.UserRepository.update(userId, { clubId });
+
+        // 요청 승인시 지원서를 작성한 user에게 알림 보내기
+        return joinedUser;
     }
 }
