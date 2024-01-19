@@ -53,7 +53,7 @@ export class ClubService {
                 ...createClubDto,
                 users: [user],
                 masterId: user.id,
-                // image: await this.awsService.fileupload(file),
+                image: await this.awsService.fileupload(file),
             });
             return club;
         }
