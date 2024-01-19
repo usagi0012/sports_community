@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 
 @Injectable()
 export class AwsService {
+    // ...
     // constructor(private readonly configService: ConfigService) {}
     // async fileupload(file: Express.Multer.File) {
     //     const s3Client = new S3Client({
