@@ -14,11 +14,6 @@ export class UpdateUserProfileDto {
     description?: string;
 
     @IsOptional()
-    @IsString()
-    @ApiProperty({ description: "이미지" })
-    image: string;
-
-    @IsOptional()
     @IsNumber()
     @ApiProperty({ description: "키" })
     height: number;

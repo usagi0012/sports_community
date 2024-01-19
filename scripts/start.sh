@@ -12,6 +12,6 @@ pm2 -v
 npm -v
 
 pm2 delete $APP_NAME
-pm2 start npm --name $APP_NAME -- start
+pm2 start npm --name $APP_NAME -- start:prod
 
 echo "$TIME_NOW > Deploy has been completed"

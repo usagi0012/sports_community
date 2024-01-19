@@ -10,9 +10,11 @@ import {
 } from "@nestjs/common";
 import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { UserId } from "../auth/decorators/userId.decorator";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ClubMatchService } from "./club_match.service";
 import { CheckClubMatchDTO, ClubMatchDTO } from "./dto/club_match.dto";
+
+@ApiTags("동아리 대결 신청")
 @Controller("clubmatch")
 @ApiBearerAuth("accessToken")
 @UseGuards(accessTokenGuard)
