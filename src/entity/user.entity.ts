@@ -12,6 +12,8 @@ import {
     ManyToOne,
     JoinTable,
 } from "typeorm";
+import { Userscore } from "./userscore.entity";
+import { Personaltagcounter } from "./personaltagcounter.entity";
 import { Club } from "./club.entity";
 import { UserCalender } from "./user-calender.entity";
 import { UserProfile } from "./user-profile.entity";
@@ -19,6 +21,7 @@ import { Recruit } from "./recruit.entity";
 import { Match } from "./match.entity";
 import { ClubApplication } from "./club-application.entity";
 import { UserPosition } from "./user-position.entity";
+
 
 @Entity({
     name: "users",
@@ -48,6 +51,17 @@ export class User {
     @UpdateDateColumn()
     updatedAt: Date;
 
+
+    @OneToOne(() => Userscore, (userscroe) => userscroe.user, { cascade: true })
+    userscore: Userscore;
+
+    @OneToMany(
+        () => Personaltagcounter,
+        (personaltagcounter) => personaltagcounter.user,
+        { cascade: true },
+    )
+    personaltagcounter: Personaltagcounter[];
+
     @ManyToOne(() => Club, (club) => club.users, { onDelete: "SET NULL" })
     @JoinTable()
     club: Club;
@@ -68,4 +82,5 @@ export class User {
     recruits: Recruit[];
     @OneToMany(() => Match, (match) => match.user)
     matches: Match[];
+
 }
