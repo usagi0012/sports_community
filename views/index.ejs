@@ -114,7 +114,16 @@
                 roomName: null,
             },
         };
-        const socket = io("http://localhost:5000");
+        const authorized = localStorage.getItem("authorized");
+        const data = JSON.parse(authorized);
+        const accessToken = data.accessToken.value;
+        console.log(accessToken);
+        const socket = io("http://localhost:5000", {
+            query: {
+                auth: accessToken,
+            },
+        });
+
         socket.on("connect", function () {
             console.log("Connected");
             //연결 완료 후 로컬스토리지를 확인하여 닉네임 세팅
@@ -129,16 +138,31 @@
             socket.emit("getChatRoomList", null);
             localStorage.setItem("socketId", socket.id);
         });
+
         socket.on("getMessage", function ({ id, nickname, message }) {
             let html = "";
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const month = now.toLocaleString("en-US", { month: "long" });
+            const day = now.getDate();
+
+            const formattedTime = `${hours % 12 || 12}:${
+                minutes < 10 ? "0" : ""
+            }${minutes} ${hours >= 12 ? "PM" : "AM"}`;
+
+            const timeDate = `
+    <span class="time_date">
+        ${nickname}<br>
+        | ${formattedTime} | ${month} ${day}
+    </span>
+`;
+
             if (myInfo.id == id) {
                 html += '<div class="outgoing_msg">';
                 html += '<div class="sent_msg">';
                 html += "<p>" + message + "</p>";
-                html +=
-                    '<span class="time_date"> ' +
-                    nickname +
-                    "    | 11:01 AM    |    June 9</span>";
+                html += `${timeDate}`;
                 html += "</div>";
                 html += "</div>";
             } else {
@@ -157,6 +181,7 @@
             $(".chat").append(html);
             $(".chat").scrollTop($(".chat")[0].scrollHeight);
         });
+
         socket.on("getChatRoomList", function (response) {
             let html = "";
             for (const { roomId, roomName } of Object.values(response)) {

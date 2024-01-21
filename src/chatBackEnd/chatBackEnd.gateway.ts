@@ -34,6 +34,12 @@ export class ChatBackEndGateway
         client.leave(client.id);
         client.data.roomId = `room:lobby`;
         client.join("room:lobby");
+
+        const token = client.handshake.query;
+        console.log("토큰받아옴", token);
+        console.log(typeof token);
+        const accessToken = token.auth;
+        console.log(accessToken);
     }
 
     //소켓 연결 해제시 유저목록에서 제거
