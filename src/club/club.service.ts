@@ -5,7 +5,7 @@ import {
     UnauthorizedException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Club } from "src/entity/club.entity";
+import { Club } from "../entity/club.entity";
 import { UserService } from "../user/user.service";
 import { Repository } from "typeorm";
 import { CreateClubDto } from "./dto/createClub.dto";

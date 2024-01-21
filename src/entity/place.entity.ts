@@ -14,9 +14,6 @@ export class Place {
     address: string;
 
     @Column()
-    host: string;
-
-    @Column()
     image: string;
 
     @Column()
