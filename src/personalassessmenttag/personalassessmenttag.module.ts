@@ -8,6 +8,8 @@ import { Userscore } from "src/entity/userscore.entity";
 import { Recruit } from "src/entity/recruit.entity";
 import { Match } from "src/entity/match.entity";
 import { User } from "src/entity/user.entity";
+import { AlarmserviceModule } from "src/alarm/alarm.module";
+
 
 @Module({
     imports: [
@@ -19,6 +21,7 @@ import { User } from "src/entity/user.entity";
             User,
         ]),
         AuthModule,
+        AlarmserviceModule,
     ],
     controllers: [PersonalassessmenttagController],
     providers: [PersonalassessmenttagService],

@@ -12,8 +12,9 @@ import { MatchService } from "./match.service";
 import { MatchDTO } from "./dto/match.dto";
 import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { UserId } from "../auth/decorators/userId.decorator";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("개인 매치 신청")
 @Controller("match")
 @ApiBearerAuth("accessToken")
 @UseGuards(accessTokenGuard)

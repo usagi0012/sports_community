@@ -13,9 +13,10 @@ import {
 import { UserCalenderService } from "./user-calender.service";
 import { CreateUserCalenderDto } from "./dto/create-user-calender.dto";
 import { UpdateUserCalenderDto } from "./dto/update-user-calender.dto";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 
+@ApiTags("캘린더")
 @ApiBearerAuth()
 @UseGuards(AuthGuard("accessToken"))
 @Controller("user/me/calender")
