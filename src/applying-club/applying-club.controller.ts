@@ -110,6 +110,7 @@ export class ApplyingClubController {
         }
     }
 
+    // git commit test
     // 내 신청서 조회
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
