@@ -13,7 +13,7 @@ import {
 import { Club } from "./club.entity";
 import { User } from "./user.entity";
 
-enum ClubApplicationStatus {
+export enum ClubApplicationStatus {
     BEFORE_APPLICATION = "신청 접수중",
     IN_PROGRESS = "신청 검토중",
     APPLICATION_COMPLETED = "신청 완료",

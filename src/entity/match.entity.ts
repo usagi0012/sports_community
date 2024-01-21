@@ -4,9 +4,12 @@ import {
     Column,
     ManyToOne,
     JoinColumn,
+    OneToMany,
 } from "typeorm";
 import { User } from "./user.entity";
 import { Recruit } from "./recruit.entity";
+import { Userscore } from "./userscore.entity";
+import { Personaltagcounter } from "./personaltagcounter.entity";
 
 export enum MatchStatus {
     APPLICATION_COMPLETE = "신청완료",
