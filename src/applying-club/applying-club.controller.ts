@@ -81,19 +81,19 @@ export class ApplyingClubController {
     // 동호회 신청 수락/거절
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
-    @Put(":clubId/:applicationId")
+    @Put(":clubId/:memberId")
     async reviewApplication(
         @Body() applicationReviewDto: ApplicationReviewDto,
         @UserId() userId: number,
         @Param("clubId") clubId: number,
-        @Param("applicationId") applicationId: number,
+        @Param("memberId") memberId: number,
     ) {
         try {
             const permission = await this.applyingClubService.reviewApplication(
                 applicationReviewDto,
                 userId,
                 clubId,
-                applicationId,
+                memberId,
             );
 
             return {

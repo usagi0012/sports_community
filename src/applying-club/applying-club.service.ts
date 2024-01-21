@@ -13,6 +13,7 @@ import { User } from "src/entity/user.entity";
 import { PermissionApplicationDto } from "./dto/permission-application.dto";
 import { ApplicationReviewDto } from "./dto/applicationReview.dto";
 import { ClubApplicationStatus } from "../entity/club-application.entity";
+import { Alarmservice } from "../alarm/alarm.service";
 
 @Injectable()
 export class ApplyingClubService {
@@ -23,6 +24,7 @@ export class ApplyingClubService {
         private readonly ClubRepository: Repository<Club>,
         @InjectRepository(User)
         private readonly UserRepository: Repository<User>,
+        private readonly alramService: Alarmservice,
     ) {}
 
     // 동호회 신청서 생성
@@ -131,23 +133,24 @@ export class ApplyingClubService {
             where: { id: clubId },
         });
         if (club.masterId !== userId) {
-            throw new ForbiddenException("동아리 장만 조회할 수 있습니다.");
+            throw new ForbiddenException("동호회 장만 조회할 수 있습니다.");
         }
-        // const application = await this.clubApplicationRepository.find({where:{clubId}});
-        // if(!application) {
-        //     throw new NotFoundException("해당 동호회에 신청된 내역이 없습니다.")
-        // }
 
-        return club;
+        const application = await this.clubApplicationRepository.find({
+            where: { clubId },
+        });
+
+        return application;
     }
 
     async reviewApplication(
         applicationReviewDto: ApplicationReviewDto,
         userId: number,
         clubId: number,
-        applicationId: number,
+        memberId: number,
     ) {
         const { permission } = applicationReviewDto;
+        console.log("permission", typeof permission);
 
         const club = await this.ClubRepository.findOne({
             where: { id: clubId },
@@ -163,7 +166,15 @@ export class ApplyingClubService {
             // 승인을 거부했을 때의 로직.
             // 동호회 신청서 삭제(해야하나? status를 만든 의미가 없는 것 같은데 그럼) - 한 번 물어보기.
             // 동호회 신청 거절 알림
+            const message = `${club.name}동호회 가입 신청이 거부되었습니다.`;
+            await this.alramService.sendAlarm(memberId, message);
         }
+
+        // 요청한 신청서 찾기
+        const userApplication = await this.clubApplicationRepository.findOne({
+            where: { userId: memberId, clubId },
+        });
+        const applicationId = userApplication.id;
 
         // 요청 승인시 신청서의 상태 -> "요청 승인"
         const updatedApplication = await this.clubApplicationRepository.update(
@@ -174,12 +185,18 @@ export class ApplyingClubService {
         const application = await this.clubApplicationRepository.findOne({
             where: { id: applicationId },
         });
-        const memberId = application.userId;
 
         // 요청 승인시 user의 clubId를 승인한 club의 아이디로 변경
-        const joinedUser = await this.UserRepository.update(userId, { clubId });
+        const joinedUser = await this.UserRepository.update(memberId, {
+            clubId,
+        });
 
         // 요청 승인시 지원서를 작성한 user에게 알림 보내기
+        // 알림 보내기 로직
+
+        const message = `${club.name}동호회 가입 신청이 승인되었습니다.`;
+        await this.alramService.sendAlarm(memberId, message);
+
         return joinedUser;
     }
 }
