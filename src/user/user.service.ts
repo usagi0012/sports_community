@@ -91,6 +91,7 @@ export class UserService {
     //내 정보 수정
     async updateUser(id: number, changeUserDto: ChangeUserDto) {
         const user = await this.findUserByIdAll(id);
+        const userPassword = (await this.findUserByEmail(user.email)).password;
 
         if (!user) {
             throw new NotFoundException("존재하지 않는 사용자입니다.");
@@ -100,19 +101,17 @@ export class UserService {
         if (changeUserDto.password) {
             const isCurrentPasswordCorrect = await bcrypt.compare(
                 changeUserDto.password,
-                user.password,
+                userPassword,
             );
-            //변경할 비밀번호가 기존 비밀번호와 같은경우
-            const notchangedPassword = await bcrypt.compare(
-                changeUserDto.changePassword,
-                user.password,
-            );
+
             if (!isCurrentPasswordCorrect) {
                 throw new UnauthorizedException(
                     "현재 비밀번호가 일치하지 않습니다.",
                 );
             }
-            if (notchangedPassword) {
+
+            //변경할 비밀번호가 기존 비밀번호와 같은 경우
+            if (changeUserDto.changePassword === changeUserDto.password) {
                 throw new NotFoundException(
                     "변경할 비밀번호는 현재 비밀번호와 다르게 입력해주세요.",
                 );

@@ -33,15 +33,9 @@ export class UserProfileService {
         createUserProfileDto: CreateUserProfileDto,
         file: Express.Multer.File,
     ) {
+        //유저 찾기
         const user = await this.userRepository.findOne({
             where: { id: userId },
-        });
-        console.log(user);
-        //userId값 가져오기
-        const existingNickname = await this.userProfileRepository.findOne({
-            where: {
-                nickname: createUserProfileDto.nickname,
-            },
         });
 
         // 사용자가 이미 프로필을 작성했는지 확인
@@ -52,25 +46,40 @@ export class UserProfileService {
         });
 
         if (existingProfile) {
-            // 프로필이 있는경우 수정하라는 에러 뱉기
+            // 프로필이 있는 경우 수정하라는 에러 뱉기
             throw new BadRequestException(
                 "프로필을 이미 작성하셨습니다. 수정해주세요",
             );
         }
 
-        //중복되는 닉네임 불가능
-        if (existingNickname) {
-            throw new BadRequestException("이미 존재하는 닉네임입니다");
+        // 닉네임이 기재되었을 때 중복 여부 확인
+        if (createUserProfileDto.nickname) {
+            const existingNickname = await this.userProfileRepository.findOne({
+                where: {
+                    nickname: createUserProfileDto.nickname,
+                },
+            });
+
+            if (existingNickname) {
+                throw new BadRequestException("이미 존재하는 닉네임입니다");
+            }
         }
 
-        //이미지 업로드할경우
+        // 이미지 업로드할 경우
         if (file) {
             const uploadedFilePath = await this.awsService.fileupload(file);
+
+            // 닉네임이 기재되지 않았을 때
+            if (!createUserProfileDto.nickname) {
+                createUserProfileDto.nickname = user.name;
+            }
+
             const newProfile = this.userProfileRepository.create({
                 ...createUserProfileDto,
                 image: uploadedFilePath,
                 user: user,
             });
+
             const savedProfile =
                 await this.userProfileRepository.save(newProfile);
 
@@ -81,11 +90,18 @@ export class UserProfileService {
                 data: { savedProfile },
             };
         }
-        // 새로운 프로필 생성 및 저장
+
+        // 이미지 업로드가 없을 경우
+        // 닉네임이 기재되지 않았을 때
+        if (!createUserProfileDto.nickname) {
+            createUserProfileDto.nickname = user.name;
+        }
+
         const newProfile = this.userProfileRepository.create({
             ...createUserProfileDto,
             user: { id: user.id },
         });
+
         const savedProfile = await this.userProfileRepository.save(newProfile);
         delete savedProfile.user;
 
@@ -96,6 +112,7 @@ export class UserProfileService {
             data: { savedProfile },
         };
     }
+
     //id를 이용해서 프로필 찾기
     async findOne(userId) {
         const userProfile = await this.userProfileRepository.findOne({
@@ -125,13 +142,21 @@ export class UserProfileService {
         if (userId !== user.id) {
             throw new NotAcceptableException("권한이 없습니다.");
         }
+
         //닉네임이 존재하면 중복 불가능
-        const existingNickname = await this.userProfileRepository.findOne({
-            where: {
-                nickname: updateUserProfileDto.nickname,
-            },
-            relations: ["user"],
-        });
+        if (nickname !== undefined && nickname !== null) {
+            const existingNickname = await this.userProfileRepository.findOne({
+                where: {
+                    nickname: updateUserProfileDto.nickname,
+                },
+                relations: ["user"],
+            });
+            if (updateUserProfileDto.nickname) {
+                if (existingNickname && existingNickname.user.id !== userId) {
+                    throw new BadRequestException("이미 존재하는 닉네임입니다");
+                }
+            }
+        }
         //프로필이 존재하는지 확인
         const existingProfile = await this.userProfileRepository.findOne({
             where: { userId },
@@ -139,11 +164,7 @@ export class UserProfileService {
         if (!existingProfile) {
             throw new NotFoundException("프로필을 먼저 작성해주세요");
         }
-        if (updateUserProfileDto.nickname) {
-            if (existingNickname && existingNickname.user.id !== userId) {
-                throw new BadRequestException("이미 존재하는 닉네임입니다");
-            }
-        }
+
         //성별은 바꿀수 없음
         if (gender) {
             if (existingProfile.gender !== gender) {

@@ -16,13 +16,14 @@ import { UserProfileService } from "./user-profile.service";
 import { CreateUserProfileDto } from "./dto/create-user-profile.dto";
 import { UpdateUserProfileDto } from "./dto/update-user-profile.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { AuthGuard } from "@nestjs/passport";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { Alarmservice } from "src/alarm/alarm.service";
+import { accessTokenGuard } from "src/auth/guard/access-token.guard";
+import { UserId } from "src/auth/decorators/userId.decorator";
 
 @ApiTags("개인 프로필")
 @ApiBearerAuth()
-@UseGuards(AuthGuard("accessToken"))
+@UseGuards(accessTokenGuard)
 @Controller("/user")
 export class UserProfileController {
     constructor(
@@ -34,11 +35,10 @@ export class UserProfileController {
     @Post("/me/profile")
     @UseInterceptors(FileInterceptor("file"))
     create(
-        @Req() req: any,
+        @UserId() userId: number,
         @Body() createUserProfileDto: CreateUserProfileDto,
         @UploadedFile() file: Express.Multer.File,
     ) {
-        const userId = req.user.userId;
         return this.userProfileService.create(
             +userId,
             createUserProfileDto,
@@ -48,25 +48,25 @@ export class UserProfileController {
 
     //내 프로필 조회하기
     @Get("/me/profile")
-    findMyProfile(@Req() req: any) {
-        const userId = req.user.userId;
+    findMyProfile(@UserId() userId: number) {
         return this.userProfileService.findOne(+userId);
     }
+
     //특정 프로필 조회하기
     @Get("/:userId/profile")
     findOtherProfileById(@Param("userId") userId: string) {
         console.log(userId);
         return this.userProfileService.findOne(+userId);
     }
+
     //프로필 수정하기
     @Put("/me/profile")
     @UseInterceptors(FileInterceptor("file"))
     update(
-        @Req() req: any,
+        @UserId() userId: number,
         @Body() updateUserProfileDto: UpdateUserProfileDto,
         @UploadedFile() file: Express.Multer.File,
     ) {
-        const userId = req.user.userId;
         return this.userProfileService.update(
             +userId,
             updateUserProfileDto,
