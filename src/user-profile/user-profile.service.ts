@@ -69,7 +69,7 @@ export class UserProfileService {
         if (file) {
             const uploadedFilePath = await this.awsService.fileupload(file);
 
-            // 닉네임이 기재되지 않았을 때
+            // 닉네임이 기재되지 않았을 때 디폴트값 이름
             if (!createUserProfileDto.nickname) {
                 createUserProfileDto.nickname = user.name;
             }
@@ -92,7 +92,7 @@ export class UserProfileService {
         }
 
         // 이미지 업로드가 없을 경우
-        // 닉네임이 기재되지 않았을 때
+        // 닉네임이 기재되지 않았을 때 디폴트값 이름
         if (!createUserProfileDto.nickname) {
             createUserProfileDto.nickname = user.name;
         }
