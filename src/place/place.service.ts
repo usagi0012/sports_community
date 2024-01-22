@@ -19,7 +19,7 @@ export class PlaceService {
             let places = new Array(10);
             for (let page = 1; page < 11; page++) {
                 const response = await axios
-                    .get(`${url}&size=2&page=${page}`, {
+                    .get(`${url}&size=5&page=${page}`, {
                         headers: {
                             "Content-Type": "application/json;charset=UTF-8",
                         },
@@ -49,10 +49,37 @@ export class PlaceService {
     async saveSpaces(places) {
         const existPlaces = await this.placeRepository.find({
             select: ["name"],
-        });
-        console.log(existPlaces);
-        await places.forEach((e) => {
-            e.forEach((ele) => {});
-        });
+        })
+        const existPlacesName = existPlaces.map(e =>{
+            return e.name;
+        })
+        console.log(existPlacesName)
+        for(let i=0; i<=places.length; i++){
+            for(let j=0; j<5; j++){
+                console.log(places[i][j])
+                // if(existPlacesName.filter(e=>{
+                //     return e!==places[i][j].name
+                // }).length <1 ){
+                //     console.log(places[i][j])
+                //     // await this.placeRepository.save({
+                //     //     name: places[i][j].name,
+                //     //     address: places[i][j].address,
+                //     //     image: places[i][j].image,
+                //     //     latitude: places[i][j].latitude,
+                //     //     longitude: places[i][j].longitude,
+                //     // })
+                // }
+            }
+        }
+        return existPlacesName;
+        console.log(existPlacesName);
+        // await places.forEach((e) => {
+        //     e = e.filter((ele) => {
+        //        return ele.name !== existPlaces.name 
+        //         console.log(ele.name)
+        //         if( arr.filter((e) => { return e.id == user.id }).length < 1 ) arr.push(user);
+        //         if(ele.name)
+        //     });
+        // });
     }
 }
