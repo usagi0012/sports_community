@@ -88,7 +88,7 @@ export class ApplyingClubService {
             where: { userId, clubId },
         });
 
-        if (isApplication) {
+        if (!isApplication) {
             throw new NotFoundException(
                 "해당 동호회에 대한 내 신청서가 존재하지 않습니다.",
             );
@@ -179,7 +179,7 @@ export class ApplyingClubService {
         // 요청 승인시 신청서의 상태 -> "요청 승인"
         const updatedApplication = await this.clubApplicationRepository.update(
             applicationId,
-            { status: ClubApplicationStatus.APPLICATION_COMPLETED }, // 이 부분 수정 필요
+            { status: ClubApplicationStatus.APPROVED }, // 이 부분 수정 필요
         );
 
         const application = await this.clubApplicationRepository.findOne({
