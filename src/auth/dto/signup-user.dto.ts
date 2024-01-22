@@ -4,6 +4,6 @@ import { CreateUserDto } from "../../user/dto/create-user.dto";
 
 export class SignupUserDto extends CreateUserDto {
     @IsString()
-    @ApiProperty({ description: "비밀번호 확인" })
+    @ApiProperty({ description: "비밀번호 확인", example: "1234" })
     checkPassword: string;
 }
