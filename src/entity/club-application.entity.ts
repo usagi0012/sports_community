@@ -17,6 +17,8 @@ export enum ClubApplicationStatus {
     BEFORE_APPLICATION = "신청 접수중",
     IN_PROGRESS = "신청 검토중",
     APPLICATION_COMPLETED = "신청 완료",
+    APPROVED = "요청 승인",
+    REJECTED = "요청 거절",
 }
 @Entity({
     name: "clubApplications",
