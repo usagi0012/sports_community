@@ -1,3 +1,4 @@
+import { Match } from "./../entity/match.entity";
 import {
     Controller,
     Body,
@@ -6,6 +7,7 @@ import {
     Post,
     UseGuards,
     Delete,
+    Put,
 } from "@nestjs/common";
 
 import { MatchService } from "./match.service";
@@ -22,12 +24,19 @@ export class MatchController {
     constructor(private readonly matchService: MatchService) {}
 
     //나의 매치 조회
-    @Get("my")
+    @Get("me")
     async getMyMatch(@UserId() userId: number) {
-        return await this.matchService.getMyMatch(userId);
+        const matches = await this.matchService.getMyMatch(userId);
+
+        for (const match of matches) {
+            await match.updateProgress();
+        }
+
+        return matches;
     }
+
     //나의매치 상세조회
-    @Get("my/:matchid")
+    @Get("me/:matchid")
     async findMyMatch(@Param("matchid") id: number, @UserId() userId: number) {
         return await this.matchService.findMyMatch(id, userId);
     }
@@ -42,10 +51,34 @@ export class MatchController {
         return await this.matchService.postMatch(id, userId, matchDTO);
     }
 
+    //매치 컴펌하기
+    @Put("my/:matchid/confirm")
+    async confirmMatch(@Param("matchid") id: number, @UserId() userId: number) {
+        return await this.matchService.confirmMatch(id, userId);
+    }
+
     // 신청 취소하기
 
-    @Delete("cancel/:matchid")
-    async deleteMatch(@Param("matchid") id: number, @UserId() userId: number) {
-        await this.matchService.deleteMatch(id, userId);
+    @Put("my/:matchid/cancel")
+    async cancelMatch(@Param("matchid") id: number, @UserId() userId: number) {
+        await this.matchService.cancelMatch(id, userId);
+    }
+
+    //본인 매치에서 경기한 유저아이디 조회
+    @Get("my/:matchid/user")
+    async findGameUser(@UserId() userId: number, @Param("matchid") id: number) {
+        return await this.matchService.findGameUser(userId, id);
+    }
+
+    //경기 평가완료로 변경
+    @Put("my/:matchid/evaluate")
+    async doneGame(@UserId() userId: number, @Param("matchid") id: number) {
+        return await this.matchService.doneGame(userId, id);
+    }
+
+    //평가 후 삭제
+    @Delete("my/:matchid")
+    async deleteGame(@UserId() userId: number, @Param("matchid") id: number) {
+        return await this.matchService.deleteGame(userId, id);
     }
 }

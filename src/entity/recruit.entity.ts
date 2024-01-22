@@ -7,6 +7,8 @@ import {
     JoinColumn,
     ManyToOne,
     OneToMany,
+    BeforeInsert,
+    BeforeUpdate,
 } from "typeorm";
 
 export enum Region {
@@ -25,13 +27,20 @@ export enum Status {
     Complete = "모집완료",
 }
 
+export enum Progress {
+    BEFORE = "경기전",
+    DURING = "경기중",
+    PLEASE_EVALUATE = "평가해주세요",
+    EVALUATION_COMPLETED = "평가 완료",
+}
+
 @Entity({ name: "Recruit" })
 export class Recruit {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column("int")
-    hostid: number;
+    hostId: number;
 
     @Column("varchar")
     title: string;
@@ -48,8 +57,11 @@ export class Recruit {
     @Column("varchar")
     content: string;
 
-    @Column({ type: "date" })
+    @Column({ type: "datetime" })
     gamedate: Date;
+
+    @Column({ type: "datetime" })
+    endtime: Date;
 
     @Column("int")
     runtime: number;
@@ -61,7 +73,7 @@ export class Recruit {
     rule: Rule;
 
     @Column()
-    group: boolean;
+    basictotalmember: number;
 
     @Column("int")
     totalmember: number;
@@ -73,10 +85,28 @@ export class Recruit {
     })
     status: Status;
 
-    @ManyToOne(() => User, (user) => user.recruits)
-    @JoinColumn({ name: "userId" })
-    user: User;
+    @Column({
+        type: "enum",
+        enum: Progress,
+        default: Progress.BEFORE,
+    })
+    progress: Progress;
 
-    @OneToMany(() => Match, (match) => match.recruit)
-    matches: Match[];
+    @ManyToOne(() => User, (user) => user.recruits)
+    @JoinColumn({ name: "guestId" })
+    guest: User;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    updateProgress() {
+        const now = new Date();
+
+        if (this.gamedate < now) {
+            this.progress = Progress.DURING;
+        }
+
+        if (this.endtime < now) {
+            this.progress = Progress.PLEASE_EVALUATE;
+        }
+    }
 }
