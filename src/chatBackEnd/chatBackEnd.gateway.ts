@@ -35,19 +35,24 @@ export class ChatBackEndGateway
 
     //소켓 연결시 유저목록에 추가
     public handleConnection(client: Socket): void {
-        console.log(this.server);
-        console.log("connected", client.id);
-        client.leave(client.id);
-        client.data.roomId = `room:lobby`;
-        client.join("room:lobby");
+        try {
+            console.log(this.server);
+            console.log("connected", client.id);
+            client.leave(client.id);
+            client.data.roomId = `room:lobby`;
+            client.join("room:lobby");
 
-        const token = client.handshake.query;
-        console.log("토큰받아옴", token);
-        console.log(typeof token);
-        const accessToken = token.auth;
-        console.log(accessToken);
-        console.log(typeof accessToken);
-        this.handleAuthentication(client, accessToken);
+            const token = client.handshake.query;
+            console.log("토큰받아옴", token);
+            console.log(typeof token);
+            const accessToken = token.auth;
+            console.log(accessToken);
+            console.log(typeof accessToken);
+            this.handleAuthentication(client, accessToken);
+        } catch (error) {
+            console.error(error.message);
+            throw new Error("소켓 연결에 문제가 생겼습니다.");
+        }
     }
 
     //소켓 연결 해제시 유저목록에서 제거
@@ -88,6 +93,7 @@ export class ChatBackEndGateway
         });
 
         const user = payload;
+        console.log({ payload });
         // 인증된 유저 정보를 함수를 만들어 chatRoomService로 보내서
         // ChatRoomService에서 DB에 저장하게 만들자.
         return true;
