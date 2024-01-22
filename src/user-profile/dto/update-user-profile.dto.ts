@@ -15,11 +15,11 @@ export class UpdateUserProfileDto {
 
     @IsOptional()
     @IsNumber()
-    @ApiProperty({ description: "키", example: "수정된 키" })
+    @ApiProperty({ description: "키", example: "185" })
     height: number;
 
     @IsOptional()
     @IsEnum(Gender)
-    @ApiProperty({ description: "성별" })
-    gender: Gender;
+    @ApiProperty({ description: "성별", example: "male" })
+    gender?: Gender;
 }
