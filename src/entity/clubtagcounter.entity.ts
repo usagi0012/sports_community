@@ -3,10 +3,13 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
+import { ClubMatch } from "./club_match.entity";
+import { Club } from "./club.entity";
 
 @Entity({ name: "clubtagcounter" })
 export class Clubtagcounter {
@@ -127,4 +130,7 @@ export class Clubtagcounter {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @ManyToOne(() => Club, (club) => club.clubtagcounter)
+    club: Club;
 }

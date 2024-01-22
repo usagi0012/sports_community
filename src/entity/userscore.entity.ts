@@ -4,16 +4,18 @@ import {
     CreateDateColumn,
     Entity,
     JoinColumn,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { User } from "./user.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import {
     MAX_SCORE,
     MIN_SCORE,
 } from "src/personalassessmenttag/constants/score.constant";
+import { Match } from "./match.entity";
+import { UserProfile } from "./user-profile.entity";
 
 @Entity({ name: "userscore" })
 export class Userscore {
@@ -68,7 +70,7 @@ export class Userscore {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @OneToOne(() => User, (user) => user.userscore)
+    @OneToOne(() => UserProfile, (userprofile) => userprofile.userscore)
     @JoinColumn()
-    user: User;
+    userProfile: UserProfile;
 }

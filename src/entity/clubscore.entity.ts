@@ -3,6 +3,9 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
@@ -12,6 +15,8 @@ import {
     MAX_SCORE,
     MIN_SCORE,
 } from "src/personalassessmenttag/constants/score.constant";
+import { UserProfile } from "./user-profile.entity";
+import { Club } from "./club.entity";
 
 @Entity({ name: "clubscore" })
 export class Clubscore {
@@ -65,4 +70,7 @@ export class Clubscore {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @ManyToOne(() => Club, (club) => club.clubscore)
+    club: Club;
 }

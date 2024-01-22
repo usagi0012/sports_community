@@ -6,6 +6,7 @@ import {
     Put,
     Post,
     Param,
+    Get,
 } from "@nestjs/common";
 import { PersonalTagCounterDto } from "./dto/personaltagcounter.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
@@ -24,14 +25,42 @@ export class PersonalassessmenttagController {
         private readonly personalassessmenttagService: PersonalassessmenttagService,
         private readonly alarmService: Alarmservice,
     ) {}
+    @Get("/personal")
+    async findOneUserAssessment(@UserId() userId: number) {
+        const data =
+            await this.personalassessmenttagService.findOneUserAssessment(
+                userId,
+            );
 
-    @Post("/personal")
+        return {
+            statusCode: HttpStatus.OK,
+            message: "개인 점수가 조회되었습니다.",
+            data,
+        };
+    }
+
+    @Get("/personal/tag")
+    async findOneUserTag(@UserId() userId: number) {
+        const data =
+            await this.personalassessmenttagService.findOneUserTag(userId);
+        return {
+            statusCode: HttpStatus.OK,
+            message: "개인 태그가 조회되었습니다.",
+            data,
+        };
+    }
+
+    @Post("/personal/:matchId/:recuritedid")
     async createPersonalAssessment(
+        @Param("matchId") matchId: number,
+        @Param("recuritedId") recuritedId: number,
         @UserId() userId: number,
         @Body() createPersonalAssessmentDto: CreatePersonalAssessmentDto,
     ) {
         const data =
             await this.personalassessmenttagService.createPersonalAssessment(
+                matchId,
+                recuritedId,
                 userId,
                 createPersonalAssessmentDto,
             );
@@ -43,12 +72,16 @@ export class PersonalassessmenttagController {
         };
     }
 
-    @Post("/personal/tag")
+    @Post("/personal/tag/:matchId/:recuritedid")
     async createPersonalTag(
+        @Param("matchId") matchId: number,
+        @Param("recuritedId") recuritedId: number,
         @UserId() userId: number,
         @Body() personalTagCounterDto: PersonalTagCounterDto,
     ) {
         const data = await this.personalassessmenttagService.createPersonalTag(
+            matchId,
+            recuritedId,
             userId,
             personalTagCounterDto,
         );
@@ -61,13 +94,17 @@ export class PersonalassessmenttagController {
         };
     }
 
-    @Put("/personal/:userId")
+    @Put("/personal/:matchId/:recuritedid")
     async updatePesonalAssessment(
-        @Param("userId") userId: number,
+        @Param("matchId") matchId: number,
+        @Param("recuritedId") recuritedId: number,
+        @UserId() userId: number,
         @Body() createPersonalAssessmentDto: CreatePersonalAssessmentDto,
     ) {
         const data =
             await this.personalassessmenttagService.updatePesonalAssessment(
+                recuritedId,
+                matchId,
                 userId,
                 createPersonalAssessmentDto,
             );
@@ -80,12 +117,16 @@ export class PersonalassessmenttagController {
         };
     }
 
-    @Put("/personal/tag/:userId")
+    @Put("/personal/tag/:matchId/:recuritedid")
     async updatePesonalTag(
-        @Param("userId") userId: number,
+        @Param("matchId") matchId: number,
+        @Param("recuritedId") recuritedId: number,
+        @UserId() userId: number,
         @Body() personalTagCounterDto: PersonalTagCounterDto,
     ) {
         const data = await this.personalassessmenttagService.updatePesonalTag(
+            matchId,
+            recuritedId,
             userId,
             personalTagCounterDto,
         );
