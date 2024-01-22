@@ -163,6 +163,24 @@ export class ClubassessmenttagService {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
 
+        if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
+            throw new BadRequestException(
+                "시합 신청완료 상태에서는 평가지를 작성할 수 없습니다.",
+            );
+        }
+
+        if (clubMatch.status === ClubMatchStatus.CANCEL) {
+            throw new BadRequestException(
+                "시합 취소 상태에서는 평가지를 작성할 수 없습니다.",
+            );
+        }
+
+        if (clubMatch.status === ClubMatchStatus.REJECTED) {
+            throw new BadRequestException(
+                "시합 거절 상태에서는 평가지를 작성할 수 없습니다.",
+            );
+        }
+
         const clubMatchHostClub = await this.clubMatchRepository.findOne({
             where: { host_clubId: clubId },
         });
@@ -195,6 +213,12 @@ export class ClubassessmenttagService {
             clubScoreData.abilityAmount / clubScoreData.count;
         clubScoreData.ability =
             clubScoreData.abilityAmount / clubScoreData.count;
+
+        clubScoreData.personality = parseFloat(
+            clubScoreData.personality.toFixed(3),
+        );
+
+        clubScoreData.ability = parseFloat(clubScoreData.ability.toFixed(3));
 
         const clubScore = await this.clubscoreRepository.save(clubScoreData);
 
@@ -249,6 +273,24 @@ export class ClubassessmenttagService {
 
         if (!clubMatch) {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
+        }
+
+        if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
+            throw new BadRequestException(
+                "시합 신청완료 상태에서는 태그를 작성할 수 없습니다.",
+            );
+        }
+
+        if (clubMatch.status === ClubMatchStatus.CANCEL) {
+            throw new BadRequestException(
+                "시합 취소 상태에서는 태그를 작성할 수 없습니다.",
+            );
+        }
+
+        if (clubMatch.status === ClubMatchStatus.REJECTED) {
+            throw new BadRequestException(
+                "시합 거절 상태에서는 태그를 작성할 수 없습니다.",
+            );
         }
 
         const clubMatchHostClub = await this.clubMatchRepository.findOne({
@@ -337,6 +379,24 @@ export class ClubassessmenttagService {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
 
+        if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
+            throw new BadRequestException(
+                "시합 신청완료 상태에서는 평가지를 작성할 수 없습니다.",
+            );
+        }
+
+        if (clubMatch.status === ClubMatchStatus.CANCEL) {
+            throw new BadRequestException(
+                "시합 취소 상태에서는 평가지를 작성할 수 없습니다.",
+            );
+        }
+
+        if (clubMatch.status === ClubMatchStatus.REJECTED) {
+            throw new BadRequestException(
+                "시합 거절 상태에서는 평가지를 작성할 수 없습니다.",
+            );
+        }
+
         const clubMatchHostClub = await this.clubMatchRepository.findOne({
             where: { host_clubId: clubId },
         });
@@ -374,6 +434,14 @@ export class ClubassessmenttagService {
 
         clubAssessmentUserData.ability =
             clubAssessmentUserData.abilityAmount / clubAssessmentUserData.count;
+
+        clubAssessmentUserData.personality = parseFloat(
+            clubAssessmentUserData.personality.toFixed(3),
+        );
+
+        clubAssessmentUserData.ability = parseFloat(
+            clubAssessmentUserData.ability.toFixed(3),
+        );
 
         const clubAssessmentUser = this.clubscoreRepository.save({
             clubId: club.id,
@@ -438,6 +506,24 @@ export class ClubassessmenttagService {
 
         if (!clubMatch) {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
+        }
+
+        if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
+            throw new BadRequestException(
+                "시합 신청완료 상태에서는 태그를 작성할 수 없습니다.",
+            );
+        }
+
+        if (clubMatch.status === ClubMatchStatus.CANCEL) {
+            throw new BadRequestException(
+                "시합 취소 상태에서는 태그를 작성할 수 없습니다.",
+            );
+        }
+
+        if (clubMatch.status === ClubMatchStatus.REJECTED) {
+            throw new BadRequestException(
+                "시합 거절 상태에서는 태그를 작성할 수 없습니다.",
+            );
         }
 
         const clubMatchHostClub = await this.clubMatchRepository.findOne({
