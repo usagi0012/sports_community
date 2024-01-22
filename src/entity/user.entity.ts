@@ -41,6 +41,9 @@ export class User {
     @Column()
     name: string;
 
+    @Column({ nullable: true })
+    verificationToken: string;
+
     @CreateDateColumn()
     createdAt: Date;
 

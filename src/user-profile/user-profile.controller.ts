@@ -22,7 +22,7 @@ import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";
 
 @ApiTags("개인 프로필")
-@ApiBearerAuth()
+@ApiBearerAuth("accessToken")
 @UseGuards(accessTokenGuard)
 @Controller("/user")
 export class UserProfileController {
