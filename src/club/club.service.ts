@@ -85,7 +85,10 @@ export class ClubService {
         club.name = updateClubDto.name;
         club.region = updateClubDto.region;
         club.description = updateClubDto.description;
-        club.image = await this.awsService.fileupload(file);
+
+        if (file) {
+            club.image = await this.awsService.fileupload(file);
+        }
 
         await this.clubRepository.save(club);
 
