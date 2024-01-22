@@ -25,6 +25,34 @@ export class PersonalassessmenttagController {
         private readonly personalassessmenttagService: PersonalassessmenttagService,
         private readonly alarmService: Alarmservice,
     ) {}
+    @Get("/personal/topThree/personality")
+    async findTopThreePersonalityAmountUser(@UserId() userId: number) {
+        const data =
+            await this.personalassessmenttagService.findTopThreePersonalityAmountUser(
+                userId,
+            );
+
+        return {
+            statusCode: HttpStatus.OK,
+            message: "개인 인성 종합 점수 탑3 점수가 조회되었습니다.",
+            data,
+        };
+    }
+
+    @Get("/personal/topThree/ability")
+    async findTopThreeAbilityAmountUser(@UserId() userId: number) {
+        const data =
+            await this.personalassessmenttagService.findTopThreeAbilityAmountUser(
+                userId,
+            );
+
+        return {
+            statusCode: HttpStatus.OK,
+            message: "개인 실력 종합 점수 탑3 점수가 조회되었습니다.",
+            data,
+        };
+    }
+
     @Get("/personal")
     async findOneUserAssessment(@UserId() userId: number) {
         const data =

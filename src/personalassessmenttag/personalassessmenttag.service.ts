@@ -28,6 +28,56 @@ export class PersonalassessmenttagService {
         private readonly userRepository: Repository<User>,
     ) {}
 
+    async findTopThreePersonalityAmountUser(userId: number) {
+        const topThreeUsersPersonalityAmount =
+            await this.userscoreRepository.find({
+                where: { profileId: userId },
+                order: { personalityAmount: "DESC" },
+                take: 3,
+            });
+
+        if (
+            !topThreeUsersPersonalityAmount ||
+            topThreeUsersPersonalityAmount.length === 0
+        ) {
+            throw new NotFoundException(
+                "상위 3명의 인성점수인 유저를 찾을 수 없습니다.",
+            );
+        }
+
+        // 필요한 데이터만 추출하여 반환
+        const result = topThreeUsersPersonalityAmount.map((user) => ({
+            userId: user.profileId,
+            personalityAmount: user.personalityAmount,
+        }));
+
+        return result;
+    }
+
+    async findTopThreeAbilityAmountUser(userId: number) {
+        const topThreeAbilityAmountUser = await this.userscoreRepository.find({
+            where: { profileId: userId },
+            order: { abilityAmount: "DESC" },
+            take: 3,
+        });
+
+        if (
+            !topThreeAbilityAmountUser ||
+            topThreeAbilityAmountUser.length === 0
+        ) {
+            throw new NotFoundException(
+                "상위 3명의 실력점수인 유저를 찾을 수 없습니다.",
+            );
+        }
+
+        const result = topThreeAbilityAmountUser.map((user) => ({
+            userId: user.profileId,
+            abilityAmount: user.abilityAmount,
+        }));
+
+        return result;
+    }
+
     async findOneUserAssessment(userId: number) {
         const user = await this.userRepository.findOne({
             where: { id: userId },
@@ -186,6 +236,13 @@ export class PersonalassessmenttagService {
             userScoreData.personalityAmount / userScoreData.count;
         userScoreData.ability =
             userScoreData.abilityAmount / userScoreData.count;
+
+        userScoreData.personality = parseFloat(
+            userScoreData.personality.toFixed(3),
+        );
+
+        userScoreData.ability = parseFloat(userScoreData.ability.toFixed(3));
+
         const userScore = await this.userscoreRepository.save(userScoreData);
 
         return userScore;
@@ -368,6 +425,14 @@ export class PersonalassessmenttagService {
         personalAssessmentUserData.ability =
             personalAssessmentUserData.abilityAmount /
             personalAssessmentUserData.count;
+
+        personalAssessmentUserData.personality = parseFloat(
+            personalAssessmentUserData.personality.toFixed(3),
+        );
+
+        personalAssessmentUserData.ability = parseFloat(
+            personalAssessmentUserData.ability.toFixed(3),
+        );
 
         const personalAssessmentUser = this.userscoreRepository.save(
             personalAssessmentUserData,
