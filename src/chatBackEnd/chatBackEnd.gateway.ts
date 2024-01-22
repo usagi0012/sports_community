@@ -43,11 +43,7 @@ export class ChatBackEndGateway
             client.join("room:lobby");
 
             const token = client.handshake.query;
-            console.log("토큰받아옴", token);
-            console.log(typeof token);
             const accessToken = token.auth;
-            console.log(accessToken);
-            console.log(typeof accessToken);
             this.handleAuthentication(client, accessToken);
         } catch (error) {
             console.error(error.message);
@@ -92,10 +88,12 @@ export class ChatBackEndGateway
             secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
         });
 
-        const user = payload;
+        const userId = payload.userId;
         console.log({ payload });
         // 인증된 유저 정보를 함수를 만들어 chatRoomService로 보내서
         // ChatRoomService에서 DB에 저장하게 만들자.
+
+        this.ChatRoomService.saveUserData(userId);
         return true;
     }
 

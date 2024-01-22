@@ -90,4 +90,6 @@ export class ChatRoomService {
     deleteChatRoom(roomId: string) {
         delete this.chatRoomList[roomId];
     }
+
+    saveUserData(userId) {}
 }
