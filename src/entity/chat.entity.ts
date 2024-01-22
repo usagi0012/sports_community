@@ -15,7 +15,7 @@ export class Chat {
     @Column({ unique: true, nullable: false })
     title: string;
 
-    @Column({ unique: true, nullable: false })
+    @Column({ nullable: false })
     creator: number;
 
     @CreateDateColumn({ type: "datetime", nullable: false })

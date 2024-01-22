@@ -38,8 +38,11 @@ export class ChatRoomService {
             },
         };
     }
-    createChatRoom(client: Socket, roomName: string, userId: number): void {
+    async createChatRoom(client: Socket, roomName: string) {
         console.log("4");
+
+        const userId = this.verifyToken(client);
+
         const roomId = `room:${uuidv4()}`;
         const nickname: string = client.data.nickname;
         console.log("5");
@@ -60,10 +63,21 @@ export class ChatRoomService {
         client.rooms.clear();
         client.join(roomId);
         console.log("7");
+
+        // 존재하는 채팅방 이름일 경우 에러
+        console.log({ roomName });
+        const chatName = await this.chatRepository.findOne({
+            where: { title: roomName },
+        });
+        console.log({ chatName });
+        if (chatName) {
+            throw new Error("동일한 이름의 채팅방이 존재합니다.");
+        }
+
         // 채팅방 생성시 roomName값 Chat 테이블에 저장
         this.chatRepository.save({
             title: roomName,
-            creator: userId,
+            creator: +userId,
         });
     }
 
@@ -144,10 +158,15 @@ export class ChatRoomService {
     }
 
     saveMessage(client: Socket, message: string, roomId: string) {
+        console.log("******************************");
         const userId = this.verifyToken(client);
+        console.log("******************************");
+
+        console.log({ userId, roomId });
+        // roomId 형태가 아니라 roomId에 title 형태가 들어있어서 roomId 형태로 가져오긴 해야함.
         this.messageRepository.save({
             userId: +userId,
-            chatId: +roomId,
+            roomTitle: roomId,
             content: message,
         });
     }

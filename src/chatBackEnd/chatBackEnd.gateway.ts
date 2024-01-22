@@ -44,7 +44,6 @@ export class ChatBackEndGateway
 
             const token = client.handshake.query;
             const accessToken = token.auth;
-            // this.handleAuthentication(client, accessToken);
             console.log("서버로 가져온 토큰", accessToken);
         } catch (error) {
             console.error(error.message);
@@ -81,11 +80,9 @@ export class ChatBackEndGateway
     }
 
     verifyToken(token: string | string[]): boolean {
-        console.log("토큰형식", typeof token);
         if (typeof token !== "string") {
             throw new Error("토큰의 형식이 잘못 되었습니다.");
         }
-
         const payload = this.jwtService.verify(token, {
             secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
         });
@@ -103,6 +100,8 @@ export class ChatBackEndGateway
     //메시지가 전송되면 모든 유저에게 메시지 전송
     @SubscribeMessage("sendMessage")
     sendMessage(client: Socket, message: string): void {
+        console.log("________________________________________");
+        console.log("client.rooms", client.rooms);
         client.rooms.forEach(
             (roomId) =>
                 client.to(roomId).emit("getMessage", {
@@ -112,15 +111,15 @@ export class ChatBackEndGateway
                 }),
             // this.ChatRoomService.saveMessage(client,message,roomId)
         );
-
-        // 채팅 전송시 DB에 채팅내역 저장
+        console.log("________________________________________");
+        // 채팅 전송시 DB에 채팅 내역   저장
         client.rooms.forEach((roomId) => {
             console.log("1", client, message, roomId);
             this.ChatRoomService.saveMessage(client, message, roomId);
         });
     }
 
-    //처음 접속시 닉네임 등 최초 설정
+    //처음 접속시 닉네임 등 최초  설정
     @SubscribeMessage("setInit")
     setInit(client: Socket, data: setInitDTO): setInitDTO {
         // 이미 최초 세팅이 되어있는 경우 패스
@@ -161,28 +160,27 @@ export class ChatBackEndGateway
         client.emit("getChatRoomList", this.ChatRoomService.getChatRoomList());
     }
 
-    //채팅방 생성하기
-    @ApiBearerAuth("accessToken")
-    @UseGuards(accessTokenGuard)
+    //채팅방 생성하기 (프론트에서 받는 곳)
     @SubscribeMessage("createChatRoom")
-    createChatRoom(client: Socket, roomName: string, @UserId() userId: number) {
+    createChatRoom(client: Socket, roomName: string) {
         //이전 방이 만약 나 혼자있던 방이면 제거
-        console.log("1");
-        console.log("userId", userId);
-        if (
-            client.data.roomId != "room:lobby" &&
-            this.server.sockets.adapter.rooms.get(client.data.roomId).size == 1
-        ) {
-            this.ChatRoomService.deleteChatRoom(client.data.roomId);
+        try {
+            if (
+                client.data.roomId != "room:lobby" &&
+                this.server.sockets.adapter.rooms.get(client.data.roomId)
+                    .size == 1
+            ) {
+                this.ChatRoomService.deleteChatRoom(client.data.roomId);
+            }
+            this.ChatRoomService.createChatRoom(client, roomName);
+            return {
+                roomId: client.data.roomId,
+                roomName: this.ChatRoomService.getChatRoom(client.data.roomId)
+                    .roomName,
+            };
+        } catch (error) {
+            console.error();
         }
-        console.log("2");
-        this.ChatRoomService.createChatRoom(client, roomName, userId);
-        console.log("3");
-        return {
-            roomId: client.data.roomId,
-            roomName: this.ChatRoomService.getChatRoom(client.data.roomId)
-                .roomName,
-        };
     }
 
     //채팅방 들어가기

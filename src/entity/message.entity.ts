@@ -12,12 +12,12 @@ export class Message {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ unique: true, nullable: false })
-    chatId: number;
+    @Column({ nullable: false })
+    roomTitle: string;
 
-    @Column({ unique: true, nullable: false })
+    @Column({ nullable: false })
     userId: number;
-    
+
     @Column()
     content: string;
 

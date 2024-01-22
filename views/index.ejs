@@ -117,7 +117,7 @@
         const authorized = localStorage.getItem("authorized");
         const data = JSON.parse(authorized);
         const accessToken = data.accessToken.value;
-        console.log("엑세스 토큰",accessToken);
+        console.log("엑세스 토큰", accessToken);
         const socket = io("http://localhost:5000", {
             query: {
                 auth: accessToken,
@@ -235,6 +235,7 @@
             socket.emit("getChatRoomList", null);
         });
 
+        console.log($(".write_msg").val());
         //메시지 전송
         $(".sendMessage").on("click", function () {
             socket.emit("sendMessage", $(".write_msg").val());
