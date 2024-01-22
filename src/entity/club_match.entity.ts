@@ -5,12 +5,9 @@ import {
     ManyToOne,
     CreateDateColumn,
     UpdateDateColumn,
-    OneToMany,
 } from "typeorm";
 import { Club } from "./club.entity";
 import { IsNotEmpty } from "class-validator";
-import { Clubscore } from "./clubscore.entity";
-import { Clubtagcounter } from "./clubtagcounter.entity";
 
 export enum ClubMatchStatus {
     APPLICATION_COMPLETE = "신청완료",
