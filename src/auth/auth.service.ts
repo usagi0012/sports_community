@@ -10,6 +10,8 @@ import { LoginUserDto } from "./dto/login-user.dto";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
+import * as nodemailer from "nodemailer";
+import * as uuid from "uuid";
 
 @Injectable()
 export class AuthService {
@@ -39,11 +41,54 @@ export class AuthService {
             password: hashPassword,
         });
 
+        const verificationToken = await this.generateVerificationToken(userId);
+        await this.sendVerificationEmail(
+            createUserDto.email,
+            verificationToken,
+        );
+
         return {
             statusCode: 201,
             message: "회원가입 완료되었습니다.",
             data: { userId },
         };
+    }
+
+    private async sendVerificationEmail(
+        email: string,
+        verificationToken: string,
+    ): Promise<void> {
+        // 이메일 전송 설정
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: "your_email@gmail.com", // 발신자 Gmail 이메일 주소
+                pass: "your_gmail_password", // 발신자 Gmail 계정 비밀번호
+            },
+        });
+
+        // 이메일 내용 설정
+        const mailOptions = {
+            from: "your_email@gmail.com", // 발신자 이메일 주소
+            to: email, // 수신자 이메일 주소
+            subject: "회원가입 인증 이메일", // 이메일 제목
+            text: `회원가입을 완료하려면 아래 링크를 클릭하세요: 
+                  http://your-app-domain/verify?token=${verificationToken}`,
+            // HTML 형식을 사용하려면 text 대신 html 속성을 사용할 수 있습니다.
+        };
+
+        // 이메일 전송
+        await transporter.sendMail(mailOptions);
+    }
+
+    private async generateVerificationToken(userId): Promise<string> {
+        // UUID를 사용하여 고유한 토큰 생성
+        const verificationToken = uuid.v4();
+
+        // 데이터베이스에 토큰 저장 (예를 들어, 사용자 엔터티에 저장)
+        await this.userService.saveVerificationToken(userId, verificationToken);
+
+        return verificationToken;
     }
 
     /// 로그인

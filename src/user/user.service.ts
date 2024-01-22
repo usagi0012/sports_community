@@ -88,6 +88,21 @@ export class UserService {
         return result;
     }
 
+    async saveVerificationToken(
+        userId,
+        verificationToken: string,
+    ): Promise<void> {
+        const user = await this.userRepository.findOne(userId);
+
+        if (user) {
+            user.verificationToken = verificationToken;
+            await this.userRepository.save(user);
+        } else {
+            // 유저를 찾지 못한 경우 예외 처리 또는 다른 로직을 수행할 수 있습니다.
+            throw new NotFoundException("사용자를 찾을 수 없습니다.");
+        }
+    }
+
     //내 정보 수정
     async updateUser(id: number, changeUserDto: ChangeUserDto) {
         const user = await this.findUserByIdAll(id);
