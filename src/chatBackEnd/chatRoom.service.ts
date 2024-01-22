@@ -1,4 +1,9 @@
-import { ForbiddenException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import {
+    ForbiddenException,
+    Inject,
+    Injectable,
+    NotFoundException,
+} from "@nestjs/common";
 import { chatRoomListDTO } from "./dto/chatBackEnd.dto";
 import { Socket } from "socket.io";
 import { v4 as uuidv4 } from "uuid";
@@ -34,10 +39,10 @@ export class ChatRoomService {
         };
     }
     createChatRoom(client: Socket, roomName: string, userId: number): void {
+        console.log("4");
         const roomId = `room:${uuidv4()}`;
         const nickname: string = client.data.nickname;
-        console.log({ client });
-        console.log("클라이언트 아이디", client.id);
+        console.log("5");
         client.emit("getMessage", {
             id: null,
             nickname: "안내",
@@ -50,10 +55,11 @@ export class ChatRoomService {
             cheifId: client.id,
             roomName,
         };
+        console.log("6");
         client.data.roomId = roomId;
         client.rooms.clear();
         client.join(roomId);
-
+        console.log("7");
         // 채팅방 생성시 roomName값 Chat 테이블에 저장
         this.chatRepository.save({
             title: roomName,
@@ -64,7 +70,6 @@ export class ChatRoomService {
     enterChatRoom(client: Socket, roomId: string) {
         client.data.roomId = roomId;
         client.rooms.clear();
-
 
         client.join(roomId);
         const { nickname } = client.data;
@@ -103,42 +108,47 @@ export class ChatRoomService {
         delete this.chatRoomList[roomId];
     }
 
+    isRoomMember(client: Socket, roomId: string) {
+        const userId = this.verifyToken(client);
 
-    isRoomMember(client: Socket, roomId:string) {
-        const userId = this.verifyToken(client)
+        const roomMember = this.participantsRepository.findOne({
+            where: { userId: +userId, chatId: +roomId },
+        });
 
-        const roomMember = this.participantsRepository.findOne({where: {userId: +userId,chatId:+roomId}})
-
-        if(!roomMember) {
-            throw new ForbiddenException("초대되지 않은 사용자입니다.")
+        if (!roomMember) {
+            throw new ForbiddenException("초대되지 않은 사용자입니다.");
         }
     }
 
-    verifyToken(client:Socket): string {
-        // 실제 검증 로직이 들어가야함.
+    // 로그인된 유저인지 체크
+    verifyToken(client: Socket): string {
         const token = client.handshake.query;
         const accessToken = token.auth;
 
-        if (typeof token !== "string") {
+        console.log("토큰형식2", typeof accessToken);
+        if (typeof accessToken !== "string") {
             throw new Error("토큰의 형식이 잘못 되었습니다.");
         }
-        const payload = this.jwtService.verify(token, {
+        const payload = this.jwtService.verify(accessToken, {
             secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
         });
 
-        if(!payload) {
-            throw new NotFoundException("로그인이 필요합니다.")
+        if (!payload) {
+            throw new NotFoundException("로그인이 필요합니다.");
         }
 
         const userId = payload.userId;
+
         console.log({ payload });
-        // 인증된 유저 정보를 함수를 만들어 chatRoomService로 보내서
-        // ChatRoomService에서 DB에 저장하게 만들자.
         return userId;
     }
 
-    saveMessage(client: Socket, message: string, roomId:string) {
+    saveMessage(client: Socket, message: string, roomId: string) {
         const userId = this.verifyToken(client);
-        this.messageRepository.save({userId:+userId,chatId:+roomId,content:message})
+        this.messageRepository.save({
+            userId: +userId,
+            chatId: +roomId,
+            content: message,
+        });
     }
 }

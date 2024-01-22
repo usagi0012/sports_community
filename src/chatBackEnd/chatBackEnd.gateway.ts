@@ -44,10 +44,11 @@ export class ChatBackEndGateway
 
             const token = client.handshake.query;
             const accessToken = token.auth;
-            this.handleAuthentication(client, accessToken);
+            // this.handleAuthentication(client, accessToken);
+            console.log("서버로 가져온 토큰", accessToken);
         } catch (error) {
             console.error(error.message);
-            throw new Error("소켓 연결에 문제가 생겼습니다.");
+            throw new Error("로그인이 필요합니다.");
         }
     }
 
@@ -80,22 +81,21 @@ export class ChatBackEndGateway
     }
 
     verifyToken(token: string | string[]): boolean {
-        // 실제 검증 로직이 들어가야함.
+        console.log("토큰형식", typeof token);
         if (typeof token !== "string") {
             throw new Error("토큰의 형식이 잘못 되었습니다.");
         }
+
         const payload = this.jwtService.verify(token, {
             secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
         });
 
-        if(!payload) {
-            throw new NotFoundException("로그인이 필요합니다.")
+        if (!payload) {
+            throw new NotFoundException("로그인이 필요합니다.");
         }
 
         const userId = payload.userId;
         console.log({ payload });
-        // 인증된 유저 정보를 함수를 만들어 chatRoomService로 보내서
-        // ChatRoomService에서 DB에 저장하게 만들자.
 
         return true;
     }
@@ -103,18 +103,21 @@ export class ChatBackEndGateway
     //메시지가 전송되면 모든 유저에게 메시지 전송
     @SubscribeMessage("sendMessage")
     sendMessage(client: Socket, message: string): void {
-        client.rooms.forEach((roomId) =>
-            client.to(roomId).emit("getMessage", {
-                id: client.id,
-                nickname: client.data.nickname,
-                message,
-            }),
+        client.rooms.forEach(
+            (roomId) =>
+                client.to(roomId).emit("getMessage", {
+                    id: client.id,
+                    nickname: client.data.nickname,
+                    message,
+                }),
             // this.ChatRoomService.saveMessage(client,message,roomId)
         );
 
-        client.rooms.forEach((roomId)=> {
-            this.ChatRoomService.saveMessage(client,message,roomId)
-        })
+        // 채팅 전송시 DB에 채팅내역 저장
+        client.rooms.forEach((roomId) => {
+            console.log("1", client, message, roomId);
+            this.ChatRoomService.saveMessage(client, message, roomId);
+        });
     }
 
     //처음 접속시 닉네임 등 최초 설정
@@ -152,7 +155,7 @@ export class ChatBackEndGateway
         client.data.nickname = nickname;
     }
 
-    //채팅방 목록 가져오기
+    //채팅방 목록 가져오기 (여기부분 수정해서 내가 포함된 채팅방만 가져와보기)
     @SubscribeMessage("getChatRoomList")
     getChatRoomList(client: Socket, payload: any) {
         client.emit("getChatRoomList", this.ChatRoomService.getChatRoomList());
@@ -164,6 +167,7 @@ export class ChatBackEndGateway
     @SubscribeMessage("createChatRoom")
     createChatRoom(client: Socket, roomName: string, @UserId() userId: number) {
         //이전 방이 만약 나 혼자있던 방이면 제거
+        console.log("1");
         console.log("userId", userId);
         if (
             client.data.roomId != "room:lobby" &&
@@ -171,8 +175,9 @@ export class ChatBackEndGateway
         ) {
             this.ChatRoomService.deleteChatRoom(client.data.roomId);
         }
-
+        console.log("2");
         this.ChatRoomService.createChatRoom(client, roomName, userId);
+        console.log("3");
         return {
             roomId: client.data.roomId,
             roomName: this.ChatRoomService.getChatRoom(client.data.roomId)
@@ -183,6 +188,8 @@ export class ChatBackEndGateway
     //채팅방 들어가기
     @SubscribeMessage("enterChatRoom")
     enterChatRoom(client: Socket, roomId: string) {
+        // 로그인 되어 있지 않은 경우, 룸에 가입된 멤버가 아닐경우 에러 처리
+        this.ChatRoomService.isRoomMember(client, roomId);
         //이미 접속해있는 방 일 경우 재접속 차단
         if (client.rooms.has(roomId)) {
             return;
