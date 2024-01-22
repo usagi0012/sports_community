@@ -14,6 +14,8 @@ import { UserId } from "src/auth/decorators/userId.decorator";
 import { UseGuards } from "@nestjs/common";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { ApiBearerAuth } from "@nestjs/swagger";
+import { JwtService } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
 
 @WebSocketGateway(5000, {
     cors: {
@@ -23,7 +25,11 @@ import { ApiBearerAuth } from "@nestjs/swagger";
 export class ChatBackEndGateway
     implements OnGatewayConnection, OnGatewayDisconnect
 {
-    constructor(private readonly ChatRoomService: ChatRoomService) {}
+    constructor(
+        private readonly ChatRoomService: ChatRoomService,
+        private readonly jwtService: JwtService,
+        private readonly configService: ConfigService,
+    ) {}
     @WebSocketServer()
     server: Server;
 
@@ -40,6 +46,8 @@ export class ChatBackEndGateway
         console.log(typeof token);
         const accessToken = token.auth;
         console.log(accessToken);
+        console.log(typeof accessToken);
+        this.handleAuthentication(client, accessToken);
     }
 
     //소켓 연결 해제시 유저목록에서 제거
@@ -56,6 +64,33 @@ export class ChatBackEndGateway
             );
         }
         console.log("disonnected", client.id);
+    }
+
+    @SubscribeMessage("authenticate")
+    handleAuthentication(client: Socket, accessToken: string | string[]) {
+        if (this.verifyToken(accessToken)) {
+            client.emit("authenticated");
+        } else {
+            client.emit("unauthorized", {
+                message: "사용자 인증이 실패했습니다.",
+            });
+            client.disconnect(true);
+        }
+    }
+
+    verifyToken(token: string | string[]): boolean {
+        // 실제 검증 로직이 들어가야함.
+        if (typeof token !== "string") {
+            throw new Error("토큰의 형식이 잘못 되었습니다.");
+        }
+        const payload = this.jwtService.verify(token, {
+            secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
+        });
+
+        const user = payload;
+        // 인증된 유저 정보를 함수를 만들어 chatRoomService로 보내서
+        // ChatRoomService에서 DB에 저장하게 만들자.
+        return true;
     }
 
     //메시지가 전송되면 모든 유저에게 메시지 전송
