@@ -11,7 +11,7 @@ import { ChatRoomService } from "./chatRoom.service";
 import { setInitDTO, chatRoomListDTO } from "./dto/chatBackEnd.dto";
 import { Observable, map, from } from "rxjs";
 import { UserId } from "src/auth/decorators/userId.decorator";
-import { UseGuards } from "@nestjs/common";
+import { NotFoundException, UseGuards } from "@nestjs/common";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { JwtService } from "@nestjs/jwt";
@@ -88,12 +88,15 @@ export class ChatBackEndGateway
             secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
         });
 
+        if(!payload) {
+            throw new NotFoundException("로그인이 필요합니다.")
+        }
+
         const userId = payload.userId;
         console.log({ payload });
         // 인증된 유저 정보를 함수를 만들어 chatRoomService로 보내서
         // ChatRoomService에서 DB에 저장하게 만들자.
 
-        this.ChatRoomService.saveUserData(userId);
         return true;
     }
 
@@ -106,7 +109,12 @@ export class ChatBackEndGateway
                 nickname: client.data.nickname,
                 message,
             }),
+            // this.ChatRoomService.saveMessage(client,message,roomId)
         );
+
+        client.rooms.forEach((roomId)=> {
+            this.ChatRoomService.saveMessage(client,message,roomId)
+        })
     }
 
     //처음 접속시 닉네임 등 최초 설정

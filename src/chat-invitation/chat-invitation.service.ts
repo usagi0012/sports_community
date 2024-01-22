@@ -9,7 +9,7 @@ import { ForbiddenException } from "@nestjs/common";
 export class ChatInvitationService {
     constructor(
         @InjectRepository(Participants)
-        private readonly chatInvitationRepository: Repository<Participants>,
+        private readonly participantsRepository: Repository<Participants>,
     ) {}
 
     async invitationToRoom(chatInvitationDto, userId) {
@@ -22,7 +22,7 @@ export class ChatInvitationService {
         //         "채팅방의 생성자만 초대를 할 수 있습니다.",
         //     );
         // }
-        const invitation = await this.chatInvitationRepository.save({
+        const invitation = await this.participantsRepository.save({
             userId: memberId,
             chatId,
         });
@@ -32,6 +32,6 @@ export class ChatInvitationService {
 
     async expelMemberFromRoom(chatExpelMemberDto: ChatExpelMemeberDto) {
         const { memberId, chatId } = chatExpelMemberDto;
-        const expeledMember = await this.chatInvitationRepository.delete({});
+        const expeledMember = await this.participantsRepository.delete({});
     }
 }
