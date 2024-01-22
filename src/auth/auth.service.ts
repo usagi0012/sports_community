@@ -11,7 +11,7 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import * as nodemailer from "nodemailer";
-import * as uuid from "uuid";
+import { google } from "googleapis";
 
 @Injectable()
 export class AuthService {
@@ -41,6 +41,59 @@ export class AuthService {
             password: hashPassword,
         });
 
+        // 회원가입 이메일 전송
+
+        const verificationCode = this.generateVerificationCode(); // 인증번호 생성 함수 필요
+        const verificationLink = `${this.configService.get<string>(
+            "FRONTEND_URL",
+        )}/verify?code=${verificationCode}`;
+
+        // OAuth2 설정
+        const oauth2Client = new google.auth.OAuth2(
+            this.configService.get<string>("GOOGLE_CLIENT_ID"),
+            this.configService.get<string>("GOOGLE_CLIENT_SECRET"),
+            "https://developers.google.com/oauthplayground",
+        );
+
+        oauth2Client.setCredentials({
+            refresh_token: this.configService.get<string>(
+                "GOOGLE_REFRESH_TOKEN",
+            ),
+        });
+
+        // 이메일 전송
+        const smtpTransport = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                type: "OAuth2",
+                user: this.configService.get<string>("GOOGLE_ID"),
+                clientId: this.configService.get<string>("GOOGLE_CLIENT_ID"),
+                clientSecret: this.configService.get<string>(
+                    "GOOGLE_CLIENT_SECRET",
+                ),
+                refreshToken: this.configService.get<string>(
+                    "GOOGLE_REFRESH_TOKEN",
+                ),
+                accessToken: await oauth2Client.getAccessToken(),
+            },
+            tls: {
+                rejectUnauthorized: false,
+            },
+        } as nodemailer.TransportOptions);
+
+        const mailOptions = {
+            from: this.configService.get<string>("GOOGLE_ID"),
+            to: createUserDto.email, // 사용자가 입력한 이메일 주소
+            subject: "회원가입 인증 링크",
+            text: `회원가입을 위한 인증을 완료하려면 다음 링크를 클릭하세요: ${verificationLink}`,
+        };
+
+        smtpTransport.sendMail(mailOptions, (error, response) => {
+            error ? console.log(error) : console.log(response);
+            smtpTransport.close();
+        });
+
+        // 성공적으로 회원가입이 완료된 경우의 반환값
         return {
             statusCode: 201,
             message: "회원가입 완료되었습니다.",
@@ -48,31 +101,20 @@ export class AuthService {
         };
     }
 
-    private async sendVerificationEmail(
-        email: string,
-        verificationToken: string,
-    ): Promise<void> {
-        // 이메일 전송 설정
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: "your_email@gmail.com", // 발신자 Gmail 이메일 주소
-                pass: "your_gmail_password", // 발신자 Gmail 계정 비밀번호
-            },
-        });
+    //인증코드 생성하기
+    private generateVerificationCode(): string {
+        const length: number = 6;
+        const characters: string = "0123456789";
+        let verificationCode: string = "";
 
-        // 이메일 내용 설정
-        const mailOptions = {
-            from: "your_email@gmail.com", // 발신자 이메일 주소
-            to: email, // 수신자 이메일 주소
-            subject: "회원가입 인증 이메일", // 이메일 제목
-            text: `회원가입을 완료하려면 아래 링크를 클릭하세요: 
-                  http://your-app-domain/verify?token=${verificationToken}`,
-            // HTML 형식을 사용하려면 text 대신 html 속성을 사용할 수 있습니다.
-        };
+        for (let i: number = 0; i < length; i++) {
+            const randomIndex: number = Math.floor(
+                Math.random() * characters.length,
+            );
+            verificationCode += characters.charAt(randomIndex);
+        }
 
-        // 이메일 전송
-        await transporter.sendMail(mailOptions);
+        return verificationCode;
     }
 
     /// 로그인
