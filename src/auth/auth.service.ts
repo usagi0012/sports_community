@@ -41,12 +41,6 @@ export class AuthService {
             password: hashPassword,
         });
 
-        const verificationToken = await this.generateVerificationToken(userId);
-        await this.sendVerificationEmail(
-            createUserDto.email,
-            verificationToken,
-        );
-
         return {
             statusCode: 201,
             message: "회원가입 완료되었습니다.",
@@ -79,16 +73,6 @@ export class AuthService {
 
         // 이메일 전송
         await transporter.sendMail(mailOptions);
-    }
-
-    private async generateVerificationToken(userId): Promise<string> {
-        // UUID를 사용하여 고유한 토큰 생성
-        const verificationToken = uuid.v4();
-
-        // 데이터베이스에 토큰 저장 (예를 들어, 사용자 엔터티에 저장)
-        await this.userService.saveVerificationToken(userId, verificationToken);
-
-        return verificationToken;
     }
 
     /// 로그인
