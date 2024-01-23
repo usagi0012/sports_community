@@ -12,15 +12,17 @@ import { RecruitController } from "./recruit/recruit.controller";
 import { RecruitModule } from "./recruit/recruit.module";
 import { MatchModule } from "./match/match.module";
 import { RecruitService } from "./recruit/recruit.service";
-import { ClubMatchModule } from './club_match/club_match.module';
+import { ClubMatchModule } from "./club_match/club_match.module";
 import { ApplyingClubModule } from "./applying-club/applying-club.module";
-import { AwsModule } from './aws/aws.module';
+import { AwsModule } from "./aws/aws.module";
 import { UserPositionModule } from "./user-position/user-position.module";
-import { PlaceModule } from './place/place.module';
+import { PlaceModule } from "./place/place.module";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
     imports: [
         ConfigProjectModule,
+        ScheduleModule.forRoot(),
         TypeormModule.forRoot(),
         AuthModule,
         UserModule,

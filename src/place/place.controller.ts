@@ -1,5 +1,6 @@
-import { Controller, Get, Post } from "@nestjs/common";
+import { Controller, Get, Post, Query } from "@nestjs/common";
 import { PlaceService } from "./place.service";
+import { Cron } from "@nestjs/schedule";
 import { url } from "inspector";
 import axios from "axios";
 
@@ -7,11 +8,17 @@ import axios from "axios";
 export class PlaceController {
     constructor(private readonly placeService: PlaceService) {}
 
-    @Get()
+    // 매달 1일 새벽 3시 0 3 1 * *
+    @Cron("0 3 1 * *")
     async getData() {
         const places = await this.placeService.crawlSpaces(
             "https://shareit-resource.shareit.kr/spaces?keyword&realTime=true&approve=true&region=-1&eventTypes=31&spaceThemeSeq&minPrice=0&maxPrice=-1&minPeople=0&minArea&maxArea&discount=0&sort=popularity&work=false&life=true&type=search",
         );
-        return await this.placeService.saveSpaces(places);
+    }
+
+    //장소 R
+    @Get()
+    async showData(@Query("page") page: number) {
+        return await this.placeService.showSpaces(page);
     }
 }

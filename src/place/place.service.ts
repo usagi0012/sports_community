@@ -5,6 +5,7 @@ import { ContentType } from "aws-sdk/clients/cloudsearchdomain";
 import { Place } from "../entity/place.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { Cron } from "@nestjs/schedule";
 
 @Injectable()
 export class PlaceService {
@@ -16,10 +17,10 @@ export class PlaceService {
     //장소 크롤링해서 디비에 저장
     async crawlSpaces(url: string) {
         try {
-            let places = new Array(10);
-            for (let page = 1; page < 11; page++) {
+            let places = new Array(15);
+            for (let page = 1; page < 16; page++) {
                 const response = await axios
-                    .get(`${url}&size=20&page=${page}`, {
+                    .get(`${url}&size=30&page=${page}`, {
                         headers: {
                             "Content-Type": "application/json;charset=UTF-8",
                         },
@@ -40,7 +41,7 @@ export class PlaceService {
                         console.log(error);
                     });
             }
-            return places;
+            return await this.saveSpaces(places);
         } catch (error) {
             throw new Error(`Error in crawlSpaces: ${error.message}`);
         }
@@ -70,11 +71,28 @@ export class PlaceService {
                 }
             }
         }
-
         const newexistPlaces = await this.placeRepository.find({
             select: ["id", "name", "address", "image"],
         });
 
         return newexistPlaces;
+    }
+
+    //장소 불러오기
+    async showSpaces(page: number) {
+        const [place, total] = await this.placeRepository.findAndCount({
+            select: ["id", "name", "address", "image"],
+            take: 30,
+            skip: (page - 1) * 30,
+        });
+
+        return {
+            data: place,
+            meta: {
+                total,
+                page,
+                last_page: Math.ceil(total / 30),
+            },
+        };
     }
 }
