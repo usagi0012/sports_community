@@ -16,10 +16,11 @@ import { CreateUserPositionDto } from "./dto/create-user-position.dto";
 import { UpdateUserPositionDto } from "./dto/update-user-position.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
+import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 
 @ApiTags("개인 포지션")
-@ApiBearerAuth()
-@UseGuards(AuthGuard("accessToken"))
+@ApiBearerAuth("accessToken")
+@UseGuards(accessTokenGuard)
 @Controller("/user/me/position")
 export class UserPositionController {
     constructor(private readonly userPositionService: UserPositionService) {}
