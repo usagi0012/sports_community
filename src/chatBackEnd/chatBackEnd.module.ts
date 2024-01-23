@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { ChatBackEndGateway } from "./chatBackEnd.gateway";
+import { ChatBackEndGateway } from "./ChatBackEndGateway";
 import { ChatRoomService } from "./chatRoom.service";
 import { Chat } from "src/entity/chat.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -9,7 +9,7 @@ import { Message } from "src/entity/message.entity";
 import { Participants } from "src/entity/participants.entity";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Chat,Message,Participants])],
+    imports: [TypeOrmModule.forFeature([Chat, Message, Participants])],
     providers: [ChatBackEndGateway, ChatRoomService, JwtService, ConfigService],
 })
 export class ChatBackEndModule {}

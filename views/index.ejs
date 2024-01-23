@@ -151,11 +151,11 @@
                 minutes < 10 ? "0" : ""
             }${minutes} ${hours >= 12 ? "PM" : "AM"}`;
 
-            const timeDate = `
-    <span class="time_date">
-        ${nickname} | ${formattedTime} | ${month} ${day}
-    </span>
-`;
+            const timeDate = ` 
+            <span class="time_date">
+                ${nickname} | ${formattedTime} | ${month} ${day}
+            </span>
+        `;
 
             if (myInfo.id == id) {
                 html += '<div class="outgoing_msg">';
@@ -183,24 +183,63 @@
 
         socket.on("getChatRoomList", function (response) {
             let html = "";
-            for (const { roomId, roomName } of Object.values(response)) {
+            // for (const { roomId, roomName } of Object.values(response)) {
+            //     html +=
+            //         '<div class="chat_list ' +
+            //         (myInfo.room.roomId === roomId
+            //             ? "active_chat"
+            //             : "enterChatRoom") +
+            //         '" data-roomId="' +
+            //         roomId +
+            //         '">';
+            //     html += '<div class="chat_people">';
+            //     html += '<div class="chat_ib">';
+            //     html += "<h5>" + roomName + "</h5>";
+            //     html += "</div>";
+            //     html += "</div>";
+            //     html += "</div>";
+            // }
+
+            // 받아온 myRoomTitle 이용해서 프론트에 구현하기
+            // $(".chatRoomList").html(html);
+            console.log({ myInfo });
+            console.log("response", Object.values(response));
+            const myRoomInfo = Object.values(response);
+            for (let i = 0; i < myRoomInfo[0].length; i++) {
                 html +=
                     '<div class="chat_list ' +
-                    (myInfo.room.roomId === roomId
+                    (myInfo.room.roomId === myRoomInfo[1][i]
                         ? "active_chat"
                         : "enterChatRoom") +
                     '" data-roomId="' +
-                    roomId +
+                    myRoomInfo[1][i] +
                     '">';
                 html += '<div class="chat_people">';
                 html += '<div class="chat_ib">';
-                html += "<h5>" + roomName + "</h5>";
+                html += "<h5>" + myRoomInfo[0][i] + "</h5>";
                 html += "</div>";
                 html += "</div>";
                 html += "</div>";
             }
+            // for (const { roomId, roomName } of Object.values(response)) {
+            //     html +=
+            //         '<div class="chat_list ' +
+            //         (myInfo.room.roomId === roomId
+            //             ? "active_chat"
+            //             : "enterChatRoom") +
+            //         '" data-roomId="' +
+            //         roomId +
+            //         '">';
+            //     html += '<div class="chat_people">';
+            //     html += '<div class="chat_ib">';
+            //     html += "<h5>" + roomName + "</h5>";
+            //     html += "</div>";
+            //     html += "</div>";
+            //     html += "</div>";
+            // }
             $(".chatRoomList").html(html);
         });
+
         socket.on("disconnect", function () {
             $(".chatRoomList").html("");
             console.log("Disconnected");

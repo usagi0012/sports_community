@@ -16,6 +16,7 @@ import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { Participants } from "src/entity/participants.entity";
 import { Message } from "src/entity/message.entity";
+import { WsException } from "@nestjs/websockets";
 
 @Injectable()
 export class ChatRoomService {
@@ -66,7 +67,7 @@ export class ChatRoomService {
         });
         console.log({ chatName });
         if (chatName) {
-            throw new Error("동일한 이름의 채팅방이 존재합니다.");
+            throw new WsException("동일한 이름의 채팅방이 존재합니다.");
         }
 
         // 채팅방 생성시 roomName값 Chat 테이블에 저장
@@ -74,6 +75,15 @@ export class ChatRoomService {
             title: roomName,
             creator: +userId,
         });
+
+        // const chat = await this.chatRepository.findOne({
+        //     where: { title: roomName },
+        // });
+        // console.log("챗", chat);
+        // const chatId = chat.id;
+
+        // 채팅방 생성시 방 생성자도 참가자 명단에 포함.
+        // await this.participantsRepository.save({ userId: +userId, chatId });
     }
 
     enterChatRoom(client: Socket, roomId: string) {
@@ -112,7 +122,6 @@ export class ChatRoomService {
     // 내가 있는 채팅방만 가져오도록 변경하기
     async getChatRoomList(client) /* : Record<string, chatRoomListDTO> */ {
         const userId = this.verifyToken(client);
-
         console.log("this.chatRoomList", this.chatRoomList);
 
         const myInfo = await this.participantsRepository.find({
@@ -122,9 +131,36 @@ export class ChatRoomService {
         console.log("myInfo", myInfo);
         console.log("chatRoomList", this.chatRoomList);
 
+        const roomInfo = { title: [], id: [] };
+
+        const creatorRoom = await this.chatRepository.find({
+            where: { creator: +userId },
+        });
+
+        creatorRoom.forEach((chat) => {
+            roomInfo.title.push(chat.title);
+            roomInfo.id.push(chat.id);
+        });
+
+        console.log({ creatorRoom });
         const myRoomList = myInfo.map((participants) => participants.chatId);
-        console.log("myRoomList", myRoomList);
-        return myRoomList;
+
+        const myRoomTitlePromises = await myRoomList.map(async (v) => {
+            const chatRoom = await this.chatRepository.findOne({
+                where: { id: v },
+            });
+            if (!roomInfo.title.includes(chatRoom.title)) {
+                roomInfo.title.push(chatRoom.title);
+            }
+            if (!roomInfo.id.includes(chatRoom.id)) {
+                roomInfo.id.push(v);
+            }
+            return chatRoom.title;
+        });
+        const myRoomTitle = await Promise.all(myRoomTitlePromises);
+        console.log("myRoomTitle", myRoomTitle);
+        console.log("roomInfo", roomInfo);
+        return roomInfo;
         // return this.chatRoomList;
     }
 
@@ -140,31 +176,29 @@ export class ChatRoomService {
         });
 
         if (!roomMember) {
-            throw new ForbiddenException("초대되지 않은 사용자입니다.");
+            throw new WsException("초대되지 않은 사용자입니다.");
         }
     }
 
     // 로그인된 유저인지 체크
-    verifyToken(client: Socket): string {
-        const token = client.handshake.query;
-        const accessToken = token.auth;
-
-        console.log("토큰형식2", typeof accessToken);
-        if (typeof accessToken !== "string") {
-            throw new Error("토큰의 형식이 잘못 되었습니다.");
-        }
-        const payload = this.jwtService.verify(accessToken, {
-            secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
-        });
-
-        if (!payload) {
-            throw new NotFoundException("로그인이 필요합니다.");
-        }
-
-        const userId = payload.userId;
-
-        console.log({ payload });
-        return userId;
+    verifyToken(client: Socket) /* : string  */ {
+        // const token = client.handshake.query;
+        // const accessToken = token.auth;
+        // console.log("accessToken", accessToken);
+        // console.log(typeof accessToken);
+        // console.log("토큰형식2", typeof accessToken);
+        // if (typeof accessToken !== "string") {
+        //     throw new WsException("토큰의 형식이 잘못 되었습니다.");
+        // }
+        // const payload = this.jwtService.verify(accessToken, {
+        //     secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
+        // });
+        // if (!payload) {
+        //     throw new WsException("로그인이 필요합니다.");
+        // }
+        // const userId = payload.userId;
+        // console.log({ payload });
+        // return userId;
     }
 
     saveMessage(client: Socket, message: string, roomId: string) {

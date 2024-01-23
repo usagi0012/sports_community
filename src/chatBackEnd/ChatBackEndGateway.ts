@@ -2,19 +2,14 @@ import {
     SubscribeMessage,
     WebSocketGateway,
     WebSocketServer,
-    WsResponse,
     OnGatewayConnection,
     OnGatewayDisconnect,
     WsException,
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { ChatRoomService } from "./chatRoom.service";
-import { setInitDTO, chatRoomListDTO } from "./dto/chatBackEnd.dto";
-import { Observable, map, from } from "rxjs";
-import { UserId } from "src/auth/decorators/userId.decorator";
-import { NotFoundException, UseGuards } from "@nestjs/common";
-import { accessTokenGuard } from "src/auth/guard/access-token.guard";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { setInitDTO } from "./dto/chatBackEnd.dto";
+import { NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 
@@ -48,7 +43,7 @@ export class ChatBackEndGateway
             console.log("서버로 가져온 토큰", accessToken);
         } catch (error) {
             console.error(error.message);
-            throw new WsException("로그인이 필요합니다.");
+            throw new Error("로그인이 필요합니다.");
         }
     }
 
@@ -89,7 +84,7 @@ export class ChatBackEndGateway
         });
 
         if (!payload) {
-            throw new WsException("로그인이 필요합니다.");
+            throw new NotFoundException("로그인이 필요합니다.");
         }
 
         const userId = payload.userId;
@@ -102,14 +97,12 @@ export class ChatBackEndGateway
     @SubscribeMessage("sendMessage")
     sendMessage(client: Socket, message: string): void {
         console.log("client.rooms", client.rooms);
-        client.rooms.forEach(
-            (roomId) =>
-                client.to(roomId).emit("getMessage", {
-                    id: client.id,
-                    nickname: client.data.nickname,
-                    message,
-                }),
-            // this.ChatRoomService.saveMessage(client,message,roomId)
+        client.rooms.forEach((roomId) =>
+            client.to(roomId).emit("getMessage", {
+                id: client.id,
+                nickname: client.data.nickname,
+                message,
+            }),
         );
         // 채팅 전송시 DB에 채팅 내역 저장
         client.rooms.forEach((roomId) => {
