@@ -22,6 +22,8 @@ import { AwsModule } from "./aws/aws.module";
 import { UserPositionModule } from "./user-position/user-position.module";
 import { SseController } from "./alarm/alarm.controller";
 import { AlarmserviceModule } from "./alarm/alarm.module";
+import { PlaceModule } from "./place/place.module";
+import { ScheduleModule } from "@nestjs/schedule";
 import { KakaoModule } from "./kakao/kakao.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
@@ -29,6 +31,7 @@ import { join } from "path";
 @Module({
     imports: [
         ConfigProjectModule,
+        ScheduleModule.forRoot(),
         TypeormModule.forRoot(),
         AuthModule,
         UserModule,
@@ -45,6 +48,7 @@ import { join } from "path";
         AwsModule,
         ClubMatchModule,
         UserPositionModule,
+        PlaceModule,
         AlarmserviceModule,
         KakaoModule,
         ServeStaticModule.forRoot({
