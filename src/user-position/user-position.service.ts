@@ -80,10 +80,10 @@ export class UserPositionService {
         const { guard, forward, center } = updateUserPositionDto;
         const user = await this.userRepository.find({
             where: { id: userId },
-            relations: ["userPosition"],
         });
+
         const userPosition = await this.userPositionRepository.findOne({
-            where: userId,
+            where: { userId },
             relations: ["user"],
         });
         if (userPosition.user.id !== userId) {

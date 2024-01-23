@@ -12,8 +12,9 @@ import { SignupUserDto } from "./dto/signup-user.dto";
 import { accessTokenGuard } from "./guard/access-token.guard";
 import { refreshTokenGuard } from "./guard/refresh-token.guard";
 import { Request } from "express";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("인증")
 @Controller("auth")
 export class AuthController {
     constructor(private readonly authService: AuthService) {}

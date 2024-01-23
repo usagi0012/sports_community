@@ -13,6 +13,8 @@ import { User } from "./user.entity";
 import { toUSVString } from "util";
 import { ClubMatch } from "./club_match.entity";
 import { ClubApplication } from "./club-application.entity";
+import { Clubscore } from "./clubscore.entity";
+import { Clubtagcounter } from "./clubtagcounter.entity";
 
 @Entity({
     name: "clubs", // 데이터베이스 테이블의 이름
@@ -62,4 +64,12 @@ export class Club {
 
     @OneToMany(() => ClubMatch, (match) => match.guestClub)
     guestMatches: ClubMatch[];
+
+    @OneToMany(() => Clubscore, (clubscore) => clubscore.club, {
+        cascade: true,
+    })
+    clubscore: Clubscore[];
+
+    @OneToMany(() => Clubtagcounter, (clubtagcounter) => clubtagcounter.club)
+    clubtagcounter: Clubtagcounter[];
 }

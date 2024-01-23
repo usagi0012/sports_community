@@ -1,7 +1,14 @@
-import { UserId } from "./../auth/decorators/userId.decorator";
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { CheckClubMatchDTO, ClubMatchDTO } from "./dto/club_match.dto";
-import { ClubMatch } from "../entity/club_match.entity";
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from "@nestjs/common";
+import {
+    ChangeTimeDTO,
+    CheckClubMatchDTO,
+    ClubMatchDTO,
+} from "./dto/club_match.dto";
+import { ClubMatch, Progress } from "../entity/club_match.entity";
 import { Club } from "../entity/club.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -66,12 +73,18 @@ export class ClubMatchService {
                 host_club_name: true,
                 guest_club_name: true,
                 message: true,
-                Information: true,
+                information: true,
                 status: true,
+                gameDate: true,
+                endTime: true,
+                progress: true,
             },
         });
+        for (const match of matches) {
+            match.updateProgress();
+        }
 
-        return matches;
+        return await this.clubMatchRepository.save(matches);
     }
 
     //호스트 매치 상세조회
@@ -87,7 +100,9 @@ export class ClubMatchService {
             throw new NotFoundException(`Match ${id}을 찾을 수 없습니다.`);
         }
 
-        return match;
+        await match.updateProgress();
+
+        return await this.clubMatchRepository.save(match);
     }
 
     //host매치 승인/거절하기
@@ -119,7 +134,40 @@ export class ClubMatchService {
 
         match.status = checkClubMatchDTO.status;
 
-        await this.clubMatchRepository.save(match);
+        return await this.clubMatchRepository.save(match);
+    }
+    //host 경기 시간 변경하기
+    async changeTime(id: number, userId: number, changeTimeDTO: ChangeTimeDTO) {
+        const clubMatch = await this.findHostMatch(id, userId);
+
+        if (!clubMatch) {
+            throw new NotFoundException("조회되는 클럽 매치가 없습니다.");
+        }
+
+        clubMatch.gameDate = changeTimeDTO.gamedate;
+        clubMatch.endTime = changeTimeDTO.endtime;
+
+        return await this.clubMatchRepository.save(clubMatch);
+    }
+
+    //host 경기 평가 완료하기
+    async evaluateHost(id: number, userId: number) {
+        const clubMatch = await this.findHostMatch(id, userId);
+
+        if (!clubMatch) {
+            throw new NotFoundException("조회되는 클럽 매치가 없습니다.");
+        }
+
+        if (clubMatch.progress !== Progress.PLEASE_EVALUATE) {
+            throw new BadRequestException(
+                `경기 종료시간 ${clubMatch.endTime}이 지나야 가능합니다.`,
+                // NotFoundException을 BadRequestException으로 수정
+            );
+        }
+
+        clubMatch.host_evaluate = true;
+
+        return await this.clubMatchRepository.save(clubMatch);
     }
 
     //guest매치 조회하기
@@ -133,28 +181,37 @@ export class ClubMatchService {
                 guest_club_name: true,
                 host_club_name: true,
                 message: true,
-                Information: true,
+                information: true,
                 status: true,
             },
         });
+        for (const match of matches) {
+            match.updateProgress();
+        }
 
-        return matches;
+        return await this.clubMatchRepository.save(matches);
     }
 
     //guest매치 상세조회
     async findGuestMatch(id: number, userId: number) {
-        const match = await this.clubMatchRepository.findOne({
+        const guestMatch = await this.clubMatchRepository.findOne({
             where: {
                 id: id,
                 guest_clubId_master: userId,
             },
         });
 
-        if (!match) {
+        if (!guestMatch) {
             throw new NotFoundException(`Match ${id}을 찾을 수 없습니다.`);
         }
+        if (guestMatch.progress !== Progress.PLEASE_EVALUATE) {
+            throw new NotFoundException(
+                `경기 종료시간 ${guestMatch.endTime}이 지나야 가능합니다.`,
+            );
+        }
+        await guestMatch.updateProgress();
 
-        return match;
+        return await this.clubMatchRepository.save(guestMatch);
     }
 
     //게스트 매치 취소하기
@@ -186,7 +243,23 @@ export class ClubMatchService {
         return await this.clubMatchRepository.save(match);
     }
 
-    //삭제하기
+    //guest 경기 평가 완료하기
+    async evaluateGuest(id: number, userId: number) {
+        const guestMatch = await this.findGuestMatch(id, userId);
+        if (!guestMatch) {
+            throw new NotFoundException("조회되는 매치가 없습니다.");
+        }
+        if (guestMatch.progress !== Progress.PLEASE_EVALUATE) {
+            throw new NotFoundException(
+                `경기 종료시간 ${guestMatch.endTime}이 지나야 가능합니다.`,
+            );
+        }
+
+        guestMatch.guest_evaluate = true;
+        return await this.clubMatchRepository.save(guestMatch);
+    }
+
+    //취소된 경기 삭제하기
     async deleteClubMatch(id: number, userId: number) {
         const match = await this.clubMatchRepository.findOne({
             where: {
@@ -207,6 +280,31 @@ export class ClubMatchService {
 
         if (match.status !== ClubMatchStatus.CANCEL) {
             throw new NotFoundException("취소되지 않은 경기입니다.");
+        }
+
+        return await this.clubMatchRepository.remove(match);
+    }
+
+    //평가 완료된 경기 삭제하기
+    async confirmClubMatch(id: number, userId: number) {
+        const match = await this.clubMatchRepository.findOne({
+            where: {
+                id: id,
+            },
+        });
+
+        if (!match) {
+            throw new NotFoundException(`Match ${id}을 찾을 수 없습니다.`);
+        }
+
+        if (match.host_clubId_master !== userId) {
+            throw new NotFoundException("호스트가 아닙니다. ");
+        }
+
+        if (match.guest_evaluate !== true && match.host_evaluate !== true) {
+            throw new NotFoundException(
+                "두 클럽 모두 평가를 해야 삭제가능합니다. ",
+            );
         }
 
         return await this.clubMatchRepository.remove(match);
