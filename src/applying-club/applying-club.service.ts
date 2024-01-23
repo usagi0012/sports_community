@@ -170,6 +170,12 @@ export class ApplyingClubService {
             await this.alramService.sendAlarm(memberId, message);
         }
 
+        // 요청한 신청서 찾기
+        const userApplication = await this.clubApplicationRepository.findOne({
+            where: { userId: memberId, clubId },
+        });
+        const applicationId = userApplication.id;
+
         // 멤버가 이미 가입된 동아리가 있을 경우 에러처리
         // (신청서에서는 못보내지만 동아리 생성시 clubId 생기기 때문)
         const isJoinedMember = this.UserRepository.findOne({
@@ -177,21 +183,19 @@ export class ApplyingClubService {
         });
 
         if (isJoinedMember) {
+            const updatedApplication =
+                await this.clubApplicationRepository.update(applicationId, {
+                    status: ClubApplicationStatus.REJECTED,
+                });
             throw new Error(
                 "신청자가 가입된 동호회가 있어 승인할 수 없습니다.",
             );
         }
 
-        // 요청한 신청서 찾기
-        const userApplication = await this.clubApplicationRepository.findOne({
-            where: { userId: memberId, clubId },
-        });
-        const applicationId = userApplication.id;
-
         // 요청 승인시 신청서의 상태 -> "요청 승인"
         const updatedApplication = await this.clubApplicationRepository.update(
             applicationId,
-            { status: ClubApplicationStatus.APPROVED }, // 이 부분 수정 필요
+            { status: ClubApplicationStatus.APPROVED },
         );
 
         const application = await this.clubApplicationRepository.findOne({
