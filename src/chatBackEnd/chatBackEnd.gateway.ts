@@ -61,7 +61,7 @@ export class ChatBackEndGateway
             this.ChatRoomService.deleteChatRoom(roomId);
             this.server.emit(
                 "getChatRoomList",
-                this.ChatRoomService.getChatRoomList(),
+                this.ChatRoomService.getChatRoomList(client),
             );
         }
         console.log("disonnected", client.id);
@@ -100,7 +100,6 @@ export class ChatBackEndGateway
     //메시지가 전송되면 모든 유저에게 메시지 전송
     @SubscribeMessage("sendMessage")
     sendMessage(client: Socket, message: string): void {
-        console.log("________________________________________");
         console.log("client.rooms", client.rooms);
         client.rooms.forEach(
             (roomId) =>
@@ -111,8 +110,7 @@ export class ChatBackEndGateway
                 }),
             // this.ChatRoomService.saveMessage(client,message,roomId)
         );
-        console.log("________________________________________");
-        // 채팅 전송시 DB에 채팅 내역   저장
+        // 채팅 전송시 DB에 채팅 내역 저장
         client.rooms.forEach((roomId) => {
             console.log("1", client, message, roomId);
             this.ChatRoomService.saveMessage(client, message, roomId);
@@ -157,7 +155,10 @@ export class ChatBackEndGateway
     //채팅방 목록 가져오기 (여기부분 수정해서 내가 포함된 채팅방만 가져와보기)
     @SubscribeMessage("getChatRoomList")
     getChatRoomList(client: Socket, payload: any) {
-        client.emit("getChatRoomList", this.ChatRoomService.getChatRoomList());
+        client.emit(
+            "getChatRoomList",
+            this.ChatRoomService.getChatRoomList(client),
+        );
     }
 
     //채팅방 생성하기 (프론트에서 받는 곳)

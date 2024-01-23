@@ -39,13 +39,10 @@ export class ChatRoomService {
         };
     }
     async createChatRoom(client: Socket, roomName: string) {
-        console.log("4");
-
         const userId = this.verifyToken(client);
 
         const roomId = `room:${uuidv4()}`;
         const nickname: string = client.data.nickname;
-        console.log("5");
         client.emit("getMessage", {
             id: null,
             nickname: "안내",
@@ -58,11 +55,9 @@ export class ChatRoomService {
             cheifId: client.id,
             roomName,
         };
-        console.log("6");
         client.data.roomId = roomId;
         client.rooms.clear();
         client.join(roomId);
-        console.log("7");
 
         // 존재하는 채팅방 이름일 경우 에러
         console.log({ roomName });
@@ -114,8 +109,17 @@ export class ChatRoomService {
         return this.chatRoomList[roomId];
     }
 
-    getChatRoomList(): Record<string, chatRoomListDTO> {
-        return this.chatRoomList;
+    // 내가 있는 채팅방만 가져오도록 변경하기
+    async getChatRoomList(client) /* : Record<string, chatRoomListDTO> */ {
+        const userId = this.verifyToken(client);
+
+        console.log("this.chatRoomList", this.chatRoomList);
+
+        const roomList = await this.participantsRepository.find({
+            where: { userId: +userId },
+        });
+        console.log(roomList);
+        /* return this.chatRoomList; */
     }
 
     deleteChatRoom(roomId: string) {

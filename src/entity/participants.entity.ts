@@ -12,10 +12,10 @@ export class Participants {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ unique: true, nullable: false })
+    @Column({ nullable: false })
     userId: number;
 
-    @Column({ unique: true, nullable: false })
+    @Column({ nullable: false })
     chatId: number;
 
     @CreateDateColumn({ type: "datetime", nullable: false })

@@ -153,8 +153,7 @@
 
             const timeDate = `
     <span class="time_date">
-        ${nickname}<br>
-        | ${formattedTime} | ${month} ${day}
+        ${nickname} | ${formattedTime} | ${month} ${day}
     </span>
 `;
 
@@ -170,10 +169,10 @@
                 html += '<div class="received_msg">';
                 html += '<div class="received_withd_msg">';
                 html += "<p>" + message + "</p>";
-                html +=
-                    '<span class="time_date"> ' +
-                    nickname +
-                    "    | 11:01 AM    |    June 9</span>";
+                html += timeDate;
+                // '<span class="time_date"> ' +
+                // nickname +
+                // "    | 11:01 AM    |    June 9</span>";
                 html += "</div>";
                 html += "</div>";
                 html += "</div>";
@@ -207,7 +206,7 @@
             console.log("Disconnected");
         });
 
-        //채팅방 생성
+        //채팅방  생성
         $(".createChatRoom").on("click", function () {
             const roomName = prompt("채팅방 이름을 입력해주세요.");
             if (!roomName) {
