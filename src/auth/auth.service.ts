@@ -41,18 +41,18 @@ export class AuthService {
             password: hashPassword,
         });
 
-        console.log(userId);
-
         // 회원가입 이메일 전송
-
         createUserDto.isVerified = false;
         const verificationToken = this.generateAccessToken(
-            userId,
+            userId.id,
             createUserDto.name,
-        ); // 토큰 생성 함수를 사용합니다.
+        );
+
+        // 토큰 생성 함수를 사용합니다.
         const verificationLink = `${this.configService.get<string>(
             "FRONTEND_URL",
         )}/verify?token=${verificationToken}`;
+
         // OAuth2 설정
         const oauth2Client = new google.auth.OAuth2(
             this.configService.get<string>("GOOGLE_CLIENT_ID"),
@@ -103,7 +103,6 @@ export class AuthService {
             statusCode: 201,
             message:
                 "회원가입 완료, 이메일로 전송된 링크를 통해 인증후 로그인해주세요.",
-            data: { userId },
         };
     }
 
@@ -206,6 +205,7 @@ export class AuthService {
         const { email, password } = loginUserDto;
 
         const user = await this.userService.findUserByEmail(email);
+        console.log("user", user);
         if (!user) {
             throw new NotFoundException("회원가입되지 않은 이메일입니다.");
         }

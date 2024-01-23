@@ -34,7 +34,7 @@ export class UserService {
 
         const user = await this.userRepository.save(createUserDto);
 
-        return user.id;
+        return user;
     }
 
     async findAll() {
