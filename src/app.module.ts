@@ -22,6 +22,9 @@ import { AwsModule } from "./aws/aws.module";
 import { UserPositionModule } from "./user-position/user-position.module";
 import { SseController } from "./alarm/alarm.controller";
 import { AlarmserviceModule } from "./alarm/alarm.module";
+import { KakaoModule } from "./kakao/kakao.module";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
 
 @Module({
     imports: [
@@ -43,6 +46,10 @@ import { AlarmserviceModule } from "./alarm/alarm.module";
         ClubMatchModule,
         UserPositionModule,
         AlarmserviceModule,
+        KakaoModule,
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, "..", "kakaoHtml"),
+        }),
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],
