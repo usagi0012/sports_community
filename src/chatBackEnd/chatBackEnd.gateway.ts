@@ -51,7 +51,7 @@ export class ChatBackEndGateway
         }
     }
 
-    //소켓 연결 해제시 유저목록에서 제거
+    //소켓 연결 해제시 유저목록에서  제거
     public handleDisconnect(client: Socket): void {
         const { roomId } = client.data;
         if (

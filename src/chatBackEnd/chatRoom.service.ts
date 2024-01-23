@@ -115,11 +115,17 @@ export class ChatRoomService {
 
         console.log("this.chatRoomList", this.chatRoomList);
 
-        const roomList = await this.participantsRepository.find({
+        const myInfo = await this.participantsRepository.find({
             where: { userId: +userId },
         });
-        console.log(roomList);
-        /* return this.chatRoomList; */
+        console.log("client.data", client.data);
+        console.log("myInfo", myInfo);
+        console.log("chatRoomList", this.chatRoomList);
+
+        const myRoomList = myInfo.map((participants) => participants.chatId);
+        console.log("myRoomList", myRoomList);
+        return myRoomList;
+        // return this.chatRoomList;
     }
 
     deleteChatRoom(roomId: string) {
@@ -162,9 +168,7 @@ export class ChatRoomService {
     }
 
     saveMessage(client: Socket, message: string, roomId: string) {
-        console.log("******************************");
         const userId = this.verifyToken(client);
-        console.log("******************************");
 
         console.log({ userId, roomId });
         // roomId 형태가 아니라 roomId에 title 형태가 들어있어서 roomId 형태로 가져오긴 해야함.
