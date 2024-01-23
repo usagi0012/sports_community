@@ -22,11 +22,11 @@ import { AwsModule } from "./aws/aws.module";
 import { UserPositionModule } from "./user-position/user-position.module";
 import { SseController } from "./alarm/alarm.controller";
 import { AlarmserviceModule } from "./alarm/alarm.module";
-import { ReportModule } from "./report/report.module";
 
 @Module({
     imports: [
         ConfigProjectModule,
+        ScheduleModule.forRoot(),
         TypeormModule.forRoot(),
         AuthModule,
         UserModule,
@@ -43,8 +43,8 @@ import { ReportModule } from "./report/report.module";
         AwsModule,
         ClubMatchModule,
         UserPositionModule,
+        PlaceModule,
         AlarmserviceModule,
-        ReportModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],

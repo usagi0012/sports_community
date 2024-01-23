@@ -65,7 +65,7 @@ export class User {
     @OneToOne(() => ClubApplication, (clubApplication) => clubApplication.user)
     clubApplication: ClubApplication;
 
-    @DeleteDateColumn({ nullable: true })
+    @DeleteDateColumn({ nullable: true, select: false })
     deletedAt?: Date;
 
     @OneToMany(() => UserCalender, (userCalender) => userCalender.user)
