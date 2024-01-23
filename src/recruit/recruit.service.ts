@@ -1,6 +1,6 @@
-import { UserId } from "../auth/decorators/userId.decorator";
+import { User } from "./../entity/user.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Recruit, Status } from "../entity/recruit.entity";
+import { Progress, Recruit, Status } from "../entity/recruit.entity";
 import { RecruitDTO, UpdateDto, PutDTO } from "./dto/recruit.dto";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -14,15 +14,19 @@ export class RecruitService {
         private recruitRepository: Repository<Recruit>,
         @InjectRepository(Match)
         private matchRepository: Repository<Match>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
     ) {}
 
-    async postRecruit(hostid: number, recruitDTO: RecruitDTO) {
+    async postRecruit(userId: number, recruitDTO: RecruitDTO) {
+        const basicnumber = recruitDTO.totalmember;
         const newRecruit = this.recruitRepository.create({
-            hostid: hostid,
+            basictotalmember: basicnumber,
+            hostId: userId,
             ...recruitDTO,
         });
 
-        await this.recruitRepository.save(newRecruit);
+        return await this.recruitRepository.save(newRecruit);
     }
 
     async getRecruit() {
@@ -53,16 +57,15 @@ export class RecruitService {
             );
         }
 
-        await this.checkhost(hostid, id);
+        await this.checkHost(hostid, id);
 
         existingRecruit.title = putDTO.title;
         existingRecruit.region = putDTO.region;
         existingRecruit.gps = putDTO.gps;
         existingRecruit.content = putDTO.content;
         existingRecruit.gamedate = putDTO.gamedate;
-        existingRecruit.runtime = putDTO.runtime;
+        existingRecruit.endtime = putDTO.endtime;
         existingRecruit.rule = putDTO.rule;
-        existingRecruit.group = putDTO.group;
         existingRecruit.totalmember = putDTO.totalmember;
 
         const updatedRecruit =
@@ -84,7 +87,7 @@ export class RecruitService {
             );
         }
 
-        await this.checkhost(hostid, id);
+        await this.checkHost(hostid, id);
 
         existingRecruit.status = updateDto.status;
 
@@ -93,7 +96,7 @@ export class RecruitService {
 
         return updatedRecruit;
     }
-
+    //모집 글 삭제
     async deleteRecruit(hostid: number, id: number) {
         const existingRecruit = await this.recruitRepository.findOne({
             where: {
@@ -103,52 +106,61 @@ export class RecruitService {
 
         if (!existingRecruit) {
             throw new NotFoundException(
-                `Recruit with id ${id}을 찾을 수 없습니다.`,
+                `ID가 ${id}인 리크루트를 찾을 수 없습니다.`,
             );
         }
 
-        await this.checkhost(hostid, id);
+        await this.checkHost(hostid, id);
+
+        if (existingRecruit.basictotalmember !== existingRecruit.totalmember) {
+            throw new NotFoundException(
+                "이미 컴펌된 경기이거나 평가 후 삭제할 수 있습니다. ",
+            );
+        }
 
         await this.recruitRepository.remove(existingRecruit);
     }
 
     async myRecruit(userId: number) {
-        const myRecruit = await this.recruitRepository.find({
+        const myRecruits = await this.recruitRepository.find({
             where: {
-                hostid: userId,
+                hostId: userId,
             },
         });
 
-        if (!myRecruit) {
-            return new NotFoundException("모집글을 적어주세요!");
+        for (const myRecruit of myRecruits) {
+            const recruit = myRecruit;
+            await this.updateProgress(recruit);
         }
 
-        return myRecruit;
+        return await this.recruitRepository.save(myRecruits);
     }
 
     async findMyRecruit(userId: number, id: number) {
-        await this.checkhost(userId, id);
+        await this.checkHost(userId, id);
+        const matches = await this.findMatch(id);
 
         const myRecruit = await this.recruitRepository.findOne({
             where: {
-                hostid: userId,
+                hostId: userId,
                 id: id,
             },
-            relations: ["matches"],
         });
 
         if (!myRecruit) {
             throw new NotFoundException("모집글을 찾을 수 없습니다!");
         }
 
-        const matches = await this.findMatch(id);
+        await this.updateProgress(myRecruit);
 
-        const recruitMatch = {
+        await this.recruitRepository.save(myRecruit);
+
+        const result = {
             myRecruit: myRecruit,
             matches: matches,
         };
 
-        return recruitMatch;
+        return result;
     }
 
     async checkMatch(userId: number, id: number) {
@@ -158,7 +170,9 @@ export class RecruitService {
             },
         });
 
-        if (match.hostid !== userId) {
+        console.log(match.hostId);
+        console.log(userId);
+        if (match.hostId !== userId) {
             throw new NotFoundException("권한이 없습니다.");
         }
 
@@ -167,67 +181,136 @@ export class RecruitService {
 
     async putMatch(userId: number, matchUpdateDto: MatchUpdateDto, id: number) {
         const match = await this.checkMatch(userId, id);
-        const recruitId = match.recuritedid;
+        const recruitId = match.postId;
 
-        const Recruit = await this.recruitRepository.findOne({
+        const recruit = await this.recruitRepository.findOne({
             where: {
                 id: recruitId,
             },
         });
 
+        if (!recruit) {
+            throw new NotFoundException(
+                `Recruit with ID ${recruitId} not found`,
+            );
+        }
+
         if (matchUpdateDto.status === MatchStatus.APPROVED) {
             match.status = MatchStatus.APPROVED;
-            Recruit.totalmember -= 1;
+            recruit.totalmember -= 1;
 
-            if (Recruit.totalmember === 0) {
-                Recruit.status = Status.Complete;
+            if (recruit.totalmember === 0) {
+                recruit.status = Status.Complete;
+                await this.recruitRepository.save(recruit);
 
-                const anotherMatchs = await this.matchRepository.find({
+                const anotherMatches = await this.matchRepository.find({
                     where: {
-                        recuritedid: recruitId,
+                        postId: match.postId,
                         status: MatchStatus.APPLICATION_COMPLETE,
                     },
                 });
 
-                for (const individualMatch of anotherMatchs) {
+                for (const individualMatch of anotherMatches) {
                     individualMatch.status = MatchStatus.REJECTED;
+                    await this.matchRepository.save(individualMatch);
                 }
-
-                await this.matchRepository.save(anotherMatchs);
             }
         } else if (matchUpdateDto.status === MatchStatus.REJECTED) {
             if (match.status === MatchStatus.APPROVED) {
-                Recruit.totalmember += 1;
-                await this.recruitRepository.save(Recruit);
+                recruit.totalmember += 1;
+                await this.recruitRepository.save(recruit);
             }
             match.status = MatchStatus.REJECTED;
         }
 
-        await this.recruitRepository.save(Recruit);
+        await this.recruitRepository.save(recruit);
         const updatedMatch = await this.matchRepository.save(match);
 
         return updatedMatch;
     }
 
-    private findMatch(id: number) {
-        const matchs = this.matchRepository.find({
+    //본인 모집글 참석 컴펌한 유저 조회
+    async getGameUser(userId: number, id: number) {
+        const hostid = userId;
+        await this.checkHost(hostid, id);
+
+        const matches = await this.matchRepository.find({
             where: {
-                recuritedid: id,
+                postId: id,
+                status: MatchStatus.CONFIRM,
             },
         });
 
-        return matchs;
+        console.log(matches);
+        const users = [];
+
+        for (const match of matches) {
+            const guestUser = await this.userRepository.findOne({
+                where: {
+                    id: match.guestId,
+                },
+                select: ["id", "name", "club"],
+            });
+            users.push(guestUser);
+        }
+
+        return users;
     }
 
-    private async checkhost(hostid: number, id: number) {
+    //평가완료하기
+    async evaluateGame(userId: number, id: number) {
+        const hostid = userId;
+        const recruit = await this.checkHost(hostid, id);
+
+        if (recruit.progress !== Progress.PLEASE_EVALUATE) {
+            throw new NotFoundException("경기가 끝난후에 평가 가능합니다.");
+        }
+
+        recruit.progress = Progress.EVALUATION_COMPLETED;
+
+        return await this.recruitRepository.save(recruit);
+    }
+
+    private async findMatch(id: number) {
+        const matches = await this.matchRepository.find({
+            where: { postId: id },
+            select: ["id", "message", "guestName"],
+        });
+
+        return matches;
+    }
+    private async checkHost(hostid: number, id: number) {
+        console.log(hostid);
+        console.log(id);
+
         const checkrecruit = await this.recruitRepository.findOne({
             where: {
                 id: id,
             },
         });
 
-        if (hostid !== checkrecruit.hostid) {
+        console.log(checkrecruit);
+
+        if (!checkrecruit || checkrecruit.hostId !== hostid) {
             throw new NotFoundException("호스트가 아닙니다.");
+        }
+
+        return checkrecruit;
+    }
+
+    private updateProgress(recruit: Recruit) {
+        const now = new Date();
+
+        console.log(recruit.gamedate);
+        console.log(now);
+        console.log(recruit.endtime);
+
+        if (recruit.gamedate.getTime() < now.getTime()) {
+            recruit.progress = Progress.DURING;
+        }
+
+        if (recruit.endtime.getTime() < now.getTime()) {
+            recruit.progress = Progress.PLEASE_EVALUATE;
         }
     }
 }

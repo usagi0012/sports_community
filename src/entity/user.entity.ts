@@ -41,6 +41,9 @@ export class User {
     @Column()
     name: string;
 
+    @Column({ nullable: true })
+    verificationToken: string;
+
     @CreateDateColumn()
     createdAt: Date;
 
@@ -63,7 +66,7 @@ export class User {
     @OneToMany(() => UserPosition, (userPosition) => userPosition.user)
     userPosition: UserPosition[];
 
-    @OneToMany(() => Recruit, (recruit) => recruit.user)
+    @OneToMany(() => Recruit, (recruit) => recruit.guest)
     recruits: Recruit[];
 
     @OneToMany(() => Match, (match) => match.user)
