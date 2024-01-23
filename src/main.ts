@@ -13,6 +13,7 @@ import { join } from "path";
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
     app.useWebSocketAdapter(new SocketIoAdapter(app));
     app.useStaticAssets(join(__dirname, "..", "public")); //html,js,css (바닐라)
     app.setBaseViewsDir(join(__dirname, "..", "views"));
@@ -60,7 +61,10 @@ async function bootstrap() {
     // 환경 변수 설정
     const configService = app.get(ConfigService);
     const port: number = configService.get("SERVER_PORT");
-
+    app.enableCors();
     await app.listen(port);
 }
 bootstrap();
+function cors(): any {
+    throw new Error("Function not implemented.");
+}
