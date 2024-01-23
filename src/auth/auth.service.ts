@@ -39,6 +39,7 @@ export class AuthService {
         const userId = await this.userService.create({
             ...createUserDto,
             password: hashPassword,
+            verificationStatus: "미인증", // "미인증" 상태로 초기화
         });
 
         // 회원가입 이메일 전송
@@ -54,13 +55,13 @@ export class AuthService {
             this.configService.get<string>("GOOGLE_CLIENT_SECRET"),
             "https://developers.google.com/oauthplayground",
         );
-
         oauth2Client.setCredentials({
             refresh_token: this.configService.get<string>(
                 "GOOGLE_REFRESH_TOKEN",
             ),
         });
 
+        const accessToken = await oauth2Client.getAccessToken();
         // 이메일 전송
         const smtpTransport = nodemailer.createTransport({
             service: "gmail",
@@ -74,13 +75,12 @@ export class AuthService {
                 refreshToken: this.configService.get<string>(
                     "GOOGLE_REFRESH_TOKEN",
                 ),
-                accessToken: await oauth2Client.getAccessToken(),
+                accessToken: accessToken,
             },
             tls: {
                 rejectUnauthorized: false,
             },
         } as nodemailer.TransportOptions);
-
         const mailOptions = {
             from: this.configService.get<string>("GOOGLE_ID"),
             to: createUserDto.email, // 사용자가 입력한 이메일 주소

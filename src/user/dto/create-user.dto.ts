@@ -13,4 +13,8 @@ export class CreateUserDto {
     @IsString()
     @ApiProperty({ description: "이름", example: "테스트" })
     name: string;
+
+    @IsString()
+    @ApiProperty({ description: "인증상태" })
+    verificationStatus: string;
 }
