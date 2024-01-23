@@ -18,6 +18,10 @@ import { Recruit } from "./recruit.entity";
 import { Match } from "./match.entity";
 import { ClubApplication } from "./club-application.entity";
 import { UserPosition } from "./user-position.entity";
+import { IsBoolean } from "class-validator";
+import { Report } from "./report.entity";
+import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
+import { Observable } from "rxjs";
 
 @Entity({
     name: "users",
@@ -43,6 +47,10 @@ export class User {
 
     @Column({ nullable: true })
     verificationToken: string;
+
+    @Column({ default: false })
+    @IsBoolean()
+    admin: boolean;
 
     @CreateDateColumn()
     createdAt: Date;
@@ -71,4 +79,10 @@ export class User {
 
     @OneToMany(() => Match, (match) => match.user)
     matches: Match[];
+
+    @OneToMany(() => Report, (report) => report.reportUser)
+    reports: Report[];
+
+    @OneToMany(() => Report, (report) => report.benUser)
+    benReceived: Report[];
 }

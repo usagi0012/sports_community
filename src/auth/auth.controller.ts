@@ -9,6 +9,7 @@ import {
 import { AuthService } from "./auth.service";
 import { LoginUserDto } from "./dto/login-user.dto";
 import { SignupUserDto } from "./dto/signup-user.dto";
+import { SignupAdminDto } from "./dto/admin-signup.dto";
 import { accessTokenGuard } from "./guard/access-token.guard";
 import { refreshTokenGuard } from "./guard/refresh-token.guard";
 import { Request } from "express";
@@ -22,6 +23,11 @@ export class AuthController {
     @Post("signup")
     signup(@Body() singupUserDto: SignupUserDto) {
         return this.authService.signup(singupUserDto);
+    }
+    //관리자로 가입하기
+    @Post("signup/adimn")
+    admin_signup(@Body() signupAdminDto: SignupAdminDto) {
+        return this.authService.signup(signupAdminDto);
     }
 
     @Post("login")

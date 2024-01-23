@@ -22,6 +22,7 @@ import { AwsModule } from "./aws/aws.module";
 import { UserPositionModule } from "./user-position/user-position.module";
 import { SseController } from "./alarm/alarm.controller";
 import { AlarmserviceModule } from "./alarm/alarm.module";
+import { ReportModule } from "./report/report.module";
 
 @Module({
     imports: [
@@ -43,6 +44,7 @@ import { AlarmserviceModule } from "./alarm/alarm.module";
         ClubMatchModule,
         UserPositionModule,
         AlarmserviceModule,
+        ReportModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],

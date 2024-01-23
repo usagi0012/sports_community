@@ -12,6 +12,7 @@ import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import * as nodemailer from "nodemailer";
 import * as uuid from "uuid";
+import { SignupAdminDto } from "./dto/admin-signup.dto";
 
 @Injectable()
 export class AuthService {
@@ -45,6 +46,33 @@ export class AuthService {
             statusCode: 201,
             message: "회원가입 완료되었습니다.",
             data: { userId },
+        };
+    }
+    //관리자로 가입하기
+    async admin_signup(signupAdminDto: SignupAdminDto) {
+        const { checkPassword, ...createAdminDto } = signupAdminDto;
+
+        if (createAdminDto.password !== checkPassword) {
+            throw new BadRequestException(
+                "비밀번호와 확인 비밀번호가 일치하지 않습니다.",
+            );
+        }
+
+        const saltRounds = +this.configService.get<number>("SALT_ROUNDS");
+        const salt = await bcrypt.genSalt(saltRounds);
+
+        const hashPassword = await bcrypt.hash(createAdminDto.password, salt);
+
+        const userId = await this.userService.create({
+            ...createAdminDto,
+            password: hashPassword,
+        });
+
+        const admin = createAdminDto.admin;
+        return {
+            statusCode: 201,
+            message: "회원가입 완료되었습니다.",
+            data: { userId, admin },
         };
     }
 
