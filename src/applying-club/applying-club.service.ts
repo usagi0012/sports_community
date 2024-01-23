@@ -170,6 +170,14 @@ export class ApplyingClubService {
             await this.alramService.sendAlarm(memberId, message);
         }
 
+         // 멤버가 이미 가입된 동아리가 있을 경우 에러처리
+         // (신청서에서는 못보내지만 동아리 생성시 clubId 생기기 때문)
+         const isJoinedMember = this.UserRepository.findOne({where:{id:memberId}})
+        
+         if(isJoinedMember) {
+            throw new Error("신청자가 가입된 동아리가 있습니다.")
+         }
+
         // 요청한 신청서 찾기
         const userApplication = await this.clubApplicationRepository.findOne({
             where: { userId: memberId, clubId },
