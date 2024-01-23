@@ -3,8 +3,8 @@ import {
     Column,
     PrimaryGeneratedColumn,
     ManyToOne,
-    CreateDateColumn,
-    UpdateDateColumn,
+    BeforeInsert,
+    BeforeUpdate,
 } from "typeorm";
 import { Club } from "./club.entity";
 import { IsNotEmpty } from "class-validator";
@@ -15,7 +15,12 @@ export enum ClubMatchStatus {
     REJECTED = "거절",
     CANCEL = "취소",
 }
-
+export enum Progress {
+    BEFORE = "경기전",
+    DURING = "경기중",
+    PLEASE_EVALUATE = "평가해주세요",
+    EVALUATION_COMPLETED = "평가 완료",
+}
 @Entity()
 export class ClubMatch {
     @PrimaryGeneratedColumn()
@@ -25,7 +30,7 @@ export class ClubMatch {
     message: string;
 
     @Column()
-    Information: string;
+    information: string;
     @Column({
         type: "enum",
         enum: ClubMatchStatus,
@@ -45,6 +50,9 @@ export class ClubMatch {
     @Column()
     host_club_name: string;
 
+    @Column({ type: "boolean", default: false })
+    host_evaluate: boolean;
+
     @IsNotEmpty()
     @Column()
     guest_clubId: number;
@@ -57,15 +65,39 @@ export class ClubMatch {
     @Column()
     guest_club_name: string;
 
+    @Column({ type: "boolean", default: false })
+    guest_evaluate: boolean;
+
     @ManyToOne(() => Club)
     hostClub: Club;
 
     @ManyToOne(() => Club)
     guestClub: Club;
 
-    @CreateDateColumn()
-    createdAt: Date;
+    @Column({ type: "datetime" })
+    gameDate: Date;
 
-    @UpdateDateColumn()
-    updatedAt: Date;
+    @Column({ type: "datetime" })
+    endTime: Date;
+
+    @Column({
+        type: "enum",
+        enum: Progress,
+        default: Progress.BEFORE,
+    })
+    progress: Progress;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    updateProgress() {
+        const now = new Date();
+
+        if (this.gameDate < now) {
+            this.progress = Progress.DURING;
+        }
+
+        if (this.endTime < now) {
+            this.progress = Progress.PLEASE_EVALUATE;
+        }
+    }
 }
