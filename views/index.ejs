@@ -138,7 +138,11 @@
             socket.emit("getChatRoomList", null);
             localStorage.setItem("socketId", socket.id);
         });
-
+        
+        // 받아온 메세지가 roomId가 클릭되어 있지 않은 상태에서는 채팅방에 나오지 않도록 구현해보자.
+        // roomId의 클릭 상태는 localstorage에 넣어서 구현하면 될듯.
+        // 따라서 다른 방 접근시에는 다른 방을 클릭할텐데 localstorage에 저장해놨던 room title을 클릭한 것으로 바꿔주면 될듯.
+        // 추가적으로 다시 다른 방에 들어갔을 때는 db에 있는 데이터를 다시 넣어주고 그 뒤에 채팅 내역을 입력하는 식으로 하면 될듯.
         socket.on("getMessage", function ({ id, nickname, message }) {
             let html = "";
             const now = new Date();
