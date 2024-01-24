@@ -44,6 +44,7 @@ export class ChatRoomService {
 
         const roomId = `room:${uuidv4()}`;
         const nickname: string = client.data.nickname;
+        console.log("*******", roomId);
         client.emit("getMessage", {
             id: null,
             nickname: "안내",
@@ -126,8 +127,8 @@ export class ChatRoomService {
         // 여기서 계속 access Token이 만료되면 에러가 발생하는 것 같음.
         // 해결해야하는데 일단은, verifyToken 함수 주석키고, /view/chat 경로 들어가지 않은 상태에서
         // /api#으로 access Token 발급 받은 뒤에 다시 주석 없애고 실행시키면 됨.
-        console.log("client가 NaN인가",client);
-        console.log("userId가 NaN인가",userId);
+        console.log("client가 NaN인가", client);
+        console.log("userId가 NaN인가", userId);
         const myInfo = await this.participantsRepository.find({
             where: { userId: +userId },
         });
@@ -184,7 +185,7 @@ export class ChatRoomService {
         }
     }
 
-    // 로그인된 유저인지 체크
+    // 로그인된 유저인지  체크
     verifyToken(client: Socket) /* : string  */ {
         const token = client.handshake.query;
         const accessToken = token.auth;

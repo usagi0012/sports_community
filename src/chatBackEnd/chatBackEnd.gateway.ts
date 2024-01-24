@@ -108,6 +108,7 @@ export class ChatBackEndGateway
                     id: client.id,
                     nickname: client.data.nickname,
                     message,
+                    roomId,
                 }),
             // this.ChatRoomService.saveMessage(client,message,roomId)
         );

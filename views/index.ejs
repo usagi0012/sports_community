@@ -138,12 +138,12 @@
             socket.emit("getChatRoomList", null);
             localStorage.setItem("socketId", socket.id);
         });
-        
+
         // 받아온 메세지가 roomId가 클릭되어 있지 않은 상태에서는 채팅방에 나오지 않도록 구현해보자.
         // roomId의 클릭 상태는 localstorage에 넣어서 구현하면 될듯.
         // 따라서 다른 방 접근시에는 다른 방을 클릭할텐데 localstorage에 저장해놨던 room title을 클릭한 것으로 바꿔주면 될듯.
         // 추가적으로 다시 다른 방에 들어갔을 때는 db에 있는 데이터를 다시 넣어주고 그 뒤에 채팅 내역을 입력하는 식으로 하면 될듯.
-        socket.on("getMessage", function ({ id, nickname, message }) {
+        socket.on("getMessage", function ({ id, nickname, message, roomId }) {
             let html = "";
             const now = new Date();
             const hours = now.getHours();
@@ -155,34 +155,38 @@
                 minutes < 10 ? "0" : ""
             }${minutes} ${hours >= 12 ? "PM" : "AM"}`;
 
-            const timeDate = ` 
+            const timeDate = `
             <span class="time_date">
                 ${nickname} | ${formattedTime} | ${month} ${day}
             </span>
         `;
-
-            if (myInfo.id == id) {
-                html += '<div class="outgoing_msg">';
-                html += '<div class="sent_msg">';
-                html += "<p>" + message + "</p>";
-                html += `${timeDate}`;
-                html += "</div>";
-                html += "</div>";
-            } else {
-                html += '<div class="incoming_msg">';
-                html += '<div class="received_msg">';
-                html += '<div class="received_withd_msg">';
-                html += "<p>" + message + "</p>";
-                html += timeDate;
-                // '<span class="time_date"> ' +
-                // nickname +
-                // "    | 11:01 AM    |    June 9</span>";
-                html += "</div>";
-                html += "</div>";
-                html += "</div>";
+            const thisRoomId = localStorage.getItem("thisRoomId");
+            console.log({ thisRoomId });
+            console.log("*********", roomId);
+            if (thisRoomId === roomId) {
+                if (myInfo.id == id) {
+                    html += '<div class="outgoing_msg">';
+                    html += '<div class="sent_msg">';
+                    html += "<p>" + message + "</p>";
+                    html += `${timeDate}`;
+                    html += "</div>";
+                    html += "</div>";
+                } else {
+                    html += '<div class="incoming_msg">';
+                    html += '<div class="received_msg">';
+                    html += '<div class="received_withd_msg">';
+                    html += "<p>" + message + "</p>";
+                    html += timeDate;
+                    // '<span class="time_date"> ' +
+                    // nickname +
+                    // "    | 11:01 AM    |    June 9</span>";
+                    html += "</div>";
+                    html += "</div>";
+                    html += "</div>";
+                }
+                $(".chat").append(html);
+                $(".chat").scrollTop($(".chat")[0].scrollHeight);
             }
-            $(".chat").append(html);
-            $(".chat").scrollTop($(".chat")[0].scrollHeight);
         });
 
         socket.on("getChatRoomList", function (response) {
@@ -219,7 +223,7 @@
                     myRoomInfo[1][i] +
                     '">';
                 html += '<div class="chat_people">';
-                html += '<div class="chat_ib">';
+                html += `<div class="chat_ib">`;
                 html += "<h5>" + myRoomInfo[0][i] + "</h5>";
                 html += "</div>";
                 html += "</div>";
@@ -265,7 +269,7 @@
             socket.emit("getChatRoomList", null);
         });
 
-        //채팅방 입장
+        // 채팅방 입장
         $(document).on("click", ".enterChatRoom", function () {
             const thisRoomId = $(this).attr("data-roomId");
             socket.emit("enterChatRoom", thisRoomId, (res) => {
@@ -278,13 +282,13 @@
         });
 
         console.log($(".write_msg").val());
-        //메시지 전송
+        // 메시지 전송
         $(".sendMessage").on("click", function () {
             socket.emit("sendMessage", $(".write_msg").val());
             $(".write_msg").val("");
         });
 
-        //닉네임 설정
+        // 닉네임 설정
         $(".setNickname").on("click", function () {
             const nickname = prompt("변경할 닉네임을 입력해주세요.");
             if (!nickname) {
@@ -292,6 +296,16 @@
             }
             socket.emit("setNickname", nickname);
             localStorage.setItem("nickname", nickname);
+        });
+
+        // 채팅방 클릭시 클릭되었다는 정보 local storage에 저장
+        $(document).ready(function () {
+            $(".inbox_chat").on("click", ".chat_list", function () {
+                console.log("z");
+                const thisRoomId = $(this).attr("data-roomId");
+                console.log({ thisRoomId });
+                localStorage.setItem("thisRoomId", thisRoomId);
+            });
         });
     </script>
 </html>
