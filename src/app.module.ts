@@ -51,9 +51,9 @@ import { join } from "path";
         PlaceModule,
         AlarmserviceModule,
         KakaoModule,
-        ServeStaticModule.forRoot({
-            rootPath: join(__dirname, "..", "kakaoHtml"),
-        }),
+        // ServeStaticModule.forRoot({
+        //     rootPath: join(__dirname, "..", "kakaoHtml"),
+        // }),
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],

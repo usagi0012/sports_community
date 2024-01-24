@@ -1,0 +1,15 @@
+div {
+    border: solid 5px pink;
+}
+
+.clubInfo {
+    border: 5px solid pink;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.title {
+    border: 5px solid pink;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
