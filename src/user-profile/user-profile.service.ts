@@ -207,6 +207,7 @@ export class UserProfileService {
             where: { userId },
             relations: ["user"],
         });
+        delete updatedProfile.user;
         return {
             statusCode: 200,
             message: "프로필을 수정했습니다.",
