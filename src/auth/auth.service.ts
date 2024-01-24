@@ -191,7 +191,8 @@ export class AuthService {
             from: this.configService.get<string>("GOOGLE_ID"),
             to: email,
             subject: "비밀번호 재설정 안내",
-            text: `임시 비밀번호: ${temporaryPassword}`,
+            text: `임시 비밀번호: ${temporaryPassword}
+보안을 위해서 반드시 개인정보수정에서 비밀번호 재설정을 해주세요!`,
         };
 
         smtpTransport.sendMail(mailOptions, (error, response) => {
