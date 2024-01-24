@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Onog.login</title>
+        <meta name="description" content="Onog Integrated Login Platform" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link rel="stylesheet" href="css/login.css" />
+    </head>
+    <body>
+        <div class="logo">
+            <img src="resources/logo.png" id="logo" onclick="toHome()" />
+        </div>
+        <div class="bodyContainer">
+            <form
+                id="loginForm"
+                action="/login"
+                method="post"
+                onsubmit="submitForm(event)"
+            >
+                <h1>로그인</h1>
+                <label for="email">이메일 주소:</label>
+                <input type="email" id="email" name="email" required />
+                <label for="password">비밀번호:</label>
+                <input type="password" id="password" name="password" required />
+                <button type="submit">이메일로 로그인</button>
+                <div class="SNSLogin">
+                    <img src="resources/Kakao (1).png" id="Kakao" />
+                    <img src="resources/Naver (1).png" id="Naver" />
+                </div>
+                <p id="toSignup">
+                    아직 회원이 아니신가요?
+                    <a href="signup.html">회원가입</a> 하세요.
+                </p>
+            </form>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/constant.js"></script>
+        <script src="./js/login.js"></script>
+    </body>
+</html>
