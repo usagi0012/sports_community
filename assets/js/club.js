@@ -1,7 +1,7 @@
-const server = "http://localhost:8001";
+// const server = "http://localhost:8001";
 
 async function getClub() {
-    const response = await axios.get(server + "/api/club", {});
+    const response = await axios.get("/api/club", {});
     const region = [
         "서울",
         "부산",
@@ -24,6 +24,7 @@ async function getClub() {
 
     response.data.forEach((club) => {
         console.log("클럽", club);
+        console.log("클럽아이디",club.id)
         const clubListDiv = document.querySelector(".club-list");
         console.log(clubListDiv);
 
@@ -33,14 +34,14 @@ async function getClub() {
         const clubName = document.createElement("div");
         clubName.className = "clubName";
         // 이름에 click버튼 달고, click하면 동아리 상세 페이지로 이동
-        clubName.innerHTML += `<p onclick="moveClubDetail(club.id)">${club.name}</p>`;
+        clubName.innerHTML += `<p onclick="moveToClubDetail(${club.id})">${club.name}</p>`;
         // 1. onclick
         // 2. axios 이용해서 함수 만들기.
         // window onload
         clubInfoDiv.appendChild(clubName);
 
         const clubRegion = document.createElement("div");
-        clubName.className = "clubRegion";
+        clubRegion.className = "clubRegion";
         clubRegion.innerHTML = `${region[club.region]}`;
         clubInfoDiv.appendChild(clubRegion);
 
@@ -50,8 +51,9 @@ async function getClub() {
 }
 getClub();
 
-async function moveClubDetail(clubId) {
+async function moveToClubDetail(clubId) {
+    console.log("here")
     window.location.href =
-        "http://localhost:8001/club-detail.html?clubId=${clubId}";
+        `http://localhost:8001/club-detail.html?clubId=${clubId}`;
     getClubDetail(clubId);
 }
