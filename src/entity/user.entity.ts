@@ -22,6 +22,14 @@ import { IsBoolean } from "class-validator";
 import { Report } from "./report.entity";
 import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { Observable } from "rxjs";
+import { Banlist } from "./banlist.entity";
+
+export enum UserType {
+    USER = "user",
+    ADMIN = "admin",
+    BANNED_USER = "banUser",
+    PERMANENT_BAN = "영구정지",
+}
 
 @Entity({
     name: "users",
@@ -48,9 +56,8 @@ export class User {
     @Column({ nullable: true })
     verificationToken: string;
 
-    @Column({ default: false })
-    @IsBoolean()
-    admin: boolean;
+    @Column({ type: "enum", enum: UserType, default: "user" })
+    userType: UserType;
 
     @CreateDateColumn()
     createdAt: Date;
@@ -74,15 +81,15 @@ export class User {
     @OneToMany(() => UserPosition, (userPosition) => userPosition.user)
     userPosition: UserPosition[];
 
-    @OneToMany(() => Recruit, (recruit) => recruit.guest)
+    @OneToMany(() => Recruit, (recruit) => recruit.host)
     recruits: Recruit[];
-
-    @OneToMany(() => Match, (match) => match.user)
-    matches: Match[];
 
     @OneToMany(() => Report, (report) => report.reportUser)
     reports: Report[];
 
-    @OneToMany(() => Report, (report) => report.benUser)
-    benReceived: Report[];
+    @OneToMany(() => Report, (report) => report.banUser)
+    banReceived: Report[];
+
+    @OneToMany(() => Banlist, (benlist) => benlist.banListUser)
+    banList: Banlist[];
 }

@@ -1,3 +1,4 @@
+import { ScheduleModule } from "@nestjs/schedule";
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -22,6 +23,10 @@ import { AwsModule } from "./aws/aws.module";
 import { UserPositionModule } from "./user-position/user-position.module";
 import { SseController } from "./alarm/alarm.controller";
 import { AlarmserviceModule } from "./alarm/alarm.module";
+import { PlaceModule } from "./place/place.module";
+import { ReportModule } from "./report/report.module";
+import { BanlistService } from "./banlist/banlist.service";
+import { BanlistModule } from "./banlist/banlist.module";
 
 @Module({
     imports: [
@@ -45,6 +50,8 @@ import { AlarmserviceModule } from "./alarm/alarm.module";
         UserPositionModule,
         PlaceModule,
         AlarmserviceModule,
+        ReportModule,
+        BanlistModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],

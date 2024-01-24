@@ -46,7 +46,7 @@ export class Report {
     @JoinColumn({ name: "reportUserId" })
     reportUser: User;
 
-    @ManyToOne(() => User, (user) => user.benReceived)
+    @ManyToOne(() => User, (user) => user.banReceived)
     @JoinColumn({ name: "benUserId" })
-    benUser: User;
+    banUser: User;
 }

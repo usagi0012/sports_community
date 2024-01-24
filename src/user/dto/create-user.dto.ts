@@ -1,3 +1,4 @@
+import { UserType } from "../../entity/user.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import {
     IsBoolean,
@@ -34,8 +35,8 @@ export class CreateAdminDto {
     @ApiProperty({ description: "이름", example: "테스트" })
     name: string;
 
-    @IsBoolean()
+    @IsEnum(UserType)
     @IsOptional()
-    @ApiProperty({ description: "관리자 여부", example: true })
-    admin: boolean;
+    @ApiProperty({ description: "관리자 여부", example: "admin" })
+    UserType: UserType;
 }

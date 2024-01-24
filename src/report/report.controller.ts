@@ -14,24 +14,27 @@ import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { ReportService } from "./report.service";
 import { UserId } from "../auth/decorators/userId.decorator";
 import { userInfo } from "os";
-import { Admin } from "typeorm";
 import { ReportDTO } from "./dto/report.dto";
+import { BanGuard } from "./../auth/decorators/ban.guard";
+import { BanUsers } from "./../auth/decorators/banUser.decorator";
+import { UserType } from "src/entity/user.entity";
 
 @ApiTags("신고 시스템")
 @Controller("report")
 @ApiBearerAuth("accessToken")
-@UseGuards(accessTokenGuard)
+@UseGuards(accessTokenGuard, BanGuard)
+@BanUsers(UserType.BANNED_USER, UserType.PERMANENT_BAN)
 export class ReportController {
     constructor(private readonly reportService: ReportService) {}
 
     //벤 신청하기
-    @Post(":benUserId")
+    @Post(":banUserId")
     async benUser(
         @UserId() userId: number,
-        @Param("benUserId") benUserId: number,
+        @Param("banUserId") banUserId: number,
         @Body() reportDTO: ReportDTO,
     ) {
-        return await this.reportService.benUser(userId, benUserId, reportDTO);
+        return await this.reportService.benUser(userId, banUserId, reportDTO);
     }
     //본인이 신청한 벤 조회하기
     @Get("me")

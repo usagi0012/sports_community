@@ -1,11 +1,10 @@
-import { UserProfile } from "src/entity/user-profile.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Not, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ReportDTO } from "./dto/report.dto";
 import { User } from "./../entity/user.entity";
+import { UserType } from "./../entity/user.entity";
 import { Progress, Report } from "./../entity/report.entity";
-import { find } from "lodash";
 import { ReportProcessDTO } from "./dto/process.report.dto";
 
 @Injectable()
@@ -151,7 +150,7 @@ export class ReportService {
             },
         });
 
-        if (!user || user.admin !== true) {
+        if (!user || user.userType !== UserType.ADMIN) {
             throw new NotFoundException("NOT ADMIN");
         }
     }

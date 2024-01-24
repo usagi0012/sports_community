@@ -68,11 +68,10 @@ export class AuthService {
             password: hashPassword,
         });
 
-        const admin = createAdminDto.admin;
         return {
             statusCode: 201,
-            message: "회원가입 완료되었습니다.",
-            data: { userId, admin },
+            message: "관리자 회원가입 완료되었습니다.",
+            data: { userId },
         };
     }
 
