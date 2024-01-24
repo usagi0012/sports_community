@@ -5,6 +5,8 @@ async function submitForm(event) {
     const password = document.getElementById("password").value;
 
     try {
+        // server 빼기
+        // then 으로 작업하기
         const response = await axios.post(server + "/api/auth/login", {
             email: email,
             password: password,
