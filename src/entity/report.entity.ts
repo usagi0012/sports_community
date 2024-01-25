@@ -34,7 +34,7 @@ export class Report {
     reportUserId: number;
 
     @Column()
-    benUserId: number;
+    banUserId: number;
 
     @CreateDateColumn()
     createdAt: Date;
@@ -47,6 +47,6 @@ export class Report {
     reportUser: User;
 
     @ManyToOne(() => User, (user) => user.banReceived)
-    @JoinColumn({ name: "benUserId" })
+    @JoinColumn({ name: "banUserId" })
     banUser: User;
 }

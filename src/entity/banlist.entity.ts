@@ -37,14 +37,17 @@ export class Banlist {
     })
     actionType: ActionType;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, type: "datetime" })
     @IsOptional()
     @IsFutureDate()
     duration?: Date;
 
-    setDurationFromNumber(numberValue: number): void {
+    static setDurationFromNumber(numberValue: number): Date {
         const currentDate = new Date();
-        currentDate.setDate(currentDate.getDate() + numberValue);
-        this.duration = currentDate;
+        const futureDate = new Date(
+            currentDate.getTime() + numberValue * 24 * 60 * 60 * 1000,
+        );
+
+        return new Date(futureDate.toDateString());
     }
 }

@@ -56,7 +56,7 @@ export class User {
     @Column({ nullable: true })
     verificationToken: string;
 
-    @Column({ type: "enum", enum: UserType, default: "user" })
+    @Column({ type: "enum", enum: UserType, default: UserType.USER })
     userType: UserType;
 
     @CreateDateColumn()
@@ -84,12 +84,15 @@ export class User {
     @OneToMany(() => Recruit, (recruit) => recruit.host)
     recruits: Recruit[];
 
+    @OneToMany(() => Match, (match) => match.guest)
+    matches: Match[];
+
     @OneToMany(() => Report, (report) => report.reportUser)
     reports: Report[];
 
     @OneToMany(() => Report, (report) => report.banUser)
     banReceived: Report[];
 
-    @OneToMany(() => Banlist, (benlist) => benlist.banListUser)
+    @OneToMany(() => Banlist, (banlist) => banlist.banListUser)
     banList: Banlist[];
 }

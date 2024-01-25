@@ -16,6 +16,12 @@ export class UserTypeGuard extends AuthGuard("jwt") implements CanActivate {
             return false;
         }
 
+        const { user } = context.switchToHttp().getRequest();
+
+        if (!user) {
+            return false;
+        }
+
         const requiredUsertypes = this.reflector.getAllAndOverride<UserType[]>(
             "usertypes",
             [context.getHandler(), context.getClass()],
@@ -24,7 +30,6 @@ export class UserTypeGuard extends AuthGuard("jwt") implements CanActivate {
             return true;
         }
 
-        const { user } = context.switchToHttp().getRequest();
         return requiredUsertypes.some((usertype) => user.usertype === usertype);
     }
 }

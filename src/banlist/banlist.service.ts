@@ -51,10 +51,11 @@ export class BanlistService {
             const banlist = new Banlist();
             banlist.actionType = ActionType.PENALTY;
             banlist.banListUser = banListUser;
+            banlist.duration = Banlist.setDurationFromNumber(
+                penaltyDTO.duration,
+            );
 
-            if (penaltyDTO.duration) {
-                banlist.setDurationFromNumber(penaltyDTO.duration);
-            }
+            console.log(banlist.duration);
 
             banListUser.userType = UserType.BANNED_USER;
 
@@ -86,7 +87,7 @@ export class BanlistService {
             banlist.actionType = ActionType.PERMANENT_BAN;
             banlist.banListUser = banListUser;
 
-            banListUser.userType = UserType.BANNED_USER;
+            banListUser.userType = UserType.PERMANENT_BAN;
 
             await Promise.all([
                 this.banlistRepository.save(banlist),
@@ -102,39 +103,49 @@ export class BanlistService {
         try {
             await this.checkAdmin(userId);
 
-            return await this.banlistRepository.find({
+            return await this.userRepository.findOne({
                 where: {
-                    banListUserId: banUserId,
+                    id: banUserId,
+                },
+                relations: {
+                    banList: true,
                 },
             });
-        } catch (error) {}
+        } catch (error) {
+            // Handle errors here
+        }
     }
 
     // 징계 취소하기
     async cancelBan(userId: number, banListId: number) {
         try {
             await this.checkAdmin(userId);
+            console.log(banListId);
 
             const banlist = await this.banlistRepository.findOne({
                 where: {
                     id: banListId,
                 },
+                relations: {
+                    banListUser: true,
+                },
             });
+
+            if (!banlist) {
+                throw new NotFoundException("없는 벤리스트입니다.");
+            }
 
             const user = banlist.banListUser;
 
             user.userType = UserType.USER;
 
-            await Promise.all([
-                this.userRepository.save(user),
+            return await Promise.all([
                 this.banlistRepository.remove(banlist),
+                this.userRepository.save(user),
             ]);
-
-            return {
-                status: 200,
-                message: "Deletion complete",
-            };
-        } catch (error) {}
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
     //어드민 확인

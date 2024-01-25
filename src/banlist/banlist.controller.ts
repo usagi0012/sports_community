@@ -13,14 +13,13 @@ import { BanlistService } from "./banlist.service";
 import { UserId } from "../auth/decorators/userId.decorator";
 import { PenaltyDTO } from "./dto/Penalty.dto";
 
-import { UserTypeGuard } from "src/auth/decorators/roles.guard";
+import { UserTypeGuard } from "src/auth/guard/roles.guard";
 import { Usertypes } from "src/auth/decorators/roles.decorator";
 import { UserType } from "./../entity/user.entity";
 
 @ApiTags("밴 리스트")
 @ApiBearerAuth("accessToken")
-@UseGuards(accessTokenGuard, UserTypeGuard)
-@Usertypes(UserType.ADMIN)
+@UseGuards(accessTokenGuard)
 @Controller("banlist")
 export class BanlistController {
     constructor(private readonly banlistService: BanlistService) {}
@@ -30,7 +29,7 @@ export class BanlistController {
     async warningUser(
         @UserId() userId: number,
         @Param("banUserId") banUserId: number,
-    ): Promise<any> {
+    ) {
         return this.banlistService.warningUser(userId, banUserId);
     }
 
@@ -40,7 +39,7 @@ export class BanlistController {
         @UserId() userId: number,
         @Param("banUserId") banUserId: number,
         @Body() penaltyDTO: PenaltyDTO,
-    ): Promise<any> {
+    ) {
         return this.banlistService.penaltyUser(userId, banUserId, penaltyDTO);
     }
 
@@ -49,7 +48,7 @@ export class BanlistController {
     async permanentBanUser(
         @UserId() userId: number,
         @Param("banUserId") banUserId: number,
-    ): Promise<any> {
+    ) {
         return this.banlistService.permanentBanUser(userId, banUserId);
     }
 
@@ -58,17 +57,18 @@ export class BanlistController {
     async getBanList(
         @UserId() userId: number,
         @Param("banUserId") banUserId: number,
-    ): Promise<any> {
+    ) {
         return this.banlistService.getBanList(userId, banUserId);
     }
 
     // 징계 취소하기
 
-    @Delete("cancel/:banListId")
+    @Delete("banlist/cancel/:banListId")
     async cancelBan(
         @UserId() userId: number,
         @Param("banListId") banListId: number,
-    ): Promise<any> {
+        z,
+    ) {
         return this.banlistService.cancelBan(userId, banListId);
     }
 }
