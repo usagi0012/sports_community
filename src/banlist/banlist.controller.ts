@@ -11,10 +11,8 @@ import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { BanlistService } from "./banlist.service";
 import { UserId } from "../auth/decorators/userId.decorator";
-import { PenaltyDTO } from "./dto/Penalty.dto";
+import { PenaltyDTO } from ".";
 
-import { UserTypeGuard } from "src/auth/guard/roles.guard";
-import { Usertypes } from "src/auth/decorators/roles.decorator";
 import { UserType } from "./../entity/user.entity";
 
 @ApiTags("밴 리스트")
