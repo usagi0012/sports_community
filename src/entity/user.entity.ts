@@ -41,8 +41,8 @@ export class User {
     @Column()
     name: string;
 
-    @Column({ nullable: true })
-    verificationToken: string;
+    @Column({ default: false })
+    isVerified: boolean;
 
     @CreateDateColumn()
     createdAt: Date;
@@ -57,7 +57,7 @@ export class User {
     @OneToOne(() => ClubApplication, (clubApplication) => clubApplication.user)
     clubApplication: ClubApplication;
 
-    @DeleteDateColumn({ nullable: true })
+    @DeleteDateColumn({ nullable: true, select: false })
     deletedAt?: Date;
 
     @OneToMany(() => UserCalender, (userCalender) => userCalender.user)

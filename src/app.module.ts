@@ -1,4 +1,4 @@
-import { Module, Render } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { ConfigProjectModule } from "./config/config.module";
@@ -13,7 +13,6 @@ import { UserCalenderModule } from "./user-calender/user-calender.module";
 import { RecruitController } from "./recruit/recruit.controller";
 import { RecruitModule } from "./recruit/recruit.module";
 import { MatchModule } from "./match/match.module";
-import { RecruitService } from "./recruit/recruit.service";
 import { ApplyingClubModule } from "./applying-club/applying-club.module";
 import { ClubMatchModule } from "./club_match/club_match.module";
 import { ChatBackEndModule } from "./chatBackEnd/chatBackEnd.module";
@@ -22,12 +21,15 @@ import { AwsModule } from "./aws/aws.module";
 import { UserPositionModule } from "./user-position/user-position.module";
 import { SseController } from "./alarm/alarm.controller";
 import { AlarmserviceModule } from "./alarm/alarm.module";
-import { KakaoModule } from "./social-login/kakao/kakao.module";
 import { NaverModule } from "./social-login/naver/naver.module";
+import { PlaceModule } from "./place/place.module";
+import { KakaoModule } from "./social-login/kakao/kakao.module";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
     imports: [
         ConfigProjectModule,
+        ScheduleModule.forRoot(),
         TypeormModule.forRoot(),
         AuthModule,
         UserModule,
@@ -44,6 +46,7 @@ import { NaverModule } from "./social-login/naver/naver.module";
         AwsModule,
         ClubMatchModule,
         UserPositionModule,
+        PlaceModule,
         AlarmserviceModule,
         KakaoModule,
         NaverModule,
