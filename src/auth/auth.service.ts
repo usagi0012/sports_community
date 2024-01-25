@@ -13,6 +13,7 @@ import * as bcrypt from "bcrypt";
 import * as nodemailer from "nodemailer";
 import { google } from "googleapis";
 
+
 @Injectable()
 export class AuthService {
     constructor(
@@ -105,7 +106,7 @@ export class AuthService {
                 "회원가입 완료, 이메일로 전송된 링크를 통해 인증후 로그인해주세요.",
         };
     }
-
+  
     //이메일로 유저 인증
     async verify(token: string): Promise<string> {
         try {
