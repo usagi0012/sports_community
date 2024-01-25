@@ -1,3 +1,4 @@
+import { ScheduleModule } from "@nestjs/schedule";
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -23,10 +24,9 @@ import { UserPositionModule } from "./user-position/user-position.module";
 import { SseController } from "./alarm/alarm.controller";
 import { AlarmserviceModule } from "./alarm/alarm.module";
 import { PlaceModule } from "./place/place.module";
-import { ScheduleModule } from "@nestjs/schedule";
-import { KakaoModule } from "./kakao/kakao.module";
-import { ServeStaticModule } from "@nestjs/serve-static";
-import { join } from "path";
+import { ReportModule } from "./report/report.module";
+import { BanlistService } from "./banlist/banlist.service";
+import { BanlistModule } from "./banlist/banlist.module";
 
 @Module({
     imports: [
@@ -50,10 +50,8 @@ import { join } from "path";
         UserPositionModule,
         PlaceModule,
         AlarmserviceModule,
-        KakaoModule,
-        ServeStaticModule.forRoot({
-            rootPath: join(__dirname, "..", "kakaoHtml"),
-        }),
+        ReportModule,
+        BanlistModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],
