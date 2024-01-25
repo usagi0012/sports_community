@@ -1,5 +1,3 @@
-import { Module, Render } from "@nestjs/common";
-import { ScheduleModule } from "@nestjs/schedule";
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -27,11 +25,11 @@ import { AlarmserviceModule } from "./alarm/alarm.module";
 import { KakaoModule } from "./social-login/kakao/kakao.module";
 import { NaverModule } from "./social-login/naver/naver.module";
 import { PlaceModule } from "./place/place.module";
-import { ScheduleModule } from "@nestjs/schedule";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { ReportModule } from "./report/report.module";
 import { BanlistService } from "./banlist/banlist.service";
 import { BanlistModule } from "./banlist/banlist.module";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
     imports: [
