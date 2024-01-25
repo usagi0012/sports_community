@@ -22,6 +22,14 @@ import { ChangeUserDto } from "./dto/change-user.dto";
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+    //관리자로 변경하기
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Put("admin")
+    putAdmin(@UserId() userId: number) {
+        return this.userService.putAdmin(userId);
+    }
+
     //전체 유저정보 조회
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)

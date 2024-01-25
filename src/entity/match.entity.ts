@@ -1,4 +1,3 @@
-import { IsBoolean } from "class-validator";
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -9,10 +8,8 @@ import {
     BeforeUpdate,
     BeforeInsert,
 } from "typeorm";
-import { User } from "./user.entity";
 import { Recruit } from "./recruit.entity";
-import { Userscore } from "./userscore.entity";
-import { Personaltagcounter } from "./personaltagcounter.entity";
+import { User } from "./user.entity";
 
 export enum MatchStatus {
     APPLICATION_COMPLETE = "신청완료",
@@ -35,15 +32,6 @@ export class Match {
     id: number;
 
     @Column()
-    message: string;
-
-    @Column({ type: "datetime" })
-    gameDate: Date;
-
-    @Column({ type: "datetime" })
-    endTime: Date;
-
-    @Column()
     guestId: number;
 
     @Column()
@@ -53,7 +41,19 @@ export class Match {
     hostId: number;
 
     @Column()
-    postId: number;
+    hostName: string;
+
+    @Column()
+    recruitId: number;
+
+    @Column()
+    message: string;
+
+    @Column({ type: "datetime" })
+    gameDate: Date;
+
+    @Column({ type: "datetime" })
+    endTime: Date;
 
     @Column({ default: false })
     evaluate: boolean;
@@ -73,19 +73,20 @@ export class Match {
     progress: Progress;
 
     @ManyToOne(() => User, (user) => user.matches)
-    @JoinColumn({ name: "userId" })
-    user: User;
+    @JoinColumn({ name: "guestId" })
+    guest: User;
 
     @BeforeInsert()
     @BeforeUpdate()
     updateProgress() {
         const now = new Date();
 
-        if (this.gameDate < now) {
+        if (this.gameDate <= now && this.endTime > now) {
             this.progress = Progress.DURING;
-        }
-
-        if (this.endTime < now) {
+        } else if (
+            this.endTime <= now &&
+            this.progress !== Progress.EVALUATION_COMPLETED
+        ) {
             this.progress = Progress.PLEASE_EVALUATE;
         }
     }
