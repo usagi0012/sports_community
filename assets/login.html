@@ -24,6 +24,9 @@
                 <input type="email" id="email" name="email" required />
                 <label for="password">비밀번호:</label>
                 <input type="password" id="password" name="password" required />
+                <span id="findPassword" onclick="toForgotPassword()"
+                    >비밀번호를 잊어버리셨나요?</span
+                >
                 <button type="submit">이메일로 로그인</button>
                 <div class="SNSLogin">
                     <img src="resources/Kakao (1).png" id="Kakao" />
@@ -31,13 +34,12 @@
                 </div>
                 <p id="toSignup">
                     아직 회원이 아니신가요?
-                    <a href="signup.html">회원가입</a> 하세요.
+                    <a href="signup.html"> 회원가입</a>
                 </p>
             </form>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="./js/constant.js"></script>
         <script src="./js/login.js"></script>
     </body>
 </html>
