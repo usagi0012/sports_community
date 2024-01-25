@@ -12,10 +12,6 @@ export class ChangeUserDto {
     })
     email?: string;
 
-    @IsString()
-    @ApiPropertyOptional({ description: "비밀번호", example: "1234" })
-    password?: string;
-
     @IsOptional()
     @IsString()
     @ApiPropertyOptional({ description: "변경할 비밀번호", example: "12345" })

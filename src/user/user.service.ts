@@ -92,6 +92,7 @@ export class UserService {
             checkPasswordDto.password,
             userPassword,
         );
+        const updatedUser = await this.findUserById(user.id);
         if (!isCurrentPasswordCorrect) {
             return {
                 success: false,
@@ -99,7 +100,11 @@ export class UserService {
             };
         }
 
-        return { success: true, message: "현재 비밀번호가 일치합니다." };
+        return {
+            success: true,
+            message: "현재 비밀번호가 일치합니다.",
+            data: updatedUser.id,
+        };
     }
     async findUserByEmail(email: string) {
         return await this.userRepository.findOne({
@@ -125,23 +130,38 @@ export class UserService {
         );
         return result;
     }
-
-    //내 정보 수정
+    //이메일 검증 함수수
+    async isValidEmail(email) {
+        // 간단한 이메일 유효성 검사를 위한 정규 표현식
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    // 내 정보 수정
     async updateUser(id: number, changeUserDto: ChangeUserDto) {
         const user = await this.findUserByIdAll(id);
-        const userPassword = (await this.findUserByEmail(user.email)).password;
+        console.log(changeUserDto);
+        console.log(user);
 
         if (!user) {
             throw new NotFoundException("존재하지 않는 사용자입니다.");
         }
 
         if (changeUserDto.email) {
-            const existingEmail = await this.findUserByEmail(
-                changeUserDto.email,
-            );
-            console.log(existingEmail);
-            if (existingEmail) {
-                throw new ConflictException("이미 존재하는 이메일입니다.");
+            // 변경하려는 이메일이 형식에 맞는지 검사
+            if (!this.isValidEmail(changeUserDto.email)) {
+                throw new BadRequestException(
+                    "유효하지 않은 이메일 주소입니다.",
+                );
+            }
+
+            if (changeUserDto.email !== user.email) {
+                const existingEmail = await this.findUserByEmail(
+                    changeUserDto.email,
+                );
+                console.log(existingEmail);
+                if (existingEmail) {
+                    throw new ConflictException("이미 존재하는 이메일입니다.");
+                }
             }
         }
 
@@ -171,13 +191,16 @@ export class UserService {
             );
         }
 
-        // 수정하기
-        await this.userRepository.update(
-            { id },
-            {
-                email: changeUserDto.email,
-            },
-        );
+        // 이메일 업데이트
+        if (changeUserDto.email) {
+            await this.userRepository.update(
+                { id },
+                {
+                    email: changeUserDto.email,
+                },
+            );
+        }
+
         const updatedUser = await this.findUserById(id);
 
         return {
@@ -186,6 +209,7 @@ export class UserService {
             data: { updatedUser },
         };
     }
+
     //내 정보 삭제
     async deleteUserById(userId) {
         const user = await this.findUserById(userId);

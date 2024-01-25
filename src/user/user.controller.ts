@@ -52,6 +52,7 @@ export class UserController {
     @UseGuards(accessTokenGuard)
     @Put("me")
     updateUserById(@UserId() id: string, @Body() changeUserDto: ChangeUserDto) {
+        console.log(changeUserDto);
         return this.userService.updateUser(+id, changeUserDto);
     }
 
