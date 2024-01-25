@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, Render } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { ConfigProjectModule } from "./config/config.module";
@@ -22,9 +22,8 @@ import { AwsModule } from "./aws/aws.module";
 import { UserPositionModule } from "./user-position/user-position.module";
 import { SseController } from "./alarm/alarm.controller";
 import { AlarmserviceModule } from "./alarm/alarm.module";
-import { KakaoModule } from "./kakao/kakao.module";
-import { ServeStaticModule } from "@nestjs/serve-static";
-import { join } from "path";
+import { KakaoModule } from "./social-login/kakao/kakao.module";
+import { NaverModule } from "./social-login/naver/naver.module";
 
 @Module({
     imports: [
@@ -47,9 +46,7 @@ import { join } from "path";
         UserPositionModule,
         AlarmserviceModule,
         KakaoModule,
-        ServeStaticModule.forRoot({
-            rootPath: join(__dirname, "..", "kakaoHtml"),
-        }),
+        NaverModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],
