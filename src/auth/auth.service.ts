@@ -106,33 +106,7 @@ export class AuthService {
                 "회원가입 완료, 이메일로 전송된 링크를 통해 인증후 로그인해주세요.",
         };
     }
-    //관리자로 가입하기
-    async admin_signup(signupAdminDto: SignupAdminDto) {
-        const { checkPassword, ...createAdminDto } = signupAdminDto;
-
-        if (createAdminDto.password !== checkPassword) {
-            throw new BadRequestException(
-                "비밀번호와 확인 비밀번호가 일치하지 않습니다.",
-            );
-        }
-
-        const saltRounds = +this.configService.get<number>("SALT_ROUNDS");
-        const salt = await bcrypt.genSalt(saltRounds);
-
-        const hashPassword = await bcrypt.hash(createAdminDto.password, salt);
-
-        const userId = await this.userService.create({
-            ...createAdminDto,
-            password: hashPassword,
-        });
-
-        return {
-            statusCode: 201,
-            message: "관리자 회원가입 완료되었습니다.",
-            data: { userId },
-        };
-    }
-
+  
     //이메일로 유저 인증
     async verify(token: string): Promise<string> {
         try {
