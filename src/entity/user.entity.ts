@@ -53,8 +53,8 @@ export class User {
     @Column()
     name: string;
 
-    @Column({ nullable: true })
-    verificationToken: string;
+    @Column({ default: false })
+    isVerified: boolean;
 
     @Column({ type: "enum", enum: UserType, default: UserType.USER })
     userType: UserType;

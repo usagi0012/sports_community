@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <div class="header">
+            <div class="logo">
+                <img src="resources/logo.png" id="logo" />
+            </div>
+            <div class="iconBox">
+                <button id="logout_btn" onclick="logoutform()">
+                    <i class="fas fa-solid fa-right-from-bracket"></i>
+                </button>
+                <div id="invited_user">
+                    <div>
+                        <button
+                            id="invite_btn"
+                            type="button"
+                            class="btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#inviteModal"
+                        >
+                            <i class="fas fa-solid fa-user-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 알람 버튼 -->
+            <div id="alarm_Btn">
+                <div>
+                    <button
+                        id="alarm_btn"
+                        type="button"
+                        class="btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#alarmModal"
+                    >
+                        <i class="fas fa-solid fa-bell"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
