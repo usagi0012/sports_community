@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>동아리 전체 페이지</title>
         <link rel="stylesheet" href="css/club.css" />
     </head>
     <body>
@@ -98,6 +98,7 @@
                     })
                     .catch(function (error) {
                         console.log(error.response);
+                        alert("동아리를 등록할 수 없습니다.");
                     });
 
                 //폼 제출 후 모달 닫기

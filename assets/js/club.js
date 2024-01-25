@@ -63,6 +63,7 @@ function getClub(event) {
                 const clubNameP = document.createElement("p");
                 clubNameP.textContent = club.name;
                 clubNameP.onclick = function () {
+                    // 페이지 이동 전에 로그인 된 유저만 이동될 수 있도록 막는 로직 필요.
                     window.location.href = `http://localhost:8001/club-detail.html?id=${club.id}`;
                     // getClubDetail(club.id);
                 };
