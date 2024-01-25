@@ -26,9 +26,7 @@ import { KakaoModule } from "./social-login/kakao/kakao.module";
 import { NaverModule } from "./social-login/naver/naver.module";
 import { PlaceModule } from "./place/place.module";
 import { ScheduleModule } from "@nestjs/schedule";
-import { KakaoModule } from "./kakao/kakao.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
-import { join } from "path";
 
 @Module({
     imports: [
