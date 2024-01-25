@@ -24,10 +24,16 @@ import { SseController } from "./alarm/alarm.controller";
 import { AlarmserviceModule } from "./alarm/alarm.module";
 import { KakaoModule } from "./social-login/kakao/kakao.module";
 import { NaverModule } from "./social-login/naver/naver.module";
+import { PlaceModule } from "./place/place.module";
+import { ScheduleModule } from "@nestjs/schedule";
+import { KakaoModule } from "./kakao/kakao.module";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
 
 @Module({
     imports: [
         ConfigProjectModule,
+        ScheduleModule.forRoot(),
         TypeormModule.forRoot(),
         AuthModule,
         UserModule,
@@ -44,6 +50,7 @@ import { NaverModule } from "./social-login/naver/naver.module";
         AwsModule,
         ClubMatchModule,
         UserPositionModule,
+        PlaceModule,
         AlarmserviceModule,
         KakaoModule,
         NaverModule,
