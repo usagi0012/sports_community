@@ -1,4 +1,4 @@
-// const server = "http://localhost:8001";
+import getClubDetail from "./club-detail.js";
 const region = [
     "서울",
     "부산",
@@ -19,18 +19,27 @@ const region = [
     "제주도",
 ];
 
+// function moveToClubDetail(clubId) {
+//     console.log("here");
+//     console.log("clubId", clubId);
+//     window.location.href = `http://localhost:8001/club-detail.html/${clubId}`;
+//     getClubDetail(clubId);
+//     console.log("$$$$$");
+// }
+
 window.onload = function () {
     console.log("start");
     getClub();
 };
 
-function getClub() {
+function getClub(event) {
     axios
         .get("/api/club")
         .then(function (response) {
             console.log(response);
             response.data.forEach((club) => {
                 console.log("club", club);
+                console.log("clubId입니다", club.id);
                 const clubListDiv = document.querySelector(".club-list");
 
                 const clubInfoDiv = document.createElement("div");
@@ -41,10 +50,24 @@ function getClub() {
                 clubId.innerHTML = `${club.id}`;
                 clubInfoDiv.appendChild(clubId);
 
+                // const clubName = document.createElement("div");
+                // clubName.className = "clubName";
+                // clubName.innerHTML += `<p onclick="moveToClubDetail(
+                //     ${club.id},
+                // )">${club.name}</p>`;
+                // // 2. axios 이용해서 함수 만들기.
+                // clubInfoDiv.appendChild(clubName);
+
                 const clubName = document.createElement("div");
                 clubName.className = "clubName";
-                clubName.innerHTML += `<p onclick="moveToClubDetail(${club.id})">${club.name}</p>`;
-                // 2. axios 이용해서 함수 만들기.
+                const clubNameP = document.createElement("p");
+                clubNameP.textContent = club.name;
+                clubNameP.onclick = function () {
+                    window.location.href = `http://localhost:8001/club-detail.html?id=${club.id}`;
+                    console.log("nnn");
+                    // getClubDetail(club.id);
+                };
+                clubName.appendChild(clubNameP);
                 clubInfoDiv.appendChild(clubName);
 
                 const clubRegion = document.createElement("div");
@@ -70,12 +93,4 @@ function getClub() {
             console.log(error.request.response);
             alert(error.request.response);
         });
-}
-
-function moveToClubDetail(clubId) {
-    console.log("here");
-    console.log("clubId", clubId);
-    window.location.href = `http://localhost:8001/club-detail.html?clubId=${clubId}`;
-    getClubDetail(clubId);
-    console.log("$$$$$");
 }

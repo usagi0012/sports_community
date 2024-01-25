@@ -8,7 +8,7 @@
     </head>
     <body>
         <div class="club">
-            <button>동아리 만들기</button>
+            <button onclick="openModal()">동아리 생성</button>
         </div>
 
         <div class="title">
@@ -19,10 +19,59 @@
             <div>점수</div>
         </div>
 
+        <!-- 동아리 생성 모달창 -->
+        <div id="creatClubModal" class="modal">
+            <div class="modal-content">
+                <label for="name">이름:</label>
+                <input type="text" id="name" />
+                <br />
+                <label for="location">지역:</label>
+                <input type="text" id="location" />
+                <br />
+                <label for="description">설명:</label>
+                <textarea id="description"></textarea>
+                <br />
+                <input type="file" id="fileInput" />
+                <br />
+                <button onclick="submitForm()">제출</button>
+                <button onclick="closeModal()">닫기</button>
+            </div>
+        </div>
         <div class="club-list"></div>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="./js/club.js"></script>
-        <script src="./js/club-detail.js"></script>
+        <script type="module" src="./js/club.js"></script>
+        <!-- <script src="./js/club-detail.js"></script> -->
+        <script>
+            function openModal() {
+                document.getElementById("creatClubModal").style.display =
+                    "flex";
+            }
+
+            function closeModal() {
+                document.getElementById("creatClubModal").style.display =
+                    "none";
+            }
+
+            function submitForm() {
+                const name = document.getElementById("name").value;
+                const region = document.getElementById("location").value;
+                const description =
+                    document.getElementById("description").value;
+                const file = document.getElementById("fileInput").files[0];
+                axios
+                    .post("/api/club", {
+                        name: name,
+                        region: region,
+                        description: description,
+                    })
+                    .then(function (response) {})
+                    .catch(function (error) {
+                        console.log(error.response);
+                    });
+
+                //폼 제출 후 모달 닫기
+                closeModal();
+            }
+        </script>
     </body>
 </html>
-l
