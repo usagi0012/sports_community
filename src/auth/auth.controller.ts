@@ -12,6 +12,7 @@ import {
 import { AuthService } from "./auth.service";
 import { LoginUserDto } from "./dto/login-user.dto";
 import { SignupUserDto } from "./dto/signup-user.dto";
+import { SignupAdminDto } from "./dto/admin-signup.dto";
 import { accessTokenGuard } from "./guard/access-token.guard";
 import { refreshTokenGuard } from "./guard/refresh-token.guard";
 import { Request } from "express";

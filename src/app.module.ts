@@ -1,4 +1,6 @@
 import { Module, Render } from "@nestjs/common";
+import { ScheduleModule } from "@nestjs/schedule";
+import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { ConfigProjectModule } from "./config/config.module";
@@ -27,6 +29,9 @@ import { NaverModule } from "./social-login/naver/naver.module";
 import { PlaceModule } from "./place/place.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { ServeStaticModule } from "@nestjs/serve-static";
+import { ReportModule } from "./report/report.module";
+import { BanlistService } from "./banlist/banlist.service";
+import { BanlistModule } from "./banlist/banlist.module";
 
 @Module({
     imports: [
@@ -52,6 +57,8 @@ import { ServeStaticModule } from "@nestjs/serve-static";
         AlarmserviceModule,
         KakaoModule,
         NaverModule,
+        ReportModule,
+        BanlistModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],

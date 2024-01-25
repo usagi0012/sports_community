@@ -6,6 +6,7 @@ import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Match, MatchStatus } from "../entity/match.entity";
 import { MatchUpdateDto } from "./dto/checkmatch.dto";
+import { ST } from "next/dist/shared/lib/utils";
 
 @Injectable()
 export class RecruitService {
@@ -18,109 +19,39 @@ export class RecruitService {
         private userRepository: Repository<User>,
     ) {}
 
+    //모집 글 등록
     async postRecruit(userId: number, recruitDTO: RecruitDTO) {
         const basicnumber = recruitDTO.totalmember;
+
         const newRecruit = this.recruitRepository.create({
             basictotalmember: basicnumber,
             hostId: userId,
+
             ...recruitDTO,
         });
 
         return await this.recruitRepository.save(newRecruit);
     }
 
+    //모집 글 조회
     async getRecruit() {
         const Recruit = await this.recruitRepository.find();
 
         return Recruit;
     }
 
-    async findRecruit(id: number) {
+    //모집 글 상세조회
+    async findRecruit(recruitId: number) {
         const findRecruit = await this.recruitRepository.findOne({
             where: {
-                id: id,
+                id: recruitId,
             },
         });
 
         return findRecruit;
     }
-    async putRecruit(hostid: number, putDTO: PutDTO, id: number) {
-        const existingRecruit = await this.recruitRepository.findOne({
-            where: {
-                id: id,
-            },
-        });
 
-        if (!existingRecruit) {
-            throw new NotFoundException(
-                `Recruit with id ${id} 을 찾을 수 없습니다.`,
-            );
-        }
-
-        await this.checkHost(hostid, id);
-
-        existingRecruit.title = putDTO.title;
-        existingRecruit.region = putDTO.region;
-        existingRecruit.gps = putDTO.gps;
-        existingRecruit.content = putDTO.content;
-        existingRecruit.gamedate = putDTO.gamedate;
-        existingRecruit.endtime = putDTO.endtime;
-        existingRecruit.rule = putDTO.rule;
-        existingRecruit.totalmember = putDTO.totalmember;
-
-        const updatedRecruit =
-            await this.recruitRepository.save(existingRecruit);
-
-        return updatedRecruit;
-    }
-
-    async updateRecruit(hostid: number, updateDto: UpdateDto, id: number) {
-        const existingRecruit = await this.recruitRepository.findOne({
-            where: {
-                id: id,
-            },
-        });
-
-        if (!existingRecruit) {
-            throw new NotFoundException(
-                `Recruit with id ${id} 을 찾을 수 없습니다.`,
-            );
-        }
-
-        await this.checkHost(hostid, id);
-
-        existingRecruit.status = updateDto.status;
-
-        const updatedRecruit =
-            await this.recruitRepository.save(existingRecruit);
-
-        return updatedRecruit;
-    }
-    //모집 글 삭제
-    async deleteRecruit(hostid: number, id: number) {
-        const existingRecruit = await this.recruitRepository.findOne({
-            where: {
-                id: id,
-            },
-        });
-
-        if (!existingRecruit) {
-            throw new NotFoundException(
-                `ID가 ${id}인 리크루트를 찾을 수 없습니다.`,
-            );
-        }
-
-        await this.checkHost(hostid, id);
-
-        if (existingRecruit.basictotalmember !== existingRecruit.totalmember) {
-            throw new NotFoundException(
-                "이미 컴펌된 경기이거나 평가 후 삭제할 수 있습니다. ",
-            );
-        }
-
-        await this.recruitRepository.remove(existingRecruit);
-    }
-
+    // 내 모집글
     async myRecruit(userId: number) {
         const myRecruits = await this.recruitRepository.find({
             where: {
@@ -136,42 +67,43 @@ export class RecruitService {
         return await this.recruitRepository.save(myRecruits);
     }
 
-    async findMyRecruit(userId: number, id: number) {
-        await this.checkHost(userId, id);
-        const matches = await this.findMatch(id);
-
+    // 내 모집글 상세 조회
+    async findMyRecruit(userId: number, recruitId: number) {
         const myRecruit = await this.recruitRepository.findOne({
             where: {
+                id: recruitId,
                 hostId: userId,
-                id: id,
             },
         });
 
         if (!myRecruit) {
-            throw new NotFoundException("모집글을 찾을 수 없습니다!");
+            throw new NotFoundException("없는 모집글입니다");
         }
 
-        await this.updateProgress(myRecruit);
-
-        await this.recruitRepository.save(myRecruit);
-
-        const result = {
-            myRecruit: myRecruit,
-            matches: matches,
-        };
-
-        return result;
-    }
-
-    async checkMatch(userId: number, id: number) {
         const match = await this.matchRepository.findOne({
             where: {
-                id: id,
+                recruitId: recruitId,
             },
         });
 
-        console.log(match.hostId);
-        console.log(userId);
+        const data = { myRecruit, match };
+
+        return data;
+    }
+
+    // 모집글 매치 상세조회
+    async checkMatch(userId: number, matchId: number) {
+        const match = await this.matchRepository.findOne({
+            where: {
+                id: matchId,
+                hostId: userId,
+            },
+        });
+
+        if (!match) {
+            throw new NotFoundException("매치가 없습니다.");
+        }
+
         if (match.hostId !== userId) {
             throw new NotFoundException("권한이 없습니다.");
         }
@@ -179,21 +111,22 @@ export class RecruitService {
         return match;
     }
 
-    async putMatch(userId: number, matchUpdateDto: MatchUpdateDto, id: number) {
-        const match = await this.checkMatch(userId, id);
-        const recruitId = match.postId;
+    // 모집글 승인/거절
+    async putMatch(
+        userId: number,
+        matchUpdateDto: MatchUpdateDto,
+        matchId: number,
+    ) {
+        const match = await this.checkMatch(userId, matchId);
+
+        const recruitId = match.recruitId;
 
         const recruit = await this.recruitRepository.findOne({
             where: {
                 id: recruitId,
+                hostId: userId,
             },
         });
-
-        if (!recruit) {
-            throw new NotFoundException(
-                `Recruit with ID ${recruitId} not found`,
-            );
-        }
 
         if (matchUpdateDto.status === MatchStatus.APPROVED) {
             match.status = MatchStatus.APPROVED;
@@ -205,7 +138,7 @@ export class RecruitService {
 
                 const anotherMatches = await this.matchRepository.find({
                     where: {
-                        postId: match.postId,
+                        recruitId: match.recruitId,
                         status: MatchStatus.APPLICATION_COMPLETE,
                     },
                 });
@@ -230,18 +163,17 @@ export class RecruitService {
     }
 
     //본인 모집글 참석 컴펌한 유저 조회
-    async getGameUser(userId: number, id: number) {
-        const hostid = userId;
-        await this.checkHost(hostid, id);
+    async getGameUser(userId: number, recruitId: number) {
+        const hostId = userId;
+        await this.checkHost(hostId, recruitId);
 
         const matches = await this.matchRepository.find({
             where: {
-                postId: id,
+                recruitId: recruitId,
                 status: MatchStatus.CONFIRM,
             },
         });
 
-        console.log(matches);
         const users = [];
 
         for (const match of matches) {
@@ -257,39 +189,66 @@ export class RecruitService {
         return users;
     }
 
-    //평가완료하기
-    async evaluateGame(userId: number, id: number) {
-        const hostid = userId;
-        const recruit = await this.checkHost(hostid, id);
+    // 평가 완료하기
+    async evaluateGame(userId: number, recurtId: number) {
+        const hostId = userId;
+        const recruit = await this.checkHost(hostId, recurtId);
 
         if (recruit.progress !== Progress.PLEASE_EVALUATE) {
-            throw new NotFoundException("경기가 끝난후에 평가 가능합니다.");
+            throw new NotFoundException("경기가 끝난 후에 평가 가능합니다.");
         }
 
         recruit.progress = Progress.EVALUATION_COMPLETED;
 
-        return await this.recruitRepository.save(recruit);
+        console.log(recruit.progress);
+
+        await this.recruitRepository.update(
+            { id: recruit.id },
+            { progress: recruit.progress },
+        );
+
+        return recruit;
     }
 
-    private async findMatch(id: number) {
+    //모집 글 삭제
+    async deleteRecruit(hostId: number, recruitId: number) {
+        const existingRecruit = await this.recruitRepository.findOne({
+            where: {
+                id: recruitId,
+            },
+        });
+
+        if (!existingRecruit) {
+            throw new NotFoundException(
+                `ID가 ${recruitId}인 리크루트를 찾을 수 없습니다.`,
+            );
+        }
+
+        await this.checkHost(hostId, recruitId);
+
+        if (existingRecruit.progress !== Progress.EVALUATION_COMPLETED) {
+            throw new NotFoundException(
+                "이미 컴펌된 경기이거나 평가 후 삭제할 수 있습니다. ",
+            );
+        }
+
+        return await this.recruitRepository.remove(existingRecruit);
+    }
+
+    private async findMatch(recruitId: number) {
         const matches = await this.matchRepository.find({
-            where: { postId: id },
+            where: { recruitId: recruitId },
             select: ["id", "message", "guestName"],
         });
 
         return matches;
     }
     private async checkHost(hostid: number, id: number) {
-        console.log(hostid);
-        console.log(id);
-
         const checkrecruit = await this.recruitRepository.findOne({
             where: {
                 id: id,
             },
         });
-
-        console.log(checkrecruit);
 
         if (!checkrecruit || checkrecruit.hostId !== hostid) {
             throw new NotFoundException("호스트가 아닙니다.");

@@ -189,7 +189,7 @@ export class PersonalassessmenttagService {
         });
 
         if (
-            personalMatch.hostId === user.id &&
+            personalMatch.recruitId === user.id &&
             personalMatch.guestId === user.id
         ) {
             throw new BadRequestException(
@@ -202,7 +202,7 @@ export class PersonalassessmenttagService {
         }
 
         const personalMatchHost = await this.matchRepository.findOne({
-            where: { hostId: userId },
+            where: { recruitId: userId },
         });
 
         const personalMatchGuest = await this.matchRepository.findOne({
@@ -216,7 +216,7 @@ export class PersonalassessmenttagService {
         }
 
         const recruitGroup = await this.matchRepository.findOne({
-            where: { postId: recurit.id },
+            where: { recruitId: recurit.id },
         });
 
         if (!recruitGroup) {
@@ -283,7 +283,7 @@ export class PersonalassessmenttagService {
         });
 
         if (
-            personalMatch.hostId === user.id &&
+            personalMatch.recruitId === user.id &&
             personalMatch.guestId === user.id
         ) {
             throw new BadRequestException(
@@ -296,7 +296,7 @@ export class PersonalassessmenttagService {
         }
 
         const personalMatchHost = await this.matchRepository.findOne({
-            where: { hostId: userId },
+            where: { recruitId: userId },
         });
 
         const personalMatchGuest = await this.matchRepository.findOne({
@@ -310,7 +310,7 @@ export class PersonalassessmenttagService {
         }
 
         const recruitGroup = await this.matchRepository.findOne({
-            where: { postId: recurit.id },
+            where: { recruitId: recurit.id },
         });
 
         if (!recruitGroup) {
@@ -371,7 +371,7 @@ export class PersonalassessmenttagService {
         });
 
         if (
-            personalMatch.hostId === user.id &&
+            personalMatch.recruitId === user.id &&
             personalMatch.guestId === user.id
         ) {
             throw new BadRequestException(
@@ -384,7 +384,7 @@ export class PersonalassessmenttagService {
         }
 
         const personalMatchHost = await this.matchRepository.findOne({
-            where: { hostId: userId },
+            where: { recruitId: userId },
         });
 
         const personalMatchGuest = await this.matchRepository.findOne({
@@ -398,7 +398,7 @@ export class PersonalassessmenttagService {
         }
 
         const recruitGroup = await this.matchRepository.findOne({
-            where: { postId: recurit.id },
+            where: { recruitId: recurit.id },
         });
 
         if (!recruitGroup) {
@@ -486,7 +486,7 @@ export class PersonalassessmenttagService {
         });
 
         if (
-            personalMatch.hostId === user.id &&
+            personalMatch.recruitId === user.id &&
             personalMatch.guestId === user.id
         ) {
             throw new BadRequestException(
@@ -499,7 +499,7 @@ export class PersonalassessmenttagService {
         }
 
         const personalMatchHost = await this.matchRepository.findOne({
-            where: { hostId: userId },
+            where: { recruitId: userId },
         });
 
         const personalMatchGuest = await this.matchRepository.findOne({
@@ -513,7 +513,7 @@ export class PersonalassessmenttagService {
         }
 
         const recruitGroup = await this.matchRepository.findOne({
-            where: { postId: recurit.id },
+            where: { recruitId: recurit.id },
         });
 
         if (!recruitGroup) {
