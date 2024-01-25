@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./../entity/user.entity";
 import { UserType } from "./../entity/user.entity";
-import { PenaltyDTO } from "./dto/Penalty.dto";
+import { PenaltyDTO } from "./dto/penalty.dto";
 import { ActionType, Banlist } from "./../entity/banlist.entity";
 import { LessThan, Repository } from "typeorm";
 import { Cron, CronExpression } from "@nestjs/schedule";
