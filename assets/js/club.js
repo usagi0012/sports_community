@@ -64,7 +64,6 @@ function getClub(event) {
                 clubNameP.textContent = club.name;
                 clubNameP.onclick = function () {
                     window.location.href = `http://localhost:8001/club-detail.html?id=${club.id}`;
-                    console.log("nnn");
                     // getClubDetail(club.id);
                 };
                 clubName.appendChild(clubNameP);

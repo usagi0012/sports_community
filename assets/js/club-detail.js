@@ -40,10 +40,10 @@ export default function getClubDetail(clubId) {
             },
         })
         .then(function (response) {
-            console.log("here");
-            console.log("clubid????", clubId);
-            console.log("2번 response", response);
-            console.log("???????");
+            // console.log("here");
+            // console.log("clubid????", clubId);
+            // console.log("2번 response", response);
+            // console.log("???????");
 
             const clubNameDiv = document.querySelector(".name");
             console.log("크럽네임디브", clubNameDiv);
@@ -85,7 +85,7 @@ export default function getClubDetail(clubId) {
             clubMasterDiv.appendChild(clubMaster);
         })
         .catch(function (error) {
-            console.log("에러 리스폰스", error.response);
+            console.log("error response", error.response);
             // alert(error.request.response);
         });
 }
