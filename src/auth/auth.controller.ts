@@ -28,11 +28,6 @@ export class AuthController {
     signup(@Body() singupUserDto: SignupUserDto) {
         return this.authService.signup(singupUserDto);
     }
-    //관리자로 가입하기
-    @Post("signup/adimn")
-    admin_signup(@Body() signupAdminDto: SignupAdminDto) {
-        return this.authService.signup(signupAdminDto);
-    }
 
     @Post("login")
     login(@Body() loginUserDto: LoginUserDto) {
