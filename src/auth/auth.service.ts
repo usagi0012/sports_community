@@ -89,7 +89,7 @@ export class AuthService {
         const mailOptions = {
             from: this.configService.get<string>("GOOGLE_ID"),
             to: createUserDto.email, // 사용자가 입력한 이메일 주소
-            subject: "회원가입 인증 링크",
+            subject: "[오농] 회원가입 인증 링크",
             html: `회원가입을 위한 인증을 완료하려면 다음 링크를 클릭하세요: <a href="http://${verificationLink}">${verificationLink}</a>`,
         };
 
@@ -122,7 +122,7 @@ export class AuthService {
             await this.userService.update(userId, { isVerified: true });
 
             // 인증이 성공한 경우 리다이렉트할 URL 반환
-            return "http://127.0.0.1:5500/sports_community/src/auth/index.html";
+            return "http://localhost:8001/login.html";
         } catch (error) {
             // 토큰이 유효하지 않은 경우 예외 처리
             console.error("Token Verification Error:", error);
@@ -190,7 +190,7 @@ export class AuthService {
         const mailOptions = {
             from: this.configService.get<string>("GOOGLE_ID"),
             to: email,
-            subject: "비밀번호 재설정 안내",
+            subject: "[오농] 비밀번호 재설정 안내",
             text: `임시 비밀번호: ${temporaryPassword}
 보안을 위해서 반드시 개인정보수정에서 비밀번호 재설정을 해주세요!`,
         };

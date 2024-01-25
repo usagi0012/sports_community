@@ -2,6 +2,7 @@ import {
     BadRequestException,
     ConflictException,
     Injectable,
+    NotAcceptableException,
     NotFoundException,
     UnauthorizedException,
 } from "@nestjs/common";
@@ -14,6 +15,7 @@ import { ConfigService } from "@nestjs/config";
 import * as bcrypt from "bcrypt";
 import { ChangeUserDto } from "./dto/change-user.dto";
 import { UserProfile } from "src/entity/user-profile.entity";
+import { CheckPasswordDto } from "./dto/checkPassword.dto";
 
 @Injectable()
 export class UserService {
@@ -63,6 +65,24 @@ export class UserService {
         });
     }
 
+    //정보 수정시 현재 비밀번호 확인
+    async checkPassword(id: number, checkPasswordDto: CheckPasswordDto) {
+        const user = await this.findUserByIdAll(id);
+        const userPassword = (await this.findUserByEmail(user.email)).password;
+
+        const isCurrentPasswordCorrect = await bcrypt.compare(
+            checkPasswordDto.password,
+            userPassword,
+        );
+        if (!isCurrentPasswordCorrect) {
+            return {
+                success: false,
+                message: "현재 비밀번호가 일치하지 않습니다.",
+            };
+        }
+
+        return { success: true, message: "현재 비밀번호가 일치합니다." };
+    }
     async findUserByEmail(email: string) {
         return await this.userRepository.findOne({
             where: { email },
@@ -97,24 +117,13 @@ export class UserService {
             throw new NotFoundException("존재하지 않는 사용자입니다.");
         }
 
-        // 현재 비밀번호 확인
-        if (changeUserDto.password) {
-            const isCurrentPasswordCorrect = await bcrypt.compare(
-                changeUserDto.password,
-                userPassword,
+        if (changeUserDto.email) {
+            const existingEmail = await this.findUserByEmail(
+                changeUserDto.email,
             );
-
-            if (!isCurrentPasswordCorrect) {
-                throw new UnauthorizedException(
-                    "현재 비밀번호가 일치하지 않습니다.",
-                );
-            }
-
-            //변경할 비밀번호가 기존 비밀번호와 같은 경우
-            if (changeUserDto.changePassword === changeUserDto.password) {
-                throw new NotFoundException(
-                    "변경할 비밀번호는 현재 비밀번호와 다르게 입력해주세요.",
-                );
+            console.log(existingEmail);
+            if (existingEmail) {
+                throw new ConflictException("이미 존재하는 이메일입니다.");
             }
         }
 

@@ -16,6 +16,7 @@ import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { UserId } from "../auth/decorators/userId.decorator";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ChangeUserDto } from "./dto/change-user.dto";
+import { CheckPasswordDto } from "./dto/checkPassword.dto";
 
 @ApiTags("개인 정보")
 @Controller("user")
@@ -52,5 +53,16 @@ export class UserController {
     @Delete("me")
     deleteUserById(@UserId() id: string) {
         return this.userService.deleteUserById(+id);
+    }
+
+    //수정시 현재 비밀번호 확인
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Post("me/checkPassword")
+    checkPassword(
+        @UserId() id: string,
+        @Body() checkPasswordDto: CheckPasswordDto,
+    ) {
+        return this.userService.checkPassword(+id, checkPasswordDto);
     }
 }
