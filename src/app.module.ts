@@ -50,8 +50,6 @@ import { ScheduleModule } from "@nestjs/schedule";
         AlarmserviceModule,
         KakaoModule,
         NaverModule,
-        ReportModule,
-        BanlistModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],
