@@ -72,7 +72,6 @@ export class UserCalenderService {
     async findAll(userId) {
         const findCalenderByUserId = await this.userCalenderRepository.find({
             where: { userId },
-            relations: ["user"],
         });
         if (findCalenderByUserId.length < 1) {
             throw new NotFoundException("등록된 일정이 없습니다.");
