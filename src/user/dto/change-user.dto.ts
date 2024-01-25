@@ -24,4 +24,16 @@ export class ChangeUserDto {
         example: "12345",
     })
     changePasswordConfirm?: string;
+
+    @IsOptional()
+    @IsString()
+    @ApiPropertyOptional({ description: "이메일 인증코드", example: "123456" })
+    checkEmailCode?: string;
+
+    @IsOptional()
+    @IsString()
+    @ApiPropertyOptional({
+        description: "수정 이메일 인증 확인",
+    })
+    isVerifiedEmail?: boolean;
 }

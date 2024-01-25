@@ -2,6 +2,7 @@ import {
     BadRequestException,
     ConflictException,
     Injectable,
+    MethodNotAllowedException,
     NotAcceptableException,
     NotFoundException,
     UnauthorizedException,
@@ -16,6 +17,8 @@ import * as bcrypt from "bcrypt";
 import { ChangeUserDto } from "./dto/change-user.dto";
 import { UserProfile } from "src/entity/user-profile.entity";
 import { CheckPasswordDto } from "./dto/checkPassword.dto";
+import * as nodemailer from "nodemailer";
+import { google } from "googleapis";
 
 @Injectable()
 export class UserService {
@@ -130,12 +133,14 @@ export class UserService {
         );
         return result;
     }
-    //이메일 검증 함수수
+
+    //이메일 검증 함수
     async isValidEmail(email) {
         // 간단한 이메일 유효성 검사를 위한 정규 표현식
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
+
     // 내 정보 수정
     async updateUser(id: number, changeUserDto: ChangeUserDto) {
         const user = await this.findUserByIdAll(id);
@@ -154,6 +159,11 @@ export class UserService {
                 );
             }
 
+            if (changeUserDto.email === user.email) {
+                throw new NotFoundException(
+                    "현재 이메일로는 변경할 수 없습니다.",
+                );
+            }
             if (changeUserDto.email !== user.email) {
                 const existingEmail = await this.findUserByEmail(
                     changeUserDto.email,
@@ -230,5 +240,95 @@ export class UserService {
             statusCode: 200,
             message: "탈퇴했습니다.",
         };
+    }
+
+    private sendCheckEmailCode(email: string, checkEmailCode: string): void {
+        const smtpTransport = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                type: "OAuth2",
+                user: this.configService.get<string>("GOOGLE_ID"),
+                clientId: this.configService.get<string>("GOOGLE_CLIENT_ID"),
+                clientSecret: this.configService.get<string>(
+                    "GOOGLE_CLIENT_SECRET",
+                ),
+                refreshToken: this.configService.get<string>(
+                    "GOOGLE_REFRESH_TOKEN",
+                ),
+            },
+            tls: {
+                rejectUnauthorized: false,
+            },
+        } as nodemailer.TransportOptions);
+
+        const mailOptions = {
+            from: this.configService.get<string>("GOOGLE_ID"),
+            to: email,
+            subject: "[오농] 이메일 재설정 안내",
+            text: `인증코드: ${checkEmailCode}
+인증코드를 입력해주셔야 이메일 변경이 완료됩니다.`,
+        };
+
+        smtpTransport.sendMail(mailOptions, (error, response) => {
+            error ? console.log(error) : console.log(response);
+            smtpTransport.close();
+        });
+    }
+
+    private generateCheckEmailCode(): string {
+        // 확인 코드 생성 로직 (랜덤 문자열 등)
+        const checkEmailCode = Math.random().toString(36).substring(6);
+        return checkEmailCode;
+    }
+
+    async saveCheckEmailCode(
+        id: number,
+        checkEmailCode: string,
+    ): Promise<void> {
+        await this.userRepository.update(id, { checkEmailCode });
+    }
+
+    async sendEmailCode(id, changeUserDto: ChangeUserDto) {
+        const user = await this.findUserByIdAll(id);
+        const checkEmailCode = this.generateCheckEmailCode();
+        // 데이터베이스에 확인 코드 저장
+        await this.saveCheckEmailCode(id, checkEmailCode);
+
+        // 이메일 보내기
+        this.sendCheckEmailCode(changeUserDto.email, checkEmailCode);
+
+        user.checkEmailCode = checkEmailCode;
+        user.isVerifiedEmail = false;
+        await this.userRepository.save(user);
+    }
+
+    async checkEmailCode(id, changeUserDto: ChangeUserDto) {
+        const user = await this.findUserByIdAll(id);
+        if (!user) {
+            throw new NotFoundException("존재하지 않는 사용자입니다.");
+        }
+        if (changeUserDto.checkEmailCode !== user.checkEmailCode) {
+            throw new MethodNotAllowedException("인증번호가 틀립니다.");
+        }
+        user.checkEmailCode = null;
+        user.isVerifiedEmail = true;
+
+        // 저장
+        await this.userRepository.save(user);
+        return {
+            statusCode: 200,
+            message: "인증 완료",
+        };
+    }
+
+    async checkExistCode(id: number) {
+        const user = await this.findUserByIdAll(id);
+        const checkEmailCode = user.checkEmailCode;
+        const isVerifiedEmail = user.isVerifiedEmail;
+        if (!user) {
+            throw new NotFoundException("존재하지 않는 사용자입니다.");
+        }
+
+        return { checkEmailCode, isVerifiedEmail };
     }
 }
