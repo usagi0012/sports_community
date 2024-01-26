@@ -43,9 +43,18 @@ export class ClubService {
         userId: number,
         file: Express.Multer.File,
     ) {
+        const { name, region, description } = createClubDto;
         const user = await this.userService.findUserById(userId);
+        const existClub = await this.clubRepository.findOne({
+            where: { name },
+        });
+        console.log(existClub);
         if (user.clubId) {
             throw new ConflictException("동아리는 하나만 가입할 수 있습니다.");
+        }
+
+        if (existClub) {
+            throw new ConflictException("이미 있는 동아리 이름입니다.");
         }
 
         if (file) {
@@ -72,10 +81,18 @@ export class ClubService {
         updateClubDto: UpdateClubDto,
         file: Express.Multer.File,
     ) {
+        const { name, region, description } = updateClubDto;
         const user = await this.userService.findUserById(userId);
         const club = await this.clubRepository.findOne({ where: { id } });
+        const existClub = await this.clubRepository.findOne({
+            where: { name },
+        });
         if (!club) {
             throw new NotFoundException("동아리가 존재하지 않습니다.");
+        }
+
+        if (existClub) {
+            throw new ConflictException("이미 있는 동아리 이름입니다.");
         }
 
         if (club.masterId !== user.id) {
