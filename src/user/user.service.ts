@@ -116,6 +116,13 @@ export class UserService {
         });
     }
 
+    async existEmail(email: string) {
+        const user = await this.userRepository.findOne({
+            where: { email },
+        });
+        return { existEmail: !!user };
+    }
+
     async update(id: number, updateUserDto: UpdateUserDto) {
         const isUser = await this.findUserById(id);
 

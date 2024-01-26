@@ -7,6 +7,8 @@ import { accessTokenGuard } from "./guard/access-token.guard";
 import { accessTokenStrategy } from "./strategy/access-token.strategy";
 import { refreshTokenGuard } from "./guard/refresh-token.guard";
 import { refreshTokenStrategy } from "./strategy/refresh-token.strategy";
+import { KakaoStrategy } from "src/social-login/kakao/social-kakao-strategy";
+import { NaverStrategy } from "src/social-login/naver/social-naver-strategy";
 
 @Module({
     imports: [UserModule, JwtModule],
@@ -23,6 +25,8 @@ import { refreshTokenStrategy } from "./strategy/refresh-token.strategy";
         accessTokenStrategy,
         refreshTokenGuard,
         refreshTokenStrategy,
+        KakaoStrategy,
+        NaverStrategy,
     ],
 })
 export class AuthModule {}
