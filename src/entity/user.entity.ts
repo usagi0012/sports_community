@@ -56,6 +56,12 @@ export class User {
     @Column({ default: false })
     isVerified: boolean;
 
+    @Column()
+    checkEmailCode: string;
+
+    @Column({ default: false })
+    isVerifiedEmail: boolean;
+
     @Column({ type: "enum", enum: UserType, default: UserType.USER })
     userType: UserType;
 

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <title>User</title>
+    </head>
+    <body>
+        <div class="logo">
+            <img src="resources/logo.png" id="logo" />
+            <input type="text" placeholder="Search..." />
+            <button>검색</button>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="#feed">피드</a></li>
+                <li><a href="#club">동호회</a></li>
+                <li><a href="#stadium">경기장</a></li>
+                <li><a href="#platform">플랫폼 이용안내</a></li>
+                <li><a href="#talk">Talk</a></li>
+            </ul>
+        </nav>
+
+        <section id="userUpdate">
+            <h2>정보 수정</h2>
+            <label for="email">이메일 주소:</label>
+            <input type="email" id="email" name="email" />
+            <button onclick="requestEmailChange()">인증코드 받기</button>
+            <p id="verificationCodeSection" style="display: none">
+                <label for="verificationCode">인증코드:</label>
+                <input
+                    type="text"
+                    id="verificationCode"
+                    name="verificationCode"
+                />
+                <button onclick="confirmEmailChange()">확인</button>
+            </p>
+            <p></p>
+            <button onclick="updateEmail()">이메일 변경</button>
+            <p></p>
+            <label for="newPassword">변경할 비밀번호:</label>
+            <input type="password" id="newPassword" name="newPassword" />
+            <p></p>
+            <label for="newPasswordConfirm">비밀번호 확인:</label>
+            <input
+                type="password"
+                id="newPasswordConfirm"
+                name="newPasswordConfirm"
+            />
+            <p><button onclick="updatePassword()">비밀번호 변경</button></p>
+        </section>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/user-update.js"></script>
+        <script></script>
+    </body>
+</html>

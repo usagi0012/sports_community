@@ -17,6 +17,7 @@ import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { UserId } from "../auth/decorators/userId.decorator";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ChangeUserDto } from "./dto/change-user.dto";
+import { CheckPasswordDto } from "./dto/checkPassword.dto";
 
 @ApiTags("개인 정보")
 @Controller("user")
@@ -59,6 +60,7 @@ export class UserController {
     @UseGuards(accessTokenGuard)
     @Put("me")
     updateUserById(@UserId() id: string, @Body() changeUserDto: ChangeUserDto) {
+        console.log(changeUserDto);
         return this.userService.updateUser(+id, changeUserDto);
     }
 
@@ -68,5 +70,40 @@ export class UserController {
     @Delete("me")
     deleteUserById(@UserId() id: string) {
         return this.userService.deleteUserById(+id);
+    }
+
+    //수정시 현재 비밀번호 확인
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Post("me/checkPassword")
+    checkPassword(
+        @UserId() id: string,
+        @Body() checkPasswordDto: CheckPasswordDto,
+    ) {
+        return this.userService.checkPassword(+id, checkPasswordDto);
+    }
+
+    //수정시 이메일 인증코드 확인
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Put("me/confirm-email")
+    checkEmailCode(@UserId() id: string, @Body() changeUserDto: ChangeUserDto) {
+        return this.userService.checkEmailCode(+id, changeUserDto);
+    }
+
+    //수정시 이메일 인증코드 전송
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Put("me/request-email-change")
+    sendEmailCode(@UserId() id: string, @Body() changeUserDto: ChangeUserDto) {
+        return this.userService.sendEmailCode(+id, changeUserDto);
+    }
+
+    //수정시 이메일 인증코드가 이미 발급되었는지 확인
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("me/check-email-code")
+    checkExistCode(@UserId() id: string) {
+        return this.userService.checkExistCode(+id);
     }
 }
