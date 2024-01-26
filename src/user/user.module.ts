@@ -4,9 +4,9 @@ import { UserController } from "./user.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "../entity/user.entity";
 import { AuthModule } from "../auth/auth.module";
-import { ClubApplication } from "src/entity/club-application.entity";
-import { Banlist } from "src/entity/banlist.entity";
-import { Report } from "src/entity/report.entity";
+import { ClubApplication } from "../entity/club-application.entity";
+import { Banlist } from "../entity/banlist.entity";
+import { Report } from "../entity/report.entity";
 
 @Module({
     imports: [

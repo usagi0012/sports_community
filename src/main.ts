@@ -19,7 +19,6 @@ async function bootstrap() {
     app.useStaticAssets(join(__dirname, "..", "assets")); //html,js,css (바닐라)
     app.setBaseViewsDir(join(__dirname, "..", "views"));
     app.useStaticAssets(join(__dirname, "..", "social-login")); // 네이버, 카카오 소셜로그인 테스트
-    app.useStaticAssets(join(__dirname, "..", "assets"));
     app.setBaseViewsDir(join(__dirname, "templates"));
     app.setViewEngine("ejs");
 
