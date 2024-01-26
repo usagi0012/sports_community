@@ -99,11 +99,11 @@ export class MatchController {
         return await this.matchService.deleteCancelGame(userId, matchId);
     }
     //평가 후 삭제
-    @Delete("my/:matchId/evaluate/delete")
-    async deleteGame(
-        @UserId() userId: number,
-        @Param("matchId") matchId: number,
-    ) {
-        return await this.matchService.deleteGame(userId, matchId);
-    }
+    // @Delete("my/:matchId/evaluate/delete")
+    // async deleteGame(
+    //     @UserId() userId: number,
+    //     @Param("matchId") matchId: number,
+    // ) {
+    //     return await this.matchService.deleteGame(userId, matchId);
+    // }
 }
