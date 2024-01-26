@@ -25,7 +25,7 @@ export class NaverController {
         res.cookie("accessToken", accessToken);
         res.cookie("refreshToken", refreshToken);
         //redirect할 본인 페이지 주소확인
-        res.redirect("http://localhost:8001/html/test.html");
+        res.redirect("http://localhost:8001/index.html");
     }
 
     // 네이버 로그인할 event(button, 이미지 생성후 api를 통해 진행)
@@ -34,7 +34,7 @@ export class NaverController {
     async naverLogin(): Promise<void> {}
 
     @UseGuards(AuthGuard("naver"))
-    @Get("/callback")
+    @Get("/naver/callback")
     async loginNaver(@Req() req: Request & IOAuthUser, @Res() res: Response) {
         this.naverService.OAuthLogin({ req, res });
     }

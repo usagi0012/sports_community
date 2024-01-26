@@ -21,6 +21,7 @@ import { Alarmservice } from "src/alarm/alarm.service";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";
 
+//개인 프로필
 @ApiTags("개인 프로필")
 @ApiBearerAuth("accessToken")
 @UseGuards(accessTokenGuard)

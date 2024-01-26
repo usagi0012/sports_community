@@ -57,6 +57,32 @@ function checkPasswordMatch() {
     }
 }
 
+document.getElementById("Kakao").addEventListener("click", function () {
+    kakaoLogin();
+});
+
+document.getElementById("Naver").addEventListener("click", function () {
+    naverLogin();
+});
+
+// 네이버 로그인을 위한 api 진입
+function naverLogin() {
+    window.location.href = "api/auth/naver";
+}
+
+// 카카오 로그인을 위한 api 진입
+function kakaoLogin() {
+    window.location.href = "api/auth/kakao";
+}
+
+async function toHome() {
+    window.location.href = "index.html";
+}
+
+async function toForgotPassword() {
+    window.location.href = "findPassword.html";
+}
+
 async function toHome() {
     window.location.href = "index.html";
 }
