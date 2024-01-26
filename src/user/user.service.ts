@@ -8,7 +8,7 @@ import {
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "../entity/user.entity";
+import { User, UserType } from "../entity/user.entity";
 import { EntityManager, Repository, Transaction } from "typeorm";
 import { ConfigService } from "@nestjs/config";
 import * as bcrypt from "bcrypt";
@@ -23,6 +23,16 @@ export class UserService {
         private readonly configService: ConfigService,
     ) {}
 
+    async putAdmin(userId: number) {
+        const user = await this.userRepository.findOne({
+            where: {
+                id: userId,
+            },
+        });
+
+        user.userType = UserType.ADMIN;
+        return await this.userRepository.save(user);
+    }
     async create(createUserDto: CreateUserDto) {
         const { email } = createUserDto;
 
@@ -46,7 +56,15 @@ export class UserService {
     async findUserById(id: number) {
         return await this.userRepository.findOne({
             where: { id },
-            select: ["id", "email", "name", "createdAt", "updatedAt", "clubId"],
+            select: [
+                "id",
+                "email",
+                "name",
+                "createdAt",
+                "updatedAt",
+                "clubId",
+                "userType",
+            ],
         });
     }
 
@@ -68,6 +86,13 @@ export class UserService {
             where: { email },
             select: ["id", "email", "password", "isVerified"],
         });
+    }
+
+    async existEmail(email: string) {
+        const user = await this.userRepository.findOne({
+            where: { email },
+        });
+        return { existEmail: !!user };
     }
 
     async update(id: number, updateUserDto: UpdateUserDto) {
