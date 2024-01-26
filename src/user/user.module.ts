@@ -5,10 +5,12 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "../entity/user.entity";
 import { AuthModule } from "../auth/auth.module";
 import { ClubApplication } from "src/entity/club-application.entity";
+import { Report } from "../entity/report.entity";
+import { Banlist } from "../entity/banlist.entity";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([User, ClubApplication]),
+        TypeOrmModule.forFeature([User, ClubApplication, Report, Banlist]),
         forwardRef(() => AuthModule),
     ],
     exports: [UserService, TypeOrmModule.forFeature([User, ClubApplication])],
