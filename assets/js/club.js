@@ -50,21 +50,40 @@ function getClub(event) {
                 clubId.innerHTML = `${club.id}`;
                 clubInfoDiv.appendChild(clubId);
 
-                // const clubName = document.createElement("div");
-                // clubName.className = "clubName";
-                // clubName.innerHTML += `<p onclick="moveToClubDetail(
-                //     ${club.id},
-                // )">${club.name}</p>`;
-                // // 2. axios 이용해서 함수 만들기.
-                // clubInfoDiv.appendChild(clubName);
-
                 const clubName = document.createElement("div");
                 clubName.className = "clubName";
                 const clubNameP = document.createElement("p");
                 clubNameP.textContent = club.name;
                 clubNameP.onclick = function () {
-                    // 페이지 이동 전에 로그인 된 유저만 이동될 수 있도록 막는 로직 필요.
-                    window.location.href = `http://localhost:8001/club-detail.html?id=${club.id}`;
+                    // 페이지 이동 전에 로그인 된 유저만 이동될 수 있도록 막음.
+                    const authorized = localStorage.getItem("authorized");
+                    const token = JSON.parse(authorized).accessToken.value;
+                    axios
+                        .get(`/api/club/${club.id}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        })
+                        .then(function (response) {
+                            console.log("response", response);
+                            window.location.href = `http://localhost:8001/club-detail.html?id=${club.id}`;
+                        })
+                        .catch(function (error) {
+                            console.log(error.response);
+                            console.log("error", error);
+                            console.log(
+                                "error.message",
+                                error.response.data.message,
+                            );
+                            if (
+                                error.response.data.message === "Unauthorized"
+                            ) {
+                                alert("로그인이 필요합니다.");
+                            }
+
+                            return;
+                        });
+
                     // getClubDetail(club.id);
                 };
                 clubName.appendChild(clubNameP);

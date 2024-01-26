@@ -8,7 +8,7 @@
     </head>
     <body>
         <div class="club">
-            <button onclick="openModal()">동아리 생성</button>
+            <button onclick="moveToCreateClub()">동아리 생성</button>
         </div>
 
         <div class="title">
@@ -18,94 +18,34 @@
             <div>동아리장</div>
             <div>점수</div>
         </div>
-
-        <!-- 동아리 생성 모달창 -->
-        <div id="creatClubModal" class="modal">
-            <div class="modal-content">
-                <label for="name">이름:</label>
-                <input type="text" id="name" />
-                <br />
-                <label for="location">지역:</label>
-                <select id="location">
-                    <option value="0">서울</option>
-                    <option value="1">부산</option>
-                    <option value="2">대구</option>
-                    <option value="3">인천</option>
-                    <option value="4">광주</option>
-                    <option value="5">대전</option>
-                    <option value="6">울산</option>
-                    <option value="7">세종</option>
-                    <option value="8">경기</option>
-                    <option value="9">강원</option>
-                    <option value="10">충청북도</option>
-                    <option value="11">충청남도</option>
-                    <option value="12">경상북도</option>
-                    <option value="13">경상남도</option>
-                    <option value="14">전라북도</option>
-                    <option value="15">전라남도</option>
-                    <option value="16">제주도</option>
-                </select>
-                <br />
-                <label for="description">설명:</label>
-                <textarea id="description"></textarea>
-                <br />
-                <input type="file" id="fileInput" />
-                <br />
-                <button onclick="submitForm()">제출</button>
-                <button onclick="closeModal()">닫기</button>
-            </div>
-        </div>
         <div class="club-list"></div>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="module" src="./js/club.js"></script>
         <!-- <script src="./js/club-detail.js"></script> -->
         <script>
-            function openModal() {
-                document.getElementById("creatClubModal").style.display =
-                    "flex";
-            }
-
-            function closeModal() {
-                document.getElementById("creatClubModal").style.display =
-                    "none";
-            }
-
-            function submitForm() {
-                const name = document.getElementById("name").value;
-                const region = document.getElementById("location").value;
-                const description =
-                    document.getElementById("description").value;
-                const file = document.getElementById("fileInput").files[0];
-
+            function moveToCreateClub() {
+                // 동아리 생성 페이지 이동 전 로그인이 되어 있는지 확인
                 const authorized = localStorage.getItem("authorized");
                 const token = JSON.parse(authorized).accessToken.value;
+                console.log("토큰", token);
                 axios
-                    .post(
-                        "/api/club",
-                        {
-                            name: name,
-                            region: region,
-                            description: description,
+                    .post("/api/club", {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
                         },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                            },
-                        },
-                    )
+                    })
                     .then(function (response) {
                         console.log(response);
+                        window.location.href = `http://localhost:8001/create-club.html`;
                     })
                     .catch(function (error) {
                         console.log(error.response);
-                        alert("동아리를 등록할 수 없습니다.");
+                        // if (error.response.data.message === "Unauthorized") {
+                        //     alert("로그인이 필요합니다.");
+                        //     return;
+                        // }
+                        window.location.href = `http://localhost:8001/create-club.html`;
                     });
-
-                //폼 제출 후 모달 닫기
-                closeModal();
-
-                // 폼 제출 후 페이지 리로드
-                window.location.reload();
             }
         </script>
     </body>

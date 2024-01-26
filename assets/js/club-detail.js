@@ -48,13 +48,13 @@ export default function getClubDetail(clubId) {
             const clubNameDiv = document.querySelector(".name");
             console.log("clubNameDiv", clubNameDiv);
             const clubNameDetail = document.createElement("div");
-            clubNameDetail.className = "clubDetail";
+            clubNameDetail.className = "clubNameDetail";
             clubNameDetail.innerHTML += `${response.data.name}`;
             clubNameDiv.appendChild(clubNameDetail);
 
             const regionDiv = document.querySelector(".region");
             const region = document.createElement("div");
-            region.className = "clubDetail";
+            region.className = "region";
 
             region.innerHTML += `${regionData[response.data.region]}`;
 
@@ -62,32 +62,32 @@ export default function getClubDetail(clubId) {
 
             const classificationDiv = document.querySelector(".classification");
             const classification = document.createElement("div");
-            classification.className = "clubDetail";
-
+            classification.className = "classification";
             classification.innerHTML += ``;
             classificationDiv.appendChild(classification);
 
             const genderDiv = document.querySelector(".gender");
             const gender = document.createElement("div");
-            gender.className = "clubDetail";
+            gender.className = "gender";
             gender.innerHTML += ``;
             genderDiv.appendChild(gender);
 
             const memberDiv = document.querySelector(".member");
             const member = document.createElement("div");
-            member.className = "clubDetail";
+            member.className = "member";
             member.innerHTML += `${response.data.member}`;
             memberDiv.appendChild(member);
 
             const createdAtDiv = document.querySelector(".createdAt");
             const createdAt = document.createElement("div");
-            createdAt.className = "clubDetail";
-            createdAt.innerHTML += `${response.data.createdAt}`;
+            createdAt.className = "createdAt";
+            const date = response.data.createdAt.slice(0, 10);
+            createdAt.innerHTML += `${date}`;
             createdAtDiv.appendChild(createdAt);
 
             const clubMasterDiv = document.querySelector(".clubMaster");
             const clubMaster = document.createElement("div");
-            clubMaster.className = "clubDetail";
+            clubMaster.className = "clubMaster";
             clubMaster.innerHTML += `${response.data.masterId}`;
             clubMasterDiv.appendChild(clubMaster);
         })
