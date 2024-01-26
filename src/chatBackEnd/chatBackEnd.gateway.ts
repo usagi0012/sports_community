@@ -6,6 +6,7 @@ import {
     OnGatewayConnection,
     OnGatewayDisconnect,
     WsException,
+    ConnectedSocket,
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { ChatRoomService } from "./chatRoom.service";
@@ -35,17 +36,21 @@ export class ChatBackEndGateway
     server: Server;
 
     //소켓 연결시 유저목록에 추가
-    public handleConnection(client: Socket): void {
+    public handleConnection(@ConnectedSocket() client: Socket): void {
         try {
-            console.log(this.server);
             console.log("connected", client.id);
-            client.leave(client.id);
-            client.data.roomId = `room:lobby`;
-            client.join("room:lobby");
+            // client.leave(client.id);
 
+            // client.data.roomId = `room:lobby`;
+            client.join("room:lobby");
+            // (여기서 관리)
+            // client["user"];
+            // db에서 가져온 유저 정보 저장.
             const token = client.handshake.query;
-            const accessToken = token.auth;
-            console.log("서버로 가져온 토큰", accessToken);
+            const { auth } = client.handshake.query;
+            console.log("&&&&&&&&", auth);
+            // const accessToken = token.auth;
+            // console.log("서버로 가져온 토큰", accessToken);
         } catch (error) {
             console.error(error.message);
             throw new WsException("로그인이 필요합니다.");
@@ -59,7 +64,7 @@ export class ChatBackEndGateway
             roomId != "room:lobby" &&
             !this.server.sockets.adapter.rooms.get(roomId)
         ) {
-            this.ChatRoomService.deleteChatRoom(roomId);
+            // this.ChatRoomService.deleteChatRoom(roomId);
             this.server.emit(
                 "getChatRoomList",
                 this.ChatRoomService.getChatRoomList(client),
@@ -98,28 +103,43 @@ export class ChatBackEndGateway
         return true;
     }
 
-    //메시지가 전송되면 모든 유저에게 메시지 전송
+    //메시지가 전송되면 모든 유저에게 메시지   전송
     @SubscribeMessage("sendMessage")
-    sendMessage(client: Socket, message: string): void {
-        console.log("client.rooms", client.rooms);
-        client.rooms.forEach(
-            (roomId) =>
-                client.to(roomId).emit("getMessage", {
-                    id: client.id,
-                    nickname: client.data.nickname,
-                    message,
-                    roomId,
-                }),
-            // this.ChatRoomService.saveMessage(client,message,roomId)
-        );
-        // 채팅 전송시 DB에 채팅 내역 저장
-        client.rooms.forEach((roomId) => {
-            console.log("1", client, message, roomId);
-            this.ChatRoomService.saveMessage(client, message, roomId);
+    async sendMessage(client: Socket, data: any) {
+        console.log("서버에서 받아짐?");
+        const { roomId, message } = data;
+        console.log("&*&*&*&", roomId, message);
+        console.log(typeof roomId);
+        // console.log("서버", await this.server.in(roomId).fetchSockets());
+        console.log("!!!!", client.id, client.data.nickname);
+        // roomId 받아지는 것 같은데?
+        //client=>this.server
+        // this.server.to(roomId) : 나를 포함한 방 전원에게 보내는 것
+        // client.to(roomId) : 나를 제외한 방 전원에게 보내는 것
+        this.server.to(roomId).emit("getMessage", {
+            //실제 데이터로 바꾸기
+            id: client.id,
+            nickname: client.data.nickname,
+            message,
+            roomId,
         });
+        // client.rooms.forEach(
+        //     (roomId) =>
+        //         client.to(roomId).emit("getMessage", {
+        //             id: client.id,
+        //             nickname: client.data.nickname,
+        //             message,
+        //             roomId,
+        //         }),
+        // this.ChatRoomService.saveMessage(client,message,roomId)
+        // );
+        // 채팅 전송시 DB에 채팅 내역 저장
+        // client.rooms.forEach((roomId) => {
+        //     this.ChatRoomService.saveMessage(client, message, roomId);
+        // });
     }
 
-    //처음 접속시 닉네임 등 최초  설정
+    //처음 접속시 닉네임 등 최초 설정
     @SubscribeMessage("setInit")
     setInit(client: Socket, data: setInitDTO): setInitDTO {
         // 이미 최초 세팅이 되어있는 경우 패스
@@ -133,11 +153,12 @@ export class ChatBackEndGateway
 
         client.data.isInit = true;
 
+        // 처음 접속시 들어가는 방이 없는데 로비 말고 설정을 안해줘도 되려나...?
         return {
             nickname: client.data.nickname,
             room: {
-                roomId: "room:lobby",
-                roomName: "로비",
+                roomId: null,
+                roomName: null,
             },
         };
     }
@@ -166,21 +187,26 @@ export class ChatBackEndGateway
 
     //채팅방 생성하기 (프론트에서 받는 곳)
     @SubscribeMessage("createChatRoom")
-    createChatRoom(client: Socket, roomName: string) {
+    async createChatRoom(client: Socket, roomName: string) {
         //이전 방이 만약 나 혼자있던 방이면 제거
         try {
-            if (
-                client.data.roomId != "room:lobby" &&
-                this.server.sockets.adapter.rooms.get(client.data.roomId)
-                    .size == 1
-            ) {
-                this.ChatRoomService.deleteChatRoom(client.data.roomId);
-            }
-            this.ChatRoomService.createChatRoom(client, roomName);
+            console.log("룸네임222", roomName);
+            // if (
+            //     client.data.roomId != "room:lobby" &&
+            //     this.server.sockets.adapter.rooms.get(client.data.roomId)
+            //         .size == 1
+            // ) {
+            //     this.ChatRoomService.deleteChatRoom(client.data.roomId);
+            // }
+            console.log("여기 찍히나");
+            const chatRoom = await this.ChatRoomService.createChatRoom(
+                client,
+                roomName,
+            );
+            console.log("챗룸", chatRoom);
             return {
-                roomId: client.data.roomId,
-                roomName: this.ChatRoomService.getChatRoom(client.data.roomId)
-                    .roomName,
+                roomId: chatRoom.id,
+                roomName: chatRoom.title,
             };
         } catch (error) {
             console.error();
@@ -190,23 +216,27 @@ export class ChatBackEndGateway
     //채팅방 들어가기
     @SubscribeMessage("enterChatRoom")
     enterChatRoom(client: Socket, roomId: string) {
+        console.log("설마", roomId);
         // 로그인 되어 있지 않은 경우, 룸에 가입된 멤버가 아닐경우 에러 처리
-        this.ChatRoomService.isRoomMember(client, roomId);
-        //이미 접속해있는 방 일 경우 재접속 차단
-        if (client.rooms.has(roomId)) {
-            return;
-        }
-        //이전 방이 만약 나 혼자있던 방이면 제거
-        if (
-            client.data.roomId != "room:lobby" &&
-            this.server.sockets.adapter.rooms.get(client.data.roomId).size == 1
-        ) {
-            this.ChatRoomService.deleteChatRoom(client.data.roomId);
-        }
-        this.ChatRoomService.enterChatRoom(client, roomId);
+        // this.ChatRoomService.isRoomMember(client, roomId);
+        // //이미 접속해있는 방 일 경우 재접속 차단
+        // if (client.rooms.has(roomId)) {
+        //     return;
+        // }
+        // //이전 방이 만약 나 혼자있던 방이면 제거
+        // if (
+        //     client.data.roomId != "room:lobby" &&
+        //     this.server.sockets.adapter.rooms.get(client.data.roomId).size == 1
+        // ) {
+        //     // this.ChatRoomService.deleteChatRoom(client.data.roomId);
+        // }
+        // this.ChatRoomService.enterChatRoom(client, roomId);
+        client.rooms.clear();
+        client.join(roomId);
         return {
             roomId: roomId,
-            roomName: this.ChatRoomService.getChatRoom(roomId).roomName,
+            // roomName: this.ChatRoomService.getChatRoom(roomId).roomName,
+            roomName: "??",
         };
     }
 }

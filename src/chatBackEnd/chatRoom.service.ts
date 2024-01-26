@@ -31,20 +31,19 @@ export class ChatRoomService {
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService,
     ) {
-        this.chatRoomList = {
-            "room:lobby": {
-                roomId: "room:lobby",
-                roomName: "로비",
-                cheifId: null,
-            },
-        };
+        // this.chatRoomList = {
+        //     "room:lobby": {
+        //         roomId: "room:lobby",
+        //         roomName: "로비",
+        //         cheifId: null,
+        //     },
+        // };
     }
     async createChatRoom(client: Socket, roomName: string) {
         const userId = this.verifyToken(client);
 
-        const roomId = `room:${uuidv4()}`;
+        // const roomId = `room:${uuidv4()}`;
         const nickname: string = client.data.nickname;
-        console.log("*******", roomId);
         client.emit("getMessage", {
             id: null,
             nickname: "안내",
@@ -52,30 +51,32 @@ export class ChatRoomService {
                 '"' + nickname + '"님이 "' + roomName + '"방을 생성하였습니다.',
         });
         // return this.chatRoomList[roomId];
-        this.chatRoomList[roomId] = {
-            roomId,
-            cheifId: client.id,
-            roomName,
-        };
-        client.data.roomId = roomId;
-        client.rooms.clear();
-        client.join(roomId);
+        // this.chatRoomList[roomId] = {
+        //     roomId,
+        //     cheifId: client.id,
+        //     roomName,
+        // };
+        // client.data.roomId = roomId;
+        // client.rooms.clear();
+        // client.join(roomId);
 
         // 존재하는 채팅방 이름일 경우 에러
         console.log({ roomName });
         const chatName = await this.chatRepository.findOne({
             where: { title: roomName },
         });
-        console.log({ chatName });
-        if (chatName) {
-            throw new WsException("동일한 이름의 채팅방이 존재합니다.");
-        }
+        // console.log({ chatName });
+        // if (chatName) {
+        //     throw new WsException("동일한 이름의 채팅방이 존재합니다.");
+        // }
 
         // 채팅방 생성시 roomName값 Chat 테이블에 저장
-        this.chatRepository.save({
+        const room = await this.chatRepository.save({
             title: roomName,
             creator: +userId,
         });
+
+        return room;
 
         // const chat = await this.chatRepository.findOne({
         //     where: { title: roomName },
@@ -123,18 +124,15 @@ export class ChatRoomService {
     // 내가 있는 채팅방만 가져오도록 변경하기
     async getChatRoomList(client) /* : Record<string, chatRoomListDTO> */ {
         const userId = this.verifyToken(client);
-        console.log("this.chatRoomList", this.chatRoomList);
         // 여기서 계속 access Token이 만료되면 에러가 발생하는 것 같음.
         // 해결해야하는데 일단은, verifyToken 함수 주석키고, /view/chat 경로 들어가지 않은 상태에서
         // /api#으로 access Token 발급 받은 뒤에 다시 주석 없애고 실행시키면 됨.
-        console.log("client가 NaN인가", client);
-        console.log("userId가 NaN인가", userId);
+
         const myInfo = await this.participantsRepository.find({
             where: { userId: +userId },
         });
         console.log("client.data", client.data);
         console.log("myInfo", myInfo);
-        console.log("chatRoomList", this.chatRoomList);
 
         const roomInfo = { title: [], id: [] };
 
@@ -142,12 +140,12 @@ export class ChatRoomService {
             where: { creator: +userId },
         });
 
+        // 내가 참가해 있는 방 보내기 (생성했거나 참가되어 있는 방)
         creatorRoom.forEach((chat) => {
             roomInfo.title.push(chat.title);
             roomInfo.id.push(chat.id);
         });
 
-        console.log({ creatorRoom });
         const myRoomList = myInfo.map((participants) => participants.chatId);
 
         const myRoomTitlePromises = await myRoomList.map(async (v) => {
@@ -163,8 +161,7 @@ export class ChatRoomService {
             return chatRoom.title;
         });
         const myRoomTitle = await Promise.all(myRoomTitlePromises);
-        console.log("myRoomTitle", myRoomTitle);
-        console.log("roomInfo", roomInfo);
+
         return roomInfo;
         // return this.chatRoomList;
     }

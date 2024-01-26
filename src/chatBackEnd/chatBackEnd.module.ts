@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { ChatBackEndGateway } from "./ChatBackEndGateway";
+import { ChatBackEndGateway } from "./chatBackEnd.gateway";
 import { ChatRoomService } from "./chatRoom.service";
 import { Chat } from "src/entity/chat.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
