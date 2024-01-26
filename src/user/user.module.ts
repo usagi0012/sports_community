@@ -8,6 +8,7 @@ import { ClubApplication } from "../entity/club-application.entity";
 import { Banlist } from "../entity/banlist.entity";
 import { Report } from "../entity/report.entity";
 
+
 @Module({
     imports: [
         TypeOrmModule.forFeature([User, ClubApplication, Report, Banlist]),
