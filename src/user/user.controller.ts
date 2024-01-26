@@ -8,6 +8,7 @@ import {
     Delete,
     UseGuards,
     Put,
+    Query,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -22,6 +23,13 @@ import { ChangeUserDto } from "./dto/change-user.dto";
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+
+    //이메일 중복 확인
+    @Get("email")
+    findEmail(@Query("email") email: string) {
+        return this.userService.existEmail(email);
+    }
+  
     //관리자로 변경하기
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
