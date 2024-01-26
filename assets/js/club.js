@@ -80,6 +80,14 @@ function getClub(event) {
                             ) {
                                 alert("로그인이 필요합니다.");
                             }
+                            // access 토큰 만료되면 refresh 토큰으로 다시 재발급 할 수 있게 만들기.
+                            // localStorage에 왜 access Token이랑 refresh Token으로 안들어가는지 확인해보기.
+                            if (
+                                error.response.data.message ===
+                                "accessToken expired"
+                            ) {
+                                alert("다시 로그인 해주세요.");
+                            }
 
                             return;
                         });

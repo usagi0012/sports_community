@@ -84,6 +84,7 @@
             const clubNameDiv = document.querySelector(".name");
             const clubNameDisplay = document.querySelector("#clubNameDisplay");
             const clubNameDetail = document.querySelector(".clubNameDetail");
+            console.log("클럽네임", clubNameDiv);
             // console.log(clubNameDetail);
             // console.log("durl", clubNameDetail.textContent);
             // console.log("클럽이름", clubNameDiv);
@@ -142,9 +143,16 @@
                     "none";
             }
 
-            function submitApplyingForm() {}
+            function submitApplyingForm() {
+                const urlParams = new URLSearchParams(window.location.search);
+                console.log("urlParams", urlParams);
+                let clubId = urlParams.get("id");
+
+                axios.post(`/api/applying-club/${clubId}`);
+            }
+
             function deleteCheck() {
-                alert(`${clubName} 동아리를 정말로 삭제하시겠습니까?`);
+                alert(`${clubNameDiv} 동아리를 정말로 삭제하시겠습니까?`);
             }
         </script>
     </body>
