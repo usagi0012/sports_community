@@ -62,7 +62,7 @@
                 <p id="clubNameDisplay"></p>
                 <br />
                 <label for="description">지원이유:</label>
-                <textarea id="description"></textarea>
+                <textarea id="description1"></textarea>
                 <br />
 
                 <button onclick="submitApplyingForm()">제출</button>
@@ -148,7 +148,33 @@
                 console.log("urlParams", urlParams);
                 let clubId = urlParams.get("id");
 
-                axios.post(`/api/applying-club/${clubId}`);
+                const authorized = localStorage.getItem("authorized");
+                const token = JSON.parse(authorized).accessToken.value;
+
+                const inputMessage = document.querySelector("#description1");
+                const message = inputMessage.value;
+                console.log("메세지값", message);
+                console.log("메세지 타입", typeof message);
+
+                axios
+                    .post(
+                        `/api/applying-club/${clubId}`,
+                        {
+                            message,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        },
+                    )
+                    .then(function (response) {
+                        console.log(response);
+                        alert(response);
+                    })
+                    .catch(function (error) {
+                        console.log(error.response);
+                    });
             }
 
             function deleteCheck() {

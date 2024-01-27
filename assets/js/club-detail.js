@@ -3,6 +3,7 @@ window.onload = function () {
     console.log("urlParams", urlParams);
     let clubId = urlParams.get("id");
 
+    console.log("여기 들어감?");
     getClubDetail(clubId);
 };
 const regionData = [
