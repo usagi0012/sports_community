@@ -8,50 +8,13 @@
     </head>
     <body>
         <!-- 내 동아리 들어가면 동아리 수정 버튼 띄우기 -->
-        <button class="updateBtn" onclick="openModal()">
+        <button class="updateBtn" onclick="moveToUpdatePage() ">
             내 동아리 정보 수정
         </button>
         <button onclick="openApplyingModal()">동아리 신청하기</button>
 
         <!-- 내 동아리 들어가면 동아리 삭제 버튼 띄우기 -->
         <button onclick="deleteCheck()">등록된 동아리 삭제</button>
-
-        <!-- 동아리 정보 수정 모달창 -->
-        <div id="updateClubModal" class="modal">
-            <div class="modal-content">
-                <label for="name">이름:</label>
-                <input type="text" id="name" />
-                <br />
-                <label for="location">지역:</label>
-                <select id="location">
-                    <option value="0">서울</option>
-                    <option value="1">부산</option>
-                    <option value="2">대구</option>
-                    <option value="3">인천</option>
-                    <option value="4">광주</option>
-                    <option value="5">대전</option>
-                    <option value="6">울산</option>
-                    <option value="7">세종</option>
-                    <option value="8">경기</option>
-                    <option value="9">강원</option>
-                    <option value="10">충청북도</option>
-                    <option value="11">충청남도</option>
-                    <option value="12">경상북도</option>
-                    <option value="13">경상남도</option>
-                    <option value="14">전라북도</option>
-                    <option value="15">전라남도</option>
-                    <option value="16">제주도</option>
-                </select>
-                <br />
-                <label for="description">설명:</label>
-                <textarea id="description"></textarea>
-                <br />
-                <input type="file" id="fileInput" />
-                <br />
-                <button onclick="submitForm()">제출</button>
-                <button onclick="closeModal()">닫기</button>
-            </div>
-        </div>
 
         <!-- 동아리 신청 모달창 -->
         <div id="applyingClubModal" class="modal">
@@ -99,39 +62,6 @@
             function closeModal() {
                 document.getElementById("updateClubModal").style.display =
                     "none";
-            }
-
-            function submitForm() {
-                //내 동아리인 경우에만 수정할 수 있도록 하기
-                const name = document.getElementById("name").value;
-                const region = document.getElementById("location").value;
-                const description =
-                    document.getElementById("description").value;
-                const file = document.getElementById("fileInput").files[0];
-
-                const authorized = localStorage.getItem("authorized");
-                const token = JSON.parse(authorized).accessToken.value;
-                axios
-                    .put(
-                        `/api/club/${clubId}`,
-                        {
-                            name: name,
-                            region: region,
-                            description: description,
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                            },
-                        },
-                    )
-                    .then(function (response) {
-                        console.log(response);
-                    })
-                    .catch(function (error) {
-                        console.log(error.response);
-                        alert("동아리 정보를 수정할 수 없습니다.");
-                    });
             }
 
             function openApplyingModal() {
@@ -205,6 +135,9 @@
                         //     alert("동아리 생성자만 삭제할 수 있습니다.");
                         // }
                     });
+            }
+            function moveToUpdatePage() {
+                window.location.href = "http://localhost:8001/update-club.html";
             }
         </script>
     </body>

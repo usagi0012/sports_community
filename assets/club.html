@@ -9,6 +9,9 @@
     <body>
         <div class="club">
             <button onclick="moveToCreateClub()">동아리 생성</button>
+            <button onclick="moveToGetMyClubApplication()">
+                내 동아리 신청서 조회
+            </button>
         </div>
 
         <div class="title">
@@ -44,8 +47,12 @@
                         //     alert("로그인이 필요합니다.");
                         //     return;
                         // }
-                        window.location.href = `http://localhost:8001/create-club.html`;
                     });
+            }
+
+            function moveToGetMyClubApplication() {
+                window.location.href =
+                    "http://localhost:8001/my-club-application.html";
             }
         </script>
     </body>
