@@ -28,7 +28,7 @@ body {
 }
 
 #loginForm {
-    margin: 4rem auto;
+    margin: 1rem auto;
     background-color: white;
     padding: 20px 25px;
     height: 35rem;
@@ -41,7 +41,7 @@ h1 {
 }
 
 label {
-    display: block;
+    display: inline-flex;
     margin-bottom: 8px;
     color: #4b4c53;
 }
@@ -76,6 +76,16 @@ button {
     margin-top: 30px;
     padding: 25px 10px 20px;
     text-align: center;
+}
+
+#findPassword {
+    display: inline-flex;
+    position: relative;
+    left: 185px;
+    bottom: 10px;
+    font-size: small;
+    color: #949496;
+    cursor: pointer;
 }
 
 p {

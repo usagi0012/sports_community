@@ -13,7 +13,6 @@ import { UserCalenderModule } from "./user-calender/user-calender.module";
 import { RecruitController } from "./recruit/recruit.controller";
 import { RecruitModule } from "./recruit/recruit.module";
 import { MatchModule } from "./match/match.module";
-import { RecruitService } from "./recruit/recruit.service";
 import { ApplyingClubModule } from "./applying-club/applying-club.module";
 import { ClubMatchModule } from "./club_match/club_match.module";
 import { ChatBackEndModule } from "./chatBackEnd/chatBackEnd.module";
@@ -22,11 +21,10 @@ import { AwsModule } from "./aws/aws.module";
 import { UserPositionModule } from "./user-position/user-position.module";
 import { SseController } from "./alarm/alarm.controller";
 import { AlarmserviceModule } from "./alarm/alarm.module";
+import { NaverModule } from "./social-login/naver/naver.module";
 import { PlaceModule } from "./place/place.module";
+import { KakaoModule } from "./social-login/kakao/kakao.module";
 import { ScheduleModule } from "@nestjs/schedule";
-import { KakaoModule } from "./kakao/kakao.module";
-import { ServeStaticModule } from "@nestjs/serve-static";
-import { join } from "path";
 
 @Module({
     imports: [
@@ -51,9 +49,7 @@ import { join } from "path";
         PlaceModule,
         AlarmserviceModule,
         KakaoModule,
-        // ServeStaticModule.forRoot({
-        //     rootPath: join(__dirname, "..", "kakaoHtml"),
-        // }),
+        NaverModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],

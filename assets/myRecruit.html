@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>매치 정보</title>
+        <meta name="description" content="Onog 통합 로그인 플랫폼" />
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        />
+    </head>
+
+    <body onload="displayMatchInfo()">
+        <div
+            id="myRecruit-info"
+            data-toggle="modal"
+            data-target="#exampleModal"
+        ></div>
+
+        <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog" id="myRecruitMatch">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            매치 신청
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="recruitMatch" id="recruitMatch"></div>
+
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            닫기
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/myRecruit.js"></script>
+    </body>
+</html>

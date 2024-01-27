@@ -21,7 +21,7 @@ export class KakaoService {
         }
 
         const userEmail = req.user.email;
-        console.log(userEmail);
+
         let user = await this.userService.findUserByEmail(userEmail);
 
         if (!user) {
@@ -32,7 +32,9 @@ export class KakaoService {
         }
 
         if (!user) {
-            throw new BadRequestException("Failed to create or retrieve user.");
+            throw new BadRequestException(
+                "사용자를 생성하거나 찾지 못했습니다.",
+            );
         }
 
         const refreshToken = this.generateRefreshToken(user.id);
@@ -42,16 +44,24 @@ export class KakaoService {
 
         const accessToken = this.generateAccessToken(user.id);
         res.cookie("access_token", accessToken, { httpOnly: true });
-
-        res.sendFile(join(__dirname, "..", "../kakaoHtml/redirect.html"));
+        if (user) {
+            res.redirect(
+                `http://localhost:8001/api/auth/kakao/success?accessToken=${accessToken}&refreshToken=${refreshToken}`, //받아주는 페이지 만들어야함
+            );
+        } else {
+            res.redirect("http://localhost:8001/api/auth/login/failure");
+        } // 로그인에 실폐했을 경우 프론트 페이지를 개설해 줘야함(카카오와 네이버로그인 실패 page를 하나로 묶어서 제작)
     }
     private generateRefreshToken(userId: number): string {
         const payload = { sub: userId };
+        const secret = this.configService.get<string>(
+            "JWT_REFRESH_TOKEN_SECRET",
+        );
         const expiresIn = this.configService.get<string>(
             "JWT_REFRESH_TOKEN_EXP",
         );
         return this.jwtService.sign(payload, {
-            secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
+            secret,
             expiresIn,
         });
     }

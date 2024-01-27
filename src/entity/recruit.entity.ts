@@ -39,8 +39,11 @@ export class Recruit {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column("int")
+    @Column()
     hostId: number;
+
+    @Column("varchar")
+    hostName: string;
 
     @Column("varchar")
     title: string;
@@ -62,9 +65,6 @@ export class Recruit {
 
     @Column({ type: "datetime" })
     endtime: Date;
-
-    @Column("int")
-    runtime: number;
 
     @Column({
         type: "enum",
@@ -93,8 +93,8 @@ export class Recruit {
     progress: Progress;
 
     @ManyToOne(() => User, (user) => user.recruits)
-    @JoinColumn({ name: "guestId" })
-    guest: User;
+    @JoinColumn({ name: "hostId" })
+    host: User;
 
     @BeforeInsert()
     @BeforeUpdate()
