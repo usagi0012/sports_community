@@ -28,8 +28,12 @@ export class ApplyingClubService {
     ) {}
 
     // 동호회 신청서 생성
-    async postApplyingClub(applicationDto: ApplicationDto, userId: number) {
-        const { message, clubId } = applicationDto;
+    async postApplyingClub(
+        permissionApplicationDto: PermissionApplicationDto,
+        userId: number,
+        clubId: number,
+    ) {
+        const { message } = permissionApplicationDto;
 
         // 이미 지원했을 경우 에러 발생
         const existApplication = await this.clubApplicationRepository.findOne({
