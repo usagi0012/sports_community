@@ -17,6 +17,7 @@ export enum MatchStatus {
     REJECTED = "거절",
     CANCEL = "취소",
     CONFIRM = "학인",
+    CANCELCONFIRM = "취소한 매치",
 }
 
 export enum Progress {
@@ -47,8 +48,13 @@ export class Match {
     recruitId: number;
 
     @Column()
+    recruitTitle: string;
+
+    @Column()
     message: string;
 
+    @Column()
+    gps: string;
     @Column({ type: "datetime" })
     gameDate: Date;
 

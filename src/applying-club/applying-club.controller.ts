@@ -24,15 +24,17 @@ export class ApplyingClubController {
     // 동호회 신청
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
-    @Post()
+    @Post(":clubId")
     async postApplyingClub(
         @UserId() userId: number,
-        @Body() applicationDto: ApplicationDto,
+        @Body() permissionApplicationDto: PermissionApplicationDto,
+        @Param("clubId") clubId: number,
     ) {
         try {
             const application = await this.applyingClubService.postApplyingClub(
-                applicationDto,
+                permissionApplicationDto,
                 userId,
+                clubId,
             );
 
             return {

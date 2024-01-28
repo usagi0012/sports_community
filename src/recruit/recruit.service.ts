@@ -1,12 +1,14 @@
+import { error } from "console";
 import { User } from "./../entity/user.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Progress, Recruit, Status } from "../entity/recruit.entity";
 import { RecruitDTO, UpdateDto, PutDTO } from "./dto/recruit.dto";
-import { Repository } from "typeorm";
+import { Not, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Match, MatchStatus } from "../entity/match.entity";
 import { MatchUpdateDto } from "./dto/checkmatch.dto";
 import { ST } from "next/dist/shared/lib/utils";
+import { use } from "passport";
 
 @Injectable()
 export class RecruitService {
@@ -22,10 +24,16 @@ export class RecruitService {
     //모집 글 등록
     async postRecruit(userId: number, recruitDTO: RecruitDTO) {
         const basicnumber = recruitDTO.totalmember;
+        const user = await this.userRepository.findOne({
+            where: {
+                id: userId,
+            },
+        });
 
         const newRecruit = this.recruitRepository.create({
             basictotalmember: basicnumber,
             hostId: userId,
+            hostName: user.name,
 
             ...recruitDTO,
         });
@@ -35,7 +43,19 @@ export class RecruitService {
 
     //모집 글 조회
     async getRecruit() {
-        const Recruit = await this.recruitRepository.find();
+        const Recruit = await this.recruitRepository.find({
+            select: {
+                hostId: true,
+                hostName: true,
+                title: true,
+                region: true,
+                rule: true,
+                gamedate: true,
+                endtime: true,
+                totalmember: true,
+                status: true,
+            },
+        });
 
         return Recruit;
     }
@@ -57,38 +77,39 @@ export class RecruitService {
             where: {
                 hostId: userId,
             },
+            select: {
+                id: true,
+                hostId: true,
+                hostName: true,
+                title: true,
+                region: true,
+                rule: true,
+                gamedate: true,
+                endtime: true,
+                totalmember: true,
+                status: true,
+            },
         });
 
-        for (const myRecruit of myRecruits) {
-            const recruit = myRecruit;
-            await this.updateProgress(recruit);
-        }
-
-        return await this.recruitRepository.save(myRecruits);
+        return myRecruits;
     }
 
     // 내 모집글 상세 조회
     async findMyRecruit(userId: number, recruitId: number) {
-        const myRecruit = await this.recruitRepository.findOne({
-            where: {
-                id: recruitId,
-                hostId: userId,
-            },
-        });
-
-        if (!myRecruit) {
-            throw new NotFoundException("없는 모집글입니다");
-        }
-
-        const match = await this.matchRepository.findOne({
+        const matches = await this.matchRepository.find({
             where: {
                 recruitId: recruitId,
+                hostId: userId,
+            },
+            select: {
+                id: true,
+                guestId: true,
+                guestName: true,
+                message: true,
+                status: true,
             },
         });
-
-        const data = { myRecruit, match };
-
-        return data;
+        return matches;
     }
 
     // 모집글 매치 상세조회
@@ -117,49 +138,38 @@ export class RecruitService {
         matchUpdateDto: MatchUpdateDto,
         matchId: number,
     ) {
-        const match = await this.checkMatch(userId, matchId);
+        try {
+            const match = await this.checkMatch(userId, matchId);
 
-        const recruitId = match.recruitId;
+            const recruitId = match.recruitId;
 
-        const recruit = await this.recruitRepository.findOne({
-            where: {
-                id: recruitId,
-                hostId: userId,
-            },
-        });
+            const recruit = await this.recruitRepository.findOne({
+                where: {
+                    id: recruitId,
+                    hostId: userId,
+                },
+            });
 
-        if (matchUpdateDto.status === MatchStatus.APPROVED) {
-            match.status = MatchStatus.APPROVED;
-            recruit.totalmember -= 1;
-
-            if (recruit.totalmember === 0) {
-                recruit.status = Status.Complete;
-                await this.recruitRepository.save(recruit);
-
-                const anotherMatches = await this.matchRepository.find({
-                    where: {
-                        recruitId: match.recruitId,
-                        status: MatchStatus.APPLICATION_COMPLETE,
-                    },
-                });
-
-                for (const individualMatch of anotherMatches) {
-                    individualMatch.status = MatchStatus.REJECTED;
-                    await this.matchRepository.save(individualMatch);
-                }
+            if (match.status === MatchStatus.CONFIRM) {
+                throw new NotFoundException("컴펀된 매치입니다.");
             }
-        } else if (matchUpdateDto.status === MatchStatus.REJECTED) {
-            if (match.status === MatchStatus.APPROVED) {
-                recruit.totalmember += 1;
-                await this.recruitRepository.save(recruit);
+            if (recruit.status === Status.Complete) {
+                throw new NotFoundException("모집이 완료된 모집글입니다.");
             }
-            match.status = MatchStatus.REJECTED;
+
+            if (matchUpdateDto.status === MatchStatus.APPROVED) {
+                match.status = MatchStatus.APPROVED;
+            } else if (matchUpdateDto.status === MatchStatus.REJECTED) {
+                match.status = MatchStatus.REJECTED;
+            }
+
+            await this.recruitRepository.save(recruit);
+            const updatedMatch = await this.matchRepository.save(match);
+
+            return updatedMatch;
+        } catch (error) {
+            throw error;
         }
-
-        await this.recruitRepository.save(recruit);
-        const updatedMatch = await this.matchRepository.save(match);
-
-        return updatedMatch;
     }
 
     //본인 모집글 참석 컴펌한 유저 조회
