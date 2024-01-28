@@ -1,0 +1,95 @@
+@font-face {
+    font-family: "KCC-Ganpan";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/KCC-Ganpan.woff2")
+        format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "LINESeedKR-Bd";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2")
+        format("woff2");
+    font-weight: 700;
+    font-style: normal;
+}
+
+body {
+    font-family: "LINESeedKR-Bd";
+    background-color: white;
+    justify-content: center;
+    width: 80vw;
+    margin: 0px auto;
+}
+
+.header {
+    margin-top: 20px;
+    display: grid;
+    grid-template-areas: "logo search user";
+    grid-template-columns: 1fr 3fr 1fr;
+}
+
+.logo {
+    grid-area: logo;
+}
+
+#logo {
+    margin: 20px 20px;
+    height: 90px;
+    width: 95px;
+    cursor: pointer;
+}
+
+.bodyContainer {
+    margin-top: 10px;
+}
+
+/* 검색창 부분 */
+#searchBox {
+    grid-area: search;
+    width: 400px;
+    margin: auto 20px auto auto;
+}
+
+fieldset {
+    display: flex;
+    padding: 0 0 0 40px;
+    background: #fff;
+    border: 1px solid #ff771c;
+    border-radius: 40px;
+    width: 350px;
+}
+
+input,
+#searchBtn {
+    position: relative;
+    width: 300px;
+    height: 40px;
+    padding: 0;
+    float: left;
+}
+
+input {
+    color: #666;
+    border: 0 none;
+    font-size: 1.2rem;
+    font-family: "KCC-Ganpan";
+}
+
+input:focus {
+    outline: 0 none;
+}
+
+#searchBtn {
+    width: 50px;
+    border: 0 none;
+    cursor: pointer;
+    border-radius: 0 40px 40px 0;
+    background-color: #ff771c;
+}
+
+.fa-search {
+    font-size: 1.4rem;
+    color: white;
+    top: 25%;
+}

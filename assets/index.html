@@ -3,45 +3,93 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Onog</title>
+        <meta name="description" content="Onog MainPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="css/index.css" />
     </head>
     <body>
         <div class="header">
             <div class="logo">
-                <img src="resources/logo.png" id="logo" />
+                <img src="resources/logo.png" id="logo" onclick="toHome()" />
             </div>
-            <div class="iconBox">
-                <button id="logout_btn" onclick="logoutform()">
-                    <i class="fas fa-solid fa-right-from-bracket"></i>
-                </button>
-                <div id="invited_user">
-                    <div>
-                        <button
-                            id="invite_btn"
-                            type="button"
-                            class="btn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#inviteModal"
+            <div id="searchBox">
+                <form>
+                    <fieldset>
+                        <input type="search" /><button
+                            type="submit"
+                            id="searchBtn"
                         >
-                            <i class="fas fa-solid fa-user-plus"></i>
+                            <i class="fas fa-search"></i>
                         </button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="bodyContainer">
+            <div class="menuBar">
+                <ul>
+                    <li><a href="#feed">피드</a></li>
+                    <li><a href="#club">동아리</a></li>
+                    <li><a href="#stadium">경기장</a></li>
+                    <li><a href="#platform">플랫폼 이용안내</a></li>
+                    <li><a href="#talk">Talk</a></li>
+                </ul>
+            </div>
+            <div class="mainContainer">
+                <div class="profileContainer">
+                    <div class="profileImage"></div>
+                    <div class="nickname"></div>
+                    <div class="gender"></div>
+                    <div class="tag"></div>
+                    <div class="height"></div>
+                    <div class="description"></div>
+                    <div class="scoreContainer">
+                        <div class="score" id="personalityAmount"></div>
+                        <div class="score" id="abilityAmount"></div>
+                        <div class="score" id="MVPCount"></div>
                     </div>
-                </div>
-            </div>
-
-            <!-- 알람 버튼 -->
-            <div id="alarm_Btn">
-                <div>
-                    <button
-                        id="alarm_btn"
-                        type="button"
-                        class="btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#alarmModal"
-                    >
-                        <i class="fas fa-solid fa-bell"></i>
+                    <button type="button" id="alarmBtn">알림</button>
+                    <button type="button" id="profileUpdate">
+                        프로필 수정하기
                     </button>
+                    <div class="calenderContainer">캘린더</div>
+                </div>
+                <div class="personalityRankContainer">
+                    <div class="rank" id="personality1st">김용근</div>
+                    <div class="rank" id="personality2nd">최종현</div>
+                    <div class="rank" id="personality3rd">김윤찬</div>
+                </div>
+                <div class="abilityRankContainer">
+                    <div class="rank" id="ability1st">유우섭</div>
+                    <div class="rank" id="ability2nd">염지원</div>
+                    <div class="rank" id="ability3rd">김윤찬</div>
+                </div>
+                <div class="clubRankContainer">
+                    <div class="rank" id="club1st">농구킹</div>
+                    <div class="rank" id="club2nd">슬램덩크</div>
+                    <div class="rank" id="club3rd">삼조</div>
+                </div>
+                <div class="announcementContainer">
+                    <button type="button" id="announcementBtn">공지사항</button>
+                </div>
+                <div class="FAQContainer">
+                    <button type="button" id="FAQBtn">FAQ</button>
                 </div>
             </div>
+        </div>
+        <div class="footer">
+            <a>커뮤니티 이용 안내</a>
+            <a>개인정보 처리 방침</a>
+            <p>문의) usagi0012@naver.com</p>
+            <p>@Onong</p>
         </div>
         <script src="./js/index.js"></script>
     </body>
