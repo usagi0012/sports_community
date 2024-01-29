@@ -32,64 +32,219 @@
                     </fieldset>
                 </form>
             </div>
+            <div id="logoutBtn">
+                Logout <i class="fas fa-solid fa-power-off"></i>
+            </div>
         </div>
-        <div class="bodyContainer">
+        <div class="menubarContainer">
             <div class="menuBar">
-                <ul>
-                    <li><a href="#feed">피드</a></li>
-                    <li><a href="#club">동아리</a></li>
-                    <li><a href="#stadium">경기장</a></li>
-                    <li><a href="#platform">플랫폼 이용안내</a></li>
-                    <li><a href="#talk">Talk</a></li>
+                <ul class="menu">
+                    <li id="recruit">
+                        <a href="#">모집</a>
+                        <ul class="detail" id="detailRecruit">
+                            <li><a href="#">모집글 목록</a></li>
+                            <li onclick="toMyRecruit()">
+                                <a href="#">내 모집글</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li id="club">
+                        <a href="#">동아리</a>
+                        <ul class="detail" id="detailClub">
+                            <li onclick="toClub()">
+                                <a href="#">동아리 목록</a>
+                            </li>
+                            <li><a href="#">내 동아리</a></li>
+                        </ul>
+                    </li>
+                    <li id="stadium"><a href="#">경기장</a></li>
+                    <li id="platform">
+                        <a href="#">플랫폼 이용안내</a>
+                        <ul class="detail" id="detailPlatform">
+                            <li><a href="#">이용 안내</a></li>
+                            <li><a href="#">공지 사항</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Q&A</a></li>
+                        </ul>
+                    </li>
+                    <li id="talk"><a href="#">Talk</a></li>
                 </ul>
             </div>
+        </div>
+        <div class="bodyContainer">
             <div class="mainContainer">
                 <div class="profileContainer">
-                    <div class="profileImage"></div>
-                    <div class="nickname"></div>
-                    <div class="gender"></div>
-                    <div class="tag"></div>
-                    <div class="height"></div>
-                    <div class="description"></div>
-                    <div class="scoreContainer">
-                        <div class="score" id="personalityAmount"></div>
-                        <div class="score" id="abilityAmount"></div>
-                        <div class="score" id="MVPCount"></div>
+                    <!-- <div class="image">
+                        <img src="resources/profile.jpeg" id="profileImage" />
                     </div>
-                    <button type="button" id="alarmBtn">알림</button>
-                    <button type="button" id="profileUpdate">
-                        프로필 수정하기
+                    <div class="nickname">닉네임</div>
+                    <div class="noprofile">
+                        아직 프로필이 없습니다. 프로필 작성 →
+                    </div> -->
+                    <div class="image">
+                        <img src="resources/profile.jpeg" id="profileImage" />
+                    </div>
+                    <div class="nickname">닉네임</div>
+                    <div class="gender">
+                        <i
+                            class="fas fa-solid fa-mars"
+                            style="color: #0860a8"
+                        ></i>
+                        <!-- <i class="fas fa-solid fa-venus" style="color: #cc679f"></i> -->
+                    </div>
+                    <div class="tag">
+                        <span id="tag1"> #커리 </span>
+                        <span id="tag2"> #커리 </span>
+                        <span id="tag3"> #커리 </span>
+                    </div>
+                    <div class="height">키: 190 cm</div>
+                    <div class="description">예시 소개입니다.</div>
+                    <div class="scoreContainer">
+                        <div class="score" id="personalityAmount">
+                            인성: <i class="fas fa-solid fa-star"></i> 4.2
+                        </div>
+                        <div class="score" id="abilityAmount">
+                            실력: <i class="fas fa-solid fa-star"></i> 4.6
+                        </div>
+                        <div class="score" id="MVPCount">MVP: 10 회</div>
+                    </div>
+                    <button type="button" id="alarmBtn">
+                        <i class="fas fa-solid fa-bell"></i>
                     </button>
-                    <div class="calenderContainer">캘린더</div>
+                    <button type="button" id="profileUpdateBtn">
+                        수정하기
+                    </button>
+                    <div class="calenderContainer">
+                        <button type="button" id="calenderBtn">캘린더 →</button>
+                    </div>
                 </div>
-                <div class="personalityRankContainer">
-                    <div class="rank" id="personality1st">김용근</div>
-                    <div class="rank" id="personality2nd">최종현</div>
-                    <div class="rank" id="personality3rd">김윤찬</div>
+
+                <label id="rankLabel">랭킹</label>
+                <div class="rankContainer">
+                    <div
+                        class="rankOuterContainer"
+                        id="personalityRankContainer"
+                    >
+                        <div class="rankName">인성점수 랭킹</div>
+                        <div class="rankInnerContainer">
+                            <div class="rank" id="personality1st">
+                                <div class="rankNumber">1st</div>
+                                <div class="ranknickName">김용근</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                            <div class="rank" id="personality2nd">
+                                <div class="rankNumber">2nd</div>
+                                <div class="ranknickName">최종현</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                            <div class="rank" id="personality3rd">
+                                <div class="rankNumber">3rd</div>
+                                <div class="ranknickName">김윤찬</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rankOuterContainer" id="abilityRankContainer">
+                        <div class="rankName">실력점수 랭킹</div>
+                        <div class="rankInnerContainer">
+                            <div class="rank" id="ability1st">
+                                <div class="rankNumber">1st</div>
+                                <div class="ranknickName">유우섭</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                            <div class="rank" id="ability2nd">
+                                <div class="rankNumber">2nd</div>
+                                <div class="ranknickName">염지원</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                            <div class="rank" id="ability3rd">
+                                <div class="rankNumber">3rd</div>
+                                <div class="ranknickName">김윤찬</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rankOuterContainer" id="clubRankContainer">
+                        <div class="rankName">동아리 랭킹</div>
+                        <div class="rankInnerContainer">
+                            <div class="rank" id="club1st">
+                                <div class="rankNumber">1st</div>
+                                <div class="ranknickName">농구킹</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                            <div class="rank" id="club2nd">
+                                <div class="rankNumber">2nd</div>
+                                <div class="ranknickName">슬램덩크</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                            <div class="rank" id="club3rd">
+                                <div class="rankNumber">3rd</div>
+                                <div class="ranknickName">삼조</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="abilityRankContainer">
-                    <div class="rank" id="ability1st">유우섭</div>
-                    <div class="rank" id="ability2nd">염지원</div>
-                    <div class="rank" id="ability3rd">김윤찬</div>
+                <div class="rankAnnouncement">
+                    <p>※랭킹은 매월 1일 9:00에 갱신됩니다.</p>
+                    <p>
+                        ※랭킹은 점수 평균의 소수점 셋째짜리까지 계산되어
+                        집계됩니다.
+                    </p>
+                    <p>※평가가 10회 미만인 회원은 랭킹에 반영되지 않습니다.</p>
                 </div>
-                <div class="clubRankContainer">
-                    <div class="rank" id="club1st">농구킹</div>
-                    <div class="rank" id="club2nd">슬램덩크</div>
-                    <div class="rank" id="club3rd">삼조</div>
-                </div>
-                <div class="announcementContainer">
-                    <button type="button" id="announcementBtn">공지사항</button>
-                </div>
-                <div class="FAQContainer">
-                    <button type="button" id="FAQBtn">FAQ</button>
+                <div class="plusContainer">
+                    <div class="plusOuterContainer" id="announcementContainer">
+                        <label class="plusName">공지사항</label>
+                        <div class="plusInnerContainer">
+                            <div class="plusDataContainer">
+                                <div class="plusData">공지 예시</div>
+                                <div class="plusData">공지입니다</div>
+                                <div class="plusData">공지 내용</div>
+                                <div class="plusData">공지 내용</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="plusOuterContainer" id="FAQContainer">
+                        <label class="plusName">FAQ</label>
+                        <div class="plusInnerContainer">
+                            <div class="plusDataContainer">
+                                <div class="plusData">FAQ 예시</div>
+                                <div class="plusData">FAQ입니다</div>
+                                <div class="plusData">FAQ 내용</div>
+                                <div class="plusData">FAQ 내용</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="footer">
-            <a>커뮤니티 이용 안내</a>
-            <a>개인정보 처리 방침</a>
-            <p>문의) usagi0012@naver.com</p>
-            <p>@Onong</p>
+            <div class="footerLogo">
+                <img src="resources/logo.png" id="footerLogoImg" />
+            </div>
+            <a href="#" id="footerAnnounce">커뮤니티 이용 안내</a>
+            <a href="#" id="footerPrivacy">개인정보 처리 방침</a>
+            <p id="footerCall">문의) usagi001218@gmail.com</p>
+            <p id="footerSite">@Onong</p>
         </div>
         <script src="./js/index.js"></script>
     </body>
