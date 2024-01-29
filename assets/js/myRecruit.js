@@ -86,8 +86,6 @@ async function findRecruit(recruitId) {
                     <p style="font-size: smaller;"><strong>메세지:</strong>${guest.message}</p>
                     <p style="font-size: smaller;"><strong>상태:</strong>${guest.status}</p>
 
-                    <button class="approveButton" data-guestId="${guest.id}" onclick="approvebutton(${guest.id})">찬성</button>
-                    <button class="rejectButton" data-guestId="${guest.id}" onclick="rejectbutton(${guest.id})">거절</button>
                 </div>
             `;
 
