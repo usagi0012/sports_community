@@ -28,8 +28,9 @@
         <script>
             function moveToCreateClub() {
                 // 동아리 생성 페이지 이동 전 로그인이 되어 있는지 확인
-                const authorized = localStorage.getItem("authorized");
-                const token = JSON.parse(authorized).accessToken.value;
+                // const authorized = localStorage.getItem("authorized");
+                // const token = JSON.parse(authorized).accessToken.value;
+                const token = localStorage.getItem("accessToken");
                 console.log("토큰", token);
                 axios
                     .post("/api/club", {

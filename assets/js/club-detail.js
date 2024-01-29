@@ -30,10 +30,9 @@ export default function getClubDetail(clubId) {
     console.log("##########");
     console.log("2번 클럽 아이디", clubId);
     // 보내는 순서 알아보기(header, params)
-    const authorized = localStorage.getItem("authorized");
-    const token = JSON.parse(authorized).accessToken.value;
-    console.log("토큰값", token);
-    console.log("클럽아이디", clubId);
+    // const authorized = localStorage.getItem("authorized");
+    // const token = JSON.parse(authorized).accessToken.value;
+    const token = localStorage.getItem("accessToken");
     axios
         .get(`/api/club/${clubId}`, {
             headers: {

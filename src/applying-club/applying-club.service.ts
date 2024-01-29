@@ -131,8 +131,12 @@ export class ApplyingClubService {
         return application;
     }
 
-    async getApplicationOfMyClub(clubId: number, userId: number) {
+    async getApplicationOfMyClub( userId: number) {
         // 동호회 장이 아니면 열람 불가
+
+        const user = await this.UserRepository.findOne({where: {id:userId}});
+        const clubId = user.clubId;
+        
         const club = await this.ClubRepository.findOne({
             where: { id: clubId },
         });

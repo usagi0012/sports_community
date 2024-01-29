@@ -54,17 +54,11 @@ export class ApplyingClubController {
     // 동호회에게 온 신청서 조회
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
-    @Get(":clubId")
-    async getApplicationOfMyClub(
-        @Param("clubId") clubId: number,
-        @UserId() userId: number,
-    ) {
+    @Get()
+    async getApplicationOfMyClub(@UserId() userId: number) {
         try {
             const application =
-                await this.applyingClubService.getApplicationOfMyClub(
-                    clubId,
-                    userId,
-                );
+                await this.applyingClubService.getApplicationOfMyClub(userId);
 
             return {
                 statusCode: 200,
@@ -116,7 +110,7 @@ export class ApplyingClubController {
     // 내 신청서 조회
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
-    @Get()
+    @Get("me")
     async getApplyingClub(@UserId() userId: number) {
         try {
             const application =

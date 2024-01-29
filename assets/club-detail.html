@@ -78,8 +78,9 @@
                 console.log("urlParams", urlParams);
                 let clubId = urlParams.get("id");
 
-                const authorized = localStorage.getItem("authorized");
-                const token = JSON.parse(authorized).accessToken.value;
+                // const authorized = localStorage.getItem("authorized");
+                // const token = JSON.parse(authorized).accessToken.value;
+                const token = localStorage.getItem("accessToken");
 
                 const inputMessage = document.querySelector("#description1");
                 const message = inputMessage.value;
@@ -100,7 +101,8 @@
                     )
                     .then(function (response) {
                         console.log(response);
-                        alert(response);
+                        alert(response.data.message);
+                        closeApplyingModal();
                     })
                     .catch(function (error) {
                         console.log(error.response);
@@ -113,8 +115,9 @@
                 console.log("urlParams", urlParams);
                 let clubId = urlParams.get("id");
 
-                const authorized = localStorage.getItem("authorized");
-                const token = JSON.parse(authorized).accessToken.value;
+                // const authorized = localStorage.getItem("authorized");
+                // const token = JSON.parse(authorized).accessToken.value;
+                const token = localStorage.getItem("accessToken");
 
                 axios
                     .delete(`api/club/${clubId}`, {

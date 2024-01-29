@@ -56,8 +56,9 @@ function getClub(event) {
                 clubNameP.textContent = club.name;
                 clubNameP.onclick = function () {
                     // 페이지 이동 전에 로그인 된 유저만 이동될 수 있도록 막음.
-                    const authorized = localStorage.getItem("authorized");
-                    const token = JSON.parse(authorized).accessToken.value;
+                    // const authorized = localStorage.getItem("authorized");
+                    // const token = JSON.parse(authorized).accessToken.value;
+                    const token = localStorage.getItem("accessToken");
                     axios
                         .get(`/api/club/${club.id}`, {
                             headers: {

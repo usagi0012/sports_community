@@ -57,8 +57,9 @@
                 console.log("urlParams", urlParams);
                 let clubId = urlParams.get("id");
 
-                const authorized = localStorage.getItem("authorized");
-                const token = JSON.parse(authorized).accessToken.value;
+                // const authorized = localStorage.getItem("authorized");
+                // const token = JSON.parse(authorized).accessToken.value;
+                const token = localStorage.getItem("accessToken");
                 axios
                     .put(
                         `/api/club/${clubId}`,
