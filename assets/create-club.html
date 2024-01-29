@@ -69,10 +69,12 @@
                     .then(function (response) {
                         console.log(response);
                         //폼 제출 후 원래 페이지로 이동
+                        alert(`${response.data.message}`);
                         returnPage();
                     })
                     .catch(function (error) {
                         console.log(error.response);
+                        // 이 부분 세분화해서 에러 메세지별 에러메세지 띄우기
                         alert("동아리를 등록할 수 없습니다.");
                     });
             }

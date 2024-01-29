@@ -183,4 +183,26 @@ export class ApplyingClubController {
             };
         }
     }
+
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("ClubMaster")
+    async isClubMaster(@UserId() userId: number) {
+        try {
+            const isMaster =
+                await this.applyingClubService.isClubMaster(userId);
+
+            return {
+                statusCode: 200,
+                message: "동호회장 확인에 성공했습니다.",
+                data: isMaster,
+            };
+        } catch (error) {
+            return {
+                statusCode: 400,
+                message: "동호회장 확인에 실패했습니다.",
+                error: error.message,
+            };
+        }
+    }
 }

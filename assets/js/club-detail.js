@@ -1,10 +1,17 @@
 window.onload = function () {
+    console.log("$$-1");
     const urlParams = new URLSearchParams(window.location.search);
     console.log("urlParams", urlParams);
     let clubId = urlParams.get("id");
 
     console.log("여기 들어감?");
+    console.log("$$$1");
     getClubDetail(clubId);
+    console.log("$$$2");
+    hasClub();
+    console.log("$$$3");
+    isMyClub();
+    console.log("$$4");
 };
 const regionData = [
     "서울",
@@ -40,13 +47,9 @@ export default function getClubDetail(clubId) {
             },
         })
         .then(function (response) {
-            // console.log("here");
-            // console.log("clubid????", clubId);
-            // console.log("2번 response", response);
-            // console.log("???????");
+            console.log("response", response);
 
             const clubNameDiv = document.querySelector(".name");
-            console.log("clubNameDiv", clubNameDiv);
             const clubNameDetail = document.createElement("div");
             clubNameDetail.className = "clubNameDetail";
             clubNameDetail.innerHTML += `${response.data.name}`;
@@ -75,7 +78,7 @@ export default function getClubDetail(clubId) {
             const memberDiv = document.querySelector(".member");
             const member = document.createElement("div");
             member.className = "member";
-            member.innerHTML += `${response.data.member}`;
+            member.innerHTML += `${response.data.members}`;
             memberDiv.appendChild(member);
 
             const createdAtDiv = document.querySelector(".createdAt");
@@ -88,11 +91,73 @@ export default function getClubDetail(clubId) {
             const clubMasterDiv = document.querySelector(".clubMaster");
             const clubMaster = document.createElement("div");
             clubMaster.className = "clubMaster";
-            clubMaster.innerHTML += `${response.data.masterId}`;
+            clubMaster.innerHTML += `${response.data.users[0].name}`;
             clubMasterDiv.appendChild(clubMaster);
+
+            const detailsDiv = document.querySelector(".details");
+            const details = document.createElement("div");
+            details.className = "details";
+            details.innerHTML += `${response.data.description}`;
+            detailsDiv.appendChild(details);
         })
         .catch(function (error) {
             console.log("error response", error.response);
             // alert(error.request.response);
+        });
+}
+
+function isMyClub() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    let clubId = urlParams.get("id");
+    console.log("클럽 아이디", clubId);
+    const token = localStorage.getItem("accessToken");
+
+    axios
+        .get(`/api/club/myClub/${clubId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            console.log("리스폰스는 여기", response);
+            console.log("리스폰스 데이터", response.data);
+            if (response.data.statusCode === 200) {
+                const updateBtn = document.querySelector(".updateBtn");
+                updateBtn.style.display = "block";
+                const deleteBtn = document.querySelector(".deleteBtn");
+                deleteBtn.style.display = "block";
+            } else {
+                console.log("수정/삭제버튼 안나옴");
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function hasClub() {
+    const token = localStorage.getItem("accessToken");
+    console.log("여기는 찍혀?");
+    console.log("token", token);
+    axios
+        .get("/api/club/myClub", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            console.log("콘솔안쪽");
+            console.log("ㅋㅋㅋㅋㅋ리스폰스", response);
+            console.log("ㅋㅋㅋㅋ리스폰스 데이터", response.data);
+            if (response.data.data === true) {
+                const applyingBtn = document.querySelector(".applyingBtn");
+                applyingBtn.style.display = "block";
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            console.log(error.message);
+            console.log("에러메세지");
         });
 }
