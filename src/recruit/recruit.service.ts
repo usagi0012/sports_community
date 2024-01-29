@@ -7,7 +7,6 @@ import { Not, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Match, MatchStatus } from "../entity/match.entity";
 import { MatchUpdateDto } from "./dto/checkmatch.dto";
-import { ST } from "next/dist/shared/lib/utils";
 import { use } from "passport";
 
 @Injectable()
