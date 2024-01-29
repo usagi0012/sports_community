@@ -1,7 +1,6 @@
 import { ConsoleLogger, Injectable } from "@nestjs/common";
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { ContentType } from "aws-sdk/clients/cloudsearchdomain";
 import { Place } from "../entity/place.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
