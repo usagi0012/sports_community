@@ -9,6 +9,9 @@ import { Match, MatchStatus } from "../entity/match.entity";
 import { MatchUpdateDto } from "./dto/checkmatch.dto";
 import { ST } from "next/dist/shared/lib/utils";
 import { use } from "passport";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import { not } from "cheerio/lib/api/traversing";
+import { match } from "assert";
 
 @Injectable()
 export class RecruitService {
@@ -184,6 +187,10 @@ export class RecruitService {
             },
         });
 
+        if (matches.length === 0) {
+            throw new NotFoundException("컴펀한 유저가 없습니다.");
+        }
+
         const users = [];
 
         for (const match of matches) {
@@ -196,7 +203,7 @@ export class RecruitService {
             users.push(guestUser);
         }
 
-        return users;
+        return matches;
     }
 
     // 평가 완료하기
@@ -204,13 +211,15 @@ export class RecruitService {
         const hostId = userId;
         const recruit = await this.checkHost(hostId, recurtId);
 
+        if (recruit.progress === Progress.EVALUATION_COMPLETED) {
+            throw new NotFoundException("이미평가를 완료하였습니다.");
+        }
+
         if (recruit.progress !== Progress.PLEASE_EVALUATE) {
             throw new NotFoundException("경기가 끝난 후에 평가 가능합니다.");
         }
 
         recruit.progress = Progress.EVALUATION_COMPLETED;
-
-        console.log(recruit.progress);
 
         await this.recruitRepository.update(
             { id: recruit.id },
@@ -267,12 +276,19 @@ export class RecruitService {
         return checkrecruit;
     }
 
+    @Cron(CronExpression.EVERY_HOUR)
+    async handleCron() {
+        const recruits = await this.recruitRepository.find();
+
+        for (const recruit of recruits) {
+            this.updateProgress(recruit);
+        }
+
+        await this.recruitRepository.save(recruits);
+    }
+
     private updateProgress(recruit: Recruit) {
         const now = new Date();
-
-        console.log(recruit.gamedate);
-        console.log(now);
-        console.log(recruit.endtime);
 
         if (recruit.gamedate.getTime() < now.getTime()) {
             recruit.progress = Progress.DURING;

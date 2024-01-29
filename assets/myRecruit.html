@@ -11,12 +11,8 @@
         />
     </head>
 
-    <body onload="displayMatchInfo()">
-        <div
-            id="myRecruit-info"
-            data-toggle="modal"
-            data-target="#exampleModal"
-        ></div>
+    <body onload="displayRecruitInfo()">
+        <div id="myRecruit-info"></div>
 
         <div
             class="modal fade"
@@ -39,7 +35,6 @@
                         ></button>
                     </div>
                     <div class="recruitMatch" id="recruitMatch"></div>
-
                     <div class="modal-footer">
                         <button
                             type="button"
@@ -48,6 +43,49 @@
                         >
                             닫기
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            id="recruitUserButton"
+            class="recruitUserButton"
+            data-toggle="modal"
+            data-target="#recruitUserModal"
+        ></div>
+
+        <div
+            class="modal fade"
+            id="recruitUserModal"
+            tabindex="-1"
+            aria-labelledby="recruitUserModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog" id="recruitUserModalDialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="recruitUserModalLabel">
+                            게스트 유저
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div id="recruitUser"></div>
+                    <div class="modal-footer">
+                        <div id="evaluateButton" class="evaluateButton"></div>
+                        <div>
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                            >
+                                닫기
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

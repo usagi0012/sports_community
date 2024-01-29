@@ -15,7 +15,7 @@
     </head>
 
     <body onload="displayMatchInfo()">
-        <div id="myMatch" data-toggle="modal" data-target="#exampleModal"></div>
+        <div id="myMatch"></div>
 
         <div
             class="modal fade"
@@ -24,11 +24,11 @@
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
         >
-            <div class="modal-dialog" id="myRecruitMatch">
+            <div class="modal-dialog" id="myMatchUser">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">
-                            마이매치
+                            컴펀한 유저 목록
                         </h1>
                         <button
                             type="button"
@@ -37,8 +37,7 @@
                             aria-label="Close"
                         ></button>
                     </div>
-                    <div class="recruitMatch" id="recruitMatch"></div>
-
+                    <div class="matchUser" id="matchUser"></div>
                     <div class="modal-footer">
                         <button
                             type="button"
@@ -47,12 +46,13 @@
                         >
                             닫기
                         </button>
+
+                        <div class="userButton" id="userButton"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- axios를 로드합니다. -->
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/myMatch.js"></script>
     </body>
