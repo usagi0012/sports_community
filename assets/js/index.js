@@ -57,13 +57,13 @@ async function toClub() {
     }
 }
 
-async function toHome() {
-    window.location.href = "index.html";
-}
+// async function toHome() {
+//     window.location.href = "index.html";
+// }
 
-async function toHome() {
-    window.location.href = "index.html";
-}
+// async function toHome() {
+//     window.location.href = "index.html";
+// }
 
 //프로필 불러오기
 const profileContainer = document.getElementsByClassName("profileContainer");

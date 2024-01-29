@@ -29,7 +29,11 @@ a {
     text-decoration: none;
     font-size: 14px;
 }
-
+.menubarContainer {
+    position: absolute;
+    left: 9.5vw;
+    z-index: 2;
+}
 .menu {
     width: 100%;
     min-width: 800px;
@@ -37,7 +41,6 @@ a {
     margin: 0px auto;
     border-radius: 15px;
     padding: 0px;
-    position: relative;
 }
 
 .menu > li {
@@ -58,9 +61,15 @@ a {
     background-color: #ffb13d;
 }
 
-.detail {
-    height: 0; /*ul의 높이를 안보이게 처리*/
-    overflow: hidden;
+#detailRecruit,
+#detailClub {
+    height: 0px; /*ul의 높이를 안보이게 처리*/
+    visibility: hidden;
+    padding: 0px;
+}
+#detailPlatform {
+    height: 0px; /*ul의 높이를 안보이게 처리*/
+    visibility: hidden;
     padding: 0px;
 }
 
@@ -73,13 +82,13 @@ a {
 .menu > li:hover #detailClub {
     height: 100px;
     transition-duration: 0.8s;
-    overflow: visible;
+    visibility: visible;
 }
 
 .menu > li:hover #detailPlatform {
     height: 200px;
     transition-duration: 0.8s;
-    overflow: visible;
+    visibility: visible;
 }
 
 /*헤더*/
@@ -103,6 +112,7 @@ a {
 
 .bodyContainer {
     margin-top: 10px;
+    position: sticky;
 }
 
 /* 검색창 부분 */
@@ -179,11 +189,12 @@ input:focus {
 
 /* 메인 컨테이너*/
 .mainContainer {
-    margin-top: 30px;
+    margin-top: 70px;
 }
 
 /* 메인 컨테이너 - 프로필 컨테이너 */
 .profileContainer {
+    z-index: 1;
     margin: 30px 0;
     border: 2px solid #dfcec3;
     border-radius: 20px;
@@ -346,6 +357,12 @@ input:focus {
 
 .rankNumber {
     grid-area: rank;
+}
+.rankNumber > img {
+    height: 28px;
+    width: 50px;
+    position: relative;
+    bottom: 7px;
 }
 .ranknickName {
     grid-area: nickname;
