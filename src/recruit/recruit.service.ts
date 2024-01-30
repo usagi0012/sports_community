@@ -297,4 +297,35 @@ export class RecruitService {
             recruit.progress = Progress.PLEASE_EVALUATE;
         }
     }
+
+    async editMatch(userId: number, putDTO: PutDTO, recruitId: number) {
+        try {
+            const myRecruit = await this.recruitRepository.findOne({
+                where: {
+                    id: recruitId,
+                    hostId: userId,
+                },
+            });
+
+            if (myRecruit) {
+                myRecruit.title = putDTO.title || myRecruit.title;
+                myRecruit.region = putDTO.region || myRecruit.region;
+                myRecruit.gps = putDTO.gps || myRecruit.gps;
+                myRecruit.content = putDTO.content || myRecruit.content;
+                myRecruit.gamedate = putDTO.gamedate || myRecruit.gamedate;
+                myRecruit.endtime = putDTO.endtime || myRecruit.endtime;
+                myRecruit.rule = putDTO.rule || myRecruit.rule;
+                myRecruit.totalmember =
+                    putDTO.totalmember || myRecruit.totalmember;
+
+                await this.recruitRepository.save(myRecruit);
+
+                return myRecruit;
+            } else {
+                throw new NotFoundException("모집글이 존재하지 않습니다.");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }
