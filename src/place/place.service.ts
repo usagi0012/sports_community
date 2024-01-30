@@ -88,7 +88,7 @@ export class PlaceService {
             meta: {
                 total,
                 page,
-                lastPage: Math.ceil(total / 30),
+                lastPage: Math.ceil(total / 28),
             },
         };
     }

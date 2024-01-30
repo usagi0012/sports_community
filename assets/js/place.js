@@ -4,7 +4,9 @@ const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
 
 window.onload = function () {
+    loadHeader();
     getPlace(1);
+    loadFooter();
 };
 
 function getPlace(page) {
@@ -67,13 +69,30 @@ function renderPagination(meta) {
         pageContainer.appendChild(pageLink);
     }
 
-    prevBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        getPlace(Math.max(1, currentPage - 1));
-    });
+    // 이전에 추가된 클릭 이벤트 리스너 제거
+    prevBtn.removeEventListener("click", handlePrevButtonClick);
+    nextBtn.removeEventListener("click", handleNextButtonClick);
 
-    nextBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        getPlace(Math.min(totalPage, currentPage + 1));
-    });
+    // 새로운 클릭 이벤트 리스너 추가
+    prevBtn.addEventListener("click", handlePrevButtonClick);
+    nextBtn.addEventListener("click", handleNextButtonClick);
+}
+
+function handlePrevButtonClick(e) {
+    e.preventDefault();
+    const currentPage = parseInt(
+        pageContainer.querySelector(".active").innerText,
+        10,
+    );
+    getPlace(Math.max(1, currentPage - 1));
+}
+
+function handleNextButtonClick(e) {
+    e.preventDefault();
+    const currentPage = parseInt(
+        pageContainer.querySelector(".active").innerText,
+        10,
+    );
+    const totalPage = parseInt(pageContainer.lastChild.innerText, 10);
+    getPlace(Math.min(totalPage, currentPage + 1));
 }
