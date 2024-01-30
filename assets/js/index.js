@@ -30,41 +30,6 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
-async function toHome() {
-    window.location.href = "index.html";
-}
-
-//메뉴바 클릭시 이동
-async function toRecruit() {
-    window.location.href = "index.html";
-}
-
-async function toMyRecruit() {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-        alert("로그인 후 이용 가능합니다.");
-    } else {
-        window.location.href = "myRecruit.html";
-    }
-}
-
-async function toClub() {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-        alert("로그인 후 이용 가능합니다.");
-    } else {
-        window.location.href = "club.html";
-    }
-}
-
-// async function toHome() {
-//     window.location.href = "index.html";
-// }
-
-// async function toHome() {
-//     window.location.href = "index.html";
-// }
-
 //프로필 불러오기
 const profileContainer = document.getElementsByClassName("profileContainer");
 function getProfile(token) {

@@ -17,8 +17,5 @@ export class Place {
     image: string;
 
     @Column()
-    latitude: string;
-
-    @Column()
-    longitude: string;
+    link: number;
 }

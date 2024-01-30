@@ -11,6 +11,7 @@ export class PlaceController {
     // 매달 1일 새벽 3시 0 3 1 * *
     @Cron("0 3 1 * *")
     async getData() {
+        console.log("hi");
         const places = await this.placeService.crawlSpaces(
             "https://shareit-resource.shareit.kr/spaces?keyword&realTime=true&approve=true&region=-1&eventTypes=31&spaceThemeSeq&minPrice=0&maxPrice=-1&minPeople=0&minArea&maxArea&discount=0&sort=popularity&work=false&life=true&type=search",
         );
