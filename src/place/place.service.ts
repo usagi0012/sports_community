@@ -31,8 +31,7 @@ export class PlaceService {
                                 name: t.host.name,
                                 address: t.address,
                                 image: t.photos[0].file.resourcePath,
-                                latitude: t.latitude,
-                                longitude: t.longitude,
+                                link: t.seq,
                             };
                         });
                     })
@@ -64,14 +63,13 @@ export class PlaceService {
                         name: places[i][j].name,
                         address: places[i][j].address,
                         image: places[i][j].image,
-                        latitude: places[i][j].latitude,
-                        longitude: places[i][j].longitude,
+                        link: places[i][j].link,
                     });
                 }
             }
         }
         const newexistPlaces = await this.placeRepository.find({
-            select: ["id", "name", "address", "image"],
+            select: ["id", "name", "address", "image", "link"],
         });
 
         return newexistPlaces;
@@ -80,9 +78,9 @@ export class PlaceService {
     //장소 불러오기
     async showSpaces(page: number) {
         const [place, total] = await this.placeRepository.findAndCount({
-            select: ["id", "name", "address", "image"],
-            take: 30,
-            skip: (page - 1) * 30,
+            select: ["id", "name", "address", "image", "link"],
+            take: 28,
+            skip: (page - 1) * 28,
         });
 
         return {
@@ -90,7 +88,7 @@ export class PlaceService {
             meta: {
                 total,
                 page,
-                last_page: Math.ceil(total / 30),
+                lastPage: Math.ceil(total / 30),
             },
         };
     }
