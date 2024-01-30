@@ -1,17 +1,12 @@
 window.onload = function () {
-    console.log("$$-1");
     const urlParams = new URLSearchParams(window.location.search);
     console.log("urlParams", urlParams);
     let clubId = urlParams.get("id");
-
-    console.log("여기 들어감?");
-    console.log("$$$1");
+    loadHeader();
     getClubDetail(clubId);
-    console.log("$$$2");
     hasClub();
-    console.log("$$$3");
     isMyClub();
-    console.log("$$4");
+    loadFooter();
 };
 const regionData = [
     "서울",
@@ -34,8 +29,6 @@ const regionData = [
 ];
 
 export default function getClubDetail(clubId) {
-    console.log("##########");
-    console.log("2번 클럽 아이디", clubId);
     // 보내는 순서 알아보기(header, params)
     // const authorized = localStorage.getItem("authorized");
     // const token = JSON.parse(authorized).accessToken.value;
@@ -115,7 +108,6 @@ function isMyClub() {
     const urlParams = new URLSearchParams(window.location.search);
 
     let clubId = urlParams.get("id");
-    console.log("클럽 아이디", clubId);
     const token = localStorage.getItem("accessToken");
 
     axios
@@ -125,15 +117,12 @@ function isMyClub() {
             },
         })
         .then(function (response) {
-            console.log("리스폰스는 여기", response);
-            console.log("리스폰스 데이터", response.data);
             if (response.data.statusCode === 200) {
                 const updateBtn = document.querySelector(".updateBtn");
                 updateBtn.style.display = "block";
                 const deleteBtn = document.querySelector(".deleteBtn");
                 deleteBtn.style.display = "block";
             } else {
-                console.log("수정/삭제버튼 안나옴");
             }
         })
         .catch(function (error) {
@@ -143,7 +132,6 @@ function isMyClub() {
 
 function hasClub() {
     const token = localStorage.getItem("accessToken");
-    console.log("여기는 찍혀?");
     console.log("token", token);
     axios
         .get("/api/club/myClub", {
@@ -152,9 +140,6 @@ function hasClub() {
             },
         })
         .then(function (response) {
-            console.log("콘솔안쪽");
-            console.log("ㅋㅋㅋㅋㅋ리스폰스", response);
-            console.log("ㅋㅋㅋㅋ리스폰스 데이터", response.data);
             if (response.data.data === true) {
                 const applyingBtn = document.querySelector(".applyingBtn");
                 applyingBtn.style.display = "block";

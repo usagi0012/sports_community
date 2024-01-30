@@ -18,6 +18,7 @@ import { refreshTokenGuard } from "./guard/refresh-token.guard";
 import { Request } from "express";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ResetPasswordDto } from "./dto/reset-password.dto";
+import { UserId } from "./decorators/userId.decorator";
 
 @ApiTags("인증")
 @Controller("auth")
@@ -65,9 +66,7 @@ export class AuthController {
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Post("logout")
-    logout(@Req() req: Request) {
-        const userId: number = (req.user as any).userId;
-
+    logout(@UserId() userId: number) {
         if (!userId) {
             throw new UnauthorizedException("로그인 오류입니다.");
         }

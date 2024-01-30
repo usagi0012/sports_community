@@ -3,38 +3,62 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>동아리 상세 페이지</title>
+        <title>Onog Club Details</title>
+        <meta name="description" content="Onog ClubDetailPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
         <link rel="stylesheet" href="css/club-detail.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
     </head>
     <body>
-        <!-- 내 동아리 들어가면 동아리 수정 버튼 띄우기 -->
-        <button class="updateBtn" onclick="moveToUpdatePage() ">
-            내 동아리 정보 수정
-        </button>
-        <button class="applyingBtn" onclick="openApplyingModal()">
-            동아리 신청하기
-        </button>
-        <button>동아리 대결 신청하기</button>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer" id="mainContainer">
+                <!-- 내 동아리 들어가면 동아리 수정 버튼 띄우기 -->
+                <button class="updateBtn" onclick="moveToUpdatePage() ">
+                    내 동아리 정보 수정
+                </button>
+                <button class="applyingBtn" onclick="openApplyingModal()">
+                    동아리 신청하기
+                </button>
+                <button>동아리 대결 신청하기</button>
 
-        <!-- 내 동아리 들어가면 동아리 삭제 버튼 띄우기 -->
-        <button class="deleteBtn" onclick="deleteCheck()">
-            등록된 동아리 삭제
-        </button>
+                <!-- 내 동아리 들어가면 동아리 삭제 버튼 띄우기 -->
+                <button class="deleteBtn" onclick="deleteCheck()">
+                    등록된 동아리 삭제
+                </button>
 
-        <!-- 동아리 신청 모달창 -->
-        <div id="applyingClubModal" class="modal">
-            <div class="modal-content">
-                <!-- 기본값으로 클릭한 동아리의 id가 들어가도록 설정하기 
+                <!-- 동아리 신청 모달창 -->
+                <div id="applyingClubModal" class="modal">
+                    <div class="modal-content">
+                        <!-- 기본값으로 클릭한 동아리의 id가 들어가도록 설정하기 
                 하지만 사용자에게 보여주는 값은 동아리 "이름"이 보여질 수 있도록 하기 -->
-                <label for="Applyingclub">지원할 동아리:</label>
-                <p id="clubNameDisplay"></p>
-                <br />
-                <label for="description">지원이유:</label>
-                <textarea id="description1"></textarea>
-                <br />
+                        <label for="Applyingclub">지원할 동아리:</label>
+                        <p id="clubNameDisplay"></p>
+                        <br />
+                        <label for="description">지원이유:</label>
+                        <textarea id="description1"></textarea>
+                        <br />
 
-                <button onclick="submitApplyingForm()">제출</button>
-                <button onclick="closeApplyingModal()">닫기</button>
+                        <button onclick="submitApplyingForm()">제출</button>
+                        <button onclick="closeApplyingModal()">닫기</button>
+                    </div>
+                </div>
+
+                <div class="name">이름</div>
+                <div class="region">지역</div>
+                <div class="classification">분류</div>
+                <div class="gender">성별</div>
+                <div class="member">회원수</div>
+                <div class="createdAt">생성일자</div>
+                <div class="clubMaster">동호회장</div>
+                <div class="details">상세설명</div>
             </div>
         </div>
 
@@ -45,9 +69,11 @@
         <div class="createdAt">생성일자</div>
         <div class="clubMaster">동호회장</div>
         <div class="details">상세설명</div>
+        <div class="footer" id="footer"></div>
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="module" src="./js/club-detail.js"></script>
+        <script src="./js/dropmenu.js"></script>
         <script>
             const clubNameDiv = document.querySelector(".name");
             const clubNameDisplay = document.querySelector("#clubNameDisplay");

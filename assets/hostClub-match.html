@@ -3,57 +3,64 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>myMatch</title>
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-
+        <title>Document</title>
         <link
             rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         />
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+        <style>
+            .host-match-item {
+                margin-bottom: 20px;
+            }
+        </style>
     </head>
 
-    <body onload="displayMatchInfo()">
-        <div id="myMatch"></div>
+    <body onload="displayHostClubMatchInfo()">
+        <div id="hostClub-match"></div>
 
         <div
             class="modal fade"
-            id="exampleModal"
+            id="hostMatchModal"
             tabindex="-1"
-            aria-labelledby="exampleModalLabel"
+            role="dialog"
+            aria-labelledby="hostMatchModalLabel"
             aria-hidden="true"
         >
-            <div class="modal-dialog" id="myMatchUser">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">
-                            컴펀한 유저 목록
+                        <h1 class="modal-title fs-5" id="hostMatchModalLabel">
+                            게스트 클럽
                         </h1>
                         <button
                             type="button"
-                            class="btn-close"
+                            class="close"
                             data-dismiss="modal"
                             aria-label="Close"
-                        ></button>
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="matchUser" id="matchUser"></div>
+                    <div class="modal-body" id="guestClub"></div>
                     <div class="modal-footer">
+                        <div id="hostClubButton"></div>
                         <button
                             type="button"
                             class="btn btn-secondary"
                             data-dismiss="modal"
                         >
-                            닫기
+                            Close
                         </button>
-
-                        <div class="userButton" id="userButton"></div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="./js/myMatch.js"></script>
+        <script src="./js/hostClub-match.js"></script>
     </body>
 </html>

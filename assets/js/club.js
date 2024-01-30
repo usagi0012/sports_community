@@ -30,8 +30,10 @@ const region = [
 
 window.onload = function () {
     console.log("start");
+    loadHeader();
     getClub();
     hasClub();
+    loadFooter();
 };
 
 function getClub(event) {

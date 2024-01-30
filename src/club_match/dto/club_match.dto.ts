@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { DateTime } from "aws-sdk/clients/devicefarm";
 import { IsDate, IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { ClubMatchStatus } from "src/entity/club_match.entity";
 

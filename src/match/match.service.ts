@@ -8,6 +8,8 @@ import { Recruit, Status } from "../entity/recruit.entity";
 import { User } from "./../entity/user.entity";
 import { userInfo } from "os";
 import { find } from "lodash";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import { match } from "assert";
 
 @Injectable()
 export class MatchService {
@@ -127,13 +129,13 @@ export class MatchService {
             throw new NotFoundException("컴펌된 유저가 없습니다.");
         }
 
-        const users = [];
+        // const users = [];
 
-        for (const match of matches) {
-            users.push(match.guestId, match.guestName, match);
-        }
+        // for (const match of matches) {
+        //     users.push(match.guestId, match.guestName, match);
+        // }
 
-        return users;
+        return matches;
     }
 
     //매치 컴펌하기
@@ -194,6 +196,10 @@ export class MatchService {
     async doneGame(userId: number, matchId: number) {
         const findMatch = await this.findMyMatch(matchId, userId);
 
+        if (findMatch.progress === Progress.EVALUATION_COMPLETED) {
+            throw new NotFoundException("이미 평가완료하였습니다. ");
+        }
+
         if (findMatch.endTime >= new Date()) {
             throw new NotFoundException("경기가 끝난 후 평가 가능합니다.");
         }
@@ -230,6 +236,29 @@ export class MatchService {
         });
         if (matche && matche.guestId == UserId) {
             throw new NotFoundException("이미 신청하셨습니다.");
+        }
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async handleCron() {
+        const matches = await this.matchRepository.find();
+
+        for (const match of matches) {
+            this.updateProgress(match);
+        }
+
+        await this.matchRepository.save(matches);
+    }
+
+    private updateProgress(match: Match) {
+        const now = new Date();
+
+        if (match.gameDate.getTime() < now.getTime()) {
+            match.progress = Progress.DURING;
+        }
+
+        if (match.endTime.getTime() < now.getTime()) {
+            match.progress = Progress.PLEASE_EVALUATE;
         }
     }
 }
