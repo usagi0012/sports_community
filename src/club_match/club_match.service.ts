@@ -15,6 +15,7 @@ import { Repository } from "typeorm";
 import { NotFoundError } from "rxjs";
 import { ClubMatchStatus } from "../entity/club_match.entity";
 import { MatchStatus } from "src/entity/match.entity";
+import { Status } from "src/entity/recruit.entity";
 
 @Injectable()
 export class ClubMatchService {
@@ -56,6 +57,7 @@ export class ClubMatchService {
             guest_clubId: guestClub.id,
             guest_clubId_master: userId,
             guest_club_name: guestClub.name,
+            guestClub: guestClub,
             ...clubMatchDTO,
         });
 
@@ -94,25 +96,42 @@ export class ClubMatchService {
                 id: id,
                 host_clubId_master: userId,
             },
+            relations: {
+                guestClub: true,
+            },
         });
 
         if (!match) {
             throw new NotFoundException(`Match ${id}을 찾을 수 없습니다.`);
         }
 
-        await match.updateProgress();
-
-        return await this.clubMatchRepository.save(match);
+        return match;
     }
 
+    //호스트 유저 조회
+    async findHostMatchUser(id: number, userId: number) {
+        const match = await this.clubMatchRepository.findOne({
+            where: {
+                id: id,
+                host_clubId_master: userId,
+            },
+            relations: {
+                guestClub: true,
+            },
+        });
+
+        if (!match) {
+            throw new NotFoundException(`Match ${id}을 찾을 수 없습니다.`);
+        }
+        const guestClub = match.guestClub;
+        return guestClub;
+    }
     //host매치 승인/거절하기
     async putHostMatch(
         id: number,
         userId: number,
         checkClubMatchDTO: CheckClubMatchDTO,
     ) {
-        console.log(userId);
-        console.log(id);
         const match = await this.clubMatchRepository.findOne({
             where: {
                 id: id,
@@ -124,12 +143,13 @@ export class ClubMatchService {
             throw new NotFoundException(`Match ${id}을 찾을 수 없습니다.`);
         }
 
-        if (match.status === ClubMatchStatus.CANCEL) {
-            throw new NotFoundException("취소된 경기입니다.");
-        }
-
-        if (checkClubMatchDTO.status === ClubMatchStatus.CANCEL) {
-            throw new NotFoundException("호스트는 취소할 수 없습니다.");
+        if (
+            match.status === ClubMatchStatus.CANCEL ||
+            match.status === ClubMatchStatus.APROVECONFIRM
+        ) {
+            throw new NotFoundException(
+                "이미 컴펌된 경기입니다. 수정이 불가능합니다.",
+            );
         }
 
         match.status = checkClubMatchDTO.status;
@@ -150,6 +170,25 @@ export class ClubMatchService {
         return await this.clubMatchRepository.save(clubMatch);
     }
 
+    //host 컴펌하기
+    async confirmHost(id: number, userId: number) {
+        const clubMatch = await this.findHostMatch(id, userId);
+
+        if (!clubMatch) {
+            throw new NotFoundException("조회되는 클럽 매치가 없습니다.");
+        }
+
+        if (clubMatch.status === ClubMatchStatus.REJECTED) {
+            clubMatch.status = ClubMatchStatus.CANCEL;
+        } else if (clubMatch.status === ClubMatchStatus.APPROVED) {
+            clubMatch.status = ClubMatchStatus.APROVECONFIRM;
+        } else if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
+            throw new NotFoundException("승인/거절 후 컴펌해주세요 ");
+        }
+
+        return await this.clubMatchRepository.save(clubMatch);
+    }
+
     //host 경기 평가 완료하기
     async evaluateHost(id: number, userId: number) {
         const clubMatch = await this.findHostMatch(id, userId);
@@ -161,7 +200,6 @@ export class ClubMatchService {
         if (clubMatch.progress !== Progress.PLEASE_EVALUATE) {
             throw new BadRequestException(
                 `경기 종료시간 ${clubMatch.endTime}이 지나야 가능합니다.`,
-                // NotFoundException을 BadRequestException으로 수정
             );
         }
 
@@ -214,7 +252,29 @@ export class ClubMatchService {
         return await this.clubMatchRepository.save(guestMatch);
     }
 
-    //게스트 매치 취소하기
+    // 호스트 매치 취소하기
+    async cancelHostMatch(id: number, userId: number) {
+        const match = await this.clubMatchRepository.findOne({
+            where: {
+                id: id,
+                host_clubId_master: userId,
+            },
+        });
+
+        if (!match) {
+            throw new NotFoundException(`매치 ${id}을 찾을 수 없습니다.`);
+        }
+
+        if (match.progress === Progress.PLEASE_EVALUATE) {
+            throw new NotFoundException("경기 시작중에는 취소할 수 없습니다.");
+        }
+
+        match.status = ClubMatchStatus.CANCEL;
+
+        return await this.clubMatchRepository.save(match);
+    }
+
+    //host 매치 취소하기
     async cancelGuestMatch(
         id: number,
         userId: number,
@@ -242,7 +302,6 @@ export class ClubMatchService {
 
         return await this.clubMatchRepository.save(match);
     }
-
     //guest 경기 평가 완료하기
     async evaluateGuest(id: number, userId: number) {
         const guestMatch = await this.findGuestMatch(id, userId);
@@ -277,7 +336,16 @@ export class ClubMatchService {
         ) {
             throw new NotFoundException("권한이 없습니다.");
         }
-
+        if (match.guest_evaluate == true && match.host_evaluate == true) {
+            return await this.clubMatchRepository.remove(match);
+        } else if (
+            match.host_evaluate == true &&
+            match.guest_evaluate == false
+        ) {
+            throw new NotFoundException(
+                "어웨이 클럽이 평가를 완료해야 삭제가능합니다.",
+            );
+        }
         if (match.status !== ClubMatchStatus.CANCEL) {
             throw new NotFoundException("취소되지 않은 경기입니다.");
         }
