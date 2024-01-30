@@ -62,4 +62,16 @@
 
 .createBtn {
     display: none;
+    font-family: "LINESeedKR-Bd";
+    margin: 10px 15px;
+    height: 25px;
+    padding-top: 5px;
+    border-radius: 7px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.createBtn:hover {
+    box-shadow: 2px 2px 2px gray;
 }
