@@ -56,17 +56,11 @@ export default function getClubDetail(clubId) {
 
             regionDiv.appendChild(region);
 
-            const classificationDiv = document.querySelector(".classification");
-            const classification = document.createElement("div");
-            classification.className = "classification";
-            classification.innerHTML += ``;
-            classificationDiv.appendChild(classification);
-
-            const genderDiv = document.querySelector(".gender");
-            const gender = document.createElement("div");
-            gender.className = "gender";
-            gender.innerHTML += ``;
-            genderDiv.appendChild(gender);
+            const scoreDiv = document.querySelector(".score");
+            const score = document.createElement("div");
+            score.className = "score";
+            score.innerHTML += `${response.data.score}`;
+            scoreDiv.appendChild(score);
 
             const memberDiv = document.querySelector(".member");
             const member = document.createElement("div");
@@ -88,6 +82,17 @@ export default function getClubDetail(clubId) {
             clubMasterDiv.appendChild(clubMaster);
 
             const detailsDiv = document.querySelector(".details");
+
+            const image = document.createElement("div");
+            image.className = "image";
+            if (response.data.image) {
+                const imageElement = document.createElement("img");
+                imageElement.src = response.data.image;
+                imageElement.alt = "Uploaded Image";
+                image.appendChild(imageElement);
+                detailsDiv.appendChild(image);
+            }
+
             const details = document.createElement("div");
             details.className = "details";
             details.innerHTML += `${response.data.description}`;
