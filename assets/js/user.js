@@ -75,6 +75,10 @@ async function redirectToUserUpdatePage(currentPassword) {
             }
         }
     } catch (error) {
+        if (error.response && error.response.status === 401) {
+            alert("로그인 후 이용해주세요.");
+            window.location.href = "http://localhost:8001/login.html";
+        }
         console.log(error);
         // 오류 처리 로직 추가
     }

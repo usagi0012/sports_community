@@ -44,6 +44,10 @@ async function requestEmailChange() {
             return;
         }
     } catch (error) {
+        if (error.response && error.response.status === 401) {
+            alert("로그인 후 이용해주세요.");
+            window.location.href = "http://localhost:8001/login.html";
+        }
         console.error(error);
     }
 
@@ -91,6 +95,10 @@ function confirmEmailChange() {
             verificationCodeInput.disabled = true;
         })
         .catch((error) => {
+            if (error.response && error.response.status === 401) {
+                alert("로그인 후 이용해주세요.");
+                window.location.href = "http://localhost:8001/login.html";
+            }
             console.error(error);
             alert("인증에 실패했습니다.");
         });
@@ -119,6 +127,10 @@ async function getUserInfo() {
         const { email } = response.data;
         document.getElementById("email").value = email;
     } catch (error) {
+        if (error.response && error.response.status === 401) {
+            alert("로그인 후 이용해주세요.");
+            window.location.href = "http://localhost:8001/login.html";
+        }
         console.error("Error fetching user info:", error);
     }
 }
@@ -143,6 +155,10 @@ async function updateEmail() {
             return;
         }
     } catch (error) {
+        if (error.response && error.response.status === 401) {
+            alert("로그인 후 이용해주세요.");
+            window.location.href = "http://localhost:8001/login.html";
+        }
         console.error(error);
     }
     try {
@@ -174,6 +190,10 @@ async function updateEmail() {
             }
         }
     } catch (error) {
+        if (error.response && error.response.status === 401) {
+            alert("로그인 후 이용해주세요.");
+            window.location.href = "http://localhost:8001/login.html";
+        }
         console.error("Error updating email:", error);
         // 오류 처리 로직 추가
         alert("이메일 업데이트 중 오류가 발생했습니다. 에러를 확인하세요.");
@@ -214,6 +234,10 @@ async function updatePassword() {
             }
         }
     } catch (error) {
+        if (error.response && error.response.status === 401) {
+            alert("로그인 후 이용해주세요.");
+            window.location.href = "http://localhost:8001/login.html";
+        }
         console.error("Error updating password:", error);
         // 오류 처리 로직 추가
         alert("비밀번호 업데이트 중 오류가 발생했습니다. 에러를 확인하세요.");
