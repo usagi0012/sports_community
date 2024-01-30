@@ -1,3 +1,8 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+};
+
 // function submitForm() {
 //     console.log("submitForm들어옴");
 //     const name = document.getElementById("name").value;

@@ -115,7 +115,7 @@ a {
     margin-top: 10px;
     position: sticky;
     height: auto;
-    min-height: 100%;
+    min-height: 80vh;
     padding-bottom: 120px;
 }
 
@@ -184,11 +184,6 @@ input:focus {
 
 #authBtn:hover {
     text-shadow: 0px 0px 5px #ff771c;
-}
-
-/* 바디컨테이너 */
-.bodyContainer {
-    min-height: 100vh;
 }
 
 /* 하단부 */
