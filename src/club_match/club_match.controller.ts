@@ -101,14 +101,14 @@ export class ClubMatchController {
         return await this.clubMatchService.confirmHost(id, userId);
     }
 
-    //host 매치 취소하기
-    @Put("host/cancel/:clubmatchid")
-    async cancelHostMatch(
-        @Param("clubmatchid") id: number,
-        @UserId() userId: number,
-    ) {
-        return await this.clubMatchService.cancelHostMatch(id, userId);
-    }
+    // //host 매치 취소하기
+    // @Put("host/cancel/:clubmatchid")
+    // async cancelHostMatch(
+    //     @Param("clubmatchid") id: number,
+    //     @UserId() userId: number,
+    // ) {
+    //     return await this.clubMatchService.cancelHostMatch(id, userId);
+    // }
 
     //host 경기 평가 완료하기
     @Put("host/evaluate/:clubmatchid")
@@ -132,22 +132,36 @@ export class ClubMatchController {
     ) {
         return await this.clubMatchService.findGuestMatch(id, userId);
     }
+
+    //Guest 컴펌하기
+    @Put("guest/confirm/:clubmatchid")
+    async confirmGuest(
+        @Param("clubmatchid") id: number,
+        @UserId() userId: number,
+    ) {
+        return await this.clubMatchService.confirmGuest(id, userId);
+    }
+
+    //guest매치 호스트클럽조회
+    @Get("guest/hostClub/:clubmatchid")
+    async findHostClub(
+        @Param("clubmatchid") id: number,
+        @UserId() userId: number,
+    ) {
+        return await this.clubMatchService.findHostClub(id, userId);
+    }
+
     //게스트 매치 취소하기
     @Put("guest/cancel/:clubmatchid")
     async cancelGuestMatch(
         @Param("clubmatchid") id: number,
         @UserId() userId: number,
-        @Body() checkClubMatchDTO: CheckClubMatchDTO,
     ) {
-        return await this.clubMatchService.cancelGuestMatch(
-            id,
-            userId,
-            checkClubMatchDTO,
-        );
+        return await this.clubMatchService.cancelGuestMatch(id, userId);
     }
 
     //guest 경기 평가 완료하기
-    @Put("host/evaluate/:clubmatchid")
+    @Put("guest/evaluate/:clubmatchid")
     async evaluateGuest(
         @Param("clubmatchid") id: number,
         @UserId() userId: number,
@@ -164,12 +178,12 @@ export class ClubMatchController {
         return await this.clubMatchService.deleteClubMatch(id, userId);
     }
 
-    //평가 완료된 경기 삭제하기
-    @Delete("delete/comfirm/:clubmatchid")
-    async confirmClubMatch(
-        @Param("clubmatchid") id: number,
-        @UserId() userId: number,
-    ) {
-        return await this.clubMatchService.confirmClubMatch(id, userId);
-    }
+    // //평가 완료된 경기 삭제하기
+    // @Delete("delete/comfirm/:clubmatchid")
+    // async confirmClubMatch(
+    //     @Param("clubmatchid") id: number,
+    //     @UserId() userId: number,
+    // ) {
+    //     return await this.clubMatchService.confirmClubMatch(id, userId);
+    // }
 }

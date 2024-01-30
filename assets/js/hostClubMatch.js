@@ -15,6 +15,7 @@ async function displayHostClubMatchInfo() {
 
         response.data.forEach((hostMatch) => {
             const hostMatchHTML = createHostMatchHTML(hostMatch);
+
             hostMatchContainer.innerHTML += hostMatchHTML;
         });
     } catch (error) {
@@ -23,20 +24,16 @@ async function displayHostClubMatchInfo() {
     }
 }
 
+//호스트매치html
 function createHostMatchHTML(hostMatch) {
     return `
     <div class="host-match-item">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#hostMatchModal" id="hostMatch-${hostMatch}" hostMatchId="${hostMatch.id}" onclick="getGuestClub(${hostMatch.id})">
-            <h1>${hostMatch.message}</h1>
-            <div><strong>호스트:</strong> ${hostMatch.guest_club_name} </div>
-            <p><strong>게임 일자:</strong> ${hostMatch.gamedate}</p>
-            <p><strong>경기 시간:</strong> ${hostMatch.endTime}</p>
-            <p><strong>진행상황:</strong> ${hostMatch.progress}</p>
-            <p><strong>상세정보:</strong> ${hostMatch.information}</p>
+            <h4>${hostMatch.message}</h4>
+            <div><strong>게스트:</strong> ${hostMatch.guest_club_name} </div>
+            <p><strong>진행상황:</strong> ${hostMatch.progress}</p>    
             <p><strong>상태:</strong> ${hostMatch.status}</p>
         </button>  
-        <button class="deleteButton btn btn-danger" data-matchId="${hostMatch.id}" onclick="deleteClubMatch(${hostMatch.id})">삭제하기</button>
-        <button class="confirmButton btn btn-success" data-matchId="${hostMatch.id}" onclick="confirmButton(${hostMatch.id})">컴펌하기</button>
     </div>
     `;
 }
@@ -99,27 +96,34 @@ async function getGuestClub(hostMatchId) {
             },
         );
 
-        console.log(hostMatchId);
-        console.log(response);
-
         const guestClubContainer = document.getElementById("guestClub");
-        guestClubContainer.innerHTML = "";
         const hostClubButtonContainer =
             document.getElementById("hostClubButton");
-        hostClubButtonContainer.innerHTML = "";
+        const deleteButtonContainer = document.getElementById("deletebutton");
 
-        const guestClub = response.data;
+        const guestClub = response.data[1];
+        const clubMatch = response.data[0];
+
         const guestClubHTML = createGuestClubHTML(guestClub);
-        const hostClubButtonHTML = createhostClubButtonHTML(hostMatchId);
-        guestClubContainer.innerHTML += guestClubHTML;
-        hostClubButtonContainer.innerHTML += hostClubButtonHTML;
+        const hostClubButtonHTML = createHostClubButtonHTML(hostMatchId);
+        const clubMatchHTML = createClubMatchHTML(clubMatch);
+        const deleteButtonHTML = createDeleteButtonHTML(hostMatchId);
+
+        deleteButtonContainer.innerHTML = deleteButtonHTML;
+        guestClubContainer.innerHTML = guestClubHTML + clubMatchHTML;
+        hostClubButtonContainer.innerHTML = hostClubButtonHTML;
 
         $("#hostMatchModal").modal("show");
     } catch (error) {
         console.error(error);
-        alert(error.response.data.message);
-        window.location.reload();
+        alert(error.response);
     }
+}
+
+function createDeleteButtonHTML(hostMatchId) {
+    return ` 
+    <button class="deleteButton btn btn-danger" data-matchId="${hostMatchId}" onclick="deleteClubMatch(${hostMatchId})">삭제하기</button>   
+    `;
 }
 
 function createGuestClubHTML(guestClub) {
@@ -139,11 +143,26 @@ function createGuestClubHTML(guestClub) {
     `;
 }
 
-function createhostClubButtonHTML(hostMatchId) {
+function createHostClubButtonHTML(hostMatchId) {
     return `
         <div class="hostClubButton">
             <button class="approveButton btn btn-success" onclick="approvebutton(${hostMatchId})">승인</button>
             <button class="rejectButton btn btn-danger" onclick="rejectbutton(${hostMatchId})">거절</button>
+            <button class="confirmButton btn btn-success" data-matchId="${hostMatchId}" onclick="confirmButton(${hostMatchId})">컴펌하기</button>
+        </div>
+    `;
+}
+function createClubMatchHTML(clubMatch) {
+    return `
+        <div>
+            <h2>경기정보</h2>
+            <p><strong>Information:</strong> ${clubMatch.information}</p>
+            <p><strong>Message:</strong> ${clubMatch.message}</p>
+            <p><strong>End Time:</strong> ${clubMatch.endTime}</p>
+            <p><strong>Game Date:</strong> ${clubMatch.gameDate}</p>
+            <p><strong>Progress:</strong> ${clubMatch.progress}</p>
+            <p><strong>evaluation:</strong> ${clubMatch.host_evaluate}</p>
+            <p><strong>Status:</strong> ${clubMatch.status}</p>
         </div>
     `;
 }

@@ -10,29 +10,24 @@
         />
 
         <style>
-            .host-match-item {
+            .guest-match-item {
                 margin-bottom: 20px;
             }
         </style>
     </head>
 
-    <body onload="displayHostClubMatchInfo()">
-        <div id="hostClub-match"></div>
+    <body onload="getGuestMatch()">
+        <div>
+            <div id="guestClubMatch"></div>
+        </div>
 
-        <div
-            class="modal fade"
-            id="hostMatchModal"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="hostMatchModalLabel"
-            aria-hidden="true"
-        >
-            <div class="modal-dialog" role="document">
+        <div class="modal fade" id="guestMatchModal">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="hostMatchModalLabel">
-                            게스트 클럽
-                        </h1>
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Modal title
+                        </h5>
                         <button
                             type="button"
                             class="close"
@@ -42,9 +37,9 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="guestClub"></div>
+                    <div class="modal-body" id="hostClub"></div>
                     <div class="modal-footer">
-                        <div id="hostClubButton"></div>
+                        <div id="guestModalButton"></div>
                         <button
                             type="button"
                             class="btn btn-secondary"
@@ -56,11 +51,10 @@
                 </div>
             </div>
         </div>
-
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="./js/hostClub-match.js"></script>
+        <script src="./js/guestClubMatch.js"></script>
     </body>
 </html>

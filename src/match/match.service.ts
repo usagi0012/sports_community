@@ -129,13 +129,7 @@ export class MatchService {
             throw new NotFoundException("컴펌된 유저가 없습니다.");
         }
 
-        // const users = [];
-
-        // for (const match of matches) {
-        //     users.push(match.guestId, match.guestName, match);
-        // }
-
-        return matches;
+        return [findmatch, matches];
     }
 
     //매치 컴펌하기
@@ -150,6 +144,10 @@ export class MatchService {
                 hostId: userId,
             },
         });
+
+        if (findMatch.status === MatchStatus.CONFIRM) {
+            throw new NotFoundException("이미 참석하기로한 경기입니다.");
+        }
 
         if (findMatch.status === MatchStatus.APPLICATION_COMPLETE) {
             throw new NotFoundException("처리중입니다.");
@@ -219,6 +217,10 @@ export class MatchService {
 
         if (findMatch.progress === Progress.EVALUATION_COMPLETED) {
             return await this.matchRepository.remove(findMatch);
+        }
+
+        if (findMatch.status === MatchStatus.CONFIRM) {
+            throw new NotFoundException("이미 컴펌한 경기입니다.");
         }
 
         if (findMatch.status !== MatchStatus.CANCELCONFIRM) {
