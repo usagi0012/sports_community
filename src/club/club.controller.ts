@@ -59,6 +59,16 @@ export class ClubController {
         }
     }
 
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("/myClubId")
+    async getMyClubId(@UserId() userId: number) {
+        console.log("백엔드 안들어옴?");
+        const clubId = await this.clubService.getMyClubId(userId);
+
+        return clubId;
+    }
+
     //동아리 상세 조회
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)

@@ -43,7 +43,7 @@ function loadHeader() {
                     <li onclick="toClub()">
                         <a href="#">동아리 목록</a>
                     </li>
-                    <li><a href="#">내 동아리</a></li>
+                    <li onclick="toMyClub()"><a href="#">내 동아리</a></li>
                 </ul>
             </li>
             <li id="stadium" onclick="toPlace()">
@@ -129,6 +129,14 @@ async function toClub() {
 //경기장 페이지로 이동
 async function toPlace() {
     window.location.href = "place.html";
+}
+//내 동아리 페이지로 이동
+async function toMyClub() {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+        alert("로그인 후 이용 가능합니다.");
+    }
+    window.location.href = "myClub.html";
 }
 
 //로그아웃 하기

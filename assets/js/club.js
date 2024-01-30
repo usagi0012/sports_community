@@ -23,7 +23,7 @@ const region = [
 // function moveToClubDetail(clubId) {
 //     console.log("here");
 //     console.log("clubId", clubId);
-//     window.location.href = `http://localhost:8001/club-detail.html/${clubId}`;
+//     window.location.href = `club-detail.html/${clubId}`;
 //     getClubDetail(clubId);
 //     console.log("$$$$$");
 // }
@@ -71,7 +71,7 @@ function getClub(event) {
                         })
                         .then(function (response) {
                             console.log("response", response);
-                            window.location.href = `http://localhost:8001/club-detail.html?id=${club.id}`;
+                            window.location.href = `club-detail.html?id=${club.id}`;
                         })
                         .catch(function (error) {
                             console.log(error.response);
