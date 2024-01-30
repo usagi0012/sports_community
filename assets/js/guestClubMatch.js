@@ -121,13 +121,6 @@ function createGuestModalButtonHTML(guestMatchId) {
     `;
 }
 
-function createGuestMatchButtonHTML(guestClubMatch) {
-    return `
-
-        
-    `;
-}
-
 // 게스트 매치 취소하기
 async function cancelGuestMatch(guestMatchId) {
     const accessToken = localStorage.getItem("accessToken");

@@ -141,9 +141,10 @@ export class MatchService {
         const recruit = await this.recruitRepository.findOne({
             where: {
                 id: recruitId,
-                hostId: userId,
             },
         });
+
+        console.log(recruit);
 
         if (findMatch.status === MatchStatus.CONFIRM) {
             throw new NotFoundException("이미 참석하기로한 경기입니다.");
