@@ -14,13 +14,8 @@ window.onload = function () {
             "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
 
-    const token = localStorage.getItem("accessToken");
-
-    if (!token) {
-        getProfile("home"); // load the home page by default
-    } else {
-        getProfile("login");
-    }
+    loadHeader();
+    loadFooter();
 };
 
 // 각 cookie에 대한 토큰값
