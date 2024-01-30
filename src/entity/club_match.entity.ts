@@ -13,8 +13,9 @@ export enum ClubMatchStatus {
     APPLICATION_COMPLETE = "신청완료",
     APPROVED = "승인",
     REJECTED = "거절",
-    APROVECONFIRM = "호스트 승인",
+    APPROVECONFIRM = "호스트 승인(게스트 클럽은 컴펌을 눌러주세요!)",
     CANCEL = "취소",
+    MATCHSUCCESS = "매치 성사",
 }
 export enum Progress {
     BEFORE = "경기전",

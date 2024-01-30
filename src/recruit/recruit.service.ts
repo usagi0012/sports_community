@@ -3,7 +3,7 @@ import { User } from "./../entity/user.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Progress, Recruit, Status } from "../entity/recruit.entity";
 import { RecruitDTO, UpdateDto, PutDTO } from "./dto/recruit.dto";
-import { Not, Repository } from "typeorm";
+import { In, Not, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Match, MatchStatus } from "../entity/match.entity";
 import { MatchUpdateDto } from "./dto/checkmatch.dto";
@@ -98,20 +98,30 @@ export class RecruitService {
 
     // 내 모집글 상세 조회
     async findMyRecruit(userId: number, recruitId: number) {
+        const myRecruits = await this.recruitRepository.findOne({
+            where: {
+                id: recruitId,
+                hostId: userId,
+            },
+        });
+
+        if (!myRecruits) {
+            throw new NotFoundException("내 모집글을 조회하지 못했습니다.");
+        }
+
         const matches = await this.matchRepository.find({
             where: {
                 recruitId: recruitId,
                 hostId: userId,
-            },
-            select: {
-                id: true,
-                guestId: true,
-                guestName: true,
-                message: true,
-                status: true,
+                status: In([
+                    MatchStatus.APPLICATION_COMPLETE,
+                    MatchStatus.APPROVED,
+                    MatchStatus.REJECTED,
+                ]),
             },
         });
-        return matches;
+
+        return [myRecruits, matches];
     }
 
     // 모집글 매치 상세조회
@@ -177,7 +187,10 @@ export class RecruitService {
     //본인 모집글 참석 컴펌한 유저 조회
     async getGameUser(userId: number, recruitId: number) {
         const hostId = userId;
-        await this.checkHost(hostId, recruitId);
+        const findRecruit = await this.checkHost(hostId, recruitId);
+        if (!findRecruit) {
+            throw new NotFoundException("조회된 매치가 없습니다.");
+        }
 
         const matches = await this.matchRepository.find({
             where: {
@@ -186,23 +199,11 @@ export class RecruitService {
             },
         });
 
-        if (matches.length === 0) {
-            throw new NotFoundException("컴펀한 유저가 없습니다.");
+        if (!matches) {
+            throw new NotFoundException("조회된 매치가 없습니다.");
         }
 
-        const users = [];
-
-        for (const match of matches) {
-            const guestUser = await this.userRepository.findOne({
-                where: {
-                    id: match.guestId,
-                },
-                select: ["id", "name", "club"],
-            });
-            users.push(guestUser);
-        }
-
-        return matches;
+        return [findRecruit, matches];
     }
 
     // 평가 완료하기
