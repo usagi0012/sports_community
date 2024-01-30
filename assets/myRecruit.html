@@ -12,11 +12,15 @@
     </head>
 
     <body onload="displayRecruitInfo()">
-        <div id="myRecruit-info"></div>
+        <div>
+            <h2>내 모집글</h2>
+            <div id="myRecruit-info"></div>
+        </div>
 
+        <!-- 모집글 상세정보 -->
         <div
             class="modal fade"
-            id="exampleModal"
+            id="myRecruitModal"
             tabindex="-1"
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
@@ -25,7 +29,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">
-                            매치 신청
+                            모집글 상세정보
                         </h1>
                         <button
                             type="button"
@@ -34,8 +38,13 @@
                             aria-label="Close"
                         ></button>
                     </div>
-                    <div class="recruitMatch" id="recruitMatch"></div>
+                    <div class="modal-body">
+                        <div id="myRecruit"></div>
+                        <h2>참가유저</h2>
+                        <div id="recruitMatch"></div>
+                    </div>
                     <div class="modal-footer">
+                        <div id="RecruitButton"></div>
                         <button
                             type="button"
                             class="btn btn-secondary"
@@ -47,6 +56,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- 신청목록 모달 -->
         <div
             id="recruitUserButton"
             class="recruitUserButton"
@@ -65,7 +76,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="recruitUserModalLabel">
-                            게스트 유저
+                            신청 목록
                         </h1>
                         <button
                             type="button"
@@ -74,9 +85,10 @@
                             aria-label="Close"
                         ></button>
                     </div>
-                    <div id="recruitUser"></div>
+                    <div class="modal-body">
+                        <div style="margin-bottom: 10px" id="recruitUser"></div>
+                    </div>
                     <div class="modal-footer">
-                        <div id="evaluateButton" class="evaluateButton"></div>
                         <div>
                             <button
                                 type="button"

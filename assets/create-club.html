@@ -77,17 +77,19 @@
                             name: name,
                             region: region,
                             description: description,
+                            file: file,
                         },
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,
+                                "Content-Type": "multipart/form-data",
                             },
                         },
                     )
                     .then(function (response) {
-                        console.log(response);
+                        console.log("클럽 생성 리스폰스", response);
                         //폼 제출 후 원래 페이지로 이동
-                        alert(`${response.data.message}`);
+                        alert(`성공적으로 생성되었습니다.`);
                         returnPage();
                     })
                     .catch(function (error) {

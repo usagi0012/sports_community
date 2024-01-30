@@ -1,11 +1,11 @@
+// let clubId;
+
 window.onload = function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams", urlParams);
-    let clubId = urlParams.get("id");
     loadHeader();
-    getClubDetail(clubId);
-    hasClub();
-    isMyClub();
+    // getClubDetail(clubId);
+    // console.log("****");
+    // hasClub();
+    // isMyClub();
     loadFooter();
 };
 const regionData = [
@@ -103,6 +103,51 @@ export default function getClubDetail(clubId) {
             // alert(error.request.response);
         });
 }
+
+function getMyClubId() {
+    const token = localStorage.getItem("accessToken");
+    axios
+        .get("api/club/myClubId", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            console.log("clubId 뽑아오는 response", response);
+            // clubId = response.data;
+            // console.log("클럽아이이디", clubId);
+            // console.log(response.data);
+            // console.log(typeof response.data);
+            getClubDetail(response.data);
+            console.log("****");
+            hasClub();
+            axios
+                .get(`/api/club/myClub/${response.data}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then(function (response) {
+                    console.log("dsfdf", response);
+                    console.log(response.data.statusCode);
+                    if (response.data.statusCode === 200) {
+                        const updateBtn = document.querySelector(".updateBtn");
+                        updateBtn.style.display = "block";
+                        const deleteBtn = document.querySelector(".deleteBtn");
+                        deleteBtn.style.display = "block";
+                    } else {
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        })
+        .catch(function (error) {
+            console.log("??");
+            console.log(error);
+        });
+}
+getMyClubId();
 
 function isMyClub() {
     const urlParams = new URLSearchParams(window.location.search);

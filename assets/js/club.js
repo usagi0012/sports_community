@@ -23,7 +23,7 @@ const region = [
 // function moveToClubDetail(clubId) {
 //     console.log("here");
 //     console.log("clubId", clubId);
-//     window.location.href = `http://localhost:8001/club-detail.html/${clubId}`;
+//     window.location.href = `club-detail.html/${clubId}`;
 //     getClubDetail(clubId);
 //     console.log("$$$$$");
 // }
@@ -41,7 +41,7 @@ function getClub(event) {
         .get("/api/club")
         .then(function (response) {
             console.log("*******", response);
-            response.data.forEach((club) => {
+            response.data.data.forEach((club) => {
                 console.log("club", club);
                 console.log("clubId입니다", club.id);
                 const clubListDiv = document.querySelector(".club-list");
@@ -71,7 +71,7 @@ function getClub(event) {
                         })
                         .then(function (response) {
                             console.log("response", response);
-                            window.location.href = `http://localhost:8001/club-detail.html?id=${club.id}`;
+                            window.location.href = `club-detail.html?id=${club.id}`;
                         })
                         .catch(function (error) {
                             console.log(error.response);
@@ -122,8 +122,9 @@ function getClub(event) {
             });
         })
         .catch(function (error) {
-            console.log(error.request.response);
-            alert(error.request.response);
+            console.log(error);
+            // console.log(error.request.response);
+            // alert(error.request.response);
         });
 }
 

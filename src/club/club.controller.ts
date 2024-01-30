@@ -6,6 +6,7 @@ import {
     Param,
     Post,
     Put,
+    Query,
     UploadedFile,
     UseGuards,
     UseInterceptors,
@@ -28,8 +29,8 @@ export class ClubController {
 
     //동아리 전체 조회
     @Get()
-    getAllClubs() {
-        return this.clubService.getAllClubs();
+    getAllClubs(/* @Query("page") page: number */) {
+        return this.clubService.getAllClubs(3);
     }
 
     // 동아리에 가입된 사람인지 확인
@@ -56,6 +57,16 @@ export class ClubController {
                 error: error.message,
             };
         }
+    }
+
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("/myClubId")
+    async getMyClubId(@UserId() userId: number) {
+        console.log("백엔드 안들어옴?");
+        const clubId = await this.clubService.getMyClubId(userId);
+
+        return clubId;
     }
 
     //동아리 상세 조회

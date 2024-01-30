@@ -24,12 +24,40 @@ export class ClubService {
         private readonly awsService: AwsService,
     ) {}
 
-    async getAllClubs() {
-        const clubs = await this.clubRepository.find({
-            select: ["id", "name", "region", "masterId", "score"],
-            relations: ["users"], // Include the users relation
-        });
+    // async getAllClubs() {
+    // const clubs = await this.clubRepository.find({
+    //     select: ["id", "name", "region", "masterId", "score"],
+    //     relations: ["users"], // Include the users relation
+    // });
 
+    //     const clubsWithMasterNames = await Promise.all(
+    //         clubs.map(async (club) => {
+    //             const master = club.users.find(
+    //                 (user) => user.id === club.masterId,
+    //             );
+
+    //             return {
+    //                 ...club,
+    //                 masterName: master ? master.name : null,
+    //             };
+    //         }),
+    //     );
+
+    //     return clubsWithMasterNames;
+    // }
+
+    // take랑 skip 배분을 잘 해줘야 값이 뜨ㅡ네;;
+    async getAllClubs(page: number, itemsPerPage: number = 30) {
+        const skip = (page - 1) * itemsPerPage;
+
+        const [clubs, total] = await this.clubRepository.findAndCount({
+            select: ["id", "name", "region", "masterId", "score"],
+            relations: ["users"],
+            take: 30,
+            skip: 0,
+        });
+        console.log("Clubs:", clubs);
+        console.log("Total:", total);
         const clubsWithMasterNames = await Promise.all(
             clubs.map(async (club) => {
                 const master = club.users.find(
@@ -43,7 +71,22 @@ export class ClubService {
             }),
         );
 
-        return clubsWithMasterNames;
+        console.log("?!?", {
+            data: clubsWithMasterNames,
+            meta: {
+                total,
+                page,
+                last_page: Math.ceil(total / 30),
+            },
+        });
+        return {
+            data: clubsWithMasterNames,
+            meta: {
+                total,
+                page,
+                last_page: Math.ceil(total / 30),
+            },
+        };
     }
 
     async getClub(id: number) {
@@ -188,5 +231,17 @@ export class ClubService {
         }
         console.log("5#####");
         return true;
+    }
+
+    async getMyClubId(userId: number) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        if (!user.clubId) {
+            throw new NotFoundException("가입한 동아리가 없습니다.");
+        }
+        console.log("ggggg");
+
+        return user.clubId;
     }
 }

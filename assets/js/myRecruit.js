@@ -15,9 +15,7 @@ async function displayRecruitInfo() {
         response.data.forEach((recruit) => {
             const myRecruitHTML = createRecruitHTML(recruit);
             const myRecruitButtonHTML = createRecruitButtonHTML(recruit);
-            myRecruit.innerHTML += [myRecruitHTML, myRecruitButtonHTML].join(
-                "",
-            );
+            myRecruit.innerHTML += [myRecruitHTML, myRecruitButtonHTML];
         });
     } catch (error) {
         console.log(error.response.data);
@@ -27,14 +25,10 @@ async function displayRecruitInfo() {
 
 function createRecruitHTML(recruit) {
     return `
-        <button id="recruit-${recruit.id}" data-recruitId="${recruit.id}" onclick="findRecruit(${recruit.id})">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myRecruitModal" onclick="findRecruit(${recruit.id})">
             <h1>${recruit.title}</h1>
-            <p><strong>호스트:</strong> ${recruit.hostName} (ID: ${recruit.hostId})</p>
-            <p><strong>지역:</strong> ${recruit.region}</p>
             <p><strong>규칙:</strong> ${recruit.rule}</p>
-            <p><strong>게임 일자:</strong> ${recruit.gamedate}</p>
-            <p><strong>종료 시간:</strong> ${recruit.endtime}</p>
-            <p><strong>총 참가 인원:</strong> ${recruit.totalmember}</p>
+            <p><strong>게임 시간:</strong> ${recruit.gamedate}</p>
             <p><strong>상태:</strong> ${recruit.status}</p>
         </button>
     `;
@@ -43,14 +37,96 @@ function createRecruitHTML(recruit) {
 function createRecruitButtonHTML(recruit) {
     return `
         <div>
-            <button data-toggle="modal" data-target="#recruitUserModal" class="경기진행과정" data-recruitId="${recruit.id}" onclick="displayRecruitUser(${recruit.id})">게스트</button>
-            <button class="경기진행과정" data-recruitId="${recruit.id}" onclick="cancelButton(${recruit.id})">취소/삭제하기</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#recruitUserModal" onclick="application(${recruit.id})">신청목록</button>
         </div>
     `;
 }
 
-// 경기 취소하기
-async function cancelButton(recruitId) {
+// 모집글 상세정보(모달창1)
+async function findRecruit(recruitId) {
+    try {
+        const accessToken = localStorage.getItem("accessToken");
+
+        const response = await axios.get(
+            `/api/recruit/my/post/${recruitId}/user`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+
+        console.log(response.data); // 확인용 로그
+
+        const confirmUsers = response.data[1];
+        const findRecruit = response.data[0];
+
+        const myRecruitUser = document.getElementById("recruitMatch");
+        myRecruitUser.innerHTML = "";
+        const myRecruitMatch = document.getElementById("myRecruit");
+        myRecruitMatch.innerHTML = "";
+
+        const recurtIdButton = document.getElementById("RecruitButton");
+        recurtIdButton.innerHTML = "";
+
+        //경기에 참석하는 유저 정보
+        confirmUsers.forEach((confirmUser) => {
+            const confirmUsersHTML = createConfirmUsersHTML(confirmUser);
+            myRecruitUser.innerHTML += confirmUsersHTML;
+        });
+        //매치 상세정보
+        const myRecruitMatchHTML = createmyRecruitMatchHTML(findRecruit);
+        myRecruitMatch.innerHTML = myRecruitMatchHTML;
+        //모집글 상세보기 모달창에 쓰이는 버튼
+        const recurtIdButtonHTML = createRecurtIdButtonHTML(findRecruit);
+        recurtIdButton.innerHTML = recurtIdButtonHTML;
+    } catch (error) {
+        console.log(error.response.data);
+        alert(error.response.data.message);
+        window.location.reload();
+    }
+}
+
+function createRecurtIdButtonHTML(findRecruit) {
+    return `
+    <div>
+        <button type="button" class="btn btn-success"  onclick="evaluateGuest(${findRecruit.id})">평가완료하기</button>
+        <button type="button" class="btn btn-danger"  onclick="deleteButton(${findRecruit.id})">삭제하기</button>
+
+    </div>
+`;
+}
+
+function createConfirmUsersHTML(confirmUser) {
+    return `
+        <button type="button" class="btn btn-secondary" >
+            <p><strong>Name:</strong> ${confirmUser.guestName}</p>
+            <p><strong>Progress:</strong> ${confirmUser.progress}</p>
+            <p><strong>Status:</strong> ${confirmUser.status}</p>
+        </div>
+    `;
+}
+
+function createmyRecruitMatchHTML(findRecruit) {
+    return `
+<div>
+    <h4>${findRecruit.title}</h4>
+    <p><strong>위치:</strong> ${findRecruit.gps}</p>
+    <p><strong>모집장:</strong> ${findRecruit.hostName}</p>
+    <p><strong>지역:</strong> ${findRecruit.region}</p>
+    <p><strong>경기방식:</strong> ${findRecruit.rule}</p>
+    <p><strong>모집인원</strong> ${findRecruit.totalmember}</p>
+    <p><strong>경기시간:</strong> ${findRecruit.gamedate}</p>
+    <p><strong>경기END타임:</strong> ${findRecruit.endtime}</p>
+    <p><strong>특이사항:</strong> ${findRecruit.content}</p>
+    <p><strong>진행상황:</strong> ${findRecruit.progress}</p>
+    <p><strong>상태:</strong> ${findRecruit.status}</p>
+</div>
+`;
+}
+
+// 모집글 삭제하기
+async function deleteButton(recruitId) {
     const accessToken = localStorage.getItem("accessToken");
     console.log(recruitId);
     try {
@@ -66,8 +142,32 @@ async function cancelButton(recruitId) {
         window.location.reload();
     }
 }
+//경기 평가하기
+async function evaluateGuest(recruitId) {
+    try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.put(
+            `/api/recruit/my/post/${recruitId}/evaluate`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
 
-async function findRecruit(recruitId) {
+        console.log(response.data);
+
+        window.location.reload();
+    } catch (error) {
+        console.log(error.response.data);
+        alert(error.response.data.message);
+        window.location.reload();
+    }
+}
+
+//신청목록보기(모달창 2)
+async function application(recruitId) {
     try {
         const accessToken = localStorage.getItem("accessToken");
 
@@ -77,32 +177,45 @@ async function findRecruit(recruitId) {
             },
         });
 
-        const modalContentContainer = document.getElementById("recruitMatch");
+        console.log(response.data);
+        const guestData = response.data[1];
+
+        const modalContentContainer = document.getElementById("recruitUser");
         modalContentContainer.innerHTML = "";
-        response.data.forEach((guest) => {
-            const guestHTML = `
-                <div id="recruitMatch-${guest.guestId}" matchId="${guest.guestId}">
-                    <h1 style="font-size: smaller;"><strong>게스트:</strong>${guest.guestName}</h1>
-                    <p style="font-size: smaller;"><strong>메세지:</strong>${guest.message}</p>
-                    <p style="font-size: smaller;"><strong>상태:</strong>${guest.status}</p>
 
-                </div>
-            `;
-
-            modalContentContainer.innerHTML += guestHTML;
+        guestData.forEach((guest) => {
+            const guestHTML = createGuestHTML(guest);
+            const buttonHTML = createButtonHTML(guest);
+            modalContentContainer.innerHTML += [guestHTML, buttonHTML];
         });
-
-        $("#exampleModal").modal("show");
     } catch (error) {
         console.log(error.response.data);
         alert(error.response.data.message);
+        window.location.reload();
     }
 }
 
-function closeModal() {
-    var modal = document.getElementById("recruitMatch");
-    modal.style.display = "none";
+function createGuestHTML(guest) {
+    return `
+    <button type="button" class="btn btn-primary">
+    <h7><strong></strong>${guest.message}</h7>
+        <p><strong>게스트:</strong>${guest.guestName}</p>
+        <p ><strong>상태:</strong>${guest.status}</p>
+    </button>
+    `;
 }
+
+function createButtonHTML(guest) {
+    return `
+        <div>
+            <button type="button" class="btn btn-success"  onclick="approvebutton(${guest.id})">승인</button>
+            <button type="button" class="btn btn-danger"  onclick="rejectbutton(${guest.id})">거절</button>
+
+        </div>
+    `;
+}
+
+//경기승인하기
 
 async function approvebutton(matchId) {
     const accessToken = localStorage.getItem("accessToken");
@@ -117,13 +230,15 @@ async function approvebutton(matchId) {
                 },
             },
         );
-        console.log("승인 성공");
-        location.reload();
+        window.location.reload();
     } catch (error) {
         console.log(error.response.data);
         alert(error.response.data.message);
+        window.location.reload();
     }
 }
+
+//경기거절하기
 
 async function rejectbutton(matchId) {
     const accessToken = localStorage.getItem("accessToken");
@@ -137,38 +252,8 @@ async function rejectbutton(matchId) {
                 },
             },
         );
-        console.log("거절 성공");
-    } catch (error) {
-        console.error(error);
-    }
-}
 
-async function displayRecruitUser(recruitId) {
-    try {
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await axios.get(
-            `/api/recruit/my/post/${recruitId}/user`,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            },
-        );
-
-        console.log(response.data);
-
-        const recruitUser = document.getElementById("recruitUser");
-        recruitUser.innerHTML = "";
-        const evaluate = document.getElementById("evaluateButton");
-        const evaluateButton = createEvaluateButtonHtml(recruitId);
-
-        response.data.forEach((user) => {
-            const recruitUserHtml = createRecruitUserHtml(user);
-            recruitUser.innerHTML += recruitUserHtml;
-        });
-        evaluate.innerHTML = evaluateButton;
-
-        $("#recruitUserModal").modal("show");
+        window.location.reload();
     } catch (error) {
         console.log(error.response.data);
         alert(error.response.data.message);
@@ -176,6 +261,7 @@ async function displayRecruitUser(recruitId) {
     }
 }
 
+//
 function createRecruitUserHtml(user) {
     console.log(user);
     return `
@@ -192,28 +278,3 @@ function createEvaluateButtonHtml(recruitId) {
         </div>
     `;
 }
-
-async function evaluateGuest(recruitId) {
-    try {
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await axios.put(
-            `/api/recruit/my/post/${recruitId}/evaluate`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            },
-        );
-
-        window.location.reload();
-    } catch (error) {
-        console.log(error.response.data);
-        alert(error.response.data.message);
-        window.location.reload();
-    }
-}
-
-//모집글 삭제하기
-
-// @Delete("my/post/:recurtId")

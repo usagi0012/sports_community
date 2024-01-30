@@ -6,14 +6,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // 토큰이 존재하는 경우에만 프로필 요청
         if (accessToken) {
-            const response = await axios.get(
-                "http://localhost:8001/api/user/me",
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
+            const response = await axios.get("/api/user/me", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
                 },
-            );
+            });
 
             const user = response.data;
 
@@ -56,7 +53,7 @@ async function redirectToUserUpdatePage(currentPassword) {
             };
 
             const response = await axios.post(
-                "http://localhost:8001/api/user/me/checkPassword",
+                "/api/user/me/checkPassword",
                 checkPasswordDto,
                 {
                     headers: {
@@ -75,6 +72,10 @@ async function redirectToUserUpdatePage(currentPassword) {
             }
         }
     } catch (error) {
+        if (error.response && error.response.status === 401) {
+            alert("로그인 후 이용해주세요.");
+            window.location.href = "/login.html";
+        }
         console.log(error);
         // 오류 처리 로직 추가
     }
