@@ -1,4 +1,5 @@
 import {
+    ConflictException,
     Injectable,
     NotAcceptableException,
     NotFoundException,
@@ -6,7 +7,7 @@ import {
 import { CreateUserCalenderDto } from "./dto/create-user-calender.dto";
 import { UpdateUserCalenderDto } from "./dto/update-user-calender.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Between, Repository } from "typeorm";
 import { User } from "src/entity/user.entity";
 import { UserCalender } from "src/entity/user-calender.entity";
 
@@ -29,6 +30,7 @@ export class UserCalenderService {
         if (!user) {
             throw new NotFoundException("유저 정보가 없습니다.");
         }
+
         const userCalendar = this.userCalenderRepository.create({
             ...createUserCalenderDto,
             date: userCalendarDate,
@@ -46,24 +48,40 @@ export class UserCalenderService {
     }
 
     //특정 캘린더 일정 조회하기(calenderId를 이용해서 특정 캘린더 찾기)
-    async findCalenderById(userId, calenderId) {
+    async findCalenderByDate(userId, date) {
+        // 해당 날짜의 시작과 끝을 계산
+        const startOfDay = new Date(date);
+        const endOfDay = new Date(date);
+        endOfDay.setDate(endOfDay.getDate() + 1);
+
         const getCalenderByCalenderId =
             await this.userCalenderRepository.findOne({
-                where: { id: calenderId },
+                where: {
+                    date: Between(startOfDay, endOfDay),
+                    userId: userId,
+                },
                 relations: ["user"],
             });
+
+        console.log("찾은정보", getCalenderByCalenderId);
+
         if (!getCalenderByCalenderId) {
-            throw new NotFoundException(
-                "해당 캘린더에 일정이 존재하지 않습니다.",
-            );
+            return {
+                statusCode: 200, // 상태 코드를 200으로 변경
+                message: "해당 날짜에 등록된 일정이 없습니다.",
+                data: null, // 데이터를 null로 설정
+            };
         }
+
         if (getCalenderByCalenderId.user.id !== userId) {
             throw new NotAcceptableException("권한이 없습니다.");
         }
+
         delete getCalenderByCalenderId.user;
+
         return {
             statusCode: 200,
-            message: "캘린더를 조회했습니다.",
+            message: "해당 일정의 캘린더를 조회했습니다.",
             data: { getCalenderByCalenderId },
         };
     }
@@ -95,7 +113,7 @@ export class UserCalenderService {
             where: { id: userId },
         });
         const userCalender = await this.userCalenderRepository.findOne({
-            where: { id: calenderId },
+            where: { date: calenderId },
             relations: ["user"],
         });
         if (!userCalender) {
@@ -135,7 +153,7 @@ export class UserCalenderService {
             where: { id: userId },
         });
         const userCalender = await this.userCalenderRepository.findOne({
-            where: { id: calenderId },
+            where: { date: calenderId },
             relations: ["user"],
         });
         if (!userCalender) {
