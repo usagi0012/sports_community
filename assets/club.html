@@ -8,8 +8,13 @@
     </head>
     <body>
         <div class="club">
-            <button onclick="moveToCreateClub()">동아리 생성</button>
-            <button onclick="moveToGetMyClubApplication()">
+            <button class="createBtn" onclick="moveToCreateClub()">
+                동아리 생성
+            </button>
+            <button
+                class="myClubApplication"
+                onclick="moveToGetMyClubApplication()"
+            >
                 내 동아리 신청서 조회
             </button>
         </div>
@@ -18,42 +23,65 @@
             <div>번호</div>
             <div>동아리명</div>
             <div>지역</div>
-            <div>동아리장</div>
+            <div class="club-leader">동아리장</div>
             <div>점수</div>
         </div>
         <div class="club-list"></div>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="module" src="./js/club.js"></script>
+        <script src="./js/otherUser-modal.js"></script>
         <!-- <script src="./js/club-detail.js"></script> -->
         <script>
             function moveToCreateClub() {
                 // 동아리 생성 페이지 이동 전 로그인이 되어 있는지 확인
-                const authorized = localStorage.getItem("authorized");
-                const token = JSON.parse(authorized).accessToken.value;
-                console.log("토큰", token);
+                // const authorized = localStorage.getItem("authorized");
+                // const token = JSON.parse(authorized).accessToken.value;
+
+                window.location.href = `http://localhost:8001/create-club.html`;
+            }
+
+            function moveToGetMyClubApplication() {
+                const token = localStorage.getItem("accessToken");
                 axios
-                    .post("/api/club", {
+                    .get("/api/applying-club", {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     })
                     .then(function (response) {
                         console.log(response);
-                        window.location.href = `http://localhost:8001/create-club.html`;
+                        if (response.data.statusCode !== 200) {
+                            alert(`${response.data.error}`);
+                            return;
+                        }
+                        window.location.href =
+                            "http://localhost:8001/my-club-application.html";
                     })
                     .catch(function (error) {
-                        console.log(error.response);
-                        // if (error.response.data.message === "Unauthorized") {
-                        //     alert("로그인이 필요합니다.");
-                        //     return;
-                        // }
+                        console.log(error);
+                        alert("동아리 장만 조회할 수 있습니다.");
+                        return;
                     });
             }
 
-            function moveToGetMyClubApplication() {
-                window.location.href =
-                    "http://localhost:8001/my-club-application.html";
+            function getMyClubApplication() {
+                isClubMaster();
+                moveToGetMyClubApplication();
             }
+
+            const clubLeaders = document.querySelectorAll(".club-leader");
+            clubLeaders.forEach((leader) => {
+                // 모달이 보이지 않도록 초기화
+                const modal = document.getElementById("userProfileModal");
+                if (modal) {
+                    modal.style.display = "none";
+                }
+
+                leader.addEventListener("click", () => {
+                    const userId = leader.dataset.userId;
+                    openUserModal(2);
+                });
+            });
         </script>
     </body>
 </html>

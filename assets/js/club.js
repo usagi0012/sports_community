@@ -1,3 +1,4 @@
+// import axios from "axios";
 import getClubDetail from "./club-detail.js";
 const region = [
     "서울",
@@ -30,13 +31,14 @@ const region = [
 window.onload = function () {
     console.log("start");
     getClub();
+    hasClub();
 };
 
 function getClub(event) {
     axios
         .get("/api/club")
         .then(function (response) {
-            console.log(response);
+            console.log("*******", response);
             response.data.forEach((club) => {
                 console.log("club", club);
                 console.log("clubId입니다", club.id);
@@ -56,8 +58,9 @@ function getClub(event) {
                 clubNameP.textContent = club.name;
                 clubNameP.onclick = function () {
                     // 페이지 이동 전에 로그인 된 유저만 이동될 수 있도록 막음.
-                    const authorized = localStorage.getItem("authorized");
-                    const token = JSON.parse(authorized).accessToken.value;
+                    // const authorized = localStorage.getItem("authorized");
+                    // const token = JSON.parse(authorized).accessToken.value;
+                    const token = localStorage.getItem("accessToken");
                     axios
                         .get(`/api/club/${club.id}`, {
                             headers: {
@@ -105,7 +108,7 @@ function getClub(event) {
                 // 백엔드에서 클럽id에 해당하는 이름 보내줘야 할 듯.
                 const clubMaster = document.createElement("div");
                 clubMaster.className = "clubMaster";
-                clubMaster.innerHTML = `${club.masterId}`;
+                clubMaster.innerHTML = `${club.masterName}`;
                 clubInfoDiv.appendChild(clubMaster);
 
                 const clubScore = document.createElement("div");
@@ -119,5 +122,53 @@ function getClub(event) {
         .catch(function (error) {
             console.log(error.request.response);
             alert(error.request.response);
+        });
+}
+
+// 동아리장일 경우에만 "내 동아리 신청서 조회" 버튼 display="block"
+function isClubMaster() {
+    const token = localStorage.getItem("accessToken");
+    axios
+        .get("/api/applying-club/clubMaster", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            console.log("여기 response", response);
+            console.log("들어온거 맞아?");
+            if (response.data.statusCode !== 400) {
+                console.log("여기까지?");
+                const myClubApplicationBtn =
+                    document.querySelector(".myClubApplication");
+                myClubApplicationBtn.style.display = "block";
+            }
+        })
+        .catch(function (error) {
+            console.log("여기");
+            console.log(error);
+        });
+}
+
+isClubMaster();
+
+function hasClub() {
+    const token = localStorage.getItem("accessToken");
+    axios
+        .get("/api/club/myClub", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            if (response.data.data === true) {
+                const createBtn = document.querySelector(".createBtn");
+                createBtn.style.display = "block";
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            console.log(error.message);
+            console.log("에러메세지");
         });
 }

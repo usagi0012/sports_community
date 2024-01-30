@@ -3,46 +3,271 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Onog</title>
+        <meta name="description" content="Onog MainPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="css/index.css" />
     </head>
     <body>
         <div class="header">
             <div class="logo">
-                <img src="resources/logo.png" id="logo" />
+                <img src="resources/logo.png" id="logo" onclick="toHome()" />
             </div>
-            <div class="iconBox">
-                <button id="logout_btn" onclick="logoutform()">
-                    <i class="fas fa-solid fa-right-from-bracket"></i>
-                </button>
-                <div id="invited_user">
-                    <div>
-                        <button
-                            id="invite_btn"
-                            type="button"
-                            class="btn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#inviteModal"
+            <div id="searchBox">
+                <form>
+                    <fieldset>
+                        <input type="search" /><button
+                            type="submit"
+                            id="searchBtn"
                         >
-                            <i class="fas fa-solid fa-user-plus"></i>
+                            <i class="fas fa-search"></i>
                         </button>
+                    </fieldset>
+                </form>
+            </div>
+            <div id="logoutBtn" onclick="logout()">
+                Logout <i class="fas fa-solid fa-power-off"></i>
+            </div>
+        </div>
+        <div class="menubarContainer">
+            <div class="menuBar">
+                <ul class="menu">
+                    <li id="recruit">
+                        <a href="#">모집</a>
+                        <ul class="detail" id="detailRecruit">
+                            <li><a href="#">모집글 목록</a></li>
+                            <li onclick="toMyRecruit()">
+                                <a href="#">내 모집글</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li id="club">
+                        <a href="#">동아리</a>
+                        <ul class="detail" id="detailClub">
+                            <li onclick="toClub()">
+                                <a href="#">동아리 목록</a>
+                            </li>
+                            <li><a href="#">내 동아리</a></li>
+                        </ul>
+                    </li>
+                    <li id="stadium" onclick="toPlace()">
+                        <a href="#">경기장</a>
+                    </li>
+                    <li id="platform">
+                        <a href="#">플랫폼 이용안내</a>
+                        <ul class="detail" id="detailPlatform">
+                            <li><a href="#">이용 안내</a></li>
+                            <li><a href="#">공지 사항</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Q&A</a></li>
+                        </ul>
+                    </li>
+                    <li id="talk"><a href="#">Talk</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="bodyContainer">
+            <div class="mainContainer">
+                <div class="profileContainer">
+                    <!-- <div class="image">
+                        <img src="resources/profile.jpeg" id="profileImage" />
+                    </div>
+                    <div class="nickname">닉네임</div>
+                    <div class="noprofile">
+                        아직 프로필이 없습니다. 프로필 작성 →
+                    </div> -->
+                    <div class="image">
+                        <img src="resources/profile.jpeg" id="profileImage" />
+                    </div>
+                    <div class="nickname">닉네임</div>
+                    <div class="gender">
+                        <i
+                            class="fas fa-solid fa-mars"
+                            style="color: #0860a8"
+                        ></i>
+                        <!-- <i class="fas fa-solid fa-venus" style="color: #cc679f"></i> -->
+                    </div>
+                    <div class="tag">
+                        <span id="tag1"> #커리 </span>
+                        <span id="tag2"> #커리 </span>
+                        <span id="tag3"> #커리 </span>
+                    </div>
+                    <div class="height">키: 190 cm</div>
+                    <div class="description">예시 소개입니다.</div>
+                    <div class="scoreContainer">
+                        <div class="score" id="personalityAmount">
+                            인성: <i class="fas fa-solid fa-star"></i> 4.2
+                        </div>
+                        <div class="score" id="abilityAmount">
+                            실력: <i class="fas fa-solid fa-star"></i> 4.6
+                        </div>
+                        <div class="score" id="MVPCount">MVP: 10 회</div>
+                    </div>
+                    <button type="button" id="alarmBtn">
+                        <i class="fas fa-solid fa-bell"></i>
+                    </button>
+                    <button type="button" id="profileUpdateBtn">
+                        수정하기
+                    </button>
+                    <div class="calenderContainer">
+                        <button type="button" id="calenderBtn">캘린더 →</button>
+                    </div>
+                </div>
+
+                <label id="rankLabel">랭킹</label>
+                <div class="rankContainer">
+                    <div
+                        class="rankOuterContainer"
+                        id="personalityRankContainer"
+                    >
+                        <div class="rankName">인성점수 랭킹</div>
+                        <div class="rankInnerContainer">
+                            <div class="rank" id="personality1st">
+                                <div class="rankNumber">
+                                    <img src="resources/1st.png" />
+                                </div>
+                                <div class="ranknickName">김용근</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                            <div class="rank" id="personality2nd">
+                                <div class="rankNumber">
+                                    <img src="resources/2nd.png" />
+                                </div>
+                                <div class="ranknickName">최종현</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                            <div class="rank" id="personality3rd">
+                                <div class="rankNumber">
+                                    <img src="resources/3rd.png" />
+                                </div>
+                                <div class="ranknickName">김윤찬</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rankOuterContainer" id="abilityRankContainer">
+                        <div class="rankName">실력점수 랭킹</div>
+                        <div class="rankInnerContainer">
+                            <div class="rank" id="ability1st">
+                                <div class="rankNumber">
+                                    <img src="resources/1st.png" />
+                                </div>
+                                <div class="ranknickName">유우섭</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                            <div class="rank" id="ability2nd">
+                                <div class="rankNumber">
+                                    <img src="resources/2nd.png" />
+                                </div>
+                                <div class="ranknickName">염지원</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                            <div class="rank" id="ability3rd">
+                                <div class="rankNumber">
+                                    <img src="resources/3rd.png" />
+                                </div>
+                                <div class="ranknickName">김윤찬</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rankOuterContainer" id="clubRankContainer">
+                        <div class="rankName">동아리 랭킹</div>
+                        <div class="rankInnerContainer">
+                            <div class="rank" id="club1st">
+                                <div class="rankNumber">
+                                    <img src="resources/1st.png" />
+                                </div>
+                                <div class="ranknickName">농구킹</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                            <div class="rank" id="club2nd">
+                                <div class="rankNumber">
+                                    <img src="resources/2nd.png" />
+                                </div>
+                                <div class="ranknickName">슬램덩크</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                            <div class="rank" id="club3rd">
+                                <div class="rankNumber">
+                                    <img src="resources/3rd.png" />
+                                </div>
+                                <div class="ranknickName">삼조</div>
+                                <div class="rankScore">
+                                    <i class="fas fa-solid fa-star"></i> 4.9
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rankAnnouncement">
+                    <p>※랭킹은 매월 1일 오전 9:00에 갱신됩니다.</p>
+                    <p>
+                        ※랭킹은 점수 평균의 소수점 셋째짜리까지 계산되어
+                        집계됩니다.
+                    </p>
+                    <p>※평가가 10회 미만인 회원은 랭킹에 반영되지 않습니다.</p>
+                </div>
+                <div class="plusContainer">
+                    <div class="plusOuterContainer" id="announcementContainer">
+                        <label class="plusName">공지사항</label>
+                        <div class="plusInnerContainer">
+                            <div class="plusDataContainer">
+                                <div class="plusData">공지 예시</div>
+                                <div class="plusData">공지입니다</div>
+                                <div class="plusData">공지 내용</div>
+                                <div class="plusData">공지 내용</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="plusOuterContainer" id="FAQContainer">
+                        <label class="plusName">FAQ</label>
+                        <div class="plusInnerContainer">
+                            <div class="plusDataContainer">
+                                <div class="plusData">FAQ 예시</div>
+                                <div class="plusData">FAQ입니다</div>
+                                <div class="plusData">FAQ 내용</div>
+                                <div class="plusData">FAQ 내용</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- 알람 버튼 -->
-            <div id="alarm_Btn">
-                <div>
-                    <button
-                        id="alarm_btn"
-                        type="button"
-                        class="btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#alarmModal"
-                    >
-                        <i class="fas fa-solid fa-bell"></i>
-                    </button>
-                </div>
-            </div>
         </div>
+        <div class="footer">
+            <div class="footerLogo">
+                <img src="resources/logo.png" id="footerLogoImg" />
+            </div>
+            <a href="#" id="footerAnnounce">커뮤니티 이용 안내</a>
+            <a href="#" id="footerPrivacy">개인정보 처리 방침</a>
+            <p id="footerCall">문의) usagi001218@gmail.com</p>
+            <p id="footerSite">@Onong</p>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/index.js"></script>
+        <script src="./js/dropmenu.js"></script>
     </body>
 </html>

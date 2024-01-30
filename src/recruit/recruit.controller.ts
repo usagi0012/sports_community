@@ -111,4 +111,14 @@ export class RecruitController {
         const hostId = userId;
         return await this.recruitService.deleteRecruit(hostId, recruitId);
     }
+
+    //모집 글 수정
+    @Put("my/post/match/edit/:recruitId")
+    async editMatch(
+        @UserId() userId: number,
+        @Param("recruitId") recruitId: number,
+        @Body() putDTO: PutDTO,
+    ) {
+        return await this.recruitService.editMatch(userId, putDTO, recruitId);
+    }
 }
