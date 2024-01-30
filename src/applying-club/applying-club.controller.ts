@@ -54,17 +54,11 @@ export class ApplyingClubController {
     // 동호회에게 온 신청서 조회
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
-    @Get(":clubId")
-    async getApplicationOfMyClub(
-        @Param("clubId") clubId: number,
-        @UserId() userId: number,
-    ) {
+    @Get()
+    async getApplicationOfMyClub(@UserId() userId: number) {
         try {
             const application =
-                await this.applyingClubService.getApplicationOfMyClub(
-                    clubId,
-                    userId,
-                );
+                await this.applyingClubService.getApplicationOfMyClub(userId);
 
             return {
                 statusCode: 200,
@@ -116,7 +110,7 @@ export class ApplyingClubController {
     // 내 신청서 조회
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
-    @Get()
+    @Get("me")
     async getApplyingClub(@UserId() userId: number) {
         try {
             const application =
@@ -185,6 +179,28 @@ export class ApplyingClubController {
             return {
                 statusCode: 400,
                 message: "동호회 지원서 삭제에 실패했습니다.",
+                error: error.message,
+            };
+        }
+    }
+
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("ClubMaster")
+    async isClubMaster(@UserId() userId: number) {
+        try {
+            const isMaster =
+                await this.applyingClubService.isClubMaster(userId);
+
+            return {
+                statusCode: 200,
+                message: "동호회장 확인에 성공했습니다.",
+                data: isMaster,
+            };
+        } catch (error) {
+            return {
+                statusCode: 400,
+                message: "동호회장 확인에 실패했습니다.",
                 error: error.message,
             };
         }

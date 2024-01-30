@@ -11,12 +11,15 @@ import { Repository } from "typeorm";
 import { CreateClubDto } from "./dto/createClub.dto";
 import { UpdateClubDto } from "./dto/updateClub.dto";
 import { AwsService } from "../aws/aws.service";
+import { User } from "src/entity/user.entity";
 
 @Injectable()
 export class ClubService {
     constructor(
         @InjectRepository(Club)
         private readonly clubRepository: Repository<Club>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
         private readonly userService: UserService,
         private readonly awsService: AwsService,
     ) {}
@@ -24,8 +27,23 @@ export class ClubService {
     async getAllClubs() {
         const clubs = await this.clubRepository.find({
             select: ["id", "name", "region", "masterId", "score"],
+            relations: ["users"], // Include the users relation
         });
-        return clubs;
+
+        const clubsWithMasterNames = await Promise.all(
+            clubs.map(async (club) => {
+                const master = club.users.find(
+                    (user) => user.id === club.masterId,
+                );
+
+                return {
+                    ...club,
+                    masterName: master ? master.name : null,
+                };
+            }),
+        );
+
+        return clubsWithMasterNames;
     }
 
     async getClub(id: number) {
@@ -128,5 +146,47 @@ export class ClubService {
         return {
             message: "동아리가 성공적으로 삭제되었습니다.",
         };
+    }
+
+    async isMyClub(userId: number, clubId: number) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        console.log("클럽!!!", clubId);
+        console.log(typeof clubId);
+        console.log("유저클럽!!", user.clubId);
+        console.log(typeof user.clubId);
+        if (!user.clubId) {
+            throw new NotFoundException("동호회에 가입되지 않은 유저입니다.");
+        }
+        console.log("이건?");
+        if (clubId !== user.clubId) {
+            throw new NotFoundException("동호회에 가입된 사람이 아닙니다");
+        }
+
+        const club = await this.clubRepository.findOne({
+            where: { id: clubId },
+        });
+        const clubMasterId = club.masterId;
+
+        if (userId !== clubMasterId) {
+            throw new NotFoundException("동호회장이 아닙니다");
+        }
+
+        return true;
+    }
+
+    async hasClub(userId: number) {
+        console.log("3#####");
+
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        if (user.clubId) {
+            console.log("4#####");
+            throw new Error("이미 동아리에 가입되어 있습니다.");
+        }
+        console.log("5#####");
+        return true;
     }
 }

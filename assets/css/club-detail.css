@@ -45,6 +45,14 @@ body {
     font-size: 20px;
 }
 
-/* .updateBtn {
+.updateBtn {
     display: none;
-} */
+}
+
+.deleteBtn {
+    display: none;
+}
+
+.applyingBtn {
+    display: none;
+}
