@@ -14,65 +14,10 @@
             referrerpolicy="no-referrer"
         />
         <link rel="stylesheet" href="css/index.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
     </head>
     <body>
-        <div class="header">
-            <div class="logo">
-                <img src="resources/logo.png" id="logo" onclick="toHome()" />
-            </div>
-            <div id="searchBox">
-                <form>
-                    <fieldset>
-                        <input type="search" /><button
-                            type="submit"
-                            id="searchBtn"
-                        >
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </fieldset>
-                </form>
-            </div>
-            <div id="logoutBtn" onclick="logout()">
-                Logout <i class="fas fa-solid fa-power-off"></i>
-            </div>
-        </div>
-        <div class="menubarContainer">
-            <div class="menuBar">
-                <ul class="menu">
-                    <li id="recruit">
-                        <a href="#">모집</a>
-                        <ul class="detail" id="detailRecruit">
-                            <li><a href="#">모집글 목록</a></li>
-                            <li onclick="toMyRecruit()">
-                                <a href="#">내 모집글</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li id="club">
-                        <a href="#">동아리</a>
-                        <ul class="detail" id="detailClub">
-                            <li onclick="toClub()">
-                                <a href="#">동아리 목록</a>
-                            </li>
-                            <li><a href="#">내 동아리</a></li>
-                        </ul>
-                    </li>
-                    <li id="stadium" onclick="toPlace()">
-                        <a href="#">경기장</a>
-                    </li>
-                    <li id="platform">
-                        <a href="#">플랫폼 이용안내</a>
-                        <ul class="detail" id="detailPlatform">
-                            <li><a href="#">이용 안내</a></li>
-                            <li><a href="#">공지 사항</a></li>
-                            <li><a href="#">FAQ</a></li>
-                            <li><a href="#">Q&A</a></li>
-                        </ul>
-                    </li>
-                    <li id="talk"><a href="#">Talk</a></li>
-                </ul>
-            </div>
-        </div>
+        <div id="sameContainer"></div>
         <div class="bodyContainer">
             <div class="mainContainer">
                 <div class="profileContainer">
@@ -257,17 +202,9 @@
                 </div>
             </div>
         </div>
-        <div class="footer">
-            <div class="footerLogo">
-                <img src="resources/logo.png" id="footerLogoImg" />
-            </div>
-            <a href="#" id="footerAnnounce">커뮤니티 이용 안내</a>
-            <a href="#" id="footerPrivacy">개인정보 처리 방침</a>
-            <p id="footerCall">문의) usagi001218@gmail.com</p>
-            <p id="footerSite">@Onong</p>
-        </div>
+        <div class="footer" id="footer"></div>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="./js/index.js"></script>
-        <script src="./js/dropmenu.js"></script>
+        <script src="./js/index.js" defer></script>
+        <script src="./js/dropmenu.js" defer></script>
     </body>
 </html>
