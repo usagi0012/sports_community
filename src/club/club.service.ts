@@ -232,4 +232,16 @@ export class ClubService {
         console.log("5#####");
         return true;
     }
+
+    async getMyClubId(userId: number) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        if (!user.clubId) {
+            throw new NotFoundException("가입한 동아리가 없습니다.");
+        }
+        console.log("ggggg");
+
+        return user.clubId;
+    }
 }
