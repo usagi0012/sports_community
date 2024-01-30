@@ -39,6 +39,10 @@ function getPlace(page) {
         });
 }
 
+function toPlaceLink(link) {
+    window.open(`https://shareit.kr/venue/${link}`);
+}
+
 function renderPagination(meta) {
     pageContainer.innerHTML = "";
     const totalPage = meta.lastPage;

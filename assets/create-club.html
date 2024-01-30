@@ -3,44 +3,62 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>동아리 생성</title>
+        <title>Onog Create Club</title>
+        <meta name="description" content="Onog CreateClubPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="css/createClub.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
     </head>
     <body>
-        <div class="modal-content">
-            <label for="name">이름:</label>
-            <input type="text" id="name" />
-            <br />
-            <label for="location">지역:</label>
-            <select id="location">
-                <option value="0">서울</option>
-                <option value="1">부산</option>
-                <option value="2">대구</option>
-                <option value="3">인천</option>
-                <option value="4">광주</option>
-                <option value="5">대전</option>
-                <option value="6">울산</option>
-                <option value="7">세종</option>
-                <option value="8">경기</option>
-                <option value="9">강원</option>
-                <option value="10">충청북도</option>
-                <option value="11">충청남도</option>
-                <option value="12">경상북도</option>
-                <option value="13">경상남도</option>
-                <option value="14">전라북도</option>
-                <option value="15">전라남도</option>
-                <option value="16">제주도</option>
-            </select>
-            <br />
-            <label for="description">설명:</label>
-            <textarea id="description"></textarea>
-            <br />
-            <input type="file" id="fileInput" />
-            <br />
-            <button onclick="submitForm()">제출</button>
-            <button onclick="closeModal()">닫기</button>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer" id="mainContainer">
+                <label id="containerLabel">동아리 생성하기</label>
+                <div id="nameContainer">
+                    <label for="name" id="nameLabel">이름</label>
+                    <input type="text" id="name" />
+                </div>
+                <div id="locationContainer">
+                    <label for="location" id="locationLabel">지역:</label>
+                    <select id="location">
+                        <option value="0">서울</option>
+                        <option value="1">부산</option>
+                        <option value="2">대구</option>
+                        <option value="3">인천</option>
+                        <option value="4">광주</option>
+                        <option value="5">대전</option>
+                        <option value="6">울산</option>
+                        <option value="7">세종</option>
+                        <option value="8">경기</option>
+                        <option value="9">강원</option>
+                        <option value="10">충청북도</option>
+                        <option value="11">충청남도</option>
+                        <option value="12">경상북도</option>
+                        <option value="13">경상남도</option>
+                        <option value="14">전라북도</option>
+                        <option value="15">전라남도</option>
+                        <option value="16">제주도</option>
+                    </select>
+                </div>
+                <div id="descriptionContainer">
+                    <label for="description">설명:</label>
+                    <textarea id="description"></textarea>
+                </div>
+                <input type="file" id="fileInput" />
+                <button onclick="submitForm()">생성</button>
+            </div>
         </div>
+        <div class="footer" id="footer"></div>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="module" src="./js/create-club.js"></script>
+        <script src="./js/dropmenu.js"></script>
         <script>
             function submitForm() {
                 const name = document.getElementById("name").value;
@@ -80,7 +98,7 @@
             }
             function returnPage() {
                 console.log("페이지 이동");
-                window.location.href = `http://localhost:8001/club.html`;
+                window.location.href = "club.html";
             }
         </script>
     </body>

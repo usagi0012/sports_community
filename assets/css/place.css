@@ -9,7 +9,6 @@
 .placeContainer {
     height: 20rem;
     width: 100%;
-    padding: 10px;
     cursor: pointer;
 }
 
@@ -25,6 +24,7 @@
 .name {
     font-size: 1.2rem;
     margin: 5px 3px 3px 5px;
+    text-decoration: underline;
 }
 
 .address {
