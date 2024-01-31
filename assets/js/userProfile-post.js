@@ -12,6 +12,13 @@ async function postProfile() {
     const gender = document.getElementById("gender").value;
     const description = document.getElementById("description").value;
     const height = document.getElementById("height").value;
+    const position = Array.from(
+        document.querySelectorAll('input[name="position"]:checked'),
+    ).reduce((acc, checkbox) => {
+        acc[checkbox.value] = true;
+        return acc;
+    }, {});
+    console.log(position);
 
     console.log(image);
     // FormData 객체 생성
@@ -34,8 +41,15 @@ async function postProfile() {
             },
         });
 
+        const response2 = await axios.post("/api/user/me/position", position, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
         // 서버 응답 확인
-        console.log(response);
+        console.log(response, response2);
 
         // 성공적으로 처리된 경우에 대한 로직 추가
         alert("프로필이 성공적으로 업데이트되었습니다.");
