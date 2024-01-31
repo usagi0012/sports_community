@@ -137,7 +137,7 @@ async function cancelGuestMatch(guestMatchId) {
                 },
             },
         );
-
+        alert("취소를 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.error(error);
@@ -160,6 +160,7 @@ async function confirmGuestMatch(guestMatchId) {
             },
         );
 
+        alert("컴펌을 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.error(error);
@@ -182,6 +183,7 @@ async function evaluateGuestMatch(guestMatchId) {
             },
         );
 
+        alert("평가를 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.error(error);
@@ -200,6 +202,7 @@ async function deleteGuestMatch(guestMatchId) {
             },
         });
 
+        alert("삭제를 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.error(error);
