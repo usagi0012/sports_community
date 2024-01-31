@@ -47,6 +47,7 @@ export class RecruitService {
     async getRecruit() {
         const Recruit = await this.recruitRepository.find({
             select: {
+                id: true,
                 hostId: true,
                 hostName: true,
                 title: true,
