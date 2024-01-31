@@ -1,0 +1,205 @@
+.calendar {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    font-family: "Gamja Flower";
+}
+
+.calendar-yearmonth {
+    padding: 14px 20px 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2vmax;
+    font-weight: 900;
+    align-items: center;
+}
+
+.calendar-yearmonth__btn {
+    background-color: var(--btn-yellow);
+    background-image: url(https://www.google.com/url?sa=i&url=https%3A%2F%2Ficon-icons.com%2Fko%2F%25EC%2595%2584%25EC%259D%25B4%25EC%25BD%2598%2F%25EC%2598%25A4%25EB%25A5%25B8%25EC%25AA%25BD-%25ED%2599%2594%25EC%2582%25B4%25ED%2591%259C-%25EC%2595%2588%25EB%2582%25B4%25EC%259E%25A5-%25EC%2584%25A4%25EB%25AA%2585-%25EB%25B2%2584%25ED%258A%25BC%2F73175&psig=AOvVaw3aY9h5b64itoAupKCm3l6p&ust=1702714403505000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCOi91cv_kIMDFQAAAAAdAAAAABAD);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 15px;
+    border-radius: 50%;
+    transition: all 0.2s ease-in-out;
+}
+
+.calendar-yearmonth__btn:hover {
+    box-shadow: var(--btn-shadow);
+    cursor: pointer;
+}
+
+.calendar-days {
+    display: flex;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.calendar-day {
+    width: 2.5vmax;
+    padding: 5px 0;
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.calendar-days div:nth-child(1) {
+    color: rgb(248, 95, 95);
+}
+.calendar-days div:nth-child(7) {
+    color: rgb(82, 82, 253);
+}
+
+.calendar-date {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 18px;
+}
+
+.calendar-date__row {
+    display: flex;
+    box-sizing: border-box;
+    padding-bottom: 8px;
+    justify-content: space-between;
+}
+
+.calendar-date__col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 0;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(236, 234, 234, 0.9);
+}
+
+.calendar-date__today {
+    background-color: rgb(61, 121, 226);
+    color: white;
+    border: none;
+}
+
+.calendar-date__event {
+    border: 1px solid red;
+}
+.calendar-yearmonth__col {
+    font-size: 20px;
+}
+@media screen and (min-width: 750px) and (max-width: 1024px) {
+    .calendar-day {
+        padding: 0;
+        border-radius: 6px;
+    }
+    .calendar-date {
+        padding: 5px 5px;
+    }
+    .calendar-days {
+        padding: 0 5px;
+    }
+}
+@media screen and (min-width: 750px) and (max-width: 1024px) {
+    .calendar-yearmonth__btn {
+        padding: 10px;
+    }
+    .calendar-yearmonth {
+        padding: 14px 10px 10px 10px;
+    }
+    .calendar-yearmonth {
+        text-align: center;
+    }
+}
+@media screen and (min-width: 750px) and (max-width: 1024px) {
+    .calendar-day,
+    .calendar-date__col {
+        flex: 0 0 14.2857%; /* 7개의 요일이므로 100%를 7등분 */
+    }
+}
+.calendar {
+    height: 400px;
+    width: 100%; /* 조정 */
+    max-width: 500px; /* 조정 */
+    margin: 0 auto; /* 중앙 정렬 */
+    /* 추가적으로 필요한 스타일링을 여기에 추가 */
+}
+.calendar-reservation {
+    padding-top: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    z-index: 1000; /* 다른 요소들보다 위에 나타나도록 설정 */
+    background-color: rgba(0, 0, 0, 0.7); /* 배경에 투명한 검은색 레이어 추가 */
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px; /* 모달 창 최대 너비 조정 */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 닫기 버튼 스타일 추가 */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #fff;
+}
+
+/* 모달 내부 요소 스타일 추가 */
+.modal h2 {
+    margin-bottom: 10px;
+}
+
+.modal label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.modal input,
+.modal textarea,
+.modal select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.modal button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* 모달 버튼 호버 효과 추가 */
+.modal button:hover {
+    background-color: #45a049;
+}
+
+.calendar-event-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 5px; /* 조절 가능한 여백 */
+}
