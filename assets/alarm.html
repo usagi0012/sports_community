@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="css/alarm.css" />
+        <style>
+            #notification-template {
+                display: none;
+            }
+        </style>
+        <title>알림 확인 페이지</title>
+    </head>
+    <body>
+        <h1>알림 확인 페이지</h1>
+        <div id="notification-container"></div>
+
+        <!-- 여기에 알림을 표시할 HTML 코드 추가 -->
+        <div id="notification-template">
+            <template id="notification-template-content">
+                <div class="notification">
+                    <span class="message"></span>
+                    <span class="created-at"></span>
+                    <span
+                        class="delete-button"
+                        onclick="deleteNotification(this)"
+                        >삭제</span
+                    >
+                </div>
+            </template>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/alarm.js"></script>
+    </body>
+</html>
