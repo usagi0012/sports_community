@@ -135,6 +135,7 @@ async function deleteButton(recruitId) {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
+        alert("삭제를 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);
@@ -157,7 +158,7 @@ async function evaluateGuest(recruitId) {
         );
 
         console.log(response.data);
-
+        alert("평가를 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);
@@ -230,6 +231,8 @@ async function approvebutton(matchId) {
                 },
             },
         );
+
+        alert("승인을 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);
@@ -253,6 +256,7 @@ async function rejectbutton(matchId) {
             },
         );
 
+        alert("거절을 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);

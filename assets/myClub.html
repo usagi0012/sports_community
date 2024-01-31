@@ -20,35 +20,39 @@
         <div id="sameContainer"></div>
         <div class="bodyContainer">
             <div class="mainContainer" id="mainContainer">
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
+                <div class="buttonContainer" id="buttonContainer">
+                    <button
+                        class="myClubApplication"
+                        onclick="moveToGetMyClubApplication()"
+                    >
+                        신청서 조회
+                    </button>
 
-                <button
-                    class="myClubApplication"
-                    onclick="moveToGetMyClubApplication()"
-                >
-                    내 동아리 신청서 조회
-                </button>
+                    <button class="updateBtn" onclick="moveToUpdatePage() ">
+                        동아리 정보 수정
+                    </button>
 
-                <button class="updateBtn" onclick="moveToUpdatePage() ">
-                    내 동아리 정보 수정
-                </button>
+                    <button class="deleteBtn" onclick="deleteCheck()">
+                        동아리 삭제
+                    </button>
 
-                <button class="deleteBtn" onclick="deleteCheck()">
-                    내 동아리 삭제
-                </button>
-                <button class="matchManagement">대결 관리</button>
-
-                <div class="name">이름</div>
-                <div class="region">지역</div>
-                <div class="score">점수</div>
-                <div class="member">회원수</div>
-                <div class="createdAt">생성일자</div>
-                <div class="clubMaster">동호회장</div>
-                <div class="details">상세설명</div>
+                    <button class="matchManagement">대결 관리</button>
+                </div>
+                <div class="clubDetailContainer" id="clubDetailContainer">
+                    <div class="firstRow">
+                        <div class="name">이름</div>
+                        <div class="region">지역</div>
+                        <div class="createdAt">생성일자</div>
+                    </div>
+                    <div class="secondRow">
+                        <div class="clubMaster">동호회장</div>
+                        <div class="member">회원수</div>
+                        <div class="score">점수</div>
+                    </div>
+                    <div class="detialRow">
+                        <div class="details">상세설명</div>
+                    </div>
+                </div>
             </div>
         </div>
 

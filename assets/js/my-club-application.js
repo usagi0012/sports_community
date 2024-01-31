@@ -1,6 +1,7 @@
 window.onload = function () {
-    console.log("my-club-application 페이지");
+    loadHeader();
     getMyClubApplication();
+    loadFooter();
 };
 
 function getMyClubApplication() {
