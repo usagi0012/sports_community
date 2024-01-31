@@ -64,9 +64,6 @@ export class Recruit {
     @Column({ type: "datetime" })
     endtime: Date;
 
-    @Column("int")
-    runtime: number;
-
     @Column({
         type: "enum",
         enum: Rule,

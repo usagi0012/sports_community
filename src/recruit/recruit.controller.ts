@@ -115,4 +115,14 @@ export class RecruitController {
             message: "해당 모집글이 삭제되었습니다.",
         };
     }
+
+    //모집 글 수정
+    @Put("my/post/match/edit/:recruitId")
+    async editMatch(
+        @UserId() userId: number,
+        @Param("recruitId") recruitId: number,
+        @Body() putDTO: PutDTO,
+    ) {
+        return await this.recruitService.editMatch(userId, putDTO, recruitId);
+    }
 }

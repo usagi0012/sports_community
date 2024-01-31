@@ -1,0 +1,46 @@
+/* 메인 컨테이너*/
+.mainContainer {
+    margin: 100px auto 10px;
+    height: 35rem;
+    width: 40rem;
+    border: 2px solid gray;
+    border-radius: 10px;
+    display: grid;
+    grid-template-areas:
+        "title"
+        "name"
+        "location"
+        "description"
+        "file"
+        "createBtn";
+    grid-template-rows: 1fr 1.2fr 0.5fr 1.7fr 0.6fr 1fr;
+}
+
+#containerLabel {
+    width: 90%;
+    margin: 15px auto 0px;
+    font-size: 2rem;
+    text-align: center;
+    display: block;
+}
+
+#nameContainer {
+    width: 90%;
+    margin: 0px auto;
+}
+
+#nameLabel {
+    font-size: 1.2rem;
+    display: block;
+}
+
+#name {
+    width: 95%;
+    margin: 0px auto;
+    background-color: #eeeeee;
+    border-radius: 10px;
+}
+
+#locationContainer {
+    width: 100%;
+}

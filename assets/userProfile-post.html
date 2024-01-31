@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <title>User Profile</title>
+    </head>
+    <body>
+        <div class="logo">
+            <img src="resources/logo.png" id="logo" />
+            <input type="text" placeholder="Search..." />
+            <button>검색</button>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="#feed">피드</a></li>
+                <li><a href="#club">동호회</a></li>
+                <li><a href="#stadium">경기장</a></li>
+                <li><a href="#platform">플랫폼 이용안내</a></li>
+                <li><a href="#talk">Talk</a></li>
+            </ul>
+        </nav>
+
+        <section id="userSection">
+            <h2>내 프로필</h2>
+            <p>닉네임: <input type="text" id="nickname" /></p>
+            <p>이미지: <input type="file" id="file" accept="image/*" /></p>
+            <p>성별:
+                <select id="gender">
+                    <option value="male">남성</option>
+                    <option value="female">여성</option>
+                </select>
+            </p>
+            <p>자기소개: <input type="text" id="description" /></p>
+            <p>키: <input type="number" id="height" /></p>
+            <p>
+                <p><button id="submitProfileButton">프로필 등록하기</button></p>
+            </p>
+        </section>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/userProfile-post.js"></script>
+    </body>
+</html>

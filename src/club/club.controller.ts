@@ -6,6 +6,7 @@ import {
     Param,
     Post,
     Put,
+    Query,
     UploadedFile,
     UseGuards,
     UseInterceptors,
@@ -18,6 +19,8 @@ import { CreateClubDto } from "./dto/createClub.dto";
 import { UpdateClubDto } from "./dto/updateClub.dto";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { error } from "console";
+import { cloudbuild } from "googleapis/build/src/apis/cloudbuild";
+import { errorMonitor } from "events";
 
 @ApiTags("동아리")
 @Controller("club")
@@ -26,8 +29,44 @@ export class ClubController {
 
     //동아리 전체 조회
     @Get()
-    getAllClubs() {
-        return this.clubService.getAllClubs();
+    getAllClubs(/* @Query("page") page: number */) {
+        return this.clubService.getAllClubs(3);
+    }
+
+    // 동아리에 가입된 사람인지 확인
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("/myClub")
+    async hasClub(@UserId() userId: number) {
+        try {
+            console.log("1######");
+            const result = await this.clubService.hasClub(userId);
+
+            return {
+                statusCode: 200,
+                message: "조회에 성공했습니다.",
+                data: result,
+            };
+        } catch (error) {
+            console.log(error);
+            console.log("2######");
+
+            return {
+                statusCode: 400,
+                message: "조회에 실패했습니다.",
+                error: error.message,
+            };
+        }
+    }
+
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("/myClubId")
+    async getMyClubId(@UserId() userId: number) {
+        console.log("백엔드 안들어옴?");
+        const clubId = await this.clubService.getMyClubId(userId);
+
+        return clubId;
     }
 
     //동아리 상세 조회
@@ -48,6 +87,7 @@ export class ClubController {
         @Body() createClubDto: CreateClubDto,
         @UploadedFile() file: Express.Multer.File,
     ) {
+        console.log("여기 찍힘????");
         return this.clubService.createClub(createClubDto, userId, file);
     }
 
@@ -71,5 +111,30 @@ export class ClubController {
     @Delete("/:clubId")
     deleteClub(@Param("clubId") id: string, @UserId() userId: number) {
         return this.clubService.deleteClub(+id, userId);
+    }
+
+    // 내 동아리인지 확인
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("/myClub/:clubId")
+    async isMyClub(@UserId() userId: number, @Param("clubId") clubId: number) {
+        try {
+            const result = await this.clubService.isMyClub(userId, clubId);
+            console.log("여기는 들어오는가");
+            return {
+                statusCode: 200,
+                message: "조회에 성공했습니다.",
+                data: result,
+            };
+        } catch (error) {
+            console.log("여기 왜 안들어와.");
+            console.log(error);
+            console.log(error.message);
+            return {
+                statusCode: 400,
+                message: "조회에 실패했습니다.",
+                error: error.message,
+            };
+        }
     }
 }

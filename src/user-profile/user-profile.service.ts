@@ -68,6 +68,7 @@ export class UserProfileService {
         // 이미지 업로드할 경우
         if (file) {
             const uploadedFilePath = await this.awsService.fileupload(file);
+            console.log("이미지", uploadedFilePath);
 
             // 닉네임이 기재되지 않았을 때 디폴트값 이름
             if (!createUserProfileDto.nickname) {
