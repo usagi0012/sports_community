@@ -180,7 +180,11 @@
                     });
             }
             function moveToUpdatePage() {
-                window.location.href = "update-club.html";
+                const urlParams = new URLSearchParams(window.location.search);
+                console.log("urlParams", urlParams);
+                let clubId = urlParams.get("id");
+
+                window.location.href = `update-club.html?id=${clubId}`;
             }
         </script>
     </body>
