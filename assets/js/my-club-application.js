@@ -1,6 +1,7 @@
 window.onload = function () {
-    console.log("my-club-application 페이지");
+    loadHeader();
     getMyClubApplication();
+    loadFooter();
 };
 
 function getMyClubApplication() {
@@ -33,7 +34,6 @@ function getMyClubApplication() {
                 user.className = "user";
                 user.innerHTML = `${application.userId}`;
                 myClubAppplicationList.appendChild(user);
-                console.log("뭐가나옴?", response.data);
 
                 const message = document.createElement("div");
                 message.className = "message";

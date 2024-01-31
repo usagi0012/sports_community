@@ -21,6 +21,9 @@
 .clubInfo {
     padding: 0px 5px;
 }
+.clubName {
+    cursor: pointer;
+}
 
 .clubId,
 .clubName,

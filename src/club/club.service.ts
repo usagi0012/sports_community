@@ -244,4 +244,17 @@ export class ClubService {
 
         return user.clubId;
     }
+
+    async isClubMaster(userId) {
+        const clubMaster = await this.clubRepository.findOne({
+            where: { masterId: userId },
+        });
+
+        console.log("클럽 마스터", clubMaster);
+        if (!clubMaster) {
+            throw new NotFoundException("동아리 장이 아닙니다.");
+        }
+
+        return true;
+    }
 }

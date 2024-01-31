@@ -26,7 +26,7 @@
                     <input type="text" id="name" />
                 </div>
                 <div id="locationContainer">
-                    <label for="location" id="locationLabel">지역:</label>
+                    <label for="location" id="locationLabel">지역</label>
                     <select id="location">
                         <option value="0">서울</option>
                         <option value="1">부산</option>
@@ -48,11 +48,13 @@
                     </select>
                 </div>
                 <div id="descriptionContainer">
-                    <label for="description">설명:</label>
+                    <label for="description" id="descriptionLabel"
+                        >소개글</label
+                    >
                     <textarea id="description"></textarea>
                 </div>
                 <input type="file" id="fileInput" />
-                <button onclick="submitForm()">생성</button>
+                <button onclick="submitForm()" id="createClubBtn">생성</button>
             </div>
         </div>
         <div class="footer" id="footer"></div>
