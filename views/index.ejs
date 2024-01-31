@@ -125,7 +125,6 @@
                     auth: accessToken,
                 },
             });
-
             return socket;
         }
 
@@ -208,61 +207,36 @@
             );
 
             socket.on("getChatRoomList", function (response) {
+                console.log("얍얍얍", response);
                 let html = "";
-                // for (const { roomId, roomName } of Object.values(response)) {
-                //     html +=
-                //         '<div class="chat_list ' +
-                //         (myInfo.room.roomId === roomId
-                //             ? "active_chat"
-                //             : "enterChatRoom") +
-                //         '" data-roomId="' +
-                //         roomId +
-                //         '">';
-                //     html += '<div class="chat_people">';
-                //     html += '<div class="chat_ib">';
-                //     html += "<h5>" + roomName + "</h5>";
-                //     html += "</div>";
-                //     html += "</div>";
-                //     html += "</div>";
-                // }
 
-                // 받아온 myRoomTitle 이용해서 프론트에 구현하기
-                // $(".chatRoomList").html(html);
                 console.log({ myInfo });
                 console.log("response", Object.values(response));
                 const myRoomInfo = Object.values(response);
-                for (let i = 0; i < myRoomInfo[0].length; i++) {
+
+                // 2024-01-31 수정
+                const roomId = localStorage.getItem("thisRoomId");
+
+                response.title.forEach((v, index) => {
+                    console.log("제목나눔", v);
+                    console.log("oooo", roomId);
+                    console.log("oooo", response.id[index]);
                     html +=
                         '<div class="chat_list ' +
-                        (myInfo.room.roomId === myRoomInfo[1][i]
+                        (roomId === response.id[index]
                             ? "active_chat"
                             : "enterChatRoom") +
                         '" data-roomId="' +
-                        myRoomInfo[1][i] +
+                        response.id[index] +
                         '">';
                     html += '<div class="chat_people">';
                     html += `<div class="chat_ib">`;
-                    // html += "<h5>" + myRoomInfo[0][i] + "</h5>";
+                    html += "<h5>" + v + "</h5>";
                     html += "</div>";
                     html += "</div>";
                     html += "</div>";
-                }
-                // for (const { roomId, roomName } of Object.values(response)) {
-                //     html +=
-                //         '<div class="chat_list ' +
-                //         (myInfo.room.roomId === roomId
-                //             ? "active_chat"
-                //             : "enterChatRoom") +
-                //         '" data-roomId="' +
-                //         roomId +
-                //         '">';
-                //     html += '<div class="chat_people">';
-                //     html += '<div class="chat_ib">';
-                //     html += "<h5>" + roomName + "</h5>";
-                //     html += "</div>";
-                //     html += "</div>";
-                //     html += "</div>";
-                // }
+                });
+
                 $(".chatRoomList").html(html);
             });
 
@@ -291,6 +265,7 @@
                 console.log("야호야호야호", res);
                 if (!res) return;
                 myInfo.room = res;
+                console.log("마이 인포룸", myInfo.room);
                 $(".roomName").text(myInfo.room.roomName);
                 $(".chat").html("");
             });

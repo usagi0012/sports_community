@@ -182,25 +182,25 @@ export class ChatRoomService {
         }
     }
 
-    // 로그인된 유저인지  체크
+    // 로그인된 유저인지   체크
     verifyToken(client: Socket) /* : string  */ {
-        const token = client.handshake.query;
-        const accessToken = token.auth;
-        console.log("accessToken", accessToken);
-        console.log(typeof accessToken);
-        console.log("토큰형식2", typeof accessToken);
-        if (typeof accessToken !== "string") {
-            throw new WsException("토큰의 형식이 잘못 되었습니다.");
-        }
-        const payload = this.jwtService.verify(accessToken, {
-            secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
-        });
-        if (!payload) {
-            throw new WsException("로그인이 필요합니다.");
-        }
-        const userId = payload.userId;
-        console.log({ payload });
-        return userId;
+        // const token = client.handshake.query;
+        // const accessToken = token.auth;
+        // console.log("accessToken", accessToken);
+        // console.log(typeof accessToken);
+        // console.log("토큰형식2", typeof accessToken);
+        // if (typeof accessToken !== "string") {
+        //     throw new WsException("토큰의 형식이 잘못 되었습니다.");
+        // }
+        // const payload = this.jwtService.verify(accessToken, {
+        //     secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
+        // });
+        // if (!payload) {
+        //     throw new WsException("로그인이 필요합니다.");
+        // }
+        // const userId = payload.userId;
+        // console.log({ payload });
+        // return userId;
     }
 
     saveMessage(client: Socket, message: string, roomId: string) {

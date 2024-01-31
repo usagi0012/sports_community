@@ -40,7 +40,6 @@ export class ChatBackEndGateway
         try {
             console.log("connected", client.id);
             // client.leave(client.id);
-
             // client.data.roomId = `room:lobby`;
             client.join("room:lobby");
             // (여기서 관리)
@@ -116,6 +115,9 @@ export class ChatBackEndGateway
         //client=>this.server
         // this.server.to(roomId) : 나를 포함한 방 전원에게 보내는 것
         // client.to(roomId) : 나를 제외한 방 전원에게 보내는 것
+        console.log("룸아이디 슬라이스", roomId.slice(-1));
+        console.log("룸아이디 슬라이스", typeof roomId.slice(-1));
+        console.log(client.id, client.data.nickname, message, roomId);
         this.server.to(roomId).emit("getMessage", {
             //실제 데이터로 바꾸기
             id: client.id,
