@@ -98,12 +98,15 @@ export class Recruit {
     @BeforeUpdate()
     updateProgress() {
         const now = new Date();
+        const utc = now.getTime();
+        const koreaTimeDiff = 9 * 60 * 60 * 1000;
+        const korNow = new Date(utc + koreaTimeDiff);
 
-        if (this.gamedate < now) {
+        if (this.gamedate < korNow) {
             this.progress = Progress.DURING;
         }
 
-        if (this.endtime < now) {
+        if (this.endtime < korNow) {
             this.progress = Progress.PLEASE_EVALUATE;
         }
     }

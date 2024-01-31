@@ -12,6 +12,14 @@ import { Cron, CronExpression } from "@nestjs/schedule";
 import { not } from "cheerio/lib/api/traversing";
 import { match } from "assert";
 
+const now = new Date();
+const utc = now.getTime();
+const koreaTimeDiff = 9 * 60 * 60 * 1000;
+const korNow = new Date(utc + koreaTimeDiff);
+const oneHoursAgo = new Date(korNow);
+
+oneHoursAgo.setHours(korNow.getHours() - 1);
+
 @Injectable()
 export class RecruitService {
     constructor(
@@ -25,32 +33,38 @@ export class RecruitService {
 
     //모집 글 등록
     async postRecruit(userId: number, recruitDTO: RecruitDTO) {
-        const basicnumber = recruitDTO.totalmember;
-        const user = await this.userRepository.findOne({
-            where: {
-                id: userId,
-            },
-        });
+        try {
+            const basicnumber = recruitDTO.totalmember;
+            const user = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
 
-        const newRecruit = this.recruitRepository.create({
-            basictotalmember: basicnumber,
-            hostId: userId,
-            hostName: user.name,
+            const newRecruit = this.recruitRepository.create({
+                basictotalmember: basicnumber,
+                hostId: userId,
+                hostName: user.name,
 
-            ...recruitDTO,
-        });
+                ...recruitDTO,
+            });
 
-        await this.recruitRepository.save(newRecruit);
+            await this.recruitRepository.save(newRecruit);
 
-        return {
-            message: "모집글이 등록되었습니다.",
-        };
+            return {
+                message: "모집글이 등록되었습니다.",
+            };
+        } catch (error) {
+            console.error(error);
+            throw new Error("모집글 등록 중 오류가 발생했습니다.");
+        }
     }
 
     //모집 글 조회
     async getRecruit() {
         const Recruit = await this.recruitRepository.find({
             select: {
+                id: true,
                 hostId: true,
                 hostName: true,
                 title: true,
@@ -96,22 +110,26 @@ export class RecruitService {
                 status: true,
             },
         });
-
+        for (const myRecruit of myRecruits) {
+            this.updateProgress(myRecruit);
+        }
         return myRecruits;
     }
 
     // 내 모집글 상세 조회
     async findMyRecruit(userId: number, recruitId: number) {
-        const myRecruits = await this.recruitRepository.findOne({
+        const myRecruit = await this.recruitRepository.findOne({
             where: {
                 id: recruitId,
                 hostId: userId,
             },
         });
 
-        if (!myRecruits) {
+        if (!myRecruit) {
             throw new NotFoundException("내 모집글을 조회하지 못했습니다.");
         }
+
+        await this.updateProgress(myRecruit);
 
         const matches = await this.matchRepository.find({
             where: {
@@ -125,7 +143,7 @@ export class RecruitService {
             },
         });
 
-        return [myRecruits, matches];
+        return [myRecruit, matches];
     }
 
     // 모집글 매치 상세조회
@@ -246,11 +264,22 @@ export class RecruitService {
             );
         }
         await this.checkHost(hostId, recruitId);
-        if (existingRecruit.progress !== Progress.EVALUATION_COMPLETED) {
+        const newGameDate = new Date(existingRecruit.gamedate);
+        newGameDate.setHours(existingRecruit.gamedate.getHours() - 1);
+
+        if (existingRecruit.progress === Progress.EVALUATION_COMPLETED) {
+            return await this.recruitRepository.remove(existingRecruit);
+        }
+
+        if (newGameDate < oneHoursAgo) {
             throw new NotFoundException(
-                "이미 컴펌된 경기이거나 평가 후 삭제할 수 있습니다. ",
+                "1시간전부터는 취소 할 수 없습니다. 경기가 끝난 후 평가해주세요.",
             );
         }
+        if (existingRecruit.progress === Progress.BEFORE) {
+            return await this.recruitRepository.remove(existingRecruit);
+        }
+
         await this.recruitRepository.delete({ id: recruitId });
         return {
             message: "모집글이 삭제되었습니다.",
@@ -291,13 +320,11 @@ export class RecruitService {
     }
 
     private updateProgress(recruit: Recruit) {
-        const now = new Date();
-
-        if (recruit.gamedate.getTime() < now.getTime()) {
+        if (recruit.gamedate.getTime() > korNow.getTime()) {
             recruit.progress = Progress.DURING;
         }
 
-        if (recruit.endtime.getTime() < now.getTime()) {
+        if (recruit.endtime.getTime() < korNow.getTime()) {
             recruit.progress = Progress.PLEASE_EVALUATE;
         }
     }
@@ -317,7 +344,9 @@ export class RecruitService {
                 myRecruit.gps = putDTO.gps || myRecruit.gps;
                 myRecruit.content = putDTO.content || myRecruit.content;
                 myRecruit.gamedate = putDTO.gamedate || myRecruit.gamedate;
-                myRecruit.endtime = putDTO.endtime || myRecruit.endtime;
+
+                myRecruit.endtime = putDTO.gamedate || myRecruit.endtime;
+
                 myRecruit.rule = putDTO.rule || myRecruit.rule;
                 myRecruit.totalmember =
                     putDTO.totalmember || myRecruit.totalmember;

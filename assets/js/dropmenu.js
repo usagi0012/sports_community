@@ -136,7 +136,25 @@ async function toMyClub() {
     if (!token) {
         alert("로그인 후 이용 가능합니다.");
     }
-    window.location.href = "myClub.html";
+    console.log("here");
+    axios
+        .get("/api/club/myClub", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            console.log("제발", response);
+            if (response.data.data === true) {
+                alert("가입된 동아리가 없습니다.");
+            } else {
+                window.location.href = "myClub.html";
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            console.log("백에서 return 잘 됐는데 왜 여기로 들어옴?ㄴ");
+        });
 }
 
 //로그아웃 하기
@@ -159,11 +177,14 @@ async function logout() {
                 "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             document.cookie =
                 "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
+            alert("로그아웃 되었습니다.");
             window.location.href = "index.html";
         } catch (error) {
             console.log(error);
             alert("로그아웃에 실패하였습니다.");
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            window.location.href = "index.html";
 
             if (
                 error.response &&
