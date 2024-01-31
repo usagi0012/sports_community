@@ -27,7 +27,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "북산",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     buksan: number;
 
@@ -38,7 +38,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "센안토니오",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "0",
     })
     sanantonio: number;
 
@@ -49,7 +49,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "젠틀",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     gentle: number;
 
@@ -60,7 +60,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "매너",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     manner: number;
 
@@ -71,7 +71,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "레이커스",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     lakers: number;
 
@@ -82,7 +82,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "원맨팀",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "0",
     })
     oneman: number;
 
@@ -93,7 +93,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "골스",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     goldenstate: number;
 
@@ -104,7 +104,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "낫배드",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "0",
     })
     notbed: number;
 
@@ -115,7 +115,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "배드가이즈",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     bed: number;
 
@@ -126,7 +126,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "터프가이즈",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "0",
     })
     tough: number;
 
@@ -137,7 +137,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "파이터즈",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     fighter: number;
 
@@ -148,7 +148,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "지각",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     late: number;
 
@@ -159,7 +159,7 @@ export class Clubtagcounter {
     @Column()
     @ApiProperty({
         description: "파출리아가이즈",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "0",
     })
     zaza: number;
 

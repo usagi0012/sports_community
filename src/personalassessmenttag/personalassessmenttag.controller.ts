@@ -78,7 +78,32 @@ export class PersonalassessmenttagController {
         };
     }
 
-    @Post("/personal/:matchId/:recuritedid")
+    @Get("/personal/:userId")
+    async findOtherOneUserAssessment(@Param("userId") userId: number) {
+        const data =
+            await this.personalassessmenttagService.findOtherOneUserAssessment(
+                userId,
+            );
+
+        return {
+            statusCode: HttpStatus.OK,
+            message: "점수가 조회되었습니다.",
+            data,
+        };
+    }
+
+    @Get("/personal/tag/:userId")
+    async findOtherOneUserTag(@Param("userId") userId: number) {
+        const data =
+            await this.personalassessmenttagService.findOtherOneUserTag(userId);
+        return {
+            statusCode: HttpStatus.OK,
+            message: "태그가 조회되었습니다.",
+            data,
+        };
+    }
+
+    @Post("/personal/:matchId/:recuritedId")
     async createPersonalAssessment(
         @Param("matchId") matchId: number,
         @Param("recuritedId") recuritedId: number,
@@ -100,7 +125,7 @@ export class PersonalassessmenttagController {
         };
     }
 
-    @Post("/personal/tag/:matchId/:recuritedid")
+    @Post("/personal/tag/:matchId/:recuritedId")
     async createPersonalTag(
         @Param("matchId") matchId: number,
         @Param("recuritedId") recuritedId: number,
@@ -122,7 +147,7 @@ export class PersonalassessmenttagController {
         };
     }
 
-    @Put("/personal/:matchId/:recuritedid")
+    @Put("/personal/:matchId/:recuritedId")
     async updatePesonalAssessment(
         @Param("matchId") matchId: number,
         @Param("recuritedId") recuritedId: number,
@@ -145,7 +170,7 @@ export class PersonalassessmenttagController {
         };
     }
 
-    @Put("/personal/tag/:matchId/:recuritedid")
+    @Put("/personal/tag/:matchId/:recuritedId")
     async updatePesonalTag(
         @Param("matchId") matchId: number,
         @Param("recuritedId") recuritedId: number,

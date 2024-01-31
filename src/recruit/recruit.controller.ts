@@ -109,7 +109,11 @@ export class RecruitController {
         @Param("recurtId") recruitId: number,
     ) {
         const hostId = userId;
-        return await this.recruitService.deleteRecruit(hostId, recruitId);
+        await this.recruitService.deleteRecruit(hostId, recruitId);
+
+        return {
+            message: "해당 모집글이 삭제되었습니다.",
+        };
     }
 
     //모집 글 수정

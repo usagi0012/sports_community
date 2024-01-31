@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="./css/recruit-post.css" />
+    </head>
+    <body>
+        <div class="make-vertical">
+            <div class="main-list-background">
+                <div class="main-list">
+                    <div>
+                        <a id="feed" class="btn feed" href="#feed">피드</a>
+                    </div>
+                    <div>
+                        <a id="club" class="btn club" href="#club">동호회</a>
+                    </div>
+                    <div>
+                        <a id="ground" class="btn ground" href="#ground">
+                            경기장
+                        </a>
+                    </div>
+                    <div>
+                        <a id="info" class="btn info" href="#info">
+                            플렛폼이용안내
+                        </a>
+                    </div>
+                    <div>
+                        <a id="talk" class="btn talk" href="#talk">TALK</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="board-wrap">
+                <div class="board-title">
+                    <strong>피드</strong>
+                    <p>오농 커뮤니티</p>
+                </div>
+                <div class="board-post-wrap">
+                    <div class="board-post">
+                        <div class="title">
+                            <dl>
+                                <dt>제목</dt>
+                                <dd>
+                                    <input
+                                        id="input-title"
+                                        type="text"
+                                        placeholder="제목을 입력하세요"
+                                    />
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="info">
+                            <dl>
+                                <dt>지역</dt>
+                                <dd>
+                                    <select
+                                        id="regionSelect"
+                                        placeholder="지역을 선택해주세요."
+                                    >
+                                        <option value="Region1">Region1</option>
+                                        <option value="Region2">Region2</option>
+                                    </select>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>gps</dt>
+                                <dd>
+                                    <input
+                                        id="input-gps"
+                                        type="text"
+                                        placeholder="gps을 입력하세요"
+                                    />
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>경기날짜</dt>
+                                <dd>
+                                    <input
+                                        id="input-gamedate"
+                                        type="text"
+                                        placeholder="경기 날짜를 입력하세요"
+                                    />
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>경기종료</dt>
+                                <dd>
+                                    <input
+                                        id="input-endtime"
+                                        type="text"
+                                        placeholder="경기 종료 날짜를 입력하세요"
+                                    />
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>경기규칙</dt>
+                                <dd>
+                                    <select
+                                        id="ruleSelect"
+                                        placeholder="경기 규칙을 선택하세요"
+                                    >
+                                        <option value="3대3">3대3</option>
+                                        <option value="4대4">4대4</option>
+                                        <option value="5대5">5대5</option>
+                                    </select>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>모집인원</dt>
+                                <dd>
+                                    <input
+                                        id="input-totalmember"
+                                        type="text"
+                                        placeholder="모집 인원을 입력하세요"
+                                    />
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="content">
+                            <textarea
+                                id="input-content"
+                                placeholder="내용 입력하세요"
+                            ></textarea>
+                        </div>
+                    </div>
+                    <div class="bt-wrap">
+                        <a href="#" id="register-btn" class="on">등록</a>
+                        <a href="#" id="register-cancel-btn">취소</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/recruit-post.js"></script>
+    </body>
+</html>

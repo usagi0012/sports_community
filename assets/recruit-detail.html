@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="./css/recruit-detail.css" />
+    </head>
+    <body>
+        <div class="make-vertical">
+            <div class="main-list-background">
+                <div class="main-list">
+                    <div>
+                        <a id="feed" class="btn feed" href="recruit.html"
+                            >피드</a
+                        >
+                    </div>
+                    <div>
+                        <a id="club" class="btn club" href="#club">동호회</a>
+                    </div>
+                    <div>
+                        <a id="ground" class="btn ground" href="#ground">
+                            경기장
+                        </a>
+                    </div>
+                    <div>
+                        <a id="info" class="btn info" href="#info">
+                            플렛폼이용안내
+                        </a>
+                    </div>
+                    <div>
+                        <a id="talk" class="btn talk" href="#talk">TALK</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="board-wrap">
+                <div class="board-title">
+                    <strong>피드</strong>
+                    <p>오농 커뮤니티</p>
+                </div>
+                <div class="board-detail-wrap">
+                    <div class="board-detail"></div>
+                    <div class="bt-wrap">
+                        <a href="./recruit.html" class="on">목록</a>
+                        <a href="./recruit.html" id="recruit-delete">삭제</a>
+                        <a href="#" id="modalOpenButton">신청</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="applyingRecruitModal" id="applyModal" hidden>
+            <div class="modal-content">
+                <!--  <span class="close" onclick="closeModal()">&times;</span> -->
+                <h5>신청하기</h5>
+                <label for="applyingclub">모집지원:</label>
+                <p id="applyingclub1"></p>
+                <br />
+                <label for="description">지원이유:</label>
+                <textarea id="description1"></textarea>
+                <br />
+                <div>
+                    <button id="submit-application">신청하기</button>
+                    <button id="close-modal">닫기</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/recruit-detail.js"></script>
+    </body>
+</html>

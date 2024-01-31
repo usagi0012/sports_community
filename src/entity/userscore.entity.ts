@@ -43,7 +43,7 @@ export class Userscore {
     @ApiProperty({
         description: "성격",
         default: 1,
-        example: "1부터 5사이의 숫자를 입력해주세요.",
+        example: "3",
     })
     @Column({
         default: 0,
@@ -69,7 +69,7 @@ export class Userscore {
     @ApiProperty({
         description: "실력",
         default: 1,
-        example: "1부터 5사이의 숫자를 입력해주세요.",
+        example: "2",
     })
     abilityAmount: number;
 
