@@ -1,230 +1,79 @@
-* {
-    margin: 0;
-    padding: 0;
-    /* box-sizing: border-box; */
+/* 메인 컨테이너*/
+.mainContainer {
+    margin-top: 70px;
 }
 
-html {
-    font-size: 10px;
+.createBtn {
+    font-family: "LINESeedKR-Bd";
+    margin: 10px 15px;
+    height: 25px;
+    padding-top: 5px;
+    border-radius: 7px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
 }
 
-ul,
-li {
-    list-style: none;
+.createBtn:hover {
+    box-shadow: 2px 2px 2px gray;
 }
 
-a {
+.boardContainer {
+    border-top: 3px solid #4c3c36;
+}
+
+.boardTitleContainer {
+    padding: 10px 0px;
+}
+
+.boardTitleContainer,
+.boardListContainer > .item {
+    display: flex;
+    width: 100%;
+}
+
+.item {
+    padding: 15px 0px;
+    border-top: 1.5px solid #4c3c36;
+}
+
+.num,
+.category,
+.title,
+.region,
+.writer,
+.gamedate,
+.status {
+    text-align: center;
+}
+
+.num {
+    width: 10%;
+}
+.category {
+    width: 10%;
+}
+.title {
+    width: 20%;
+}
+.region {
+    width: 15%;
+}
+.writer {
+    width: 15%;
+}
+.gamedate {
+    width: 15%;
+}
+.status {
+    width: 15%;
+}
+
+.title > a {
     text-decoration: none;
-    color: inherit;
-}
-
-.btn {
-    text-decoration: none;
-    font-size: 1.4rem;
     color: black;
 }
 
-body {
-    display: flex;
-    justify-content: center; /* 가운데 정렬을 위해 추가 */
-    height: 100vh; /* 화면 전체 높이를 채우도록 설정 */
-    margin: 0; /* Body의 기본 마진 제거 */
-    min-width: 320px;
-}
-
-.main-list {
-    display: flex;
-    justify-content: center; /* 가운데 정렬을 위해 추가 */
-    align-items: center; /* 가운데 정렬을 위해 추가 */
-    margin-top: 10%;
-}
-
-.board-wrap {
-    width: 1000px;
-    margin: 100px auto;
-}
-
-.board-title {
-    margin-bottom: 30px;
-}
-
-.board-title strong {
-    font-size: 3rem;
-}
-
-.board-title p {
-    margin-top: 5px;
-    font-size: 1.4rem;
-}
-
-.bt-wrap {
-    margin-top: 30px;
-    text-align: center;
-    font-size: 0;
-}
-
-.bt-wrap a {
-    display: inline-block;
-    min-width: 80px;
-    margin-left: 10px;
-    padding: 10px;
-    border: 1px solid #000;
-    border-radius: 2px;
-    font-size: 1.4rem;
-}
-
-.bt-wrap a:first-child {
-    margin-left: 0;
-}
-
-.bt-wrap a.on {
-    background: #000;
-    color: #fff;
-    margin-bottom: 50px;
-}
-
-.board-list {
-    width: 100%;
-    border-top: 2px solid #000;
-}
-
-.board-list > div {
-    border-bottom: 1px solid #ddd;
-    font-size: 0;
-}
-
-.board-list > div.top {
-    border-color: #999;
-}
-
-.board-list > div.last-child {
-    border-color: #000;
-}
-
-.board-list > div > div {
-    display: inline-block;
-    padding: 15px 0;
-    text-align: center;
-    font-size: 1.4rem;
-}
-
-.board-list > div.top > div {
-    font-weight: 600;
-}
-
-.board-list .num {
-    width: 5%;
-}
-
-.board-list .category {
-    width: 10%;
-}
-
-.board-list .title {
-    width: 37%;
-    text-align: left;
-}
-
-.board-list .top .title {
-    text-align: center;
-}
-
-.board-list .region {
-    width: 10%;
-}
-
-.board-list .writer {
-    width: 10%;
-}
-
-.board-list .gamedate {
-    width: 20%;
-}
-
-.board-list .status {
-    width: 8%;
-}
-
-.board-page {
-    margin-top: 30px;
-    text-align: center;
-    font-size: 0;
-}
-
-.board-page a {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    border: 1px solid #ddd;
-    border-left: 0;
-    box-sizing: border-box;
-    vertical-align: middle;
-    line-height: 100%;
-}
-
-.board-page a.bt {
-    padding-top: 10px;
-    font-size: 1.2rem;
-    letter-spacing: -1px;
-}
-
-.board-page a.num {
-    padding-top: 9px;
-    font-size: 1.4rem;
-}
-
-.board-page a.num.on {
-    border-color: #000;
-    background: #000;
-    color: #fff;
-}
-
-.board-page a:first-child {
-    border-left: 1px solid #ddd;
-}
-
-.main-list a {
-    margin-right: 2rem;
-}
-
-@media (max-width: 1000px) {
-    .board-wrap {
-        width: 100%;
-        min-width: 320px;
-        padding: 0 30px;
-        box-sizing: border-box;
-    }
-    .board-list .num,
-    .board-list .writer,
-    .board-list .count,
-    .board-list .category,
-    .board-list .region,
-    .board-list .gamedate {
-        display: none;
-    }
-
-    .board-list .status {
-        width: 20%;
-    }
-
-    .board-list .title {
-        width: 80%;
-        text-indent: 10px;
-    }
-    .board-list .top .title {
-        text-indent: 0;
-    }
-
-    .board-page a {
-        width: 26px;
-        height: 26px;
-    }
-
-    .board-page a.bt {
-        padding-top: 7px;
-    }
-
-    .board-page a.num {
-        padding-top: 6px;
-    }
+.title > a:hover {
+    text-decoration: underline;
 }

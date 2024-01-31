@@ -2,7 +2,7 @@ window.onload = function () {
     const urlParams = new URLSearchParams(window.location.search);
     let recruitId = urlParams.get("id");
 
-    getRecruitDetail(recruitId);
+    getRecruitDetail(+recruitId);
 
     const recruitDeleteButton = document.getElementById("recruit-delete");
     if (recruitDeleteButton) {
@@ -125,13 +125,13 @@ function recruitDelete(recruitId) {
     const accessToken = localStorage.getItem("accessToken");
 
     axios
-        .delete(`api/recruit/my/post/${recruitId}`, {
+        .delete(`/api/recruit/my/post/${recruitId}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         })
         .then(function (response) {
-            alert("삭제을 완료했습니다.");
+            alert("삭제를 완료했습니다.");
             window.location.reload();
         })
         .catch(function (error) {
