@@ -9,8 +9,6 @@ function getMyClubApplication() {
     // let clubId = urlParams.get("id");
     // console.log("clubId", clubId);
 
-    // const authorized = localStorage.getItem("authorized");
-    // const token = JSON.parse(authorized).accessToken.value;
     const token = localStorage.getItem("accessToken");
 
     axios
@@ -29,21 +27,92 @@ function getMyClubApplication() {
                 const myClubAppplicationList = document.querySelector(
                     ".my-club-application",
                 );
+                // 신청서 내용들을 하나로 감싸주는 div = clubApplication
+                const clubApplication = document.createElement("div");
+                clubApplication.className = `${clubApplication} ${application.userId} ${application.clubId}`;
+
                 const user = document.createElement("div");
                 user.className = "user";
                 user.innerHTML = `${application.userId}`;
-                myClubAppplicationList.appendChild(user);
-                console.log("뭐가나옴?", response.data);
+                clubApplication.appendChild(user);
 
                 const message = document.createElement("div");
                 message.className = "message";
                 message.innerHTML = `${application.message}`;
-                myClubAppplicationList.appendChild(message);
+                clubApplication.appendChild(message);
 
                 const status = document.createElement("div");
                 status.className = "status";
                 status.innerHTML = `${application.status}`;
-                myClubAppplicationList.appendChild(status);
+                clubApplication.appendChild(status);
+                myClubAppplicationList.appendChild(clubApplication);
+
+                const userAndClub = clubApplication.className.split(" ");
+                const userId = userAndClub[2];
+                const clubId = userAndClub[3];
+                const token = localStorage.getItem("accessToken");
+
+                const approveBtn = document.createElement("button");
+                approveBtn.className = "approval";
+                approveBtn.innerHTML = "승인";
+                approveBtn.addEventListener("click", () => {
+                    axios
+                        .put(
+                            `/api/applying-club/${clubId}/${userId}`,
+                            {
+                                permission: true,
+                            },
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            },
+                        )
+                        .then(function (response) {
+                            console.log("신청서 리뷰 리스폰스", response);
+                            //폼 제출 후 원래 페이지로 이동
+                            alert(`동호회 가입을 승인했습니다.`);
+                            location.reload();
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+
+                            // 이 부분 세분화해서 에러 메세지별 에러메세지 띄우기
+                            alert("동아리 신청서 처리 중 에러가 발생했습니다.");
+                        });
+                });
+                clubApplication.appendChild(approveBtn);
+
+                const rejectionBtn = document.createElement("button");
+                rejectionBtn.className = "rejection";
+                rejectionBtn.innerHTML = "거절";
+                rejectionBtn.addEventListener("click", () => {
+                    axios
+                        .put(
+                            `/api/applying-club/${clubId}/${userId}`,
+                            {
+                                permission: false,
+                            },
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            },
+                        )
+                        .then(function (response) {
+                            console.log("신청서 리뷰 리스폰스", response);
+                            //폼 제출 후 원래 페이지로 이동
+                            alert(`동호회 가입을 거절했습니다.`);
+                            location.reload();
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+
+                            // 이 부분 세분화해서 에러 메세지별 에러메세지 띄우기
+                            alert("동아리 신청서 처리 중 에러가 발생했습니다.");
+                        });
+                });
+                clubApplication.appendChild(rejectionBtn);
             });
         })
         .catch(function (error) {

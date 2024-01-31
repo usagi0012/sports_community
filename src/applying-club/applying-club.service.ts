@@ -171,32 +171,36 @@ export class ApplyingClubService {
                 "동아리 장만 승인/거절할 수 있습니다.",
             );
         }
-
-        if (!permission) {
-            // 승인을 거부했을 때의 로직.
-            // 동호회 신청서 삭제(해야하나? status를 만든 의미가 없는 것 같은데 그럼) - 한 번 물어보기.
-            // 동호회 신청 거절 알림
-            const message = `${club.name}동호회 가입 신청이 거부되었습니다.`;
-            await this.alramService.sendAlarm(memberId, message);
-        }
-
         // 요청한 신청서 찾기
         const userApplication = await this.clubApplicationRepository.findOne({
             where: { userId: memberId, clubId },
         });
         const applicationId = userApplication.id;
 
+        console.log("permission", permission);
+        if (!permission) {
+            // 승인을 거부했을 때의 로직.
+            // 동호회 신청서 삭제(해야하나? status를 만든 의미가 없는 것 같은데 그럼) - 한 번 물어보기.
+            // 동호회 신청 거절 알림
+            const message = `${club.name}동호회 가입 신청이 거부되었습니다.`;
+            // await this.alramService.sendAlarm(memberId, message);
+
+            await this.clubApplicationRepository.update(applicationId, {
+                status: ClubApplicationStatus.REJECTED,
+            });
+            throw new Error("신청이 거절되었습니다.");
+        }
+
         // 멤버가 이미 가입된 동아리가 있을 경우 에러처리
         // (신청서에서는 못보내지만 동아리 생성시 clubId 생기기 때문)
-        const isJoinedMember = this.UserRepository.findOne({
+        const isJoinedMember = await this.UserRepository.findOne({
             where: { id: memberId },
         });
-
-        if (isJoinedMember) {
-            const updatedApplication =
-                await this.clubApplicationRepository.update(applicationId, {
-                    status: ClubApplicationStatus.REJECTED,
-                });
+        console.log("조인 멤버 클럽아이디", isJoinedMember.clubId);
+        if (isJoinedMember.clubId) {
+            await this.clubApplicationRepository.update(applicationId, {
+                status: ClubApplicationStatus.REJECTED,
+            });
             throw new Error(
                 "신청자가 가입된 동호회가 있어 승인할 수 없습니다.",
             );
@@ -221,7 +225,7 @@ export class ApplyingClubService {
         // 알림 보내기 로직
 
         const message = `${club.name}동호회 가입 신청이 승인되었습니다.`;
-        await this.alramService.sendAlarm(memberId, message);
+        // await this.alramService.sendAlarm(memberId, message);
 
         return joinedUser;
     }
