@@ -25,10 +25,15 @@ async function displayRecruitInfo() {
 
 function createRecruitHTML(recruit) {
     return `
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myRecruitModal" onclick="findRecruit(${recruit.id})">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myRecruitModal" onclick="findRecruit(${
+            recruit.id
+        })">
             <h1>${recruit.title}</h1>
             <p><strong>규칙:</strong> ${recruit.rule}</p>
-            <p><strong>게임 시간:</strong> ${recruit.gamedate}</p>
+            <p><strong>게임 시간:</strong> ${recruit.gamedate.slice(
+                "T",
+                16,
+            )}</p>
             <p><strong>상태:</strong> ${recruit.status}</p>
         </button>
     `;

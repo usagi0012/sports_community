@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="css/club-detail.css" />
         <link rel="stylesheet" href="css/dropBar.css" />
     </head>
+
     <body>
         <div id="sameContainer"></div>
         <div class="bodyContainer">
@@ -38,6 +39,7 @@
                         동아리 삭제
                     </button>
                 </div>
+
                 <!-- 동아리 신청 모달창 -->
                 <div id="applyingClubModal" class="modal">
                     <div class="modal-content">
@@ -87,6 +89,7 @@
             // console.log("클럽상세이름", clubNameDiv.children);
             // console.log(clubNameDiv.children[0].textContent);
             clubNameDisplay.innerHTML = ``;
+
             function openModal() {
                 document.getElementById("updateClubModal").style.display =
                     "flex";
@@ -101,6 +104,7 @@
                 document.getElementById("applyingClubModal").style.display =
                     "flex";
             }
+
             function closeApplyingModal() {
                 document.getElementById("applyingClubModal").style.display =
                     "none";
@@ -179,6 +183,7 @@
                         // }
                     });
             }
+
             function moveToUpdatePage() {
                 const urlParams = new URLSearchParams(window.location.search);
                 console.log("urlParams", urlParams);
@@ -187,5 +192,65 @@
                 window.location.href = `update-club.html?id=${clubId}`;
             }
         </script>
+
+        <!-- 클럽매치 모달창 -->
+        <div id="clubMatchModal" class="modal">
+            <div id="modalContainer"></div>
+            <div class="modal-content" style="width: 400px">
+                <div class="modal-body">
+                    <form
+                        id="clubMatchForm"
+                        onsubmit="clubMatchApplication(event)"
+                    >
+                        <div class="form-group">
+                            <label for="message">Message:</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="message"
+                                name="message"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="Information">Information:</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="Information"
+                                name="Information"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="gamedate">Game Date:</label>
+                            <input
+                                type="datetime-local"
+                                class="form-control"
+                                id="gamedate"
+                                name="gamedate"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="endtime">End Time:</label>
+                            <input
+                                type="datetime-local"
+                                class="form-control"
+                                id="endtime"
+                                name="endtime"
+                                required
+                            />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Submit
+                        </button>
+                    </form>
+                </div>
+                <button onclick="closeClubMatchModal()">닫기</button>
+            </div>
+        </div>
+        <!-- 클럽매치 모달창 -->
     </body>
 </html>
