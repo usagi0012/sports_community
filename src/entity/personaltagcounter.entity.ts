@@ -29,7 +29,7 @@ export class Personaltagcounter {
     @Column()
     @ApiProperty({
         description: "조던",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "0",
     })
     jorden: number;
 
@@ -41,7 +41,7 @@ export class Personaltagcounter {
     @Column()
     @ApiProperty({
         description: "정대만",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     daeman: number;
 
@@ -53,7 +53,7 @@ export class Personaltagcounter {
     @Column()
     @ApiProperty({
         description: "서태웅",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     teawoong: number;
 
@@ -65,7 +65,7 @@ export class Personaltagcounter {
     @Column()
     @ApiProperty({
         description: "채치수",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "0",
     })
     chisu: number;
 
@@ -77,7 +77,7 @@ export class Personaltagcounter {
     @Column()
     @ApiProperty({
         description: "커리",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     curry: number;
 
@@ -89,7 +89,7 @@ export class Personaltagcounter {
     @Column()
     @ApiProperty({
         description: "어빙",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "0",
     })
     irving: number;
 
@@ -101,7 +101,7 @@ export class Personaltagcounter {
     @Column()
     @ApiProperty({
         description: "으악새",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "0",
     })
     yakbird: number;
 
@@ -113,7 +113,7 @@ export class Personaltagcounter {
     @Column()
     @ApiProperty({
         description: "지각",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     late: number;
 
@@ -125,7 +125,7 @@ export class Personaltagcounter {
     @Column()
     @ApiProperty({
         description: "도망감",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     run: number;
 
@@ -137,7 +137,7 @@ export class Personaltagcounter {
     @Column()
     @ApiProperty({
         description: "도둑",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "0",
     })
     thief: number;
 
@@ -149,7 +149,7 @@ export class Personaltagcounter {
     @Column()
     @ApiProperty({
         description: "예민함",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "0",
     })
     mean: number;
 
@@ -161,7 +161,7 @@ export class Personaltagcounter {
     @Column()
     @ApiProperty({
         description: "파출리아",
-        example: "0 또는 1의 값을 입력해주세요.",
+        example: "1",
     })
     zaza: number;
 

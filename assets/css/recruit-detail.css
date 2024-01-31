@@ -1,0 +1,222 @@
+* {
+    margin: 0;
+    padding: 0;
+    /* box-sizing: border-box; */
+}
+
+html {
+    font-size: 10px;
+}
+
+ul,
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.btn {
+    text-decoration: none;
+    font-size: 1.4rem;
+    color: black;
+}
+
+body {
+    display: flex;
+    justify-content: center; /* 가운데 정렬을 위해 추가 */
+    height: 100vh; /* 화면 전체 높이를 채우도록 설정 */
+    margin: 0; /* Body의 기본 마진 제거 */
+    min-width: 320px;
+}
+
+.make-vertical {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-list {
+    display: flex;
+    justify-content: center; /* 가운데 정렬을 위해 추가 */
+    align-items: center; /* 가운데 정렬을 위해 추가 */
+    margin-top: 10%;
+}
+
+.board-wrap {
+    width: 1000px;
+    margin: 100px auto;
+}
+
+.board-title {
+    margin-bottom: 30px;
+}
+
+.board-title strong {
+    font-size: 3rem;
+}
+
+.board-title p {
+    margin-top: 5px;
+    font-size: 1.4rem;
+}
+
+.bt-wrap {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0;
+}
+
+.bt-wrap a {
+    display: inline-block;
+    min-width: 80px;
+    margin-left: 10px;
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 2px;
+    font-size: 1.4rem;
+}
+
+.bt-wrap a:first-child {
+    margin-left: 0;
+}
+
+.bt-wrap a.on {
+    background: #000;
+    color: #fff;
+}
+
+.board-page {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0;
+}
+
+.board-page a {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ddd;
+    border-left: 0;
+    box-sizing: border-box;
+    vertical-align: middle;
+    line-height: 100%;
+}
+
+.board-page a.bt {
+    padding-top: 10px;
+    font-size: 1.2rem;
+    letter-spacing: -1px;
+}
+
+.board-page a.num {
+    padding-top: 9px;
+    font-size: 1.4rem;
+}
+
+.board-page a.num.on {
+    border-color: #000;
+    background: #000;
+    color: #fff;
+}
+
+.board-page a:first-child {
+    border-left: 1px solid #ddd;
+}
+
+.main-list a {
+    margin-right: 2rem;
+}
+
+h3,
+h5 {
+    margin: 0px; /* 기본 마진 제거 */
+}
+
+.board-detail {
+    width: 100%;
+    border-top: 2px solid #000;
+}
+
+.board-detail .title {
+    padding: 20px 15px;
+    border-bottom: 1px dashed #ddd;
+    font-size: 2rem;
+}
+
+.board-detail .info {
+    padding: 15px;
+    border-bottom: 1px solid #999;
+    font-size: 0;
+}
+
+.board-detail .info dl {
+    position: relative;
+    display: inline-block;
+    padding: 0 20px;
+}
+
+.board-detail .info dl:first-child {
+    padding-left: 0;
+}
+
+.board-detail .info dl::before {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 0;
+    bottom: 0;
+    display: block;
+    width: 1px;
+    height: 20px;
+    background: #ddd;
+}
+
+.board-detail .info dl:first-child::before {
+    display: none;
+}
+
+.board-detail .info dl dt,
+.board-detail .info dl dd {
+    display: inline-block;
+    font-size: 1.6rem;
+}
+
+.board-detail .info dl dd {
+    margin-left: 10px;
+    color: #777;
+}
+
+.board-detail .cont {
+    padding: 15px;
+    border-bottom: 1px solid #000;
+    line-height: 160%;
+    font-size: 1.5rem;
+}
+
+@media (max-width: 1000px) {
+    .board-wrap {
+        width: 100%;
+        min-width: 320px;
+        padding: 0 30px;
+        box-sizing: border-box;
+    }
+    .board-detail .info dl {
+        width: 50%;
+        padding: 0;
+    }
+
+    .board-detail .info dl:nth-child(-n + 7) {
+        margin-bottom: 5px;
+    }
+
+    .board-detail .info dl::before {
+        display: none;
+    }
+
+    .board-detail .info dl dt,
+    .board-detail .info dl dd {
+        font-size: 1.4rem;
+    }
+}

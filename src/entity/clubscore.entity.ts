@@ -37,7 +37,7 @@ export class Clubscore {
     @ApiProperty({
         description: "성격",
         default: 1,
-        example: "1부터 5사이의 숫자를 입력해주세요.",
+        example: "3",
     })
     @Column({
         type: "decimal",
@@ -67,7 +67,7 @@ export class Clubscore {
     @ApiProperty({
         description: "실력",
         default: 1,
-        example: "1부터 5사이의 숫자를 입력해주세요.",
+        example: "3",
     })
     abilityAmount: number;
 

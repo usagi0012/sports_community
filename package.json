@@ -37,7 +37,6 @@
         "@nestjs/typeorm": "^10.0.1",
         "@sparticuz/chromium-min": "^119.0.2",
         "@nestjs/websockets": "^10.3.0",
-        "aws-sdk": "^2.1537.0",
         "axios": "^1.6.5",
         "bcrypt": "^5.1.1",
         "cheerio": "^1.0.0-rc.12",

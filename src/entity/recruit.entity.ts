@@ -1,12 +1,10 @@
 import { User } from "./user.entity";
-import { Match } from "./match.entity";
 import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
     JoinColumn,
     ManyToOne,
-    OneToMany,
     BeforeInsert,
     BeforeUpdate,
 } from "typeorm";
