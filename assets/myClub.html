@@ -25,7 +25,7 @@
                         class="myClubApplication"
                         onclick="moveToGetMyClubApplication()"
                     >
-                        동아리 신청서 조회
+                        신청서 조회
                     </button>
 
                     <button class="updateBtn" onclick="moveToUpdatePage() ">
@@ -35,17 +35,23 @@
                     <button class="deleteBtn" onclick="deleteCheck()">
                         동아리 삭제
                     </button>
-              
+
                     <button class="matchManagement">대결 관리</button>
                 </div>
                 <div class="clubDetailContainer" id="clubDetailContainer">
-                    <div class="name">이름</div>
-                    <div class="region">지역</div>
-                    <div class="score">점수</div>
-                    <div class="member">회원수</div>
-                    <div class="createdAt">생성일자</div>
-                    <div class="clubMaster">동호회장</div>
-                    <div class="details">상세설명</div>
+                    <div class="firstRow">
+                        <div class="name">이름</div>
+                        <div class="region">지역</div>
+                        <div class="createdAt">생성일자</div>
+                    </div>
+                    <div class="secondRow">
+                        <div class="clubMaster">동호회장</div>
+                        <div class="member">회원수</div>
+                        <div class="score">점수</div>
+                    </div>
+                    <div class="detialRow">
+                        <div class="details">상세설명</div>
+                    </div>
                 </div>
             </div>
         </div>

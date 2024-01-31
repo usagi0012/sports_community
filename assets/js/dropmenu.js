@@ -177,11 +177,14 @@ async function logout() {
                 "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             document.cookie =
                 "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
+            alert("로그아웃 되었습니다.");
             window.location.href = "index.html";
         } catch (error) {
             console.log(error);
             alert("로그아웃에 실패하였습니다.");
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            window.location.href = "index.html";
 
             if (
                 error.response &&

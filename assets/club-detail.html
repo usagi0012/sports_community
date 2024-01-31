@@ -29,6 +29,9 @@
                         동아리 신청
                     </button>
                     <button class="matchBtn">동아리 대결 신청</button>
+                    <button class="toMyClubBtn" onclick="toMyClub()">
+                        관리페이지 이동
+                    </button>
 
                     <!-- 내 동아리 들어가면 동아리 삭제 버튼 띄우기 -->
                     <button class="deleteBtn" onclick="deleteCheck()">
@@ -40,15 +43,14 @@
                     <div class="modal-content">
                         <!-- 기본값으로 클릭한 동아리의 id가 들어가도록 설정하기 
                 하지만 사용자에게 보여주는 값은 동아리 "이름"이 보여질 수 있도록 하기 -->
-                        <label for="Applyingclub">지원할 동아리:</label>
-                        <p id="clubNameDisplay"></p>
-                        <br />
-                        <label for="description">지원이유:</label>
+                        <label for="description" id="applyDescription"
+                            >지원 이유</label
+                        >
                         <textarea id="description1"></textarea>
-                        <br />
-
-                        <button onclick="submitApplyingForm()">제출</button>
-                        <button onclick="closeApplyingModal()">닫기</button>
+                        <div class="modalBtnContainer">
+                            <button onclick="submitApplyingForm()">제출</button>
+                            <button onclick="closeApplyingModal()">닫기</button>
+                        </div>
                     </div>
                 </div>
                 <div class="clubDetailContainer" id="clubDetailContainer">
@@ -58,11 +60,13 @@
                         <div class="createdAt">생성일자</div>
                     </div>
                     <div class="secondRow">
-                        <div class="member">회원수</div>
                         <div class="clubMaster">동호회장</div>
+                        <div class="member">회원수</div>
                         <div class="score">점수</div>
                     </div>
-                    <div class="details">상세설명</div>
+                    <div class="detialRow">
+                        <div class="details">상세설명</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -130,11 +134,19 @@
                     )
                     .then(function (response) {
                         console.log(response);
-                        alert(response.data.message);
+                        if (
+                            response.data.error ==
+                            "지원서 신청은 한 곳만 가능합니다."
+                        ) {
+                            alert(response.data.error);
+                        } else {
+                            alert(response.data.message);
+                        }
                         closeApplyingModal();
                     })
                     .catch(function (error) {
                         console.log(error.response);
+                        alert(error.response.data.message);
                     });
             }
 
