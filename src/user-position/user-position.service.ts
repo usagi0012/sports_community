@@ -43,8 +43,8 @@ export class UserPositionService {
         userPosition.forward = createUserPositionDto.forward || false;
         userPosition.userId = user.id;
 
-        const createdPosition =
-            await this.userPositionRepository.save(userPosition);
+        const createdPosition = console.log(userPosition);
+        await this.userPositionRepository.save(userPosition);
         return {
             statusCode: 201,
             message: "선호 포지션 등록을 성공했습니다.",
