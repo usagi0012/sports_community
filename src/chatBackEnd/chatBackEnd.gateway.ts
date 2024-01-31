@@ -115,9 +115,9 @@ export class ChatBackEndGateway
         //client=>this.server
         // this.server.to(roomId) : 나를 포함한 방 전원에게 보내는 것
         // client.to(roomId) : 나를 제외한 방 전원에게 보내는 것
-        console.log("룸아이디 슬라이스", roomId.slice(-1));
-        console.log("룸아이디 슬라이스", typeof roomId.slice(-1));
+
         console.log(client.id, client.data.nickname, message, roomId);
+        console.log(typeof roomId);
         this.server.to(roomId).emit("getMessage", {
             //실제 데이터로 바꾸기
             id: client.id,
@@ -125,6 +125,7 @@ export class ChatBackEndGateway
             message,
             roomId,
         });
+        console.log("getMessage서버에서 보낸 뒤");
         // client.rooms.forEach(
         //     (roomId) =>
         //         client.to(roomId).emit("getMessage", {

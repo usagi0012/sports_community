@@ -180,10 +180,10 @@
                     const thisRoomId = localStorage.getItem("thisRoomId");
                     console.log({ thisRoomId });
                     console.log("*********", roomId);
-                    console.log(myInfo.id);
-                    console.log(id);
+                    console.log("마이 인포 아이디", myInfo.id);
+                    console.log("디스 룸 아이디", thidRoomId);
                     /*  if (thisRoomId === roomId) { */
-                    if (myInfo.id == id) {
+                    if (roomId == thisRoomId) {
                         html += '<div class="outgoing_msg">';
                         html += '<div class="sent_msg">';
                         html += "<p>" + message + "</p>";
@@ -218,9 +218,6 @@
                 const roomId = localStorage.getItem("thisRoomId");
 
                 response.title.forEach((v, index) => {
-                    console.log("제목나눔", v);
-                    console.log("oooo", roomId);
-                    console.log("oooo", response.id[index]);
                     html +=
                         '<div class="chat_list ' +
                         (roomId === response.id[index]
@@ -294,7 +291,9 @@
             // Column count doesn't match value count at row 1
             // 룸 아이디를 못넘겨주면 어떻게 하지?
             // => messageData를 넘겨줘도 message만 넘어간다.
-            const roomId = localStorage.getItem("roomId");
+            const roomId = localStorage.getItem("thisRoomId");
+            console.log("here");
+            console.log("roomId", roomId);
             const messageData = {
                 roomId: roomId,
                 message: $(".write_msg").val(),
