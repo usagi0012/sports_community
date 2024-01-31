@@ -5,7 +5,56 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
         <link rel="stylesheet" href="./css/recruit-post.css" />
+        <script
+            async
+            src="https://code.jquery.com/jquery-3.6.4.min.js"
+        ></script>
+
+        <script
+            type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils"
+        ></script>
+        <script
+            type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils&submodules=geocoder"
+        ></script>
+
+        <style>
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                justify-content: center;
+                align-items: center;
+            }
+
+            .modal-content {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 5px;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            /* 닫기 버튼 스타일 */
+
+            .close-button {
+                cursor: pointer;
+                font-size: 18px;
+            }
+        </style>
     </head>
+
     <body>
         <div class="make-vertical">
             <div class="main-list-background">
@@ -66,21 +115,121 @@
                             </dl>
                             <dl>
                                 <dt>gps</dt>
+
                                 <dd>
+                                    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+                                    <button onclick="openMapModal()">
+                                        지도
+                                    </button>
                                     <input
                                         id="input-gps"
                                         type="text"
-                                        placeholder="gps을 입력하세요"
+                                        readonly
                                     />
+
+                                    <div
+                                        id="mapModal"
+                                        class="modal"
+                                        onclick="closeMapModal()"
+                                    >
+                                        <div
+                                            class="modal-content"
+                                            onclick="event.stopPropagation();"
+                                        >
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5">
+                                                    장소 설정
+                                                </h1>
+                                                <span
+                                                    class="close-button"
+                                                    onclick="closeMapModal()"
+                                                    >&times;</span
+                                                >
+                                            </div>
+                                            <div class="modal-body">
+                                                <div
+                                                    id="map"
+                                                    style="
+                                                        width: 500px;
+                                                        height: 500px;
+                                                    "
+                                                ></div>
+                                                <input
+                                                    type="text"
+                                                    id="address"
+                                                    placeholder="주소를 입력하세요"
+                                                />
+                                                <button id="submit">
+                                                    검색
+                                                </button>
+                                                <button id="confirm">
+                                                    확인
+                                                </button>
+                                                <button id="getCurrentLocation">
+                                                    현재 위치로 이동
+                                                </button>
+                                                <button
+                                                    id="confirmDORO"
+                                                    onclick="roadAddress()"
+                                                ></button>
+                                                <button
+                                                    id="confirmJUSO"
+                                                    onclick="jibunAddress()"
+                                                ></button>
+                                                <div id="checkbox"></div>
+                                                <script src="js/map.js"></script>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button
+                                                    type="button"
+                                                    onclick="closeMapModal()"
+                                                >
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <script>
+                                        function roadAddress() {
+                                            const roadAddress =
+                                                $("#confirmDORO").text();
+                                            $("#input-gps").val(roadAddress);
+
+                                            if (roadAddress) {
+                                                closeMapModal();
+                                            }
+                                        }
+
+                                        function jibunAddress() {
+                                            const jibunAddress =
+                                                $("#confirmJUSO").text();
+                                            $("#input-gps").val(jibunAddress);
+                                            if (jibunAddress) {
+                                                closeMapModal();
+                                            }
+                                        }
+
+                                        function openMapModal() {
+                                            const modal = $("#mapModal");
+                                            modal.css("display", "block");
+                                        }
+
+                                        function closeMapModal() {
+                                            const modal = $("#mapModal");
+                                            modal.css("display", "none");
+                                        }
+                                    </script>
                                 </dd>
                             </dl>
                             <dl>
                                 <dt>경기날짜</dt>
                                 <dd>
                                     <input
-                                        id="input-gamedate"
-                                        type="text"
-                                        placeholder="경기 날짜를 입력하세요"
+                                        id="input-gamedate "
+                                        type="text "
+                                        placeholder="경기 날짜를 입력하세요 "
                                     />
                                 </dd>
                             </dl>
@@ -88,9 +237,9 @@
                                 <dt>경기종료</dt>
                                 <dd>
                                     <input
-                                        id="input-endtime"
-                                        type="text"
-                                        placeholder="경기 종료 날짜를 입력하세요"
+                                        id="input-endtime "
+                                        type="text "
+                                        placeholder="경기 종료 날짜를 입력하세요 "
                                     />
                                 </dd>
                             </dl>
@@ -98,12 +247,12 @@
                                 <dt>경기규칙</dt>
                                 <dd>
                                     <select
-                                        id="ruleSelect"
-                                        placeholder="경기 규칙을 선택하세요"
+                                        id="ruleSelect "
+                                        placeholder="경기 규칙을 선택하세요 "
                                     >
-                                        <option value="3대3">3대3</option>
-                                        <option value="4대4">4대4</option>
-                                        <option value="5대5">5대5</option>
+                                        <option value="3대3 ">3대3</option>
+                                        <option value="4대4 ">4대4</option>
+                                        <option value="5대5 ">5대5</option>
                                     </select>
                                 </dd>
                             </dl>
@@ -111,29 +260,29 @@
                                 <dt>모집인원</dt>
                                 <dd>
                                     <input
-                                        id="input-totalmember"
-                                        type="text"
-                                        placeholder="모집 인원을 입력하세요"
+                                        id="input-totalmember "
+                                        type="text "
+                                        placeholder="모집 인원을 입력하세요 "
                                     />
                                 </dd>
                             </dl>
                         </div>
                         <div class="content">
                             <textarea
-                                id="input-content"
-                                placeholder="내용 입력하세요"
+                                id="input-content "
+                                placeholder="내용 입력하세요 "
                             ></textarea>
                         </div>
                     </div>
                     <div class="bt-wrap">
-                        <a href="#" id="register-btn" class="on">등록</a>
-                        <a href="#" id="register-cancel-btn">취소</a>
+                        <a href="# " id="register-btn " class="on">등록</a>
+                        <a href="# " id="register-cancel-btn ">취소</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="./js/recruit-post.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js "></script>
+        <script src="./js/recruit-post.js "></script>
     </body>
 </html>
