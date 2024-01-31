@@ -86,11 +86,14 @@ export class Match {
     @BeforeUpdate()
     updateProgress() {
         const now = new Date();
+        const utc = now.getTime();
+        const koreaTimeDiff = 9 * 60 * 60 * 1000;
+        const korNow = new Date(utc + koreaTimeDiff);
 
-        if (this.gameDate <= now && this.endTime > now) {
+        if (this.gameDate <= korNow && this.endTime > korNow) {
             this.progress = Progress.DURING;
         } else if (
-            this.endTime <= now &&
+            this.endTime <= korNow &&
             this.progress !== Progress.EVALUATION_COMPLETED
         ) {
             this.progress = Progress.PLEASE_EVALUATE;
