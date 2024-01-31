@@ -40,7 +40,11 @@ export class RecruitService {
             ...recruitDTO,
         });
 
-        return await this.recruitRepository.save(newRecruit);
+        await this.recruitRepository.save(newRecruit);
+
+        return {
+            message: "모집글이 등록되었습니다.",
+        };
     }
 
     //모집 글 조회
@@ -237,22 +241,21 @@ export class RecruitService {
                 id: recruitId,
             },
         });
-
         if (!existingRecruit) {
             throw new NotFoundException(
                 `ID가 ${recruitId}인 리크루트를 찾을 수 없습니다.`,
             );
         }
-
         await this.checkHost(hostId, recruitId);
-
         if (existingRecruit.progress !== Progress.EVALUATION_COMPLETED) {
             throw new NotFoundException(
                 "이미 컴펌된 경기이거나 평가 후 삭제할 수 있습니다. ",
             );
         }
-
-        return await this.recruitRepository.remove(existingRecruit);
+        await this.recruitRepository.delete({ id: recruitId });
+        return {
+            message: "모집글이 삭제되었습니다.",
+        };
     }
 
     private async findMatch(recruitId: number) {

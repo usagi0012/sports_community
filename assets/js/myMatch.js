@@ -48,6 +48,8 @@ async function cancelButton(matchId) {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
+
+        alert("취소를 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);
@@ -65,6 +67,8 @@ async function deleteButton(matchId) {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
+
+        alert("삭제를 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);
@@ -82,6 +86,8 @@ async function confirmButton(matchId) {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
+
+        alert("컴펌을 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);
@@ -99,6 +105,7 @@ async function evaluateButton(matchId) {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
+        alert("평가를 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);

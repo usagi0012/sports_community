@@ -135,6 +135,12 @@ function getMyClubId() {
                         updateBtn.style.display = "block";
                         const deleteBtn = document.querySelector(".deleteBtn");
                         deleteBtn.style.display = "block";
+                        const myClubApplication =
+                            document.querySelector(".myClubApplication");
+                        myClubApplication.style.display = "block";
+                        const matchManagement =
+                            document.querySelector(".matchManagement");
+                        matchManagement.style.display = "block";
                     } else {
                     }
                 })

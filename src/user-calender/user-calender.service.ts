@@ -47,25 +47,23 @@ export class UserCalenderService {
         };
     }
 
-    //특정 캘린더 일정 조회하기(calenderId를 이용해서 특정 캘린더 찾기)
     async findCalenderByDate(userId, date) {
         // 해당 날짜의 시작과 끝을 계산
         const startOfDay = new Date(date);
         const endOfDay = new Date(date);
         endOfDay.setDate(endOfDay.getDate() + 1);
 
-        const getCalenderByCalenderId =
-            await this.userCalenderRepository.findOne({
-                where: {
-                    date: Between(startOfDay, endOfDay),
-                    userId: userId,
-                },
-                relations: ["user"],
-            });
+        const calenders = await this.userCalenderRepository.find({
+            where: {
+                date: Between(startOfDay, endOfDay),
+                userId: userId,
+            },
+            relations: ["user"],
+        });
 
-        console.log("찾은정보", getCalenderByCalenderId);
+        console.log("찾은 정보", calenders);
 
-        if (!getCalenderByCalenderId) {
+        if (!calenders || calenders.length === 0) {
             return {
                 statusCode: 200, // 상태 코드를 200으로 변경
                 message: "해당 날짜에 등록된 일정이 없습니다.",
@@ -73,16 +71,20 @@ export class UserCalenderService {
             };
         }
 
-        if (getCalenderByCalenderId.user.id !== userId) {
-            throw new NotAcceptableException("권한이 없습니다.");
-        }
+        // 권한 체크 및 필요한 정보 처리 (예: user 필드 삭제)
+        calenders.forEach((calender) => {
+            if (calender.user.id !== userId) {
+                throw new NotAcceptableException("권한이 없습니다.");
+            }
+            delete calender.user;
+        });
 
-        delete getCalenderByCalenderId.user;
+        console.log("보내는정보확인", calenders);
 
         return {
             statusCode: 200,
             message: "해당 일정의 캘린더를 조회했습니다.",
-            data: { getCalenderByCalenderId },
+            data: { calenders },
         };
     }
 
@@ -113,7 +115,7 @@ export class UserCalenderService {
             where: { id: userId },
         });
         const userCalender = await this.userCalenderRepository.findOne({
-            where: { date: calenderId },
+            where: { id: calenderId },
             relations: ["user"],
         });
         if (!userCalender) {
@@ -153,7 +155,7 @@ export class UserCalenderService {
             where: { id: userId },
         });
         const userCalender = await this.userCalenderRepository.findOne({
-            where: { date: calenderId },
+            where: { id: calenderId },
             relations: ["user"],
         });
         if (!userCalender) {

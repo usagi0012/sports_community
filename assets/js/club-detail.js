@@ -5,6 +5,7 @@ window.onload = function () {
     loadHeader();
     getClubDetail(clubId);
     hasClub();
+    isClubMaster();
     isMyClub();
     loadFooter();
 };
@@ -104,6 +105,29 @@ export default function getClubDetail(clubId) {
         });
 }
 
+function isClubMaster() {
+    const token = localStorage.getItem("accessToken");
+
+    axios
+        .get(`/api/club/clubMaster`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            console.log("dsfdf", response);
+            console.log(response.data.statusCode);
+            if (response.data.statusCode === 200) {
+                const applyingClubMatch =
+                    document.querySelector(".applyingClubMatch");
+                applyingClubMatch.style.display = "block";
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
 function isMyClub() {
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -124,7 +148,9 @@ function isMyClub() {
                 updateBtn.style.display = "block";
                 const deleteBtn = document.querySelector(".deleteBtn");
                 deleteBtn.style.display = "block";
-            } else {
+                const applyingClubMatch =
+                    document.querySelector(".applyingClubMatch");
+                applyingClubMatch.style.display = "none";
             }
         })
         .catch(function (error) {

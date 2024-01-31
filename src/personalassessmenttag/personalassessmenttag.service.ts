@@ -154,6 +154,82 @@ export class PersonalassessmenttagService {
         return topThreeTagsObject;
     }
 
+    async findOtherOneUserAssessment(userId: number) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+
+        if (!user) {
+            throw new NotFoundException("해당 유저를 찾을 수 없습니다.");
+        }
+
+        const userAssessment = await this.userscoreRepository.findOne({
+            where: { profileId: user.id },
+            select: {
+                personalityAmount: true,
+                personality: true,
+                abilityAmount: true,
+                ability: true,
+                count: true,
+            },
+        });
+
+        if (!userAssessment) {
+            throw new NotFoundException("유저 평점을 찾을 수 없습니다.");
+        }
+
+        return userAssessment;
+    }
+
+    async findOtherOneUserTag(userId: number) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+
+        if (!user) {
+            throw new NotFoundException("해당 유저를 찾을 수 없습니다.");
+        }
+
+        const userTag = await this.personaltagcounterRepository.findOne({
+            where: { profileId: user.id },
+        });
+        if (!userTag) {
+            throw new NotFoundException("유저의 개인 태그를 찾을 수 없습니다.");
+        }
+
+        // 공통 열을 제외한 열 이름 추출
+        const tagColumns = Object.keys(userTag).filter(
+            (key) =>
+                key !== "id" &&
+                key !== "profileId" &&
+                key !== "createdAt" &&
+                key !== "updatedAt" &&
+                key !== "userProfile",
+        );
+
+        // 태그 열 중에서 최댓값을 가진 열 찾기
+        const maxTagColumn = tagColumns.reduce((maxColumn, currentColumn) => {
+            if (userTag[currentColumn] > userTag[maxColumn]) {
+                return currentColumn;
+            }
+            return maxColumn;
+        }, tagColumns[0]);
+
+        // 최대값을 기준으로 상위 3개 태그 추출
+        const topThreeTags = tagColumns
+            .filter((column) => column !== maxTagColumn)
+            .sort((a, b) => userTag[b] - userTag[a])
+            .slice(0, 3);
+
+        // 상위 3개 태그 및 그 값들을 가진 객체 생성
+        const topThreeTagsObject = topThreeTags.reduce((result, tag) => {
+            result[tag] = userTag[tag];
+            return result;
+        }, {});
+
+        return topThreeTagsObject;
+    }
+
     async createPersonalAssessment(
         matchId: number,
         recuritedId: number,
