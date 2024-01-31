@@ -41,7 +41,7 @@ export class ClubController {
         try {
             console.log("1######");
             const result = await this.clubService.hasClub(userId);
-
+            console.log("true 떠야함", result);
             return {
                 statusCode: 200,
                 message: "조회에 성공했습니다.",
@@ -53,7 +53,6 @@ export class ClubController {
 
             return {
                 statusCode: 400,
-                message: "조회에 실패했습니다.",
                 error: error.message,
             };
         }
@@ -67,6 +66,30 @@ export class ClubController {
         const clubId = await this.clubService.getMyClubId(userId);
 
         return clubId;
+    }
+
+    // 동호회 장인지 체크
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("/clubMaster")
+    async isClubMaster(@UserId() userId: number) {
+        try {
+            const result = await this.clubService.isClubMaster(userId);
+
+            return {
+                statusCode: 200,
+                message: "동호회장 조회에 성공했습니다.",
+                data: result,
+            };
+        } catch (error) {
+            console.log(error);
+
+            return {
+                statusCode: 400,
+                message: "동호회장 조회에 실패했습니다.",
+                error: error.message,
+            };
+        }
     }
 
     //동아리 상세 조회

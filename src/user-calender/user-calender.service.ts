@@ -115,7 +115,7 @@ export class UserCalenderService {
             where: { id: userId },
         });
         const userCalender = await this.userCalenderRepository.findOne({
-            where: { date: calenderId },
+            where: { id: calenderId },
             relations: ["user"],
         });
         if (!userCalender) {
@@ -155,7 +155,7 @@ export class UserCalenderService {
             where: { id: userId },
         });
         const userCalender = await this.userCalenderRepository.findOne({
-            where: { date: calenderId },
+            where: { id: calenderId },
             relations: ["user"],
         });
         if (!userCalender) {
