@@ -136,7 +136,25 @@ async function toMyClub() {
     if (!token) {
         alert("로그인 후 이용 가능합니다.");
     }
-    window.location.href = "myClub.html";
+    console.log("here");
+    axios
+        .get("/api/club/myClub", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            console.log("제발", response);
+            if (response.data.data === true) {
+                alert("가입된 동아리가 없습니다.");
+            } else {
+                window.location.href = "myClub.html";
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            console.log("백에서 return 잘 됐는데 왜 여기로 들어옴?ㄴ");
+        });
 }
 
 //로그아웃 하기
