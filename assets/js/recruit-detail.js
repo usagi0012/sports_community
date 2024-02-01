@@ -125,7 +125,8 @@ function submitApplication(recruitId) {
         )
         .then(function (response) {
             // 성공적으로 처리된 경우 추가적인 처리를 할 수 있습니다.
-            alert(`${response.data.message}`);
+            console.log(response);
+            alert("신청 완료");
             document
                 .getElementById("applyModal")
                 .setAttribute("hidden", "true");

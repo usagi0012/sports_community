@@ -50,20 +50,3 @@ function toRecruitPost() {
         window.location.href = "recruit-post.html";
     }
 }
-
-// function recruitPost() {
-//     const accessToken = localStorage.getItem("accessToken");
-//     axios
-//         .post("/api/recruit", {
-//             headers: {
-//                 Authorization: `Bearer ${accessToken}`,
-//             },
-//         })
-//         .then(function (response) {
-//             alert(response.data.message);
-//             window.location.href = `recruit-post.html`;
-//         })
-//         .catch(function (error) {
-//             console.log(error.response);
-//         });
-// }

@@ -76,6 +76,7 @@ dd {
 }
 
 #gpsBtn {
+    padding-top: 2px;
     border: 1px solid #6b6968;
     background-color: #eeeeee;
     text-align: center;
@@ -83,7 +84,7 @@ dd {
     cursor: pointer;
 }
 #gpsBtn:hover {
-    border: 2px solid #ffb13d;
+    border: 1px solid #ffb13d;
     background-color: #fff;
 }
 
