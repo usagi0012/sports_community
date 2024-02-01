@@ -1,10 +1,10 @@
 function openClubMatchModal() {
     urlParams = new URLSearchParams(window.location.search);
 
-    console.log("urlParams", urlParams);
+    // console.log("urlParams", urlParams);
 
-    const clubId = urlParams.get("id");
-    console.log("clubID", clubId);
+    // const clubId = urlParams.get("id");
+    // console.log("clubID", clubId);
 
     document.getElementById("clubMatchModal").style.display = "flex";
 }
