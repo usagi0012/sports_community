@@ -25,6 +25,11 @@
     cursor: pointer;
 }
 
+.clubName:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .clubId,
 .clubName,
 .clubRegion,
