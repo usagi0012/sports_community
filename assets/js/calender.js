@@ -232,6 +232,8 @@ $(".calendar-date").on("click", ".calendar-date__col", function () {
         : "";
 });
 
+let currentEvent = null; // 전역 변수로 현재 이벤트를 저장할 변수
+
 // 수정 모달창 열기 함수
 function openUpdateModal(event) {
     console.log("event 안에 내용", event);
@@ -242,9 +244,11 @@ function openUpdateModal(event) {
     document.getElementById("updateDescription").value = event.description;
     document.getElementById("updateColor").value = event.color;
 
-    // 수정 모달창에서 existDate를 반환
-    console.log("event반환하기 전", event);
-    return event;
+    // 현재 이벤트를 전역 변수에 저장
+    currentEvent = event;
+
+    // 수정 모달창에서 existDate를 반환 (필요한 경우에만 반환)
+    console.log("event 반환하기 전", event);
 }
 
 async function loadEventForSelectedDate(selectedDate) {
@@ -350,6 +354,7 @@ document
 
         // 수정된 일정 정보를 가져와서 프론트엔드에서 화면을 갱신할 수 있음
         const success = await updateCalendar(
+            currentEvent.id,
             updatedTitle,
             updatedDescription,
             updatedColor,
@@ -400,21 +405,16 @@ async function createCalendar(title, description, color, selectedDate) {
 }
 
 // updateCalendar 함수 정의
-async function updateCalendar(title, description, color) {
+async function updateCalendar(calenderId, title, description, color) {
     try {
         const accessToken = localStorage.getItem("accessToken");
-        const user = await axios.get(`/api/user/me`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
-        const userId = user.data.id;
+        console.log("여기", calenderId);
 
-        // userId 및 selectedDate를 이용하여 axios.put 호출
-        console.log("수정할때 params", selectedDate);
+        // userId 및 calenderId를 이용하여 axios.put 호출
         const response = await axios.put(
-            `/api/user/me/calender/${selectedDate}`,
+            `/api/user/me/calender/${calenderId}`,
             {
+                calenderId,
                 title,
                 description,
                 color,
@@ -426,7 +426,7 @@ async function updateCalendar(title, description, color) {
             },
         );
 
-        console.log(response.data);
+        console.log(response);
         // 수정이 성공하면 true 반환
         return true;
     } catch (error) {
@@ -444,14 +444,13 @@ async function updateCalendar(title, description, color) {
     }
 }
 
-async function deleteCalendar() {
+async function deleteCalendar(calenderId) {
     try {
         const accessToken = localStorage.getItem("accessToken");
 
-        // userId 및 selectedDate를 이용하여 axios.put 호출
-        console.log(selectedDate);
+        // userId 및 calenderId를 이용하여 axios.delete 호출
         const response = await axios.delete(
-            `/api/user/me/calender/${selectedDate}`,
+            `/api/user/me/calender/${calenderId}`,
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -481,7 +480,8 @@ async function deleteCalendar() {
 document
     .getElementById("deleteButtonId")
     .addEventListener("click", async () => {
-        const success = await deleteCalendar();
+        console.log(currentEvent.id);
+        const success = await deleteCalendar(currentEvent.id);
 
         if (success) {
             // 삭제 성공 시 필요한 동작 추가

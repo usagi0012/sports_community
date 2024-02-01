@@ -50,7 +50,7 @@ export default function getClubDetail(clubId) {
 
             const regionDiv = document.querySelector(".region");
             const region = document.createElement("div");
-            region.className = "region";
+            region.className = "regionDetail";
 
             region.innerHTML += `${regionData[response.data.region]}`;
 
@@ -58,33 +58,33 @@ export default function getClubDetail(clubId) {
 
             const scoreDiv = document.querySelector(".score");
             const score = document.createElement("div");
-            score.className = "score";
+            score.className = "scoreDetail";
             score.innerHTML += `${response.data.score}`;
             scoreDiv.appendChild(score);
 
             const memberDiv = document.querySelector(".member");
             const member = document.createElement("div");
-            member.className = "member";
+            member.className = "memberDetail";
             member.innerHTML += `${response.data.members}`;
             memberDiv.appendChild(member);
 
             const createdAtDiv = document.querySelector(".createdAt");
             const createdAt = document.createElement("div");
-            createdAt.className = "createdAt";
+            createdAt.className = "createdAtDetail";
             const date = response.data.createdAt.slice(0, 10);
             createdAt.innerHTML += `${date}`;
             createdAtDiv.appendChild(createdAt);
 
             const clubMasterDiv = document.querySelector(".clubMaster");
             const clubMaster = document.createElement("div");
-            clubMaster.className = "clubMaster";
+            clubMaster.className = "clubMasterDetail";
             clubMaster.innerHTML += `${response.data.users[0].name}`;
             clubMasterDiv.appendChild(clubMaster);
 
             const detailsDiv = document.querySelector(".details");
 
             const image = document.createElement("div");
-            image.className = "image";
+            image.className = "imageDetail";
             if (response.data.image) {
                 const imageElement = document.createElement("img");
                 imageElement.src = response.data.image;
@@ -94,7 +94,7 @@ export default function getClubDetail(clubId) {
             }
 
             const details = document.createElement("div");
-            details.className = "details";
+            details.className = "detailsDetail";
             details.innerHTML += `${response.data.description}`;
             detailsDiv.appendChild(details);
         })
@@ -135,6 +135,12 @@ function getMyClubId() {
                         updateBtn.style.display = "block";
                         const deleteBtn = document.querySelector(".deleteBtn");
                         deleteBtn.style.display = "block";
+                        const myClubApplication =
+                            document.querySelector(".myClubApplication");
+                        myClubApplication.style.display = "block";
+                        const matchManagement =
+                            document.querySelector(".matchManagement");
+                        matchManagement.style.display = "block";
                     } else {
                     }
                 })

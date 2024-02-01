@@ -1,3 +1,9 @@
+window.onload = function () {
+    loadHeader();
+    displayRecruitInfo();
+    loadFooter();
+};
+
 async function displayRecruitInfo() {
     try {
         const accessToken = localStorage.getItem("accessToken");
@@ -15,7 +21,7 @@ async function displayRecruitInfo() {
         response.data.forEach((recruit) => {
             const myRecruitHTML = createRecruitHTML(recruit);
             const myRecruitButtonHTML = createRecruitButtonHTML(recruit);
-            myRecruit.innerHTML += [myRecruitHTML, myRecruitButtonHTML];
+            myRecruit.innerHTML += [myRecruitHTML + myRecruitButtonHTML];
         });
     } catch (error) {
         console.log(error.response.data);
@@ -25,11 +31,16 @@ async function displayRecruitInfo() {
 
 function createRecruitHTML(recruit) {
     return `
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myRecruitModal" onclick="findRecruit(${recruit.id})">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myRecruitModal" onclick="findRecruit(${
+            recruit.id
+        })">
             <h1>${recruit.title}</h1>
-            <p><strong>규칙:</strong> ${recruit.rule}</p>
-            <p><strong>게임 시간:</strong> ${recruit.gamedate}</p>
-            <p><strong>상태:</strong> ${recruit.status}</p>
+            <p><strong>규칙 :</strong> ${recruit.rule}</p>
+            <p><strong>경기 날짜 :</strong> ${recruit.gamedate.slice(
+                "T",
+                10,
+            )}</p>
+            <p><strong>상태 :</strong> ${recruit.status}</p>
         </button>
     `;
 }
@@ -135,6 +146,7 @@ async function deleteButton(recruitId) {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
+        alert("삭제를 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);
@@ -157,7 +169,7 @@ async function evaluateGuest(recruitId) {
         );
 
         console.log(response.data);
-
+        alert("평가를 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);
@@ -230,6 +242,8 @@ async function approvebutton(matchId) {
                 },
             },
         );
+
+        alert("승인을 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);
@@ -253,6 +267,7 @@ async function rejectbutton(matchId) {
             },
         );
 
+        alert("거절을 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);

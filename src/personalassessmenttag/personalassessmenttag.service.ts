@@ -224,14 +224,17 @@ export class PersonalassessmenttagService {
         playOtherUserId: number,
         createPersonalAssessmentDto: CreatePersonalAssessmentDto,
     ) {
+
         if (playOtherUserId === userId) {
             throw new BadRequestException(
                 "당사자 본인의 설문지를 작성할 수 없습니다.",
             );
         }
+
         const recurit = await this.recruitRepository.findOne({
             where: { id: recuritId },
         });
+        console.log(recurit);
 
         if (!recurit) {
             throw new NotFoundException(

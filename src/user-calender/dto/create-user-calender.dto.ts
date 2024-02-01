@@ -17,6 +17,6 @@ export class CreateUserCalenderDto {
     description: string;
 
     @IsString()
-    @ApiProperty({ description: "색상", example: "red" })
+    @ApiProperty({ description: "색상", example: "#ff0000" })
     color: string;
 }

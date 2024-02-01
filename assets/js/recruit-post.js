@@ -1,4 +1,9 @@
-const titleInput = document.querySelector("#input-title");
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+};
+
+const titleInput = document.querySelector("#inputTitle");
 const regionSelect = document.getElementById("regionSelect");
 const gpsInput = document.querySelector("#input-gps");
 const gamedateInput = document.querySelector("#input-gamedate");
@@ -20,12 +25,13 @@ document
 function submitForm() {
     const title = titleInput.value;
     const region = regionSelect.value; // 수정된 부분
-    const gps = gpsInput.value;
     const gamedate = gamedateInput.value;
     const endtime = endtimeInput.value;
     const rule = ruleSelect.value; // 수정된 부분
     const totalmember = totalmemberInput.value;
     const content = contentTextarea.value;
+    //gps 값 임시로 지정
+    const gps = "임시";
 
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("accessToken");

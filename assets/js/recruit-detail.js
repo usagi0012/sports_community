@@ -1,4 +1,6 @@
 window.onload = function () {
+    loadHeader();
+    loadFooter();
     const urlParams = new URLSearchParams(window.location.search);
     let recruitId = urlParams.get("id");
     getRecruitDetail(recruitId);
@@ -10,11 +12,11 @@ window.onload = function () {
         });
 
     function openApplyingModal() {
-        document.getElementById("applyModal").removeAttribute("hidden");
+        document.getElementById("applyModal").classList.remove("hidden");
     }
 
     function closeApplyingModal() {
-        document.getElementById("applyModal").setAttribute("hidden", "true");
+        document.getElementById("applyModal").classList.add("hidden");
     }
 
     document
@@ -30,7 +32,7 @@ window.onload = function () {
         });
 };
 
-const feedBoardDetail = document.querySelector(".board-detail");
+const feedBoardDetail = document.querySelector(".detailContainer");
 
 function getRecruitDetail(recruitId) {
     const accessToken = localStorage.getItem("accessToken");
@@ -50,54 +52,49 @@ function getRecruitDetail(recruitId) {
             const topContent = document.createElement("div");
             topContent.classList.add("top");
             topContent.innerHTML = `
-                <div class="title">${recruitDetail.title}</div>
+                <label class="title">${recruitDetail.title}</label>
                 <div class="info">
-                    <dl>
-                        <dt>번호</dt>
-                        <dd>${recruitDetail.id}</dd>
-                    </dl>
-                    <dl>
-                        <dt>호스트</dt>
+                <div class="firstRow">
+                    <dl class="hostName">
+                        <dt>작성자</dt>
                         <dd>${recruitDetail.hostName}</dd>
                     </dl>
-                    <dl>
+                    <dl class="region">
                         <dt>지역</dt>
                         <dd>${recruitDetail.region}</dd>
                     </dl>
-                    <dl>
-                        <dt>gps</dt>
-                        <dd>${recruitDetail.gps}</dd>
-                    </dl>
-                    <dl>
-                        <dt>경기날짜</dt>
-                        <dd>${recruitDetail.gamedate.slice("T", 10)}</dd>
-                    </dl>
-                    <dl>
-                        <dt>경기마감</dt>
-                        <dd>${recruitDetail.endtime.slice("T", 10)}</dd>
-                    </dl>
-                    <dl>
-                        <dt>playtime</dt>
-                        <dd>${recruitDetail.runtime}</dd>
-                    </dl>
-                    <dl>
+                    <dl class="status">
+                    <dt>상태</dt>
+                    <dd>${recruitDetail.status}</dd>
+                </dl>
+                <dl class="gps">
+                <dd id="gpsBtn">${recruitDetail.gps}</dd>
+            </dl>
+                </div>
+                <div class="secondRow">
+                    <dl class="rule">
                         <dt>rule</dt>
                         <dd>${recruitDetail.rule}</dd>
                     </dl>
-                    <dl>
+                    <dl class="member">
                         <dt>인원</dt>
-                        <dd>${recruitDetail.totalmember}</dd>
+                        <dd>${recruitDetail.totalmember} / ${
+                            recruitDetail.basictotalmember
+                        }</dd>
                     </dl>
-                    <dl>
-                        <dt>전체인원</dt>
-                        <dd>${recruitDetail.basictotalmember}</dd>
-                    </dl>
-                    <dl>
-                        <dt>상태</dt>
-                        <dd>${recruitDetail.status}</dd>
-                    </dl>
+                    <dl class="gamedate">
+                    <dt>경기 예정 시간</dt>
+                    <dd>${
+                        recruitDetail.gamedate.slice("T", 10).padEnd(12, " ") +
+                        recruitDetail.gamedate.slice(11, 16)
+                    } - ${
+                        recruitDetail.endtime.slice("T", 10).padEnd(12, " ") +
+                        recruitDetail.endtime.slice(11, 16)
+                    }</dd>
+                </dl>
                 </div>
-                <div class="cont">${recruitDetail.content}<br></div>
+                </div>
+                <div class="cont">${recruitDetail.content}</div>
             `;
             feedBoardDetail.appendChild(topContent);
         })
@@ -107,11 +104,6 @@ function getRecruitDetail(recruitId) {
         });
 }
 
-document
-    .getElementById("recruit-delete")
-    .addEventListener("click", function () {
-        recruitDelete();
-    });
 
 function submitApplication(recruitId) {
     const inputMessage = document.getElementById("description1");
@@ -133,13 +125,14 @@ function submitApplication(recruitId) {
         )
         .then(function (response) {
             // 성공적으로 처리된 경우 추가적인 처리를 할 수 있습니다.
-            alert(`모집 신청되었습니다.`);
+            console.log(response);
+            alert("신청 완료");
             document
                 .getElementById("applyModal")
                 .setAttribute("hidden", "true");
         })
         .catch(function (error) {
             console.error(error.response.data);
-            alert("신청을 처리하는 도중 오류가 발생했습니다.");
+            alert(error.response.data.message);
         });
 }

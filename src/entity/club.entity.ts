@@ -29,7 +29,7 @@ export class Club {
     @Column()
     region: Region;
 
-    @Column()
+    @Column({ default: 1 })
     members: number;
 
     @Column()
