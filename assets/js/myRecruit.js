@@ -1,3 +1,9 @@
+window.onload = function () {
+    loadHeader();
+    displayRecruitInfo();
+    loadFooter();
+};
+
 async function displayRecruitInfo() {
     try {
         const accessToken = localStorage.getItem("accessToken");
@@ -15,7 +21,7 @@ async function displayRecruitInfo() {
         response.data.forEach((recruit) => {
             const myRecruitHTML = createRecruitHTML(recruit);
             const myRecruitButtonHTML = createRecruitButtonHTML(recruit);
-            myRecruit.innerHTML += [myRecruitHTML, myRecruitButtonHTML];
+            myRecruit.innerHTML += [myRecruitHTML + myRecruitButtonHTML];
         });
     } catch (error) {
         console.log(error.response.data);
@@ -29,12 +35,12 @@ function createRecruitHTML(recruit) {
             recruit.id
         })">
             <h1>${recruit.title}</h1>
-            <p><strong>규칙:</strong> ${recruit.rule}</p>
-            <p><strong>게임 시간:</strong> ${recruit.gamedate.slice(
+            <p><strong>규칙 :</strong> ${recruit.rule}</p>
+            <p><strong>경기 날짜 :</strong> ${recruit.gamedate.slice(
                 "T",
-                16,
+                10,
             )}</p>
-            <p><strong>상태:</strong> ${recruit.status}</p>
+            <p><strong>상태 :</strong> ${recruit.status}</p>
         </button>
     `;
 }
