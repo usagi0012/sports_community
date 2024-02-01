@@ -18,11 +18,15 @@ import { UserId } from "../auth/decorators/userId.decorator";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ChangeUserDto } from "./dto/change-user.dto";
 import { CheckPasswordDto } from "./dto/checkPassword.dto";
+import { Alarmservice } from "src/alarm/alarm.service";
 
 @ApiTags("개인 정보")
 @Controller("user")
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        private readonly alarmService: Alarmservice,
+    ) {}
 
     //이메일 중복 확인
     @Get("email")
@@ -51,6 +55,7 @@ export class UserController {
     @UseGuards(accessTokenGuard)
     @Get("me")
     findUserById(@UserId() id: string) {
+        // this.alarmService.sendAlarm(+id, "알람테스트 22");
         return this.userService.findUserById(+id);
     }
 

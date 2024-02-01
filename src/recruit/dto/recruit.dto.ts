@@ -8,9 +8,9 @@ import {
     IsEmpty,
     IsOptional,
 } from "class-validator";
-import { Region, Rule, Status } from "../../entity/recruit.entity";
+import { Rule, Status } from "../../entity/recruit.entity";
 import { ApiProperty } from "@nestjs/swagger";
-
+import { Region } from "src/enumtypes/clubregion.type";
 export class RecruitDTO {
     @IsNotEmpty()
     @ApiProperty({ description: "title", example: "테스트" })
@@ -18,7 +18,7 @@ export class RecruitDTO {
     title: string;
 
     @IsNotEmpty()
-    @ApiProperty({ description: "region", example: "Region1" })
+    @ApiProperty({ description: "region", example: "Seoul" })
     @IsEnum(Region)
     region: Region;
 
@@ -66,7 +66,7 @@ export class PutDTO {
     title: string;
 
     @IsOptional()
-    @ApiProperty({ description: "지역", example: "Region2" })
+    @ApiProperty({ description: "지역", example: "Seoul" })
     @IsEnum(Region)
     region: Region;
 

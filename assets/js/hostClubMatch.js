@@ -51,8 +51,7 @@ async function deleteClubMatch(hostMatchId) {
             },
         );
 
-        console.log(response.data);
-
+        alert("삭제를 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.error(error);
@@ -75,7 +74,7 @@ async function confirmButton(hostMatchId) {
             },
         );
 
-        console.log(response.data);
+        alert("컴펌을 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.error(error);
@@ -180,7 +179,7 @@ async function approvebutton(hostMatchId) {
                 },
             },
         );
-        console.log("승인 성공");
+        alert("승인을 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.log(error.response.data);
@@ -201,7 +200,8 @@ async function rejectbutton(hostMatchId) {
                 },
             },
         );
-        console.log("거절 성공");
+
+        alert("거절을 완료하였습니다.");
         window.location.reload();
     } catch (error) {
         console.error(error);

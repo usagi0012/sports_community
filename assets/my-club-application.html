@@ -3,11 +3,64 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>내 동아리 신청서 조회</title>
+        <title>Onog Club Application List</title>
+        <meta name="description" content="Onog ClubApplicationListPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="css/myClubApplication.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
     </head>
     <body>
-        <div class="my-club-application">내 동아리 신청서 목록</div>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer" id="mainContainer">
+                <div class="my-club-application">
+                    <label id="listLabel">내 동아리 신청서 목록</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer" id="footer"></div>
+
+        <script src="./js/dropmenu.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="module" src="./js/my-club-application.js"></script>
+
+        <script>
+            const accessToken = localStorage.getItem("accessToken");
+            const tokenPayload = JSON.parse(atob(accessToken.split(".")[1]));
+            const userId = tokenPayload.userId;
+            const eventSource = new EventSource(
+                `http://localhost:8001/api/sse/${userId}`,
+            );
+
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                showNotification(data.message);
+            };
+
+            eventSource.onerror = (error) => {
+                console.error("SSE Error:", error);
+            };
+
+            function showNotification(message) {
+                // 브라우저 알림을 표시하는 로직
+                if (Notification.permission === "granted") {
+                    new Notification("알림", { body: message });
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission().then((permission) => {
+                        if (permission === "granted") {
+                            new Notification("알림", { body: message });
+                        }
+                    });
+                }
+            }
+        </script>
     </body>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="module" src="./js/my-club-application.js"></script>
 </html>

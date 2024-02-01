@@ -21,6 +21,14 @@
 .clubInfo {
     padding: 0px 5px;
 }
+.clubName {
+    cursor: pointer;
+}
+
+.clubName:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
 
 .clubId,
 .clubName,

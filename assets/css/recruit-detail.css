@@ -1,222 +1,165 @@
-* {
-    margin: 0;
-    padding: 0;
-    /* box-sizing: border-box; */
+/* 메인 컨테이너*/
+.mainContainer {
+    margin-top: 70px;
 }
 
-html {
-    font-size: 10px;
-}
-
-ul,
-li {
-    list-style: none;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-.btn {
-    text-decoration: none;
-    font-size: 1.4rem;
-    color: black;
-}
-
-body {
-    display: flex;
-    justify-content: center; /* 가운데 정렬을 위해 추가 */
-    height: 100vh; /* 화면 전체 높이를 채우도록 설정 */
-    margin: 0; /* Body의 기본 마진 제거 */
-    min-width: 320px;
-}
-
-.make-vertical {
-    display: flex;
-    flex-direction: column;
-}
-
-.main-list {
-    display: flex;
-    justify-content: center; /* 가운데 정렬을 위해 추가 */
-    align-items: center; /* 가운데 정렬을 위해 추가 */
-    margin-top: 10%;
-}
-
-.board-wrap {
-    width: 1000px;
-    margin: 100px auto;
-}
-
-.board-title {
-    margin-bottom: 30px;
-}
-
-.board-title strong {
-    font-size: 3rem;
-}
-
-.board-title p {
-    margin-top: 5px;
-    font-size: 1.4rem;
-}
-
-.bt-wrap {
-    margin-top: 30px;
-    text-align: center;
-    font-size: 0;
-}
-
-.bt-wrap a {
-    display: inline-block;
-    min-width: 80px;
-    margin-left: 10px;
+.modalOpenBtn,
+.toListBtn {
+    font-family: "LINESeedKR-Bd";
+    width: 110px;
+    height: 35px;
+    margin: 5px auto;
     padding: 10px;
-    border: 1px solid #000;
-    border-radius: 2px;
-    font-size: 1.4rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #eeeeee;
+    cursor: pointer;
 }
 
-.bt-wrap a:first-child {
-    margin-left: 0;
+.modalOpenBtn:hover,
+.toListBtn:hover {
+    background-color: #ffb13d;
 }
 
-.bt-wrap a.on {
-    background: #000;
-    color: #fff;
+.top {
+    padding: 10px 0px;
 }
 
-.board-page {
-    margin-top: 30px;
-    text-align: center;
-    font-size: 0;
-}
-
-.board-page a {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    border: 1px solid #ddd;
-    border-left: 0;
-    box-sizing: border-box;
-    vertical-align: middle;
-    line-height: 100%;
-}
-
-.board-page a.bt {
-    padding-top: 10px;
-    font-size: 1.2rem;
-    letter-spacing: -1px;
-}
-
-.board-page a.num {
-    padding-top: 9px;
-    font-size: 1.4rem;
-}
-
-.board-page a.num.on {
-    border-color: #000;
-    background: #000;
-    color: #fff;
-}
-
-.board-page a:first-child {
-    border-left: 1px solid #ddd;
-}
-
-.main-list a {
-    margin-right: 2rem;
-}
-
-h3,
-h5 {
-    margin: 0px; /* 기본 마진 제거 */
-}
-
-.board-detail {
-    width: 100%;
-    border-top: 2px solid #000;
-}
-
-.board-detail .title {
-    padding: 20px 15px;
-    border-bottom: 1px dashed #ddd;
+.title {
     font-size: 2rem;
+    color: #1f1c1c;
+    padding-left: 10px;
 }
 
-.board-detail .info {
-    padding: 15px;
-    border-bottom: 1px solid #999;
-    font-size: 0;
+.firstRow,
+.secondRow,
+.cont {
+    display: flex;
+    padding: 10px 15px;
+    border-top: 1.5px solid #4c3c36;
 }
 
-.board-detail .info dl {
-    position: relative;
-    display: inline-block;
-    padding: 0 20px;
+dd {
+    color: #000000;
+    border-left: 4px double #4c3c36;
+    width: 70%;
+    margin: 0px auto;
+    padding: 0px 15px;
 }
 
-.board-detail .info dl:first-child {
-    padding-left: 0;
+.hostName,
+.rule {
+    width: 30%;
+    display: flex;
+    color: #6b6968;
+}
+.region,
+.member {
+    width: 25%;
+    display: flex;
+    color: #6b6968;
+}
+.status {
+    width: 25%;
+    display: flex;
+    color: #6b6968;
+}
+.gps {
+    width: 20%;
+    display: flex;
+    color: #6b6968;
+}
+.gamedate {
+    width: 45%;
+    display: flex;
+    color: #6b6968;
 }
 
-.board-detail .info dl::before {
-    content: "";
-    position: absolute;
-    top: 1px;
+#gpsBtn {
+    padding-top: 2px;
+    border: 1px solid #6b6968;
+    background-color: #eeeeee;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#gpsBtn:hover {
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+}
+
+.cont {
+    font-size: 1.1rem;
+    min-height: 30vh;
+    border-bottom: 1.5px solid #4c3c36;
+    padding-top: 20px;
+}
+
+.buttonContainer {
+    text-align: center;
+}
+
+#applyModal {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
     left: 0;
-    bottom: 0;
-    display: block;
-    width: 1px;
-    height: 20px;
-    background: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
 }
 
-.board-detail .info dl:first-child::before {
+.modal-content {
+    position: absolute;
+    background-color: #ffffff;
+    width: 500px;
+    height: 350px;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+#applyModal.hidden {
     display: none;
 }
 
-.board-detail .info dl dt,
-.board-detail .info dl dd {
-    display: inline-block;
-    font-size: 1.6rem;
-}
-
-.board-detail .info dl dd {
-    margin-left: 10px;
-    color: #777;
-}
-
-.board-detail .cont {
-    padding: 15px;
-    border-bottom: 1px solid #000;
-    line-height: 160%;
+.applyLabel {
     font-size: 1.5rem;
+    text-align: center;
+    padding: 10px;
+    display: block;
+    margin-bottom: 10px;
 }
 
-@media (max-width: 1000px) {
-    .board-wrap {
-        width: 100%;
-        min-width: 320px;
-        padding: 0 30px;
-        box-sizing: border-box;
-    }
-    .board-detail .info dl {
-        width: 50%;
-        padding: 0;
-    }
+.applyMessage {
+    margin-left: 15px;
+    font-size: 1.1rem;
+}
 
-    .board-detail .info dl:nth-child(-n + 7) {
-        margin-bottom: 5px;
-    }
+#description1 {
+    display: block;
+    margin: 10px auto;
+    font-family: "LINESeedKR-Bd";
+    padding: 8px;
+    min-height: 150px;
+    min-width: 400px;
+}
 
-    .board-detail .info dl::before {
-        display: none;
-    }
+.modalBtnContainer {
+    text-align: center;
+}
 
-    .board-detail .info dl dt,
-    .board-detail .info dl dd {
-        font-size: 1.4rem;
-    }
+.modalBtnContainer > button {
+    font-family: "LINESeedKR-Bd";
+    border-radius: 7px;
+    height: 25px;
+    padding-top: 5px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.modalBtnContainer > button:hover {
+    background-color: #ffb13d;
 }
