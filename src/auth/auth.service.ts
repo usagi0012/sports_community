@@ -49,7 +49,7 @@ export class AuthService {
         );
 
         // 토큰 생성 함수를 사용합니다.
-        const verificationLink = `${this.configService.get<string>(
+        const verificationLink = `http://${this.configService.get<string>(
             "FRONTEND_URL",
         )}/verify?token=${verificationToken}`;
 
@@ -90,9 +90,9 @@ export class AuthService {
             from: this.configService.get<string>("GOOGLE_ID"),
             to: createUserDto.email, // 사용자가 입력한 이메일 주소
             subject: "[오농] 회원가입 인증 링크",
-            html: `회원가입을 위한 인증을 완료하려면 다음 링크를 클릭하세요: <a href="http://${verificationLink}">${verificationLink}</a>`,
+            html: `회원가입을 위한 인증을 완료하려면 다음 링크를 클릭하세요: <a href="${verificationLink}">인증하기</a>`,
         };
-
+        console.log(verificationLink);
         smtpTransport.sendMail(mailOptions, (error, response) => {
             error ? console.log(error) : console.log(response);
             smtpTransport.close();
@@ -122,7 +122,7 @@ export class AuthService {
             await this.userService.update(userId, { isVerified: true });
 
             // 인증이 성공한 경우 리다이렉트할 URL 반환
-            return "http://localhost:8001/login.html";
+            return this.configService.get<string>("REDIRECT_URL");
         } catch (error) {
             // 토큰이 유효하지 않은 경우 예외 처리
             console.error("Token Verification Error:", error);
