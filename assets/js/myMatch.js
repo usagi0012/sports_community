@@ -1,3 +1,9 @@
+window.onload = function () {
+    loadHeader();
+    displayMatchInfo();
+    loadFooter();
+};
+
 async function displayMatchInfo() {
     try {
         const accessToken = localStorage.getItem("accessToken");

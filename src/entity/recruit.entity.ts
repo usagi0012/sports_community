@@ -9,11 +9,7 @@ import {
     BeforeUpdate,
 } from "typeorm";
 
-export enum Region {
-    Region1 = "Region1",
-    Region2 = "Region2",
-}
-
+import { Region } from "src/enumtypes/clubregion.type";
 export enum Rule {
     threeOnThree = "3대3",
     fourOnFour = "4대4",
