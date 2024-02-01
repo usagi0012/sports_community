@@ -129,9 +129,9 @@ function searchAddressToCoordinate(address) {
                 htmlAddresses.push("[지번 주소] " + item.jibunAddress);
             }
 
-            // if (item.englishAddress) {
-            //     htmlAddresses.push("[영문명 주소] " + item.englishAddress);
-            // }
+            if (item.englishAddress) {
+                htmlAddresses.push("[영문명 주소] " + item.englishAddress);
+            }
 
             // htmlAddresses.push(
             //     "<br/><strong>위도:</strong> " +
@@ -146,11 +146,17 @@ function searchAddressToCoordinate(address) {
                     '<h4 style="margin-top:5px;">검색 주소 : ' +
                         address +
                         "</h4><br />",
+                    htmlAddresses.join("<br />"),
+                    "</div>",
                 ].join("\n"),
             );
 
             map.setCenter(point);
             infoWindow.open(map, point);
+
+            // Update the confirmDORO and confirmJUSO elements
+            $("#confirmDORO").text(item.roadAddress);
+            $("#confirmJUSO").text(item.jibunAddress);
         },
     );
 }
@@ -173,6 +179,7 @@ function initGeocoder() {
 
         searchAddressToCoordinate($("#address").val());
     });
+
     $("#confirm").on("click", function (e) {
         e.preventDefault();
 
@@ -205,12 +212,12 @@ function initGeocoder() {
                     }
                 }
 
-                alert(
-                    "지번주소: " + jibunAddress + "도로면주소: " + roadAddress,
-                );
+                $("#confirmDORO").text(roadAddress);
+                $("#confirmJUSO").text(jibunAddress);
             },
         );
     });
+
     searchAddressToCoordinate(currentlocation);
 }
 
