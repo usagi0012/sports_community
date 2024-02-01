@@ -105,7 +105,7 @@ async function redirectToUserUpdatePage(currentPassword) {
             alert("로그인 후 이용해주세요.");
             window.location.href = "/login.html";
         }
-        console.log(error);
+        console.log(typeof error);
         // 오류 처리 로직 추가
     }
 }

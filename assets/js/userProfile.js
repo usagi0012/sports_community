@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 },
             });
 
-            console.log(scoreResponse.data);
+            console.log(scoreResponse);
 
             if (scoreResponse.data.message === "개인 점수가 조회되었습니다.") {
                 // 평가 점수가 있는 경우

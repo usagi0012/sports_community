@@ -19,6 +19,9 @@ export class UserAlarm {
     @Column()
     message: string;
 
+    @Column({ nullable: true }) // link 속성 추가
+    link: string;
+
     @CreateDateColumn()
     createdAt: Date;
 

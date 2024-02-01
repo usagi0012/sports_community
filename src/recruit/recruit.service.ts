@@ -11,6 +11,7 @@ import { use } from "passport";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { not } from "cheerio/lib/api/traversing";
 import { match } from "assert";
+import { Alarmservice } from "src/alarm/alarm.service";
 
 const now = new Date();
 const utc = now.getTime();
@@ -29,6 +30,7 @@ export class RecruitService {
         private matchRepository: Repository<Match>,
         @InjectRepository(User)
         private userRepository: Repository<User>,
+        private readonly alarmService: Alarmservice,
     ) {}
 
     //모집 글 등록
@@ -193,6 +195,11 @@ export class RecruitService {
 
             if (matchUpdateDto.status === MatchStatus.APPROVED) {
                 match.status = MatchStatus.APPROVED;
+                console.log(match);
+                this.alarmService.sendAlarm(
+                    match.guestId,
+                    `${recruit.title}에 대한 매치 신청이 승인되었습니다.`,
+                );
             } else if (matchUpdateDto.status === MatchStatus.REJECTED) {
                 match.status = MatchStatus.REJECTED;
             }
@@ -200,6 +207,7 @@ export class RecruitService {
             await this.recruitRepository.save(recruit);
             const updatedMatch = await this.matchRepository.save(match);
 
+            console.log(match.guestId);
             return updatedMatch;
         } catch (error) {
             throw error;
