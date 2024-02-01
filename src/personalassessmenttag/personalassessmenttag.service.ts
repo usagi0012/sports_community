@@ -236,9 +236,11 @@ export class PersonalassessmenttagService {
         userId: number,
         createPersonalAssessmentDto: CreatePersonalAssessmentDto,
     ) {
+        console.log(recuritedId);
         const recurit = await this.recruitRepository.findOne({
             where: { id: recuritedId },
         });
+        console.log(recurit);
 
         if (!recurit) {
             throw new NotFoundException(

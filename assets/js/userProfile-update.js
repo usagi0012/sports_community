@@ -3,21 +3,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         // Access token 가져오기
         const accessToken = localStorage.getItem("accessToken");
         // 프로필 정보 및 포지션 정보 가져오기
-        const [profileResponse, positionResponse] = await Promise.all([
-            axios.get("api/user/me/profile", {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }),
-            axios.get("api/user/me/position", {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }),
-        ]);
+        const profileResponse = await axios.get("api/user/me/profile", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
 
         console.log(profileResponse);
-        console.log("포지션", positionResponse.data.data.findPositionByUserId);
 
         // 기존 프로필 정보를 변수에 저장
         const profile = profileResponse.data.data.userProfile;
@@ -46,21 +38,48 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         });
         // 체크된 포지션 설정
-        const positionInfo = positionResponse.data.data.findPositionByUserId;
-        document
-            .querySelectorAll('input[name="position"]')
-            .forEach((checkbox) => {
-                const positionName = checkbox.value;
 
-                // 포지션 정보를 찾음
-                const position = positionInfo.find(
-                    (pos) => pos[positionName] === true,
-                );
-
-                // position이 존재하면 체크
-                const isChecked = position !== undefined;
-                checkbox.checked = isChecked;
+        let positionResponse;
+        try {
+            positionResponse = await axios.get("api/user/me/position", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
             });
+            console.log("포지션", positionResponse);
+        } catch (positionError) {
+            // 서버가 404를 반환하는 경우에 대한 추가 처리
+            if (
+                positionError.response &&
+                positionError.response.status === 404
+            ) {
+                // 포지션 정보가 없는 경우, 여기에서 처리
+                console.log("포지션 정보 없음");
+                // 원하는 처리를 추가하세요. 예: 디폴트 값을 설정하거나, 에러 메시지를 표시하거나 등
+            } else {
+                // 기타 에러 처리
+                console.error("포지션 정보 로드 중 에러 발생:", positionError);
+            }
+        }
+
+        if (positionResponse) {
+            const positionInfo =
+                positionResponse.data.data.findPositionByUserId;
+            document
+                .querySelectorAll('input[name="position"]')
+                .forEach((checkbox) => {
+                    const positionName = checkbox.value;
+
+                    // 포지션 정보를 찾음
+                    const position = positionInfo.find(
+                        (pos) => pos[positionName] === true,
+                    );
+
+                    // position이 존재하면 체크
+                    const isChecked = position !== undefined;
+                    checkbox.checked = isChecked;
+                });
+        }
 
         // 프로필 수정하기 버튼 클릭 이벤트
         document

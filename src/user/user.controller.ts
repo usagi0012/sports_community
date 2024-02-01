@@ -55,7 +55,7 @@ export class UserController {
     @UseGuards(accessTokenGuard)
     @Get("me")
     findUserById(@UserId() id: string) {
-        this.alarmService.sendAlarm(+id, "알람테스트 22");
+        // this.alarmService.sendAlarm(+id, "알람테스트 22");
         return this.userService.findUserById(+id);
     }
 
