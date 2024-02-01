@@ -39,3 +39,6 @@ h3 {
 }
 
 /* 카드 부분*/
+div {
+    border: 1px solid pink;
+}
