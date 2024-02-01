@@ -8,12 +8,12 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { User } from "./user.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import {
     MAX_SCORE,
     MIN_SCORE,
 } from "src/personalassessmenttag/constants/score.constant";
+import { UserProfile } from "./user-profile.entity";
 
 @Entity({ name: "userscore" })
 export class Userscore {
@@ -26,7 +26,13 @@ export class Userscore {
     profileId: number;
 
     @IsNumber()
-    @Column()
+    @Column({
+        type: "decimal",
+        precision: 10,
+        scale: 3,
+        nullable: true,
+        default: 0,
+    })
     @ApiProperty({ description: "성격" })
     personality: number;
 
@@ -34,12 +40,24 @@ export class Userscore {
     @Min(MIN_SCORE, { message: "최소 점수는 1입니다." })
     @Max(MAX_SCORE, { message: "최대 점수는 5입니다." })
     @IsNumber()
-    @ApiProperty({ description: "성격", default: 1 })
-    @Column({ default: 0 })
+    @ApiProperty({
+        description: "성격",
+        default: 1,
+        example: "3",
+    })
+    @Column({
+        default: 0,
+    })
     personalityAmount: number;
 
     @IsNumber()
-    @Column({ default: 0 })
+    @Column({
+        type: "decimal",
+        precision: 10,
+        scale: 3,
+        nullable: true,
+        default: 0,
+    })
     @ApiProperty({ description: "실력" })
     ability: number;
 
@@ -47,8 +65,12 @@ export class Userscore {
     @Min(MIN_SCORE, { message: "최소 점수는 1입니다." })
     @Max(MAX_SCORE, { message: "최대 점수는 5입니다." })
     @IsNumber()
-    @Column()
-    @ApiProperty({ description: "실력", default: 1 })
+    @Column({ default: 0 })
+    @ApiProperty({
+        description: "실력",
+        default: 1,
+        example: "2",
+    })
     abilityAmount: number;
 
     @IsNotEmpty({ message: "MVP를 뽑아주세요." })
@@ -68,7 +90,7 @@ export class Userscore {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @OneToOne(() => User, (user) => user.userscore)
+    @OneToOne(() => UserProfile, (userprofile) => userprofile.userscore)
     @JoinColumn()
-    user: User;
+    userProfile: UserProfile;
 }

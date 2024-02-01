@@ -11,6 +11,6 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
     @IsOptional()
     @IsNumber()
-    @ApiPropertyOptional({ description: "소지금" })
-    money?: number;
+    @ApiPropertyOptional({ description: "인증 상태" })
+    isVerified?: boolean;
 }

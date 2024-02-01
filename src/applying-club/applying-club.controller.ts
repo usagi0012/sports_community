@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    Param,
     Post,
     Put,
     UseGuards,
@@ -12,24 +13,28 @@ import { ApplicationDto } from "./dto/application.dto";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { PermissionApplicationDto } from "./dto/permission-application.dto";
+import { ApplicationReviewDto } from "./dto/applicationReview.dto";
 
 @ApiTags("동아리 신청")
 @Controller("applying-club")
 export class ApplyingClubController {
     constructor(private readonly applyingClubService: ApplyingClubService) {}
 
+    // 동호회 신청
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
-    @Post()
+    @Post(":clubId")
     async postApplyingClub(
         @UserId() userId: number,
-        @Body() applicationDto: ApplicationDto,
+        @Body() permissionApplicationDto: PermissionApplicationDto,
+        @Param("clubId") clubId: number,
     ) {
         try {
-            // clubId 쿼리로 가져올까..
             const application = await this.applyingClubService.postApplyingClub(
-                applicationDto,
+                permissionApplicationDto,
                 userId,
+                clubId,
             );
 
             return {
@@ -46,9 +51,66 @@ export class ApplyingClubController {
         }
     }
 
+    // 동호회에게 온 신청서 조회
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Get()
+    async getApplicationOfMyClub(@UserId() userId: number) {
+        try {
+            const application =
+                await this.applyingClubService.getApplicationOfMyClub(userId);
+
+            return {
+                statusCode: 200,
+                message: "동호회 신청서 조회에 성공했습니다.",
+                data: application,
+            };
+        } catch (error) {
+            return {
+                statusCode: 400,
+                message: "동호회 신청서 조회에 실패했습니다.",
+                error: error.message,
+            };
+        }
+    }
+
+    // 동호회 신청 수락/거절
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Put(":clubId/:memberId")
+    async reviewApplication(
+        @Body() applicationReviewDto: ApplicationReviewDto,
+        @UserId() userId: number,
+        @Param("clubId") clubId: number,
+        @Param("memberId") memberId: number,
+    ) {
+        try {
+            const permission = await this.applyingClubService.reviewApplication(
+                applicationReviewDto,
+                userId,
+                clubId,
+                memberId,
+            );
+
+            return {
+                statusCode: 200,
+                message: "동호회 신청 승인/거절에 성공했습니다.",
+                data: permission,
+            };
+        } catch (error) {
+            return {
+                statusCode: 400,
+                message: "동호회 신청 승인/거절에 실패했습니다.",
+                error: error.message,
+            };
+        }
+    }
+
+    // git commit test
+    // 내 신청서 조회
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("me")
     async getApplyingClub(@UserId() userId: number) {
         try {
             const application =
@@ -68,19 +130,21 @@ export class ApplyingClubController {
         }
     }
 
+    // 내 신청서 수정
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
-    @Put()
+    @Put(":clubId")
     async updateApplyingClub(
         @UserId() userId: number,
-        @Body() applicationDto: ApplicationDto,
+        @Body() permissionApplicationDto: PermissionApplicationDto,
+        @Param("clubId") clubId: number,
     ) {
         try {
-            // clubId 쿼리로 가져와야하나..
             const updatedApplication =
                 await this.applyingClubService.updateApplyingClub(
-                    applicationDto,
+                    permissionApplicationDto,
                     userId,
+                    clubId,
                 );
 
             return {
@@ -97,12 +161,12 @@ export class ApplyingClubController {
         }
     }
 
+    // 내 신청서 삭제
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Delete()
     async deleteApplyingClub(@UserId() userId: number) {
         try {
-            // clubId 쿼리로 가져와야하나..
             const deletedApplication =
                 await this.applyingClubService.deleteApplyingClub(userId);
 
@@ -115,6 +179,28 @@ export class ApplyingClubController {
             return {
                 statusCode: 400,
                 message: "동호회 지원서 삭제에 실패했습니다.",
+                error: error.message,
+            };
+        }
+    }
+
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("ClubMaster")
+    async isClubMaster(@UserId() userId: number) {
+        try {
+            const isMaster =
+                await this.applyingClubService.isClubMaster(userId);
+
+            return {
+                statusCode: 200,
+                message: "동호회장 확인에 성공했습니다.",
+                data: isMaster,
+            };
+        } catch (error) {
+            return {
+                statusCode: 400,
+                message: "동호회장 확인에 실패했습니다.",
                 error: error.message,
             };
         }

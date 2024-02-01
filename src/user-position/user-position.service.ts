@@ -43,8 +43,8 @@ export class UserPositionService {
         userPosition.forward = createUserPositionDto.forward || false;
         userPosition.userId = user.id;
 
-        const createdPosition =
-            await this.userPositionRepository.save(userPosition);
+        const createdPosition = console.log(userPosition);
+        await this.userPositionRepository.save(userPosition);
         return {
             statusCode: 201,
             message: "선호 포지션 등록을 성공했습니다.",
@@ -63,11 +63,11 @@ export class UserPositionService {
         }
         const findPositionByUserId = await this.userPositionRepository.find({
             where: { userId: user.id },
-            relations: ["user"],
         });
         if (findPositionByUserId.length < 1) {
             throw new NotFoundException("등록된 포지션 정보가 없습니다.");
         }
+
         return {
             statusCode: 200,
             message: "포지션 조회를 성공했습니다.",
@@ -80,10 +80,10 @@ export class UserPositionService {
         const { guard, forward, center } = updateUserPositionDto;
         const user = await this.userRepository.find({
             where: { id: userId },
-            relations: ["userPosition"],
         });
+
         const userPosition = await this.userPositionRepository.findOne({
-            where: userId,
+            where: { userId },
             relations: ["user"],
         });
         if (userPosition.user.id !== userId) {

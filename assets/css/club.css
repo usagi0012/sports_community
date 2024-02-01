@@ -1,0 +1,97 @@
+/* 메인 컨테이너*/
+.mainContainer {
+    margin-top: 70px;
+}
+
+.clubInfo {
+    border-top: 1.5px solid #4c3c36;
+    display: grid;
+    grid-template-columns: 0.4fr 1.7fr 0.6fr 1fr 0.3fr;
+    text-align: center;
+}
+
+.title {
+    border-top: 3px solid #4c3c36;
+    padding: 10px 5px;
+    display: grid;
+    grid-template-columns: 0.4fr 1.7fr 0.6fr 1fr 0.3fr;
+    text-align: center;
+}
+
+.clubInfo {
+    padding: 0px 5px;
+}
+.clubName {
+    cursor: pointer;
+}
+
+.clubName:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.clubId,
+.clubName,
+.clubRegion,
+.clubMaster,
+.clubScore {
+    margin: auto 0;
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.close-btn {
+    cursor: pointer;
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+}
+
+.myClubApplication {
+    display: none;
+    font-family: "LINESeedKR-Bd";
+    margin: 10px 15px;
+    height: 25px;
+    padding-top: 5px;
+    border-radius: 7px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.myClubApplication:hover {
+    box-shadow: 2px 2px 2px gray;
+}
+
+.createBtn {
+    display: none;
+    font-family: "LINESeedKR-Bd";
+    margin: 10px 15px;
+    height: 25px;
+    padding-top: 5px;
+    border-radius: 7px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.createBtn:hover {
+    box-shadow: 2px 2px 2px gray;
+}

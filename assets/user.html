@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <title>User</title>
+    </head>
+    <body>
+        <div class="logo">
+            <img src="resources/logo.png" id="logo" />
+            <input type="text" placeholder="Search..." />
+            <button>검색</button>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="#feed">피드</a></li>
+                <li><a href="#club">동호회</a></li>
+                <li><a href="#stadium">경기장</a></li>
+                <li><a href="#platform">플랫폼 이용안내</a></li>
+                <li><a href="#talk">Talk</a></li>
+            </ul>
+        </nav>
+
+        <section id="userSection">
+            <h2>내 정보</h2>
+            <p>이름: <span id="userName"></span></p>
+            <p>이메일: <span id="userEmail"></span></p>
+            <p>비밀번호: ********</p>
+        </section>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/user.js"></script>
+    </body>
+</html>

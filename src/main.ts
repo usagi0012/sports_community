@@ -13,9 +13,12 @@ import { join } from "path";
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
     app.useWebSocketAdapter(new SocketIoAdapter(app));
     app.useStaticAssets(join(__dirname, "..", "public")); //html,js,css (바닐라)
+    app.useStaticAssets(join(__dirname, "..", "assets")); //html,js,css (바닐라)
     app.setBaseViewsDir(join(__dirname, "..", "views"));
+    app.setBaseViewsDir(join(__dirname, "templates"));
     app.setViewEngine("ejs");
 
     app.setGlobalPrefix("api", { exclude: ["/view/chat"] });
@@ -61,6 +64,10 @@ async function bootstrap() {
     const configService = app.get(ConfigService);
     const port: number = configService.get("SERVER_PORT");
 
+    app.enableCors();
     await app.listen(port);
 }
 bootstrap();
+function cors(): any {
+    throw new Error("Function not implemented.");
+}

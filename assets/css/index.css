@@ -1,0 +1,238 @@
+/* 메인 컨테이너*/
+.mainContainer {
+    margin-top: 70px;
+}
+
+/* 메인 컨테이너 - 프로필 컨테이너 */
+.profileContainer {
+    z-index: 1;
+    margin: 30px 0;
+    border: 2px solid #dfcec3;
+    border-radius: 20px;
+    height: 240px;
+    display: grid;
+    grid-template-areas:
+        "image nickname gender tag alarm calender"
+        "image height . . . calender"
+        "image description description description description calender"
+        "score score score score updateBtn calender";
+    grid-template-columns: 1fr 1fr 0.3fr 1fr 0.7fr 2fr;
+    grid-template-rows: 1fr 0.5fr 1.5fr 1fr;
+}
+
+.noprofile {
+    grid-area: description;
+    font-size: 1.6rem;
+    cursor: pointer;
+    text-align: right;
+    position: relative;
+    left: 150px;
+    width: 430px;
+    height: 50px;
+    padding: 5px 0px;
+}
+
+.noprofile:hover {
+    text-decoration-line: underline;
+    text-decoration-color: #ffb13d;
+}
+
+.image {
+    grid-area: image;
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+}
+
+#profileImage {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.nickname {
+    grid-area: nickname;
+    font-size: 1.7rem;
+    padding-top: 18px;
+    padding-left: 7px;
+}
+
+.gender {
+    grid-area: gender;
+    font-size: 1.9rem;
+    padding-top: 18px;
+}
+
+.tag {
+    grid-area: tag;
+    font-size: 0.9rem;
+    padding-top: 30px;
+}
+
+.height {
+    grid-area: height;
+    font-size: 0.9rem;
+    padding-left: 10px;
+}
+
+.description {
+    grid-area: description;
+    padding: 0px 10px;
+    margin: 0 10px;
+}
+
+.scoreContainer {
+    grid-area: score;
+    display: flex;
+    float: left;
+    margin: 15px 30px 15px 70px;
+    justify-content: space-between;
+}
+
+#personalityAmount > i,
+#abilityAmount > i,
+.rankScore > i {
+    color: #ffb13d;
+}
+#alarmBtn {
+    grid-area: alarm;
+    height: 40px;
+    width: 50px;
+    background-color: white;
+    color: #666;
+    border: none;
+    padding-top: 3px;
+    margin-top: 15px;
+    margin-left: 60px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.calenderContainer {
+    grid-area: calender;
+    border-left: 1px dashed #666;
+}
+
+#profileUpdateBtn {
+    grid-area: updateBtn;
+    height: 30px;
+    width: 100px;
+    border: none;
+    border-radius: 30px;
+    margin-top: 10px;
+    margin-right: 5px;
+    font-family: "LINESeedKR-Bd";
+    cursor: pointer;
+}
+
+/* 메인 컨테이너 - 랭킹 컨테이너 */
+
+#rankLabel {
+    font-size: 2rem;
+    color: #3f3131;
+}
+.rankContainer {
+    justify-content: space-between;
+    width: 100%;
+    display: flex;
+    float: left;
+    margin: 10px auto 15px;
+}
+
+.rankOuterContainer {
+    width: 30%;
+    margin-top: 5px;
+    border: 1px solid #ff771c;
+    border-radius: 20px;
+}
+
+.rankOuterContainer > .rankName {
+    background-color: #ff771c;
+    color: #fff;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding-left: 13px;
+    padding-top: 5px;
+    height: 25px;
+}
+
+.rank {
+    height: 30px;
+    text-align: start;
+    display: grid;
+    grid-template-areas: "rank nickname score";
+    grid-template-columns: 0.9fr 1.5fr 0.6fr;
+    margin: 20px 0px 10px 10px;
+    font-size: 1.3rem;
+}
+
+.rankNumber {
+    grid-area: rank;
+}
+.rankNumber > img {
+    height: 28px;
+    width: 50px;
+    position: relative;
+    bottom: 7px;
+}
+.ranknickName {
+    grid-area: nickname;
+}
+.rankScore {
+    grid-area: score;
+}
+.rankAnnouncement {
+    margin-top: 5px;
+}
+.rankAnnouncement > p {
+    font-size: 0.8rem;
+    margin: 2px 0px;
+}
+
+/* 메인 컨테이너 - 기타 컨테이너 */
+.plusContainer {
+    justify-content: space-between;
+    width: 100%;
+    display: flex;
+    float: left;
+    margin-bottom: 70px;
+}
+
+.plusOuterContainer {
+    width: 47%;
+    margin-top: 30px;
+}
+
+.plusName {
+    font-size: 2rem;
+    color: #3f3131;
+}
+
+.plusInnerContainer {
+    background-color: #dfcec3;
+    border-radius: 20px;
+    text-align: start;
+    padding: 20px 20px;
+}
+
+.plusDataContainer {
+    background-color: #ffffff;
+    border-radius: 20px;
+    height: 240px;
+    position: relative;
+    padding-top: 8px;
+    padding-bottom: 5px;
+}
+
+.plusData {
+    margin: 10px auto;
+    padding: 10px 0px;
+    width: 90%;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #a08989;
+}
+
+.plusData:hover {
+    transform: scale(1.05);
+    transition-duration: 0.3s;
+}

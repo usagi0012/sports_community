@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Onog Update Club</title>
+        <meta name="description" content="Onog UpdateClubPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="css/createClub.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
+    </head>
+    <body>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer" id="mainContainer">
+                <label id="containerLabel">동아리 수정하기</label>
+                <div id="nameContainer">
+                    <label for="name" id="nameLabel">이름</label>
+                    <input type="text" id="name" />
+                </div>
+                <div id="locationContainer">
+                    <label for="location" id="locationLabel">지역</label>
+                    <select id="location">
+                        <option value="0">서울</option>
+                        <option value="1">부산</option>
+                        <option value="2">대구</option>
+                        <option value="3">인천</option>
+                        <option value="4">광주</option>
+                        <option value="5">대전</option>
+                        <option value="6">울산</option>
+                        <option value="7">세종</option>
+                        <option value="8">경기</option>
+                        <option value="9">강원</option>
+                        <option value="10">충청북도</option>
+                        <option value="11">충청남도</option>
+                        <option value="12">경상북도</option>
+                        <option value="13">경상남도</option>
+                        <option value="14">전라북도</option>
+                        <option value="15">전라남도</option>
+                        <option value="16">제주도</option>
+                    </select>
+                </div>
+                <div id="descriptionContainer">
+                    <label for="description" id="descriptionLabel"
+                        >소개글</label
+                    >
+                    <textarea id="description"></textarea>
+                </div>
+                <input type="file" id="fileInput" />
+
+                <button onclick="submitForm()" id="updateClubBtn">수정</button>
+            </div>
+        </div>
+        <div class="footer" id="footer"></div>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <!-- <script type="module" src="./js/update-club.js"></script> -->
+        <script src="./js/dropmenu.js"></script>
+        <script>
+            window.onload = function () {
+                loadHeader();
+                loadFooter();
+            };
+            function submitForm() {
+                //내 동아리인 경우에만 수정할 수 있도록 하기
+                const name = document.getElementById("name").value;
+                const region = document.getElementById("location").value;
+                const description =
+                    document.getElementById("description").value;
+                const file = document.getElementById("fileInput").files[0];
+
+                const urlParams = new URLSearchParams(window.location.search);
+                console.log("urlParams", urlParams);
+                let clubId = urlParams.get("id");
+
+                // const authorized = localStorage.getItem("authorized");
+                // const token = JSON.parse(authorized).accessToken.value;
+                const token = localStorage.getItem("accessToken");
+                axios
+                    .put(
+                        `/api/club/${clubId}`,
+                        {
+                            name: name,
+                            region: region,
+                            description: description,
+                            file: file,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "multipart/form-data",
+                            },
+                        },
+                    )
+                    .then(function (response) {
+                        console.log(response);
+                        window.location.href = `/club-detail.html?id=${clubId}`;
+                    })
+                    .catch(function (error) {
+                        console.log(error.response);
+                        alert("동아리 정보를 수정할 수 없습니다.");
+                    });
+            }
+        </script>
+    </body>
+</html>

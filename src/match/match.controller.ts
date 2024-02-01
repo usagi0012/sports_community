@@ -1,3 +1,4 @@
+import { Match } from "./../entity/match.entity";
 import {
     Controller,
     Body,
@@ -6,6 +7,7 @@ import {
     Post,
     UseGuards,
     Delete,
+    Put,
 } from "@nestjs/common";
 
 import { MatchService } from "./match.service";
@@ -22,30 +24,86 @@ export class MatchController {
     constructor(private readonly matchService: MatchService) {}
 
     //나의 매치 조회
-    @Get("my")
+    @Get("me")
     async getMyMatch(@UserId() userId: number) {
-        return await this.matchService.getMyMatch(userId);
+        const matches = await this.matchService.getMyMatch(userId);
+
+        for (const match of matches) {
+            await match.updateProgress();
+        }
+
+        return matches;
     }
+
     //나의매치 상세조회
-    @Get("my/:matchid")
-    async findMyMatch(@Param("matchid") id: number, @UserId() userId: number) {
-        return await this.matchService.findMyMatch(id, userId);
+    @Get("me/:matchId")
+    async findMyMatch(
+        @Param("matchId") matchId: number,
+        @UserId() userId: number,
+    ) {
+        return await this.matchService.findMyMatch(matchId, userId);
     }
 
     //매치 신청하기
-    @Post("post/:recruitid")
+    @Post("post/:recruitId")
     async postMatch(
-        @Param("recruitid") id: number,
+        @Param("recruitId") recruitId: number,
         @UserId() userId: number,
         @Body() matchDTO: MatchDTO,
     ) {
-        return await this.matchService.postMatch(id, userId, matchDTO);
+        return await this.matchService.postMatch(recruitId, userId, matchDTO);
+    }
+
+    //매치 컴펌하기
+    @Put("my/:matchId/confirm")
+    async confirmMatch(
+        @Param("matchId") matchId: number,
+        @UserId() userId: number,
+    ) {
+        return await this.matchService.confirmMatch(matchId, userId);
     }
 
     // 신청 취소하기
 
-    @Delete("cancel/:matchid")
-    async deleteMatch(@Param("matchid") id: number, @UserId() userId: number) {
-        await this.matchService.deleteMatch(id, userId);
+    @Put("my/:matchId/cancel")
+    async cancelMatch(
+        @Param("matchId") matchId: number,
+        @UserId() userId: number,
+    ) {
+        await this.matchService.cancelMatch(matchId, userId);
     }
+
+    //본인 매치에서 경기한 유저아이디 조회
+    @Get("my/:matchId/user")
+    async findGameUser(
+        @UserId() userId: number,
+        @Param("matchId") matchId: number,
+    ) {
+        return await this.matchService.findGameUser(userId, matchId);
+    }
+
+    //경기 평가완료로 변경
+    @Put("my/:matchId/evaluate")
+    async doneGame(
+        @UserId() userId: number,
+        @Param("matchId") matchId: number,
+    ) {
+        return await this.matchService.doneGame(userId, matchId);
+    }
+    //취소 후 삭제
+    @Delete("my/:matchId/cancel/delete")
+    async deleteCancelGame(
+        @UserId() userId: number,
+        @Param("matchId") matchId: number,
+    ) {
+        return await this.matchService.deleteCancelGame(userId, matchId);
+    }
+    //평가 후 삭제
+    // @Delete("my/:matchId/evaluate/delete")
+    // async deleteGame(
+    //     @UserId() userId: number,
+    //     @Param("matchId") matchId: number,
+    // ) {
+    //     return await this.matchService.deleteGame(userId, matchId);
+    // }
 }

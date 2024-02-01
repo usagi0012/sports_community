@@ -1,0 +1,110 @@
+/* 메인 컨테이너*/
+.mainContainer {
+    margin: 100px auto 10px;
+    height: 35rem;
+    width: 40rem;
+    border: 2px solid gray;
+    border-radius: 10px;
+    display: grid;
+    grid-template-areas:
+        "title"
+        "name"
+        "location"
+        "description"
+        "file"
+        "createBtn";
+    grid-template-rows: 1fr 1.2fr 0.5fr 1.7fr 0.6fr 1fr;
+}
+
+#containerLabel {
+    width: 90%;
+    margin: 25px auto 0px;
+    font-size: 2rem;
+    text-align: center;
+    display: block;
+}
+
+#nameContainer {
+    width: 90%;
+    margin: 0px auto;
+}
+
+#nameLabel {
+    font-size: 1.2rem;
+    display: block;
+}
+
+#name {
+    width: 95%;
+    margin: 0px auto;
+    background-color: #eeeeee;
+    border-radius: 10px;
+    margin-top: 5px;
+    padding-left: 10px;
+}
+
+#locationContainer {
+    width: 90%;
+    margin: 0px auto;
+}
+
+#locationLabel {
+    font-size: 1.2rem;
+    margin-right: 20px;
+    margin-top: 5px;
+}
+
+#location {
+    font-family: "LINESeedKR-Bd";
+    font-size: 0.9rem;
+    height: 25px;
+    width: 100px;
+    padding: 5px;
+}
+
+#descriptionContainer {
+    width: 90%;
+    margin: 0px auto;
+}
+
+#descriptionLabel {
+    font-size: 1.2rem;
+    display: block;
+}
+
+#description {
+    font-family: "LINESeedKR-Bd";
+    width: 95%;
+    margin: 0px auto;
+    border: none;
+    background-color: #eeeeee;
+    border-radius: 10px;
+    height: 100px;
+    margin-top: 5px;
+    padding: 10px;
+}
+
+#fileInput {
+    cursor: pointer;
+    width: 90%;
+    margin: 10px auto;
+    font-family: "LINESeedKR-Bd";
+}
+
+#createClubBtn,
+#updateClubBtn {
+    font-family: "LINESeedKR-Bd";
+    width: 70px;
+    height: 30px;
+    margin: 20px auto;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    background-color: #eeeeee;
+    cursor: pointer;
+}
+
+#createClubBtn:hover,
+#updateClubBtn:hover {
+    background-color: #ffb13d;
+}
