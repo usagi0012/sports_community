@@ -58,130 +58,32 @@
                                     id="regionSelect"
                                     placeholder="지역을 선택해주세요."
                                 >
-                                        <option value="0">서울</option>
-                                        <option value="1">부산</option>
-                                        <option value="2">대구</option>
-                                        <option value="3">인천</option>
-                                        <option value="4">광주</option>
-                                        <option value="5">대전</option>
-                                        <option value="6">울산</option>
-                                        <option value="7">세종</option>
-                                        <option value="8">경기</option>
-                                        <option value="9">강원</option>
-                                        <option value="10">충청북도</option>
-                                        <option value="11">충청남도</option>
-                                        <option value="12">경상북도</option>
-                                        <option value="13">경상남도</option>
-                                        <option value="14">전라북도</option>
-                                        <option value="15">전라남도</option>
-                                        <option value="16">제주도</option>
+                                    <option value="0">서울</option>
+                                    <option value="1">부산</option>
+                                    <option value="2">대구</option>
+                                    <option value="3">인천</option>
+                                    <option value="4">광주</option>
+                                    <option value="5">대전</option>
+                                    <option value="6">울산</option>
+                                    <option value="7">세종</option>
+                                    <option value="8">경기</option>
+                                    <option value="9">강원</option>
+                                    <option value="10">충청북도</option>
+                                    <option value="11">충청남도</option>
+                                    <option value="12">경상북도</option>
+                                    <option value="13">경상남도</option>
+                                    <option value="14">전라북도</option>
+                                    <option value="15">전라남도</option>
+                                    <option value="16">제주도</option>
                                 </select>
                             </dd>
                         </dl>
                         <dl class="gps">
                             <dt>gps</dt>
-                            <dd id="gpsBtn"><button onclick="openMapModal()">
-                                        지도
-                                    </button>
-                                    <input
-                                        id="input-gps"
-                                        type="text"
-                                        readonly
-                                    />
-
-                                    <div
-                                        id="mapModal"
-                                        class="mapModal"
-                                        onclick="closeMapModal()"
-                                    >
-                                        <div
-                                            class="modal-content"
-                                            onclick="event.stopPropagation();"
-                                        >
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5">
-                                                    장소 설정
-                                                </h1>
-                                                <span
-                                                    class="close-button"
-                                                    onclick="closeMapModal()"
-                                                    >&times;</span
-                                                >
-                                            </div>
-                                            <div class="modal-body">
-                                                <div
-                                                    id="map"
-                                                    style="
-                                                        width: 500px;
-                                                        height: 500px;
-                                                    "
-                                                ></div>
-                                                <input
-                                                    type="text"
-                                                    id="address"
-                                                    placeholder="주소를 입력하세요"
-                                                />
-                                                <button id="submit">
-                                                    검색
-                                                </button>
-                                                <button id="confirm">
-                                                    확인
-                                                </button>
-                                                <button id="getCurrentLocation">
-                                                    현재 위치로 이동
-                                                </button>
-                                                <button
-                                                    id="confirmDORO"
-                                                    onclick="roadAddress()"
-                                                ></button>
-                                                <button
-                                                    id="confirmJUSO"
-                                                    onclick="jibunAddress()"
-                                                ></button>
-                                                <div id="checkbox"></div>
-                                                <script src="js/map.js"></script>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button
-                                                    type="button"
-                                                    onclick="closeMapModal()"
-                                                >
-                                                    Close
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <script>
-                                        function roadAddress() {
-                                            const roadAddress =
-                                                $("#confirmDORO").text();
-                                            $("#input-gps").val(roadAddress);
-
-                                            if (roadAddress) {
-                                                closeMapModal();
-                                            }
-                                        }
-
-                                        function jibunAddress() {
-                                            const jibunAddress =
-                                                $("#confirmJUSO").text();
-                                            $("#input-gps").val(jibunAddress);
-                                            if (jibunAddress) {
-                                                closeMapModal();
-                                            }
-                                        }
-
-                                        function openMapModal() {
-                                            const modal = $("#mapModal");
-                                            modal.css("display", "block");
-                                        }
-
-                                        function closeMapModal() {
-                                            const modal = $("#mapModal");
-                                            modal.css("display", "none");
-                                        }
-                                    </script></dd>
+                            <dd id="gpsBtn">
+                                <button onclick="openMapModal()">지도</button>
+                                <input id="input-gps" type="text" readonly />
+                            </dd>
                         </dl>
                         <dl class="gamedate">
                             <dt>경기 시간</dt>
@@ -242,7 +144,74 @@
                 <button id="register-cancel-btn">취소</button>
             </div>
         </div>
-       <div class="footer" id="footer"></div>
+        <div id="mapModal" class="mapModal" onclick="closeMapModal()">
+            <div class="modal-content" onclick="event.stopPropagation();">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">장소 설정</h1>
+                    <span class="close-button" onclick="closeMapModal()"
+                        >&times;</span
+                    >
+                </div>
+                <div class="modal-body">
+                    <div id="map" style="width: 450px; height: 450px"></div>
+                    <input
+                        type="text"
+                        id="address"
+                        placeholder="주소를 입력하세요"
+                    />
+                    <button id="submit">검색</button>
+                    <button id="confirm">확인</button>
+                    <button id="confirmDORO" onclick="roadAddress()">
+                        도로명 주소
+                    </button>
+                    <button id="confirmJUSO" onclick="jibunAddress()">
+                        지번 주소
+                    </button>
+                    <div id="checkbox"></div>
+                    <script src="js/map.js"></script>
+                </div>
+                <div class="modal-footer">
+                    <button id="getCurrentLocation">현재 위치로 이동</button>
+                    <button type="button" onclick="closeMapModal()">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function roadAddress() {
+                const roadAddress = $("#confirmDORO").text();
+                $("#input-gps").val(roadAddress);
+
+                if (roadAddress) {
+                    closeMapModal();
+                }
+            }
+
+            function jibunAddress() {
+                const jibunAddress = $("#confirmJUSO").text();
+                $("#input-gps").val(jibunAddress);
+                if (jibunAddress) {
+                    closeMapModal();
+                }
+            }
+
+            function openMapModal() {
+                const modal = $("#mapModal");
+                const sameContainer = $("#sameContainer");
+                const footer = $("#footer");
+                modal.css("display", "block");
+                sameContainer.css("z-index", 1);
+                footer.css("z-index", 1);
+            }
+
+            function closeMapModal() {
+                const modal = $("#mapModal");
+                modal.css("display", "none");
+            }
+        </script>
+        <div class="footer" id="footer"></div>
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/recruit-post.js"></script>
