@@ -221,6 +221,13 @@ export class ApplyingClubService {
             clubId,
         });
 
+        // 요청 승인시 club의 member를 1 늘리기
+        const addMember = club.members +1;
+
+        await this.ClubRepository.update(clubId, {
+            members: addMember
+        })
+
         // 요청 승인시 지원서를 작성한 user에게 알림 보내기
         // 알림 보내기 로직
 
