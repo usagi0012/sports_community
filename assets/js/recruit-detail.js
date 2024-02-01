@@ -1,15 +1,7 @@
 window.onload = function () {
     const urlParams = new URLSearchParams(window.location.search);
     let recruitId = urlParams.get("id");
-
     getRecruitDetail(recruitId);
-
-    const recruitDeleteButton = document.getElementById("recruit-delete");
-    if (recruitDeleteButton) {
-        recruitDeleteButton.addEventListener("click", function () {
-            recruitDelete(recruitId);
-        });
-    }
 
     document
         .getElementById("modalOpenButton")
@@ -121,26 +113,6 @@ document
         recruitDelete();
     });
 
-function recruitDelete(recruitId) {
-    const accessToken = localStorage.getItem("accessToken");
-
-    axios
-        .delete(`api/recruit/my/post/${recruitId}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        })
-        .then(function (response) {
-            alert("삭제을 완료했습니다.");
-            window.location.reload();
-        })
-        .catch(function (error) {
-            console.log(error.response.data);
-
-            /* alert(error.response.data.message); */
-        });
-}
-
 function submitApplication(recruitId) {
     const inputMessage = document.getElementById("description1");
     const message = inputMessage.value;
@@ -161,7 +133,7 @@ function submitApplication(recruitId) {
         )
         .then(function (response) {
             // 성공적으로 처리된 경우 추가적인 처리를 할 수 있습니다.
-            alert(`${response.data.message}`);
+            alert(`모집 신청되었습니다.`);
             document
                 .getElementById("applyModal")
                 .setAttribute("hidden", "true");

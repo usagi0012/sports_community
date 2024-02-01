@@ -11,6 +11,7 @@ import { Userscore } from "src/entity/userscore.entity";
 import { CreatePersonalAssessmentDto } from "./dto/create-personal-assessment.dto";
 import { Recruit, Status } from "src/entity/recruit.entity";
 import { Match, MatchStatus } from "src/entity/match.entity";
+import { UserProfile } from "src/entity/user-profile.entity";
 import { User } from "src/entity/user.entity";
 
 @Injectable()
@@ -24,6 +25,8 @@ export class PersonalassessmenttagService {
         private readonly recruitRepository: Repository<Recruit>,
         @InjectRepository(Match)
         private readonly matchRepository: Repository<Match>,
+        @InjectRepository(UserProfile)
+        private readonly userProfileRepository: Repository<UserProfile>,
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
     ) {}
@@ -31,7 +34,7 @@ export class PersonalassessmenttagService {
     async findTopThreePersonalityAmountUser(userId: number) {
         const topThreeUsersPersonalityAmount =
             await this.userscoreRepository.find({
-                where: { profileId: userId },
+                where: { userId },
                 order: { personalityAmount: "DESC" },
                 take: 3,
             });
@@ -47,7 +50,7 @@ export class PersonalassessmenttagService {
 
         // 필요한 데이터만 추출하여 반환
         const result = topThreeUsersPersonalityAmount.map((user) => ({
-            userId: user.profileId,
+            userId,
             personalityAmount: user.personalityAmount,
         }));
 
@@ -56,7 +59,7 @@ export class PersonalassessmenttagService {
 
     async findTopThreeAbilityAmountUser(userId: number) {
         const topThreeAbilityAmountUser = await this.userscoreRepository.find({
-            where: { profileId: userId },
+            where: { userId },
             order: { abilityAmount: "DESC" },
             take: 3,
         });
@@ -71,7 +74,7 @@ export class PersonalassessmenttagService {
         }
 
         const result = topThreeAbilityAmountUser.map((user) => ({
-            userId: user.profileId,
+            userId,
             abilityAmount: user.abilityAmount,
         }));
 
@@ -79,16 +82,8 @@ export class PersonalassessmenttagService {
     }
 
     async findOneUserAssessment(userId: number) {
-        const user = await this.userRepository.findOne({
-            where: { id: userId },
-        });
-
-        if (!user) {
-            throw new NotFoundException("해당 유저를 찾을 수 없습니다.");
-        }
-
         const userAssessment = await this.userscoreRepository.findOne({
-            where: { profileId: user.id },
+            where: { userId },
             select: {
                 personalityAmount: true,
                 personality: true,
@@ -106,16 +101,8 @@ export class PersonalassessmenttagService {
     }
 
     async findOneUserTag(userId: number) {
-        const user = await this.userRepository.findOne({
-            where: { id: userId },
-        });
-
-        if (!user) {
-            throw new NotFoundException("해당 유저를 찾을 수 없습니다.");
-        }
-
         const userTag = await this.personaltagcounterRepository.findOne({
-            where: { profileId: user.id },
+            where: { userId },
         });
         if (!userTag) {
             throw new NotFoundException("유저의 개인 태그를 찾을 수 없습니다.");
@@ -125,10 +112,10 @@ export class PersonalassessmenttagService {
         const tagColumns = Object.keys(userTag).filter(
             (key) =>
                 key !== "id" &&
-                key !== "profileId" &&
+                key !== "userId" &&
                 key !== "createdAt" &&
                 key !== "updatedAt" &&
-                key !== "userProfile",
+                key !== "userId",
         );
 
         // 태그 열 중에서 최댓값을 가진 열 찾기
@@ -155,16 +142,16 @@ export class PersonalassessmenttagService {
     }
 
     async findOtherOneUserAssessment(userId: number) {
-        const user = await this.userRepository.findOne({
-            where: { id: userId },
+        const userProfile = await this.userProfileRepository.findOne({
+            where: { userId },
         });
 
-        if (!user) {
+        if (!userProfile) {
             throw new NotFoundException("해당 유저를 찾을 수 없습니다.");
         }
 
         const userAssessment = await this.userscoreRepository.findOne({
-            where: { profileId: user.id },
+            where: { userId },
             select: {
                 personalityAmount: true,
                 personality: true,
@@ -182,16 +169,16 @@ export class PersonalassessmenttagService {
     }
 
     async findOtherOneUserTag(userId: number) {
-        const user = await this.userRepository.findOne({
-            where: { id: userId },
+        const userProfile = await this.userProfileRepository.findOne({
+            where: { userId },
         });
 
-        if (!user) {
+        if (!userProfile) {
             throw new NotFoundException("해당 유저를 찾을 수 없습니다.");
         }
 
         const userTag = await this.personaltagcounterRepository.findOne({
-            where: { profileId: user.id },
+            where: { userId },
         });
         if (!userTag) {
             throw new NotFoundException("유저의 개인 태그를 찾을 수 없습니다.");
@@ -201,7 +188,7 @@ export class PersonalassessmenttagService {
         const tagColumns = Object.keys(userTag).filter(
             (key) =>
                 key !== "id" &&
-                key !== "profileId" &&
+                key !== "userId" &&
                 key !== "createdAt" &&
                 key !== "updatedAt" &&
                 key !== "userProfile",
@@ -232,12 +219,18 @@ export class PersonalassessmenttagService {
 
     async createPersonalAssessment(
         matchId: number,
-        recuritedId: number,
+        recuritId: number,
         userId: number,
+        playOtherUserId: number,
         createPersonalAssessmentDto: CreatePersonalAssessmentDto,
     ) {
+        if (playOtherUserId === userId) {
+            throw new BadRequestException(
+                "당사자 본인의 설문지를 작성할 수 없습니다.",
+            );
+        }
         const recurit = await this.recruitRepository.findOne({
-            where: { id: recuritedId },
+            where: { id: recuritId },
         });
 
         if (!recurit) {
@@ -256,21 +249,33 @@ export class PersonalassessmenttagService {
             where: { id: matchId },
         });
 
-        if (!personalMatch) {
-            throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
-        }
-
-        const user = await this.userRepository.findOne({
-            where: { id: userId },
+        const matchOtherUser = await this.userRepository.findOne({
+            where: { id: playOtherUserId },
         });
 
+        if (!matchOtherUser) {
+            throw new NotFoundException(
+                "같은 경기에 참석하지 않은 유저는 설문지를 작성할 수 없습니다.",
+            );
+        }
+
         if (
-            personalMatch.recruitId === user.id &&
-            personalMatch.guestId === user.id
+            personalMatch.guestId === matchOtherUser.id &&
+            personalMatch.hostId === matchOtherUser.id
         ) {
+            throw new BadRequestException(
+                "당사자 본인은 자기 평가서를 작성할 수 없습니다.",
+            );
+        }
+
+        /* if (personalMatch.hostId) {
             throw new BadRequestException(
                 "경기를 참여한 본인은 평가지 작성에 참여할 수 없습니다.",
             );
+        } */
+
+        if (!personalMatch.guestId && !personalMatch.hostId) {
+            throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
 
         if (personalMatch.status === MatchStatus.REJECTED) {
@@ -278,7 +283,7 @@ export class PersonalassessmenttagService {
         }
 
         const personalMatchHost = await this.matchRepository.findOne({
-            where: { recruitId: userId },
+            where: { hostId: recurit.hostId },
         });
 
         const personalMatchGuest = await this.matchRepository.findOne({
@@ -288,6 +293,16 @@ export class PersonalassessmenttagService {
         if (!personalMatchHost && !personalMatchGuest) {
             throw new NotFoundException(
                 "해당 모집경기에 참여하지 않은 유저는 설문지를 작성할 수 없습니다.",
+            );
+        }
+
+        const findAssessment = await this.userscoreRepository.findOne({
+            where: { userId },
+        });
+
+        if (findAssessment) {
+            throw new BadRequestException(
+                "이미 평가를 제출한 사람은 제출을 할 수 없습니다.",
             );
         }
 
@@ -302,7 +317,7 @@ export class PersonalassessmenttagService {
         const { ...restOfUserscore } = createPersonalAssessmentDto;
 
         const userScoreData = await this.userscoreRepository.save({
-            profileId: user.id,
+            userId,
             ...restOfUserscore,
         });
 
@@ -319,6 +334,9 @@ export class PersonalassessmenttagService {
 
         userScoreData.ability = parseFloat(userScoreData.ability.toFixed(3));
 
+        console.log(userScoreData.ability);
+        console.log(userScoreData.personality);
+
         const userScore = await this.userscoreRepository.save(userScoreData);
 
         return userScore;
@@ -326,12 +344,19 @@ export class PersonalassessmenttagService {
 
     async createPersonalTag(
         matchId: number,
-        recuritedId: number,
+        recuritId: number,
         userId: number,
+        playOtherUserId: number,
         personalTagCounterDto: PersonalTagCounterDto,
     ) {
+        if (playOtherUserId === userId) {
+            throw new BadRequestException(
+                "당사자 본인의 설문지를 작성할 수 없습니다.",
+            );
+        }
+
         const recurit = await this.recruitRepository.findOne({
-            where: { id: recuritedId },
+            where: { id: recuritId },
         });
 
         if (!recurit) {
@@ -350,21 +375,41 @@ export class PersonalassessmenttagService {
             where: { id: matchId },
         });
 
-        if (!personalMatch) {
+        if (!personalMatch.guestId && !personalMatch.hostId) {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
 
-        const user = await this.userRepository.findOne({
-            where: { id: userId },
+        const matchOtherUser = await this.userRepository.findOne({
+            where: { id: playOtherUserId },
         });
 
+        if (!matchOtherUser) {
+            throw new NotFoundException(
+                "같은 경기에 참석하지 않은 유저는 설문지를 작성할 수 없습니다.",
+            );
+        }
+
+        if (matchOtherUser.id === userId) {
+            throw new BadRequestException(
+                "당사자 본인의 설문지를 작성할 수 없습니다.",
+            );
+        }
+
         if (
-            personalMatch.recruitId === user.id &&
-            personalMatch.guestId === user.id
+            personalMatch.guestId === matchOtherUser.id &&
+            personalMatch.hostId === matchOtherUser.id
         ) {
             throw new BadRequestException(
-                "경기를 참여한 본인은 태그 작성에 참여할 수 없습니다.",
+                "당사자 본인은 자기 평가서를 작성할 수 없습니다.",
             );
+        }
+
+        const userScore = await this.userscoreRepository.findOne({
+            where: { userId },
+        });
+
+        if (userScore) {
+            throw new BadRequestException("이미 태그를 가지고 있습니다.");
         }
 
         if (personalMatch.status === MatchStatus.REJECTED) {
@@ -372,7 +417,7 @@ export class PersonalassessmenttagService {
         }
 
         const personalMatchHost = await this.matchRepository.findOne({
-            where: { recruitId: userId },
+            where: { hostId: recurit.hostId },
         });
 
         const personalMatchGuest = await this.matchRepository.findOne({
@@ -382,6 +427,16 @@ export class PersonalassessmenttagService {
         if (!personalMatchHost && !personalMatchGuest) {
             throw new NotFoundException(
                 "해당 모집경기에 참여하지 않은 유저는 태그를 작성할 수 없습니다.",
+            );
+        }
+
+        const findUserTag = await this.personaltagcounterRepository.findOne({
+            where: { userId },
+        });
+
+        if (findUserTag) {
+            throw new BadRequestException(
+                "이미 평가를 제출한 사람은 제출을 할 수 없습니다.",
             );
         }
 
@@ -395,7 +450,7 @@ export class PersonalassessmenttagService {
 
         const { ...restOfPersonaltagcounter } = personalTagCounterDto;
         const personalTagData = await this.personaltagcounterRepository.save({
-            profileId: user.id,
+            userId,
             ...restOfPersonaltagcounter,
         });
 
@@ -403,13 +458,20 @@ export class PersonalassessmenttagService {
     }
 
     async updatePesonalAssessment(
-        recuritedId: number,
+        recuritId: number,
         matchId: number,
         userId: number,
+        playOtherUserId: number,
         createPersonalAssessmentDto: CreatePersonalAssessmentDto,
     ) {
+        if (playOtherUserId === userId) {
+            throw new BadRequestException(
+                "당사자 본인의 설문지를 작성할 수 없습니다.",
+            );
+        }
+
         const personalAssessment = await this.userscoreRepository.findOne({
-            where: { profileId: userId },
+            where: { userId },
         });
 
         if (!personalAssessment) {
@@ -419,7 +481,7 @@ export class PersonalassessmenttagService {
         }
 
         const recurit = await this.recruitRepository.findOne({
-            where: { id: recuritedId },
+            where: { id: recuritId },
         });
 
         if (!recurit) {
@@ -442,25 +504,40 @@ export class PersonalassessmenttagService {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
 
-        const user = await this.userRepository.findOne({
-            where: { id: userId },
+        const matchOtherUser = await this.userRepository.findOne({
+            where: { id: playOtherUserId },
         });
 
-        if (
-            personalMatch.recruitId === user.id &&
-            personalMatch.guestId === user.id
-        ) {
-            throw new BadRequestException(
-                "경기를 참여한 본인은 평가지 작성에 참여할 수 없습니다.",
+        if (!matchOtherUser) {
+            throw new NotFoundException(
+                "같은 경기에 참석하지 않은 유저는 설문지를 작성할 수 없습니다.",
             );
         }
+
+        if (
+            personalMatch.guestId === matchOtherUser.id &&
+            personalMatch.hostId === matchOtherUser.id
+        ) {
+            throw new BadRequestException(
+                "당사자 본인은 자기 평가서를 작성할 수 없습니다.",
+            );
+        }
+
+        /*  if (
+            personalMatch.hostId === userId &&
+            personalMatch.guestId === userId
+        ) {
+            throw new BadRequestException(
+                "경기를 참여한 본인은 태그 작성에 참여할 수 없습니다.",
+            );
+        } */
 
         if (personalMatch.status === MatchStatus.REJECTED) {
             throw new BadRequestException("해당 경기는 거절되었습니다.");
         }
 
         const personalMatchHost = await this.matchRepository.findOne({
-            where: { recruitId: userId },
+            where: { hostId: recurit.hostId },
         });
 
         const personalMatchGuest = await this.matchRepository.findOne({
@@ -483,7 +560,7 @@ export class PersonalassessmenttagService {
 
         const personalAssessmentUserData =
             await this.userscoreRepository.findOne({
-                where: { profileId: userId },
+                where: { userId },
             });
 
         personalAssessmentUserData.count += 1;
@@ -518,14 +595,21 @@ export class PersonalassessmenttagService {
     }
 
     async updatePesonalTag(
-        recuritedId: number,
+        recuritId: number,
         matchId: number,
         userId: number,
+        playOtherUserId: number,
         personalTagCounterDto: PersonalTagCounterDto,
     ) {
+        if (playOtherUserId === userId) {
+            throw new BadRequestException(
+                "당사자 본인의 설문지를 작성할 수 없습니다.",
+            );
+        }
+
         const personalTagUser = await this.personaltagcounterRepository.findOne(
             {
-                where: { profileId: userId },
+                where: { userId },
             },
         );
 
@@ -534,7 +618,7 @@ export class PersonalassessmenttagService {
         }
 
         const recurit = await this.recruitRepository.findOne({
-            where: { id: recuritedId },
+            where: { id: recuritId },
         });
 
         if (!recurit) {
@@ -557,30 +641,45 @@ export class PersonalassessmenttagService {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
 
-        const user = await this.userRepository.findOne({
-            where: { id: userId },
-        });
-
-        if (
-            personalMatch.recruitId === user.id &&
-            personalMatch.guestId === user.id
+        /*    if (
+            personalMatch.hostId === userId &&
+            personalMatch.guestId === userId
         ) {
             throw new BadRequestException(
                 "경기를 참여한 본인은 태그 작성에 참여할 수 없습니다.",
             );
-        }
+        } */
 
         if (personalMatch.status === MatchStatus.REJECTED) {
             throw new BadRequestException("해당 경기는 거절되었습니다.");
         }
 
         const personalMatchHost = await this.matchRepository.findOne({
-            where: { recruitId: userId },
+            where: { hostId: recurit.hostId },
         });
 
         const personalMatchGuest = await this.matchRepository.findOne({
             where: { guestId: userId },
         });
+
+        const matchOtherUser = await this.userRepository.findOne({
+            where: { id: playOtherUserId },
+        });
+
+        if (!matchOtherUser) {
+            throw new NotFoundException(
+                "같은 경기에 참석하지 않은 유저는 설문지를 작성할 수 없습니다.",
+            );
+        }
+
+        if (
+            personalMatch.guestId === matchOtherUser.id &&
+            personalMatch.hostId === matchOtherUser.id
+        ) {
+            throw new BadRequestException(
+                "당사자 본인은 자기 평가서를 작성할 수 없습니다.",
+            );
+        }
 
         if (!personalMatchHost && !personalMatchGuest) {
             throw new NotFoundException(

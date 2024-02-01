@@ -33,6 +33,7 @@ function feed() {
 
             recruitList.forEach((recruits) => {
                 const newContent = document.createElement("div");
+                console.log(recruits);
                 newContent.classList.add("item");
                 newContent.innerHTML = `
                     <div class="num">${recruits.id}</div>

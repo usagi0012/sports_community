@@ -134,18 +134,17 @@ body {
 
 .board-post .title input[type="text"],
 .board-post .info input[type="text"],
-.board-post .info select {
+.board-post .info select,
+.board-post .info input[type="date"],
+.board-post .info input[type="time"] {
     padding: 10px;
     box-sizing: border-box;
 }
 
-/* .board-post .info select {
-    padding: 10px;
-    box-sizing: border-box;
-} */
-
-.board-post .info select {
-    width: 150%;
+.board-post .info select,
+.board-post .info input[type="date"],
+.board-post .info input[type="time"] {
+    width: 100%;
 }
 
 .board-post .title input[type="text"] {
