@@ -1,4 +1,5 @@
 /* 메인 컨테이너*/
+
 .mainContainer {
     margin-top: 70px;
 }
@@ -53,22 +54,26 @@ dd {
     display: flex;
     color: #6b6968;
 }
+
 .region,
 .member {
     width: 25%;
     display: flex;
     color: #6b6968;
 }
+
 .status {
     width: 25%;
     display: flex;
     color: #6b6968;
 }
+
 .gps {
     width: 20%;
     display: flex;
     color: #6b6968;
 }
+
 .gamedate {
     width: 45%;
     display: flex;
@@ -83,6 +88,7 @@ dd {
     border-radius: 5px;
     cursor: pointer;
 }
+
 #gpsBtn:hover {
     border: 1px solid #ffb13d;
     background-color: #fff;
@@ -162,4 +168,34 @@ dd {
 
 .modalBtnContainer > button:hover {
     background-color: #ffb13d;
+}
+
+#mapModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border: 2px solid red;
+    /* Debugging border */
+}
+
+#mapModal button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#mapModal button:hover {
+    background-color: #2980b9;
+}
+
+#mapModal .modal-content {
+    border: 2px solid black;
 }

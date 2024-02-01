@@ -10,7 +10,8 @@ var marker = new naver.maps.Marker({
 var infoWindow = new naver.maps.InfoWindow();
 
 function showWhere() {
-    var address = document.getElementById("showWhere").value;
+    var address = document.getElementById("address").innerText;
+    console.log(address);
 
     naver.maps.Service.geocode(
         {

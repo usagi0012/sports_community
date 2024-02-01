@@ -66,7 +66,7 @@ function getRecruitDetail(recruitId) {
         })
         .then(function (response) {
             const recruitDetail = response.data;
-            // Clear existing content
+
             feedBoardDetail.innerHTML = "";
 
             // Add new content
@@ -89,7 +89,11 @@ function getRecruitDetail(recruitId) {
                     <dd>${recruitDetail.status}</dd>
                 </dl>
                 <dl class="gps">
-                <dd id="gpsBtn">${recruitDetail.gps}</dd>
+                <dd id="gpsBtn" onclick="openMapModal('${recruitDetail.gps}')">
+                    ${recruitDetail.gps}
+                </dd>
+            </dl>
+            
             </dl>
                 </div>
                 <div class="secondRow">
@@ -118,11 +122,31 @@ function getRecruitDetail(recruitId) {
                 <div class="cont">${recruitDetail.content}</div>
             `;
             feedBoardDetail.appendChild(topContent);
+            const adreessElement = document.getElementById("adreess");
+            if (adreessElement) {
+                adreessElement.innerText = recruitDetail.gps;
+            }
         })
+
         .catch(function (error) {
             console.log(error.response.data);
             alert(error.response.data.message);
         });
+}
+
+function openMapModal(gpsData) {
+    var modal = document.getElementById("mapModal");
+    console.log(gpsData);
+
+    modal.style.display = "block";
+    showWhere(gpsData);
+}
+
+function closeMapModal() {
+    var modal = document.getElementById("mapModal");
+
+    // 모달을 감추도록 설정
+    modal.style.display = "none";
 }
 
 function submitApplication(recruitId) {
@@ -155,4 +179,66 @@ function submitApplication(recruitId) {
             console.error(error.response.data);
             alert(error.response.data.message);
         });
+}
+
+var map = new naver.maps.Map("map", {
+    center: new naver.maps.LatLng(37.5665, 126.978),
+    zoom: 10,
+});
+
+var marker = new naver.maps.Marker({
+    map: map,
+});
+
+var infoWindow = new naver.maps.InfoWindow();
+
+function showWhere(gpsData) {
+    var address = gpsData;
+    naver.maps.Service.geocode(
+        {
+            query: address,
+        },
+        function (status, response) {
+            if (status === naver.maps.Service.Status.ERROR) {
+                console.error("Something went wrong:", response);
+                return;
+            }
+
+            if (response.v2.meta.totalCount === 0) {
+                alert("No results found for the address: " + address);
+                return;
+            }
+
+            var item = response.v2.addresses[0];
+            var point = new naver.maps.Point(item.x, item.y);
+
+            marker.setPosition(point);
+
+            // var htmlAddresses = [];
+
+            // if (item.roadAddress) {
+            //     htmlAddresses.push("[도로명 주소] " + item.roadAddress);
+            // }
+
+            // if (item.jibunAddress) {
+            //     htmlAddresses.push("[지번 주소] " + item.jibunAddress);
+            // }
+
+            // if (item.englishAddress) {
+            //     htmlAddresses.push("[영문명 주소] " + item.englishAddress);
+            // }
+
+            infoWindow.setContent(
+                [
+                    '<div style="padding:10px;min-width:100px;line-height:100%;">',
+                    '<h4 style="margin-top:5px;">검색 주소 : ' +
+                        address +
+                        "</div>",
+                ].join("\n"),
+            );
+
+            map.setCenter(point);
+            infoWindow.open(map, marker);
+        },
+    );
 }
