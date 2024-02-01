@@ -49,7 +49,7 @@ export class AuthService {
         );
 
         // 토큰 생성 함수를 사용합니다.
-        const verificationLink = `http://${this.configService.get<string>(
+        const verificationLink = `${this.configService.get<string>(
             "FRONTEND_URL",
         )}/verify?token=${verificationToken}`;
 
