@@ -77,12 +77,12 @@ function searchCoordinateToAddress(latlng) {
                 htmlAddresses.push(i + 1 + ". " + addrType + " " + address);
             }
 
-            htmlAddresses.push(
-                "<br/><strong>위도:</strong> " +
-                    latlng.lat() +
-                    "<br/><strong>경도:</strong> " +
-                    latlng.lng(),
-            );
+            // htmlAddresses.push(
+            //     "<br/><strong>위도:</strong> " +
+            //         latlng.lat() +
+            //         "<br/><strong>경도:</strong> " +
+            //         latlng.lng(),
+            // );
 
             infoWindow.setContent(
                 [
@@ -129,16 +129,16 @@ function searchAddressToCoordinate(address) {
                 htmlAddresses.push("[지번 주소] " + item.jibunAddress);
             }
 
-            if (item.englishAddress) {
-                htmlAddresses.push("[영문명 주소] " + item.englishAddress);
-            }
+            // if (item.englishAddress) {
+            //     htmlAddresses.push("[영문명 주소] " + item.englishAddress);
+            // }
 
-            htmlAddresses.push(
-                "<br/><strong>위도:</strong> " +
-                    point.y +
-                    "<br/><strong>경도:</strong> " +
-                    point.x,
-            );
+            // htmlAddresses.push(
+            //     "<br/><strong>위도:</strong> " +
+            //         point.y +
+            //         "<br/><strong>경도:</strong> " +
+            //         point.x,
+            // );
 
             infoWindow.setContent(
                 [
@@ -146,17 +146,11 @@ function searchAddressToCoordinate(address) {
                     '<h4 style="margin-top:5px;">검색 주소 : ' +
                         address +
                         "</h4><br />",
-                    htmlAddresses.join("<br />"),
-                    "</div>",
                 ].join("\n"),
             );
 
             map.setCenter(point);
             infoWindow.open(map, point);
-
-            // Update the confirmDORO and confirmJUSO elements
-            $("#confirmDORO").text(item.roadAddress);
-            $("#confirmJUSO").text(item.jibunAddress);
         },
     );
 }
@@ -179,7 +173,6 @@ function initGeocoder() {
 
         searchAddressToCoordinate($("#address").val());
     });
-
     $("#confirm").on("click", function (e) {
         e.preventDefault();
 
@@ -212,12 +205,12 @@ function initGeocoder() {
                     }
                 }
 
-                $("#confirmDORO").text(roadAddress);
-                $("#confirmJUSO").text(jibunAddress);
+                alert(
+                    "지번주소: " + jibunAddress + "도로면주소: " + roadAddress,
+                );
             },
         );
     });
-
     searchAddressToCoordinate(currentlocation);
 }
 
