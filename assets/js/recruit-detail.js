@@ -33,6 +33,26 @@ window.onload = function () {
         });
 };
 
+const region = [
+    "서울",
+    "부산",
+    "대구",
+    "인천",
+    "광주",
+    "대전",
+    "울산",
+    "세종",
+    "경기",
+    "강원",
+    "충청북도",
+    "충청남도",
+    "경상북도",
+    "경상남도",
+    "전라북도",
+    "전라남도",
+    "제주도",
+];
+
 const feedBoardDetail = document.querySelector(".detailContainer");
 
 function getRecruitDetail(recruitId) {
@@ -62,7 +82,7 @@ function getRecruitDetail(recruitId) {
                     </dl>
                     <dl class="region">
                         <dt>지역</dt>
-                        <dd>${recruitDetail.region}</dd>
+                        <dd>${region[recruitDetail.region]}</dd>
                     </dl>
                     <dl class="status">
                     <dt>상태</dt>
