@@ -117,6 +117,7 @@ export class ChatBackEndGateway
         // client.to(roomId) : 나를 제외한 방 전원에게 보내는 것
 
         console.log(client.id, client.data.nickname, message, roomId);
+        const roomName = "room:1";
         console.log(typeof roomId);
         this.server.to(roomId).emit("getMessage", {
             //실제 데이터로 바꾸기

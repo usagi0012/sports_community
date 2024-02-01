@@ -51,7 +51,7 @@
                         <div class="inbox_chat chatRoomList"></div>
                     </div>
                     <div class="mesgs">
-                        <div class="msg_history chat"></div>
+                        <div class="msg_history chat">fff</div>
                         <div class="type_msg">
                             <div class="input_msg_write">
                                 <input
@@ -159,7 +159,6 @@
                         message,
                         roomId,
                     );
-                    let html = "";
                     const now = new Date();
                     const hours = now.getHours();
                     const minutes = now.getMinutes();
@@ -180,14 +179,22 @@
                     const thisRoomId = localStorage.getItem("thisRoomId");
                     console.log({ thisRoomId });
                     console.log("*********", roomId);
+
+                    console.log("소켓 아이디", socket.id);
                     console.log("마이 인포 아이디", myInfo.id);
-                    console.log("디스 룸 아이디", thidRoomId);
-                    /*  if (thisRoomId === roomId) { */
+                    console.log("디스 룸 아이디", thisRoomId);
+                    console.log(roomId == thisRoomId);
+                    let html = "";
+                    // ****중요(여기까지 함)****
+                    // 채팅 내역 잘 들어감 - 확인했음, 다시 켰을 때 안되면 말도 안되는거임
+                    // roomId == thisRoomId && socket.id == client.id 넣으면 될 듯?
                     if (roomId == thisRoomId) {
+                        console.log("채팅 생성");
+                        console.log($(".chat"));
                         html += '<div class="outgoing_msg">';
                         html += '<div class="sent_msg">';
                         html += "<p>" + message + "</p>";
-                        html += `${timeDate}`;
+                        html += timeDate;
                         html += "</div>";
                         html += "</div>";
                     } else {
@@ -199,10 +206,9 @@
                         html += "</div>";
                         html += "</div>";
                         html += "</div>";
-                        /*    } */
-                        $(".chat").append(html);
-                        $(".chat").scrollTop($(".chat")[0].scrollHeight);
                     }
+                    $(".chat").append(html);
+                    $(".chat").scrollTop($(".chat")[0].scrollHeight);
                 },
             );
 
@@ -273,7 +279,8 @@
         // 채팅방 입장
         $(document).on("click", ".enterChatRoom", function () {
             const thisRoomId = $(this).attr("data-roomId");
-            const roomId = localStorage.getItem("roomId");
+            const roomId = localStorage.getItem("thisRoomId");
+            console.log("enter시 룸 아이디", roomId);
             socket.emit("enterChatRoom", roomId, (res) => {
                 if (!res) return;
                 myInfo.room = res;
