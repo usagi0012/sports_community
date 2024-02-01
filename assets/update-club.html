@@ -100,6 +100,7 @@
                     )
                     .then(function (response) {
                         console.log(response);
+                        window.location.href = `/club-detail.html?id=${clubId}`;
                     })
                     .catch(function (error) {
                         console.log(error.response);

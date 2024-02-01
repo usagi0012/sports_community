@@ -25,6 +25,7 @@ import { NaverModule } from "./social-login/naver/naver.module";
 import { PlaceModule } from "./place/place.module";
 import { KakaoModule } from "./social-login/kakao/kakao.module";
 import { ScheduleModule } from "@nestjs/schedule";
+import { UserAlarmModule } from "./user-alarm/user-alarm.module";
 
 @Module({
     imports: [
@@ -50,6 +51,7 @@ import { ScheduleModule } from "@nestjs/schedule";
         AlarmserviceModule,
         KakaoModule,
         NaverModule,
+        UserAlarmModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],

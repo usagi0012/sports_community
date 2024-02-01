@@ -2,15 +2,22 @@ document.addEventListener("DOMContentLoaded", async function () {
     try {
         // Access token 가져오기
         const accessToken = localStorage.getItem("accessToken");
-
-        // 프로필 정보 가져오기
-        const profileResponse = await axios.get("api/user/me/profile", {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+        // 프로필 정보 및 포지션 정보 가져오기
+        const [profileResponse, positionResponse] = await Promise.all([
+            axios.get("api/user/me/profile", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }),
+            axios.get("api/user/me/position", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }),
+        ]);
 
         console.log(profileResponse);
+        console.log("포지션", positionResponse.data.data.findPositionByUserId);
 
         // 기존 프로필 정보를 변수에 저장
         const profile = profileResponse.data.data.userProfile;
@@ -38,6 +45,22 @@ document.addEventListener("DOMContentLoaded", async function () {
                 newImage = event.target.files[0];
             }
         });
+        // 체크된 포지션 설정
+        const positionInfo = positionResponse.data.data.findPositionByUserId;
+        document
+            .querySelectorAll('input[name="position"]')
+            .forEach((checkbox) => {
+                const positionName = checkbox.value;
+
+                // 포지션 정보를 찾음
+                const position = positionInfo.find(
+                    (pos) => pos[positionName] === true,
+                );
+
+                // position이 존재하면 체크
+                const isChecked = position !== undefined;
+                checkbox.checked = isChecked;
+            });
 
         // 프로필 수정하기 버튼 클릭 이벤트
         document
@@ -46,6 +69,14 @@ document.addEventListener("DOMContentLoaded", async function () {
                 try {
                     // 변경된 정보를 담을 객체 생성
                     const updatedProfile = {};
+                    const updatedPositions = Array.from(
+                        document.querySelectorAll(
+                            'input[name="position"]:checked',
+                        ),
+                    ).reduce((acc, position) => {
+                        acc[position.value] = true;
+                        return acc;
+                    }, {});
 
                     // 닉네임, 성별, 자기소개, 키 등의 입력 값을 읽어와서 객체에 추가
                     updatedProfile.nickname =
@@ -91,6 +122,21 @@ document.addEventListener("DOMContentLoaded", async function () {
                                 Authorization: `Bearer ${accessToken}`,
                             },
                         },
+                    );
+                    // 변경된 포지션 정보를 서버로 전송
+                    const updatePositionResponse = await axios.put(
+                        "api/user/me/position",
+                        updatedPositions,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                        },
+                    );
+
+                    console.log(
+                        "updatePositionResponse",
+                        updatePositionResponse.data.data.updatedUserPosition,
                     );
 
                     // 성공적으로 업데이트되었다면, 페이지를 새로고침하거나 다른 조치를 취할 수 있습니다.

@@ -152,9 +152,9 @@ export class ClubService {
             throw new NotFoundException("동아리가 존재하지 않습니다.");
         }
 
-        if (existClub) {
-            throw new ConflictException("이미 있는 동아리 이름입니다.");
-        }
+        // if (existClub) {
+        //     throw new ConflictException("이미 있는 동아리 이름입니다.");
+        // }
 
         if (club.masterId !== user.id) {
             throw new UnauthorizedException("수정할 권한이 없습니다.");

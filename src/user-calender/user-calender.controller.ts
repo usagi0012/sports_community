@@ -17,13 +17,17 @@ import { UpdateUserCalenderDto } from "./dto/update-user-calender.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";
+import { Alarmservice } from "src/alarm/alarm.service";
 
 @ApiTags("캘린더")
 @ApiBearerAuth("accessToken")
 @UseGuards(accessTokenGuard)
 @Controller("user/me/calender")
 export class UserCalenderController {
-    constructor(private readonly userCalenderService: UserCalenderService) {}
+    constructor(
+        private readonly userCalenderService: UserCalenderService,
+        private readonly alarmService: Alarmservice,
+    ) {}
 
     //캘린더 일정 작성하기
     @Post()
@@ -58,6 +62,7 @@ export class UserCalenderController {
         @Body() updateUserCalenderDto: UpdateUserCalenderDto,
     ) {
         console.log("들어온 캘린더ID", calenderId);
+
         return this.userCalenderService.update(
             +userId,
             calenderId,

@@ -23,6 +23,8 @@ import { Report } from "./report.entity";
 import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { Banlist } from "./banlist.entity";
+import { UserAlarm } from "./userAlarm.entity";
+// import { Alarm } from "./alarm.entity";
 
 export enum UserType {
     USER = "user",
@@ -95,4 +97,7 @@ export class User {
 
     @OneToMany(() => Banlist, (banlist) => banlist.banListUser)
     banList: Banlist[];
+
+    @OneToMany(() => UserAlarm, (userAlarm) => userAlarm.user)
+    userAlarm: UserAlarm[];
 }
