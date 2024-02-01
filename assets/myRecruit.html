@@ -3,109 +3,145 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>매치 정보</title>
-        <meta name="description" content="Onog 통합 로그인 플랫폼" />
+        <title>Onog My Recruit</title>
+        <meta name="description" content="Onog MyRecruitPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
         <link
             rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         />
+        <link rel="stylesheet" href="css/dropBar.css" />
+        <link rel="stylesheet" href="./css/myRecruit.css" />
     </head>
 
-    <body onload="displayRecruitInfo()">
-        <div>
-            <h2>내 모집글</h2>
-            <div id="myRecruit-info"></div>
-        </div>
-
-        <!-- 모집글 상세정보 -->
-        <div
-            class="modal fade"
-            id="myRecruitModal"
-            tabindex="-1"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-        >
-            <div class="modal-dialog" id="myRecruitMatch">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">
-                            모집글 상세정보
-                        </h1>
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                        ></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="myRecruit"></div>
-                        <h2>참가유저</h2>
-                        <div id="recruitMatch"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <div id="RecruitButton"></div>
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-dismiss="modal"
-                        >
-                            닫기
-                        </button>
-                    </div>
+    <body>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="titleContainer">
+                <div class="titleFlex">
+                    <h3 id="myWriteRecruit" onclick="toMyRecruit()">
+                        내 모집글
+                    </h3>
+                    <h3 id="myApplyRecruit" onclick="toMyMatch()">
+                        내가 신청한 매치
+                    </h3>
                 </div>
             </div>
-        </div>
+            <div class="mainContainer" id="mainContainer">
+                <div>
+                    <div id="myRecruit-info"></div>
+                    <div
+                        id="recruitUserButton"
+                        class="recruitUserButton"
+                        data-toggle="modal"
+                        data-target="#recruitUserModal"
+                    ></div>
+                </div>
 
-        <!-- 신청목록 모달 -->
-        <div
-            id="recruitUserButton"
-            class="recruitUserButton"
-            data-toggle="modal"
-            data-target="#recruitUserModal"
-        ></div>
+                <!-- 모집글 상세정보 -->
+                <div
+                    class="modal fade"
+                    id="myRecruitModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog" id="myRecruitMatch">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1
+                                    class="modal-title fs-5"
+                                    id="exampleModalLabel"
+                                >
+                                    모집글 상세정보
+                                </h1>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="myRecruit"></div>
+                                <h2>참가유저</h2>
+                                <div id="recruitMatch"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <div id="RecruitButton"></div>
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-dismiss="modal"
+                                >
+                                    닫기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <div
-            class="modal fade"
-            id="recruitUserModal"
-            tabindex="-1"
-            aria-labelledby="recruitUserModalLabel"
-            aria-hidden="true"
-        >
-            <div class="modal-dialog" id="recruitUserModalDialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="recruitUserModalLabel">
-                            신청 목록
-                        </h1>
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                        ></button>
-                    </div>
-                    <div class="modal-body">
-                        <div style="margin-bottom: 10px" id="recruitUser"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <div>
-                            <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-dismiss="modal"
-                            >
-                                닫기
-                            </button>
+                <!-- 신청목록 모달 -->
+
+                <div
+                    class="modal fade"
+                    id="recruitUserModal"
+                    tabindex="-1"
+                    aria-labelledby="recruitUserModalLabel"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog" id="recruitUserModalDialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1
+                                    class="modal-title fs-5"
+                                    id="recruitUserModalLabel"
+                                >
+                                    신청 목록
+                                </h1>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div class="modal-body">
+                                <div
+                                    style="margin-bottom: 10px"
+                                    id="recruitUser"
+                                ></div>
+                            </div>
+                            <div class="modal-footer">
+                                <div>
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        data-dismiss="modal"
+                                    >
+                                        닫기
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="footer" id="footer"></div>
+
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/myRecruit.js"></script>
+        <script src="./js/dropmenu.js"></script>
     </body>
 </html>

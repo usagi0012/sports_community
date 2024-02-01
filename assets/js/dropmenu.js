@@ -118,6 +118,15 @@ async function toMyRecruit() {
         window.location.href = "myRecruit.html";
     }
 }
+//내가 신청한 모집글 페이지로 이동
+async function toMyMatch() {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+        alert("로그인 후 이용 가능합니다.");
+    } else {
+        window.location.href = "myMatch.html";
+    }
+}
 //동아리 목록 페이지로 이동
 async function toClub() {
     window.location.href = "club.html";
