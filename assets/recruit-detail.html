@@ -15,8 +15,23 @@
         />
         <link rel="stylesheet" href="css/dropBar.css" />
         <link rel="stylesheet" href="./css/recruit-detail.css" />
+        <script
+            async
+            src="https://code.jquery.com/jquery-3.6.4.min.js"
+        ></script>
+
+        <script
+            type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils"
+        ></script>
+        <script
+            type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils&submodules=geocoder"
+        ></script>
+        <style></style>
     </head>
-    <body>
+
+    <body onLoad="showWhere()">
         <div id="sameContainer"></div>
         <div class="bodyContainer">
             <div class="mainContainer" id="mainContainer">
@@ -37,6 +52,18 @@
                     </div>
                 </div>
 
+
+            <div class="board-wrap">
+                <div class="board-title">
+                    <strong>피드</strong>
+                    <p>오농 커뮤니티</p>
+                </div>
+                <div class="board-detail-wrap">
+                    <div class="board-detail"></div>
+                    <div class="bt-wrap">
+                        <a href="./recruit.html" class="on">목록</a>
+                        <a href="#" id="modalOpenButton">신청</a>
+                    </div>
                 <div class="buttonContainer" id="buttonContainer">
                     <button class="modalOpenBtn" id="modalOpenButton">
                         신청
@@ -47,6 +74,15 @@
                 </div>
             </div>
         </div>
+        <div id="mapModal" class="modal">
+            <div class="adreess" id="adreess"></div>
+
+            <div id="map" style="width: 800px; height: 600px"></div>
+
+            <div class="modalBtnContainer">
+                <button onclick="closeMapModal()">닫기</button>
+            </div>
+        </div>
 
         <div class="footer" id="footer"></div>
 
@@ -54,5 +90,8 @@
         <script src="./js/recruit-detail.js"></script>
         <script src="./js/dropmenu.js"></script>
         <script src="./js/notification.js"></script>
+        <script>
+            "js/showWhere.js";
+        </script>
     </body>
 </html>

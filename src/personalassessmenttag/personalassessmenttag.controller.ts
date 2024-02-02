@@ -103,20 +103,24 @@ export class PersonalassessmenttagController {
         };
     }
 
-    @Post("/personal/:matchId/:recuritedId")
+    @Post("/personal/:matchId/:recuritId/:playOtherUserId")
     async createPersonalAssessment(
         @Param("matchId") matchId: number,
-        @Param("recuritedId") recuritedId: number,
+        @Param("recuritId") recuritId: number,
+        @Param("playOtherUserId") playOtherUserId: number,
         @UserId() userId: number,
         @Body() createPersonalAssessmentDto: CreatePersonalAssessmentDto,
     ) {
         const data =
             await this.personalassessmenttagService.createPersonalAssessment(
                 matchId,
-                recuritedId,
+                recuritId,
+                playOtherUserId,
                 userId,
                 createPersonalAssessmentDto,
             );
+
+        console.log("fsefxdzfefxg", createPersonalAssessmentDto);
         this.alarmService.sendAlarm(userId, "평가지가 제출되었습니다.");
         return {
             statusCode: HttpStatus.CREATED,
@@ -125,16 +129,18 @@ export class PersonalassessmenttagController {
         };
     }
 
-    @Post("/personal/tag/:matchId/:recuritedId")
+    @Post("/personal/tag/:matchId/:recuritId/:playOtherUserId")
     async createPersonalTag(
         @Param("matchId") matchId: number,
-        @Param("recuritedId") recuritedId: number,
+        @Param("recuritId") recuritId: number,
+        @Param("playOtherUserId") playOtherUserId: number,
         @UserId() userId: number,
         @Body() personalTagCounterDto: PersonalTagCounterDto,
     ) {
         const data = await this.personalassessmenttagService.createPersonalTag(
             matchId,
-            recuritedId,
+            recuritId,
+            playOtherUserId,
             userId,
             personalTagCounterDto,
         );
@@ -147,17 +153,19 @@ export class PersonalassessmenttagController {
         };
     }
 
-    @Put("/personal/:matchId/:recuritedId")
+    @Put("/personal/:matchId/:recuritId/:playOtherUserId")
     async updatePesonalAssessment(
         @Param("matchId") matchId: number,
-        @Param("recuritedId") recuritedId: number,
+        @Param("recuritId") recuritId: number,
+        @Param("playOtherUserId") playOtherUserId: number,
         @UserId() userId: number,
         @Body() createPersonalAssessmentDto: CreatePersonalAssessmentDto,
     ) {
         const data =
             await this.personalassessmenttagService.updatePesonalAssessment(
-                recuritedId,
+                recuritId,
                 matchId,
+                playOtherUserId,
                 userId,
                 createPersonalAssessmentDto,
             );
@@ -170,16 +178,18 @@ export class PersonalassessmenttagController {
         };
     }
 
-    @Put("/personal/tag/:matchId/:recuritedId")
+    @Put("/personal/tag/:matchId/:recuritId/:playOtherUserId")
     async updatePesonalTag(
         @Param("matchId") matchId: number,
-        @Param("recuritedId") recuritedId: number,
+        @Param("recuritId") recuritId: number,
+        @Param("playOtherUserId") playOtherUserId: number,
         @UserId() userId: number,
         @Body() personalTagCounterDto: PersonalTagCounterDto,
     ) {
         const data = await this.personalassessmenttagService.updatePesonalTag(
             matchId,
-            recuritedId,
+            recuritId,
+            playOtherUserId,
             userId,
             personalTagCounterDto,
         );
