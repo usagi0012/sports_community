@@ -77,12 +77,12 @@ function searchCoordinateToAddress(latlng) {
                 htmlAddresses.push(i + 1 + ". " + addrType + " " + address);
             }
 
-            htmlAddresses.push(
-                "<br/><strong>위도:</strong> " +
-                    latlng.lat() +
-                    "<br/><strong>경도:</strong> " +
-                    latlng.lng(),
-            );
+            // htmlAddresses.push(
+            //     "<br/><strong>위도:</strong> " +
+            //         latlng.lat() +
+            //         "<br/><strong>경도:</strong> " +
+            //         latlng.lng(),
+            // );
 
             infoWindow.setContent(
                 [
@@ -133,12 +133,12 @@ function searchAddressToCoordinate(address) {
                 htmlAddresses.push("[영문명 주소] " + item.englishAddress);
             }
 
-            htmlAddresses.push(
-                "<br/><strong>위도:</strong> " +
-                    point.y +
-                    "<br/><strong>경도:</strong> " +
-                    point.x,
-            );
+            // htmlAddresses.push(
+            //     "<br/><strong>위도:</strong> " +
+            //         point.y +
+            //         "<br/><strong>경도:</strong> " +
+            //         point.x,
+            // );
 
             infoWindow.setContent(
                 [
