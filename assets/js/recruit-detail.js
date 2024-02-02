@@ -3,8 +3,7 @@ window.onload = function () {
     loadFooter();
     const urlParams = new URLSearchParams(window.location.search);
     let recruitId = urlParams.get("id");
-
-    getRecruitDetail(+recruitId);
+    getRecruitDetail(recruitId);
 
     document
         .getElementById("modalOpenButton")
