@@ -11,10 +11,15 @@ export class UserAlarmService {
     ) {}
 
     //알람 온거 저장
-    async saveUserAlarm(userId: number, message: string): Promise<void> {
+    async saveUserAlarm(
+        userId: number,
+        message: string,
+        link?: string,
+    ): Promise<void> {
         const newAlarm = this.userAlarmRepository.create({
             user: { id: userId },
             message,
+            link,
         });
         await this.userAlarmRepository.save(newAlarm);
     }

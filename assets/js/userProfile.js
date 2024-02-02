@@ -37,29 +37,27 @@ document.addEventListener("DOMContentLoaded", async function () {
                 console.log("포지션 정보 가져오기", positionResponse);
             const positions = positionResponse.data.data.findPositionByUserId;
 
-            if (!positions) {
-                document.getElementById("position").innerText = "없음";
-                console.log("포지션 정보 없음");
-            }
             // positions 배열에서 true인 속성들을 필터링하여 추출
             const truePositions = positions.filter((position) => {
                 return position.guard || position.forward || position.center;
             });
 
-            // truePositions에서 true인 속성들의 이름을 추출
-            const trueProperties = truePositions.map((position) => {
-                return Object.entries(position)
-                    .filter(([key, value]) => value === true)
-                    .map(([key, value]) => key);
-            });
-            const showPosition = trueProperties.flat().join(", ");
-
-            if (positionResponse.data.statusCode === 200) {
-                const position = positionResponse.data.data;
-                document.getElementById("position").innerText = showPosition;
-            } else {
-                // 포지션 정보가 없는경우
+            if (truePositions[0] === undefined) {
                 document.getElementById("position").innerText = "없음";
+            } else {
+                // truePositions에서 true인 속성들의 이름을 추출
+                const trueProperties = truePositions.map((position) => {
+                    return Object.entries(position)
+                        .filter(([key, value]) => value === true)
+                        .map(([key, value]) => key);
+                });
+                const showPosition = trueProperties.flat().join(", ");
+
+                if (positionResponse.data.statusCode === 200) {
+                    const position = positionResponse.data.data;
+                    document.getElementById("position").innerText =
+                        showPosition;
+                }
             }
         } catch (error) {
             // 에러 핸들링
@@ -82,7 +80,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 },
             });
 
-            console.log(scoreResponse.data);
+            console.log(scoreResponse);
 
             if (scoreResponse.data.message === "개인 점수가 조회되었습니다.") {
                 // 평가 점수가 있는 경우

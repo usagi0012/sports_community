@@ -13,6 +13,7 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
         />
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <link rel="stylesheet" href="css/dropBar.css" />
         <link rel="stylesheet" href="./css/recruit-post.css" />
         <script
@@ -28,7 +29,6 @@
             type="text/javascript"
             src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils&submodules=geocoder"
         ></script>
-
         <style></style>
     </head>
 
@@ -103,6 +103,29 @@
                                         id="input-endtime"
                                         type="date"
                                         placeholder="경기 종료 시간을 입력하세요"
+                                    />
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>경기규칙</dt>
+                                <dd>
+                                    <select
+                                        id="ruleSelect"
+                                        placeholder="경기 규칙을 선택하세요"
+                                    >
+                                        <option value="3대3">3대3</option>
+                                        <option value="4대4">4대4</option>
+                                        <option value="5대5">5대5</option>
+                                    </select>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>모집인원</dt>
+                                <dd>
+                                    <input
+                                        id="input-totalmember"
+                                        type="text"
+                                        placeholder="모집 인원을 입력하세요"
                                         type="datetime-local"
                                         placeholder="경기 종료 시간을 입력하세요."
                                     />
@@ -172,7 +195,6 @@
                         지번 주소
                     </button>
                     <div id="checkbox"></div>
-                    <script src="js/map.js"></script>
                 </div>
                 <div class="modal-footer">
                     <button id="getCurrentLocation">현재 위치로 이동</button>
@@ -219,6 +241,10 @@
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/recruit-post.js"></script>
+
+        <script src="js/map.js"></script>
+
         <script src="./js/dropmenu.js"></script>
+        <script src="./js/notification.js"></script>
     </body>
 </html>
