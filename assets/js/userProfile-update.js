@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         // 기존 정보를 각 필드에 표시
         document.getElementById("nickname").value = profile.nickname;
-        document.getElementById("gender").value = profile.gender;
+
         document.getElementById("description").value = profile.description;
         document.getElementById("height").value = profile.height;
 
@@ -100,16 +100,10 @@ document.addEventListener("DOMContentLoaded", async function () {
                     // 닉네임, 성별, 자기소개, 키 등의 입력 값을 읽어와서 객체에 추가
                     updatedProfile.nickname =
                         document.getElementById("nickname").value;
-                    updatedProfile.gender =
-                        document.getElementById("gender").value;
                     updatedProfile.description =
                         document.getElementById("description").value;
                     updatedProfile.height =
                         document.getElementById("height").value;
-
-                    if (updatedProfile.gender !== profile.gender) {
-                        return alert("성별은 변경할 수 없습니다.");
-                    }
 
                     // 이미지를 선택한 경우에만 새 이미지를 서버로 전송
                     if (newImage) {
