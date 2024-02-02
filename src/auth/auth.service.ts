@@ -43,10 +43,7 @@ export class AuthService {
 
         // 회원가입 이메일 전송
         createUserDto.isVerified = false;
-        const verificationToken = this.generateAccessToken(
-            userId.id,
-            createUserDto.name,
-        );
+        const verificationToken = this.generateAccessToken(userId.id);
 
         // 토큰 생성 함수를 사용합니다.
         const verificationLink = `${this.configService.get<string>(
@@ -219,7 +216,7 @@ export class AuthService {
             throw new UnauthorizedException("비밀번호가 일치하지 않습니다.");
         }
 
-        const accessToken = this.generateAccessToken(user.id, user.name);
+        const accessToken = this.generateAccessToken(user.id);
         const refreshToken = this.generateRefreshToken(user.id);
 
         await this.userService.update(user.id, {
@@ -236,7 +233,7 @@ export class AuthService {
     async refresh(id: number) {
         const user = await this.userService.findUserById(id);
 
-        const accessToken = this.generateAccessToken(id, user.name);
+        const accessToken = this.generateAccessToken(id);
 
         return accessToken;
     }
@@ -251,9 +248,8 @@ export class AuthService {
     }
 
     /// access 토큰 발급 (private)
-    private generateAccessToken(id: number, name: string) {
-        const payload = { userId: id, userName: name };
-
+    private generateAccessToken(id: number) {
+        const payload = { userId: id };
         const accessToken = this.jwtService.sign(payload, {
             secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
             expiresIn: this.configService.get<string>("JWT_ACCESS_TOKEN_EXP"),

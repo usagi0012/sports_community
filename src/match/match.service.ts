@@ -125,9 +125,9 @@ export class MatchService {
             },
         });
 
-        if (!matches || matches.length === 0) {
-            throw new NotFoundException("컴펌된 유저가 없습니다.");
-        }
+        // if (!matches || matches.length === 0) {
+        //     throw new NotFoundException("컴펌된 유저가 없습니다.");
+        // }
 
         return [findmatch, matches];
     }
