@@ -229,7 +229,6 @@ export class PersonalassessmenttagService {
                 "당사자 본인의 설문지를 작성할 수 없습니다.",
             );
         }
-        console.log(recuritedId);
         const recurit = await this.recruitRepository.findOne({
             where: { id: recuritId },
         });
