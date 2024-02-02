@@ -17,6 +17,7 @@ import { ClubMatchStatus } from "../entity/club_match.entity";
 import { MatchStatus } from "src/entity/match.entity";
 import { Status } from "src/entity/recruit.entity";
 import { Alarmservice } from "src/alarm/alarm.service";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class ClubMatchService {
@@ -26,6 +27,7 @@ export class ClubMatchService {
         @InjectRepository(Club)
         private clubRepository: Repository<Club>,
         private readonly alarmService: Alarmservice,
+        private readonly configService: ConfigService,
     ) {}
     //매치 신청하기
 
@@ -66,7 +68,8 @@ export class ClubMatchService {
         });
         console.log(hostClub.masterId);
         console.log(guestClub.name);
-        const link = `http://localhost:8001/index.html`;
+        const link = `${this.configService.get("LOCALHOSt_URL")}/index.html`;
+        console.log(this.configService.get("LOCALHOST_URL"));
         this.alarmService.sendAlarm(
             hostClub.masterId,
             `${guestClub.name}동아리에게 매치 신청이 왔습니다.`,
