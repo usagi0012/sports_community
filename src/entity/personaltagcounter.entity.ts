@@ -3,13 +3,10 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinColumn,
-    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
-import { UserProfile } from "./user-profile.entity";
 
 @Entity({ name: "personaltagcounter" })
 export class Personaltagcounter {
@@ -19,7 +16,7 @@ export class Personaltagcounter {
 
     @IsNumber()
     @Column()
-    profileId: number;
+    userId: number;
 
     @IsInt({ message: "숫자여야 합니다." })
     @Min(0, { message: "최소값은 0을 입력해야 합니다." })
@@ -170,11 +167,4 @@ export class Personaltagcounter {
 
     @UpdateDateColumn()
     updatedAt: Date;
-
-    @OneToOne(
-        () => UserProfile,
-        (userProfile) => userProfile.personaltagcounter,
-    )
-    @JoinColumn()
-    userProfile: UserProfile;
 }

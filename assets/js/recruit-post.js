@@ -30,17 +30,16 @@ function submitForm() {
     const rule = ruleSelect.value; // 수정된 부분
     const totalmember = totalmemberInput.value;
     const content = contentTextarea.value;
-    //gps 값 임시로 지정
-    const gps = "임시";
+    const gps = gpsInput.value;
 
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("accessToken");
 
     // 값이 Enum에 속하는지 확인하고 Enum 값으로 변환
-    const validatedRegion = validateRegion(region);
+    // const validatedRegion = validateRegion(region);
     const validatedRule = validateRule(rule);
 
-    if (!validatedRegion || !validatedRule) {
+    if (!validatedRule) {
         alert("올바른 값을 선택하세요.");
         return;
     }
@@ -51,7 +50,7 @@ function submitForm() {
             {
                 userId: userId,
                 title: title,
-                region: validatedRegion,
+                region: region,
                 gps: gps,
                 gamedate: gamedate,
                 endtime: endtime,
@@ -84,12 +83,12 @@ function returnCencel() {
 }
 
 // 사용자가 선택한 값이 Enum에 속하는지 확인하고 Enum 값으로 변환하는 함수
-function validateRegion(value) {
-    if (value === "Region1" || value === "Region2") {
-        return value;
-    }
-    return null;
-}
+// function validateRegion(value) {
+//     if (value === "Region1" || value === "Region2") {
+//         return value;
+//     }
+//     return null;
+// }
 
 function validateRule(value) {
     if (value === "3대3" || value === "4대4" || value === "5대5") {
