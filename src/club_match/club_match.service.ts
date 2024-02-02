@@ -16,6 +16,8 @@ import { NotFoundError } from "rxjs";
 import { ClubMatchStatus } from "../entity/club_match.entity";
 import { MatchStatus } from "src/entity/match.entity";
 import { Status } from "src/entity/recruit.entity";
+import { Alarmservice } from "src/alarm/alarm.service";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class ClubMatchService {
@@ -24,6 +26,8 @@ export class ClubMatchService {
         private clubMatchRepository: Repository<ClubMatch>,
         @InjectRepository(Club)
         private clubRepository: Repository<Club>,
+        private readonly alarmService: Alarmservice,
+        private readonly configService: ConfigService,
     ) {}
     //매치 신청하기
 
@@ -62,7 +66,15 @@ export class ClubMatchService {
 
             ...clubMatchDTO,
         });
-
+        console.log(hostClub.masterId);
+        console.log(guestClub.name);
+        const link = `${this.configService.get("LOCALHOSt_URL")}/index.html`;
+        console.log(this.configService.get("LOCALHOST_URL"));
+        this.alarmService.sendAlarm(
+            hostClub.masterId,
+            `${guestClub.name}동아리에게 매치 신청이 왔습니다.`,
+            link,
+        );
         return await this.clubMatchRepository.save(newMatch);
     }
 
@@ -157,6 +169,11 @@ export class ClubMatchService {
         }
 
         match.status = checkClubMatchDTO.status;
+
+        this.alarmService.sendAlarm(
+            match.guest_clubId_master,
+            `${match.host_club_name}동아리와 매치가 성사되었습니다.`,
+        );
 
         return await this.clubMatchRepository.save(match);
     }
