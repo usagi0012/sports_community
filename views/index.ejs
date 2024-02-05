@@ -159,6 +159,9 @@
                         message,
                         roomId,
                     );
+                    console.log("서버 소켓 아이디", id);
+                    console.log("클라아이디", socket.id);
+
                     const now = new Date();
                     const hours = now.getHours();
                     const minutes = now.getMinutes();
@@ -188,7 +191,7 @@
                     // ****중요(여기까지 함)****
                     // 채팅 내역 잘 들어감 - 확인했음, 다시 켰을 때 안되면 말도 안되는거임
                     // roomId == thisRoomId && socket.id == client.id 넣으면 될 듯?
-                    if (roomId == thisRoomId) {
+                    if (roomId == thisRoomId && socket.id == id) {
                         console.log("채팅 생성");
                         console.log($(".chat"));
                         html += '<div class="outgoing_msg">';
@@ -197,7 +200,7 @@
                         html += timeDate;
                         html += "</div>";
                         html += "</div>";
-                    } else {
+                    } else if (roomId == thisRoomId && socket.id != id) {
                         html += '<div class="incoming_msg">';
                         html += '<div class="received_msg">';
                         html += '<div class="received_withd_msg">';
