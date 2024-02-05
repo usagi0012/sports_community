@@ -1,7 +1,8 @@
+import { Recruit } from "./../entity/recruit.entity";
 import { error } from "console";
 import { User } from "./../entity/user.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Progress, Recruit, Status } from "../entity/recruit.entity";
+import { Progress, Status } from "../entity/recruit.entity";
 import { RecruitDTO, UpdateDto, PutDTO } from "./dto/recruit.dto";
 import { In, Not, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -34,25 +35,34 @@ export class RecruitService {
     //모집 글 등록
     async postRecruit(userId: number, recruitDTO: RecruitDTO) {
         try {
-            const basicnumber = recruitDTO.totalmember;
+            const { endtime, gamedate, ...restRecruitDTO } = recruitDTO;
             const user = await this.userRepository.findOne({
                 where: {
                     id: userId,
                 },
             });
 
+            const endtimeDate = Recruit.setEndTimeFromNumber(
+                recruitDTO.gamedate,
+                recruitDTO.endtime,
+            );
+
+            const gameDate = Recruit.korGameDate(recruitDTO.gamedate);
+
             const newRecruit = this.recruitRepository.create({
-                basictotalmember: basicnumber,
+                basictotalmember: recruitDTO.totalmember,
                 hostId: userId,
                 hostName: user.name,
-
-                ...recruitDTO,
+                gamedate: gameDate,
+                endtime: endtimeDate,
+                ...restRecruitDTO,
             });
 
             await this.recruitRepository.save(newRecruit);
 
             return {
                 message: "모집글이 등록되었습니다.",
+                newRecruit,
             };
         } catch (error) {
             console.error(error);
@@ -113,6 +123,7 @@ export class RecruitService {
         for (const myRecruit of myRecruits) {
             this.updateProgress(myRecruit);
         }
+
         return myRecruits;
     }
 
@@ -129,7 +140,7 @@ export class RecruitService {
             throw new NotFoundException("내 모집글을 조회하지 못했습니다.");
         }
 
-        await this.updateProgress(myRecruit);
+        this.updateProgress(myRecruit);
 
         const matches = await this.matchRepository.find({
             where: {
@@ -286,14 +297,14 @@ export class RecruitService {
         };
     }
 
-    private async findMatch(recruitId: number) {
-        const matches = await this.matchRepository.find({
-            where: { recruitId: recruitId },
-            select: ["id", "message", "guestName"],
-        });
+    // private async findMatch(recruitId: number) {
+    //     const matches = await this.matchRepository.find({
+    //         where: { recruitId: recruitId },
+    //         select: ["id", "message", "guestName"],
+    //     });
 
-        return matches;
-    }
+    //     return matches;
+    // }
     private async checkHost(hostid: number, id: number) {
         const checkrecruit = await this.recruitRepository.findOne({
             where: {
@@ -338,14 +349,21 @@ export class RecruitService {
                 },
             });
 
+            const endtimeDate = Recruit.setEndTimeFromNumber(
+                putDTO.gamedate,
+                putDTO.endtime,
+            );
+
+            const gameDate = Recruit.korGameDate(putDTO.gamedate);
+
             if (myRecruit) {
                 myRecruit.title = putDTO.title || myRecruit.title;
                 myRecruit.region = putDTO.region || myRecruit.region;
                 myRecruit.gps = putDTO.gps || myRecruit.gps;
                 myRecruit.content = putDTO.content || myRecruit.content;
-                myRecruit.gamedate = putDTO.gamedate || myRecruit.gamedate;
+                myRecruit.gamedate = gameDate || myRecruit.gamedate;
 
-                myRecruit.endtime = putDTO.gamedate || myRecruit.endtime;
+                myRecruit.endtime = endtimeDate || myRecruit.endtime;
 
                 myRecruit.rule = putDTO.rule || myRecruit.rule;
                 myRecruit.totalmember =

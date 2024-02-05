@@ -1,3 +1,4 @@
+import { UserId } from "./../auth/decorators/userId.decorator";
 import { Progress } from "./../entity/match.entity";
 import { MatchDTO } from "./dto/match.dto";
 import { Match, MatchStatus } from "../entity/match.entity";
@@ -10,6 +11,7 @@ import { userInfo } from "os";
 import { find } from "lodash";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { match } from "assert";
+import { isUtf8 } from "buffer";
 
 @Injectable()
 export class MatchService {
@@ -125,9 +127,9 @@ export class MatchService {
             },
         });
 
-        if (!matches || matches.length === 0) {
-            throw new NotFoundException("컴펌된 유저가 없습니다.");
-        }
+        // if (!matches || matches.length === 0) {
+        //     throw new NotFoundException("컴펌된 유저가 없습니다.");
+        // }
 
         return [findmatch, matches];
     }
@@ -262,6 +264,49 @@ export class MatchService {
 
         if (match.endTime.getTime() < now.getTime()) {
             match.progress = Progress.PLEASE_EVALUATE;
+        }
+    }
+
+    //호스트가 매치 삭제하기
+    async deleteMatch(userId: number, matchId: number) {
+        try {
+            const match = await this.matchRepository.findOne({
+                where: {
+                    id: matchId,
+                    hostId: userId,
+                },
+            });
+
+            if (!match) {
+                throw new Error("Match not found");
+            }
+
+            const recruitId = match.recruitId;
+            const recruit = await this.recruitRepository.findOne({
+                where: {
+                    id: recruitId,
+                },
+            });
+
+            if (!recruit) {
+                throw new Error("Recruit not found");
+            }
+
+            if (match.status === MatchStatus.CONFIRM) {
+                recruit.totalmember += 1;
+                if (recruit.status === Status.Complete) {
+                    recruit.status = Status.Recruiting;
+                }
+                await this.recruitRepository.save(recruit);
+            }
+
+            match.status = MatchStatus.CANCELCONFIRM;
+            await this.matchRepository.save(match);
+
+            return { message: "경기가 취소되었습니다." };
+        } catch (error) {
+            console.error(error.message);
+            throw new Error(error);
         }
     }
 }
