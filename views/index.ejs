@@ -404,9 +404,11 @@
                 )
                 .then(function (response) {
                     console.log(response);
+                    alert("멤버 초대에 성공했습니다.");
                 })
                 .catch(function (error) {
                     console.log(error);
+                    alert("멤버 초대에 실패했습니다.");
                 });
         });
 
@@ -421,22 +423,21 @@
             const accessToken = data.accessToken.value;
 
             axios
-                .delete(
-                    `/api/chat-invitation/${roomId}`,
-                    {
+                .delete(`/api/chat-invitation/${roomId}`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                    data: {
                         nickName,
                     },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                    },
-                )
+                })
                 .then(function (response) {
                     console.log(response);
+                    alert("멤버 추방이 완료되었습니다.");
                 })
                 .catch(function (error) {
                     console.log(error);
+                    alert("멤버 추방에 실패했습니다.");
                 });
         });
 

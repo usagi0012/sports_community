@@ -89,6 +89,7 @@ export class ChatInvitationController {
     @Get("/:roomId")
     async isCreator(@UserId() userId: number, @Param("roomId") roomId: number) {
         try {
+            console.log("왜 여기 들어옴?");
             const creator = await this.chatInvitationService.isCreator(
                 userId,
                 roomId,

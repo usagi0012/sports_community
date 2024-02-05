@@ -93,19 +93,13 @@ export class ChatInvitationService {
         console.log("존재하지 않는 유저 확인완료");
 
         const memberId = existUser.userId;
-        // 이미 채팅방에 존재하는 경우 초대 불가능
-        const joinedUser = await this.participantsRepository.findOne({
-            where: { userId: memberId, chatId: roomId },
-        });
-        if (joinedUser) {
-            throw new Error("이미 채팅방에 존재하는 유저입니다.");
-        }
 
+        console.log(memberId, roomId);
         const expeledMember = await this.participantsRepository.delete({
             userId: memberId,
             chatId: roomId,
         });
-
+        console.log("추방된 멤버", expeledMember);
         return expeledMember;
     }
 
