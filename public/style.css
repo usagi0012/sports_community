@@ -201,7 +201,8 @@ img {
     height: 516px;
     overflow-y: auto;
 }
-#modal-overlay {
+#invite-modal-overlay,
+#expel-modal-overlay {
     display: none;
     position: fixed;
     top: 0;
@@ -218,4 +219,9 @@ img {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#invite-modal-btn,
+#expel-modal-btn {
+    display: none;
 }

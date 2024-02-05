@@ -59,11 +59,11 @@
                                     class="write_msg"
                                     placeholder="Type a message"
                                 />
-                                <button type="button" id="open-modal-btn">
-                                    <i
-                                        class="fa fa-plus"
-                                        aria-hidden="true"
-                                    ></i>
+                                <button type="button" id="invite-modal-btn">
+                                    초대
+                                </button>
+                                <button type="button" id="expel-modal-btn">
+                                    추방
                                 </button>
                                 <button
                                     class="msg_send_btn sendMessage"
@@ -89,7 +89,7 @@
                 </p>
             </div>
         </div>
-        <div id="modal-overlay">
+        <div id="invite-modal-overlay">
             <div id="modal">
                 <label for="nickname">초대할 유저 닉네임: </label>
                 <input
@@ -100,6 +100,19 @@
                 <br />
                 <button id="submit-btn">제출</button>
                 <button id="close-btn">닫기</button>
+            </div>
+        </div>
+        <div id="expel-modal-overlay">
+            <div id="modal">
+                <label for="expel-nickname">추방할 유저 닉네임: </label>
+                <input
+                    type="text"
+                    id="expel-nickname"
+                    placeholder="닉네임을 입력하세요"
+                />
+                <br />
+                <button id="expel-submit-btn">제출</button>
+                <button id="expel-close-btn">닫기</button>
             </div>
         </div>
     </body>
@@ -124,7 +137,39 @@
         <script>
         </script>
     </body>-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        // 내가 채팅방의 생성자인 경우에만 멤버 초대하기 가능
+        function showButton() {
+            const roomId = localStorage.getItem("thisRoomId");
+            // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
+            const authorized = localStorage.getItem("authorized");
+            const data = JSON.parse(authorized);
+            const accessToken = data.accessToken.value;
+
+            axios
+                .get(`/api/chat-invitation/${roomId}`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                })
+                .then(function (response) {
+                    console.log("****리스폰스****", response);
+                    if (response.data.data) {
+                        console.log("****");
+                        console.log("response.data.data", response.data.data);
+                        $("#invite-modal-btn").css("display", "flex");
+                        $("#expel-modal-btn").css("display", "flex");
+                    } else {
+                        $("#invite-modal-btn").css("display", "none");
+                        $("#expel-modal-btn").css("display", "none");
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
         // 백엔드
         let myInfo = {
             nickname: null,
@@ -134,6 +179,8 @@
                 roomName: null,
             },
         };
+
+        // 채팅방 연결
         function connectSocket() {
             const authorized = localStorage.getItem("authorized");
             const data = JSON.parse(authorized);
@@ -152,6 +199,8 @@
                 console.log("Connected");
                 //연결 완료 후 로컬스토리지를 확인하여 닉네임 세팅
                 const nickname = localStorage.getItem("nickname");
+                // 연결시 기존에 저장되어 있던 룸 아이디 제거
+                const deletedRoomId = localStorage.removeItem("thisRoomId");
                 socket.emit("setInit", { nickname }, (response) => {
                     console.log("연결시 리스폰스", response);
                     myInfo.nickname = response.nickname;
@@ -311,32 +360,86 @@
             });
             //null 필요 x (API로 대체)
             socket.emit("getChatRoomList", null);
+            showButton();
         });
 
         // 채팅방 초대 모달
-        $("#open-modal-btn").on("click", function () {
-            $("#modal-overlay").css("display", "flex");
+        $("#invite-modal-btn").on("click", function () {
+            $("#invite-modal-overlay").css("display", "flex");
         });
+        $("#expel-modal-btn").on("click", function () {
+            $("#expel-modal-overlay").css("display", "flex");
+        });
+
+        // 모달 닫기 버튼들
         $("#close-btn").on("click", function () {
-            $("#modal-overlay").css("display", "none");
+            $("#invite-modal-overlay").css("display", "none");
         });
+        $("#expel-close-btn").on("click", function () {
+            $("#expel-modal-overlay").css("display", "none");
+        });
+
+        // 모달 제출 버튼
         $("#submit-btn").on("click", function () {
-            const nickname = $("#nickname").val();
+            console.log("submit");
+
+            const nickName = $("#nickname").val();
+            const roomId = localStorage.getItem("thisRoomId");
             // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
             const authorized = localStorage.getItem("authorized");
             const data = JSON.parse(authorized);
             const accessToken = data.accessToken.value;
+
             axios
-                .post("api/chat-invitation", {
-                    authorization: token,
+                .post(
+                    `/api/chat-invitation/${roomId}`,
+                    {
+                        nickName,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    },
+                )
+                .then(function (response) {
+                    console.log(response);
                 })
-                .then(function (response) {})
                 .catch(function (error) {
-                    console.log(errror);
+                    console.log(error);
                 });
         });
 
-        console.log($(".write_msg").val());
+        $("#expel-submit-btn").on("click", function () {
+            console.log("expel-submit");
+
+            const nickName = $("#expel-nickname").val();
+            const roomId = localStorage.getItem("thisRoomId");
+            // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
+            const authorized = localStorage.getItem("authorized");
+            const data = JSON.parse(authorized);
+            const accessToken = data.accessToken.value;
+
+            axios
+                .delete(
+                    `/api/chat-invitation/${roomId}`,
+                    {
+                        nickName,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    },
+                )
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        });
+
         // 메시지 전송
         $(".sendMessage").on("click", function () {
             // 룸 아이디와 같이 넘겨주려 했으나, 다음과 같은 오류 발생
