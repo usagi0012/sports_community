@@ -170,6 +170,60 @@
                 });
         }
 
+        function getRoomMessage(roomId) {
+            // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
+            const authorized = localStorage.getItem("authorized");
+            const data = JSON.parse(authorized);
+            const accessToken = data.accessToken.value;
+
+            axios
+                .get(`/api/message/${roomId}`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                })
+                .then(function (response) {
+                    console.log("여기서 확인해야함", response);
+                    let html = "";
+                    const myId = response.data.data.userId;
+                    response.data.data.message.forEach((message) => {
+                        console.log(message);
+                        // 내 유저 Id가 message.userId와 같다면 오른쪽에 표시
+                        // 다르다면 왼쪽에 표시
+                        // 추후에 userId가 아니라 nickName으로 가져오기
+                        if (myId === message.userId) {
+                            console.log(message.content);
+                            html += '<div class="outgoing_msg">';
+                            html += '<div class="sent_msg">';
+                            html += "<p>" + message.content + "</p>";
+                            // html += timeDate;
+                            html += `${message.userId} | `;
+                            html += `${message.createdAt.slice(11, 16)} | `;
+                            html += message.createdAt.slice(0, 10);
+                            html += "</div>";
+                            html += "</div>";
+                        } else {
+                            html += '<div class="incoming_msg">';
+                            html += '<div class="received_msg">';
+                            html += '<div class="received_withd_msg">';
+                            html += "<p>" + message.content + "</p>";
+                            // html += timeDate;
+                            html += `${message.userId} | `;
+                            html += `${message.createdAt.slice(11, 16)} | `;
+                            html += message.createdAt.slice(0, 10);
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</div>";
+                        }
+                        $(".chat").append(html);
+                        $(".chat").scrollTop($(".chat")[0].scrollHeight);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
         // 백엔드
         let myInfo = {
             nickname: null,
@@ -361,6 +415,7 @@
             //null 필요 x (API로 대체)
             socket.emit("getChatRoomList", null);
             showButton();
+            getRoomMessage(roomId);
         });
 
         // 채팅방 초대 모달

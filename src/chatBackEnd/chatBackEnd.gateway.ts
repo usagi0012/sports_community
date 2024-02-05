@@ -56,7 +56,7 @@ export class ChatBackEndGateway
         }
     }
 
-    //소켓 연결 해제시 유저목록에서  제거
+    //소켓 연결 해제시 유저목록에서 제거 (console.log빼고 없어도 될듯)
     public handleDisconnect(client: Socket): void {
         const { roomId } = client.data;
         if (
@@ -102,7 +102,7 @@ export class ChatBackEndGateway
         return true;
     }
 
-    //메시지가 전송되면 모든 유저에게 메시지   전송
+    //메시지가 전송되면 모든 유저에게 메시지 전송
     @SubscribeMessage("sendMessage")
     async sendMessage(client: Socket, data: any) {
         console.log("서버에서 받아짐?");
