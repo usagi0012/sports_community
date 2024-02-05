@@ -42,6 +42,7 @@ export class SearchService {
         const places = await this.placeRepository.find({
             where: [
                 { name: Like(`%${query}%`) },
+                { address: Like(`%${query}%`) },
                 // 다른 필드들에 대한 검색 조건 추가
             ],
         });
