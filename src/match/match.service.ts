@@ -203,6 +203,7 @@ export class MatchService {
                     await this.matchRepository.save(individualMatch);
                 }
             }
+            await this.recruitRepository.save(recruit);
             await this.matchRepository.save(findMatch);
         }
         return findMatch;

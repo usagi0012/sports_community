@@ -37,7 +37,8 @@ export class RecruitService {
     //모집 글 등록
     async postRecruit(userId: number, recruitDTO: RecruitDTO) {
         try {
-            const { endtime, gamedate, ...restRecruitDTO } = recruitDTO;
+            const { endtime, gamedate, totalmember, ...restRecruitDTO } =
+                recruitDTO;
             const user = await this.userRepository.findOne({
                 where: {
                     id: userId,
@@ -51,12 +52,14 @@ export class RecruitService {
 
             const gameDate = Recruit.korGameDate(recruitDTO.gamedate);
 
+            const totalMember = recruitDTO.totalmember - 1;
             const newRecruit = this.recruitRepository.create({
                 basictotalmember: recruitDTO.totalmember,
                 hostId: userId,
                 hostName: user.name,
                 gamedate: gameDate,
                 endtime: endtimeDate,
+                totalmember: totalMember,
                 ...restRecruitDTO,
             });
 
