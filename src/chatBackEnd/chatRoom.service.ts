@@ -66,9 +66,9 @@ export class ChatRoomService {
             where: { title: roomName },
         });
         // console.log({ chatName });
-        // if (chatName) {
-        //     throw new WsException("동일한 이름의 채팅방이 존재합니다.");
-        // }
+        if (chatName) {
+            throw new WsException("동일한 이름의 채팅방이 존재합니다.");
+        }
 
         // 채팅방 생성시 roomName값 Chat 테이블에 저장
         const room = await this.chatRepository.save({
@@ -210,7 +210,7 @@ export class ChatRoomService {
         // roomId 형태가 아니라 roomId에 title 형태가 들어있어서 roomId 형태로 가져오긴 해야함.
         this.messageRepository.save({
             userId: +userId,
-            roomTitle: roomId,
+            roomId: +roomId,
             content: message,
         });
     }

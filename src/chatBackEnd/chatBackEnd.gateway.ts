@@ -141,6 +141,9 @@ export class ChatBackEndGateway
         // client.rooms.forEach((roomId) => {
         //     this.ChatRoomService.saveMessage(client, message, roomId);
         // });
+
+        // 채팅 전송시 DB에 채팅 내역 저장(변경된 저장방법)
+        await this.ChatRoomService.saveMessage(client, message, roomId);
     }
 
     //처음 접속시 닉네임 등 최초 설정

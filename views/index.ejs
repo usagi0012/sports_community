@@ -59,6 +59,12 @@
                                     class="write_msg"
                                     placeholder="Type a message"
                                 />
+                                <button type="button" id="open-modal-btn">
+                                    <i
+                                        class="fa fa-plus"
+                                        aria-hidden="true"
+                                    ></i>
+                                </button>
                                 <button
                                     class="msg_send_btn sendMessage"
                                     type="button"
@@ -81,6 +87,19 @@
                         ><%= name %></a
                     >
                 </p>
+            </div>
+        </div>
+        <div id="modal-overlay">
+            <div id="modal">
+                <label for="nickname">초대할 유저 닉네임: </label>
+                <input
+                    type="text"
+                    id="nickname"
+                    placeholder="닉네임을 입력하세요"
+                />
+                <br />
+                <button id="submit-btn">제출</button>
+                <button id="close-btn">닫기</button>
             </div>
         </div>
     </body>
@@ -292,6 +311,29 @@
             });
             //null 필요 x (API로 대체)
             socket.emit("getChatRoomList", null);
+        });
+
+        // 채팅방 초대 모달
+        $("#open-modal-btn").on("click", function () {
+            $("#modal-overlay").css("display", "flex");
+        });
+        $("#close-btn").on("click", function () {
+            $("#modal-overlay").css("display", "none");
+        });
+        $("#submit-btn").on("click", function () {
+            const nickname = $("#nickname").val();
+            // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
+            const authorized = localStorage.getItem("authorized");
+            const data = JSON.parse(authorized);
+            const accessToken = data.accessToken.value;
+            axios
+                .post("api/chat-invitation", {
+                    authorization: token,
+                })
+                .then(function (response) {})
+                .catch(function (error) {
+                    console.log(errror);
+                });
         });
 
         console.log($(".write_msg").val());

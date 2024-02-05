@@ -13,7 +13,7 @@ export class Message {
     id: number;
 
     @Column({ nullable: false })
-    roomTitle: string;
+    roomId: number;
 
     @Column({ nullable: false })
     userId: number;
