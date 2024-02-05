@@ -86,8 +86,8 @@ document.addEventListener("DOMContentLoaded", async function () {
                 // 평가 점수가 있는 경우
                 const score = scoreResponse.data.data;
                 document.getElementById("score").innerText = `
-                    실력 : ${score.abilityAmount}
-                     인성 : ${score.personalityAmount}`;
+                    실력 : ${score.ability}
+                     인성 : ${score.personality}`;
             } else {
                 // 평가 점수가 없는 경우
                 document.getElementById("score").innerText = "없음";
@@ -140,6 +140,51 @@ document.addEventListener("DOMContentLoaded", async function () {
                 document.getElementById("tag").innerText = "에러 발생";
             }
         }
+
+        // 유저가 속한 동아리 가져오기
+        try {
+            const user = await axios.get("/api/user/me", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+
+            const clubId = +user.data.clubId;
+
+            const club = await axios.get(`/api/club/${clubId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+
+            if (club.status === 200) {
+                const clubName = club.data.name;
+                document.getElementById("club").innerText = clubName;
+            } else {
+                document.getElementById("club").innerText = "없음";
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+        //동아리 상세보기 버튼 클릭 이벤트
+        document
+            .getElementById("clubDetailButton")
+            .addEventListener("click", async function () {
+                const user = await axios.get("/api/user/me", {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+
+                const clubId = +user.data.clubId;
+
+                // 동아리 상세페이지 URL 생성
+                const clubDetailURL = `/club-detail.html?id=${clubId}`;
+
+                // 생성된 URL로 이동
+                window.location.href = clubDetailURL;
+            });
 
         // 프로필 수정 버튼 클릭 이벤트
         document

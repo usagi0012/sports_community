@@ -160,4 +160,12 @@ export class ClubController {
             };
         }
     }
+
+    // //userId로 동아리찾기
+    // @ApiBearerAuth("accessToken")
+    // @UseGuards(accessTokenGuard)
+    // @Get("/getClub")
+    // async getClubByUserId(@UserId() userId: number) {
+    //     return this.clubService.getClubByUserId(userId);
+    // }
 }

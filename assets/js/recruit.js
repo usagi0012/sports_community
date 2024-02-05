@@ -1,3 +1,4 @@
+import { createModal } from "./otherUser-modal.js";
 window.onload = function () {
     loadHeader();
     feed();
@@ -53,6 +54,14 @@ function feed() {
                     )}</div>
                     <div class="status">${recruits.status}</div>
                 `;
+
+                // writer 클래스를 가진 모든 요소를 선택합니다.
+                const writerElement = newContent.querySelector(".writer");
+
+                // writerElement에 대해 이벤트 리스너를 추가합니다.
+                writerElement.addEventListener("click", () =>
+                    createModal(recruits.hostId),
+                );
                 boardList.appendChild(newContent);
             });
         })

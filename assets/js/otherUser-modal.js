@@ -1,7 +1,16 @@
 // otherUser-modal.js
 
 // 모달 생성 함수
-export function createModal(userId) {
+export async function createModal(userId) {
+    //userId를 통해서 userName 가져오기
+    const accessToken = localStorage.getItem("accessToken");
+    const user = await axios.get(`/api/user/${userId}`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+
+    const userName = user.data.name;
     // 모달 창 생성
     const modal = document.createElement("div");
     modal.id = "userProfileModal";
@@ -16,7 +25,7 @@ export function createModal(userId) {
     userProfileSection.id = "userSection";
 
     const profileTitle = document.createElement("h2");
-    profileTitle.innerText = `${userId}의 프로필`;
+    profileTitle.innerText = `${userName}의 프로필`;
     userProfileSection.appendChild(profileTitle);
 
     const nickname = document.createElement("p");
@@ -39,13 +48,13 @@ export function createModal(userId) {
     height.innerHTML = `키: <span id="height"></span>`;
     userProfileSection.appendChild(height);
 
-    // const score = document.createElement("p");
-    // score.innerHTML = `평가 점수: <span id="score"></span>`;
-    // userProfileSection.appendChild(score);
+    const score = document.createElement("p");
+    score.innerHTML = `평가 점수: <span id="score"></span>`;
+    userProfileSection.appendChild(score);
 
-    // const tag = document.createElement("p");
-    // tag.innerHTML = `유저 태그: <span id="tag"></span>`;
-    // userProfileSection.appendChild(tag);
+    const tag = document.createElement("p");
+    tag.innerHTML = `유저 태그: <span id="tag"></span>`;
+    userProfileSection.appendChild(tag);
 
     modalContent.appendChild(userProfileSection);
 
@@ -85,29 +94,42 @@ window.closeUserModal = function () {
 async function loadUserProfile(userId) {
     try {
         const accessToken = localStorage.getItem("accessToken");
-        // userId를 이용하여 해당 유저의 프로필 정보를 가져옵니다.
+        // userId를 이용하여 프로필정보 가져오기
         const response = await axios.get(`/api/user/${userId}/profile`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-        const responseTag = await axios.get(`/api/personal/tag/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
-        const responseScore = await axios.get(`/api/personal/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
 
-        console.log(responseTag);
-        console.log(responseScore);
+        //userId를 이용하여 태그정보 가져오기
+        const responseTag = await axios.get(
+            `/api/assessment/personal/tag/${userId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+
+        //userId를 이용하여 점수정보 가져오기
+        const responseScore = await axios.get(
+            `/api/assessment/personal/${userId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+
+        console.log(responseTag.data.data);
+        console.log(responseScore.data.data);
 
         console.log("불러온 데이터", response.data.data.userProfile);
         const userProfile = response.data.data.userProfile;
-
+        const userTag = responseTag.data.data;
+        const top3Tag = Object.keys(userTag);
+        const userAbility = responseScore.data.data.ability;
+        const userPersonality = responseScore.data.data.personality;
         const imageContainer = document.getElementById("image");
         imageContainer.innerHTML = ""; // 기존 내용 초기화
 
@@ -122,8 +144,10 @@ async function loadUserProfile(userId) {
             userProfile.description;
         document.getElementById("height").textContent = userProfile.height;
         //변경해야함
-        // document.getElementById("score").textContent = userProfile.score;
-        // document.getElementById("tag").textContent = userProfile.tag;
+        document.getElementById("score").textContent = `실력:${userAbility}
+        인성:${userPersonality}`;
+
+        document.getElementById("tag").textContent = top3Tag;
     } catch (error) {
         console.error("Error loading user profile:", error.message);
         // 에러 처리 로직 추가
