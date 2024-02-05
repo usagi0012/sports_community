@@ -103,9 +103,10 @@ function getRecruitDetail(recruitId) {
                     </dl>
                     <dl class="member">
                         <dt>인원</dt>
-                        <dd>${recruitDetail.totalmember} / ${
-                            recruitDetail.basictotalmember
-                        }</dd>
+                        <dd>${
+                            recruitDetail.basictotalmember -
+                            recruitDetail.totalmember
+                        } / ${recruitDetail.basictotalmember}</dd>
                     </dl>
                     <dl class="gamedate">
                     <dt>경기 예정 시간</dt>

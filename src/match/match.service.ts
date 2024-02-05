@@ -73,6 +73,21 @@ export class MatchService {
                 id: userId,
             },
         });
+        const myMatches = await this.getMyMatch(userId);
+
+        for (const match of myMatches) {
+            const matchGamedate = match.gameDate;
+            const matchEndtime = match.endTime;
+
+            if (
+                findRecruit.gamedate >= matchGamedate &&
+                findRecruit.gamedate <= matchEndtime
+            ) {
+                throw new NotFoundException(
+                    "이미 그 시간에 신청한 매치가 있습니다.",
+                );
+            }
+        }
 
         const recruit = await this.recruitRepository.findOne({
             where: { id: recruitId },

@@ -12,6 +12,7 @@ import { use } from "passport";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { not } from "cheerio/lib/api/traversing";
 import { match } from "assert";
+import { Alarmservice } from "src/alarm/alarm.service";
 
 const now = new Date();
 const utc = now.getTime();
@@ -30,6 +31,7 @@ export class RecruitService {
         private matchRepository: Repository<Match>,
         @InjectRepository(User)
         private userRepository: Repository<User>,
+        private alarmService: Alarmservice,
     ) {}
 
     //모집 글 등록
@@ -123,6 +125,7 @@ export class RecruitService {
         for (const myRecruit of myRecruits) {
             this.updateProgress(myRecruit);
         }
+        this.alarmService.sendAlarm(userId, "조회성공.");
 
         return myRecruits;
     }
@@ -141,6 +144,10 @@ export class RecruitService {
         }
 
         this.updateProgress(myRecruit);
+
+        const myMatches = await this.findConfirmMatch(recruitId);
+
+        console.log(myMatches);
 
         const matches = await this.matchRepository.find({
             where: {
@@ -287,24 +294,38 @@ export class RecruitService {
                 "1시간전부터는 취소 할 수 없습니다. 경기가 끝난 후 평가해주세요.",
             );
         }
+
+        const myMatches = await this.findConfirmMatch(recruitId);
+
+        console.log(myMatches);
+        for (const myMatch of myMatches) {
+            const matchUserId = myMatch.guestId;
+            console.log(matchUserId);
+            this.alarmService.sendAlarm(
+                matchUserId,
+                `${existingRecruit.title} 경기가 취소되었습니다.`,
+            );
+
+            myMatch.status = MatchStatus.CANCELCONFIRM;
+            await this.matchRepository.save(myMatch);
+        }
+
         if (existingRecruit.progress === Progress.BEFORE) {
             return await this.recruitRepository.remove(existingRecruit);
         }
-
         await this.recruitRepository.delete({ id: recruitId });
         return {
             message: "모집글이 삭제되었습니다.",
         };
     }
 
-    // private async findMatch(recruitId: number) {
-    //     const matches = await this.matchRepository.find({
-    //         where: { recruitId: recruitId },
-    //         select: ["id", "message", "guestName"],
-    //     });
+    private async findConfirmMatch(recruitId: number) {
+        const matches = await this.matchRepository.find({
+            where: { recruitId: recruitId, status: MatchStatus.CONFIRM },
+        });
 
-    //     return matches;
-    // }
+        return matches;
+    }
     private async checkHost(hostid: number, id: number) {
         const checkrecruit = await this.recruitRepository.findOne({
             where: {
