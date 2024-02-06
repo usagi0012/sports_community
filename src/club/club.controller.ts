@@ -21,6 +21,7 @@ import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { error } from "console";
 import { cloudbuild } from "googleapis/build/src/apis/cloudbuild";
 import { errorMonitor } from "events";
+import { ExpelMemberDto } from "./dto/expelMember.dto";
 
 @ApiTags("동아리")
 @Controller("club")
@@ -55,6 +56,35 @@ export class ClubController {
                 statusCode: 400,
                 error: error.message,
             };
+        }
+    }
+
+    // 동아리 탈퇴
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Put("/withdraw")
+    withdrawClub(@UserId() userId: number) {
+        try {
+            console.log("user누구임", userId);
+            const withdraw = this.clubService.withdrawClub(userId);
+
+            return withdraw;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Put("/expelMember")
+    expelMember(
+        @UserId() userId: number,
+        @Body() expelMemeberDto: ExpelMemberDto,
+    ) {
+        try {
+            return this.clubService.expelMember(userId, expelMemeberDto);
+        } catch (error) {
+            console.log(error);
         }
     }
 

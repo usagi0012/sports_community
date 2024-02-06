@@ -148,6 +148,7 @@ async function toMyClub() {
             console.log("제발", response);
             if (response.data.data === true) {
                 alert("가입된 동아리가 없습니다.");
+                window.location.href = "myApplication.html";
             } else {
                 window.location.href = "myClub.html";
             }

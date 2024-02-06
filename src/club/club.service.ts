@@ -12,6 +12,8 @@ import { CreateClubDto } from "./dto/createClub.dto";
 import { UpdateClubDto } from "./dto/updateClub.dto";
 import { AwsService } from "../aws/aws.service";
 import { User } from "src/entity/user.entity";
+import { ExpelMemberDto } from "./dto/expelMember.dto";
+import { UserProfile } from "src/entity/user-profile.entity";
 
 @Injectable()
 export class ClubService {
@@ -20,6 +22,8 @@ export class ClubService {
         private readonly clubRepository: Repository<Club>,
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        @InjectRepository(UserProfile)
+        private readonly userProfileRepository: Repository<UserProfile>,
         private readonly userService: UserService,
         private readonly awsService: AwsService,
     ) {}
@@ -256,5 +260,58 @@ export class ClubService {
         }
 
         return true;
+    }
+
+    async withdrawClub(userId: number) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+
+        if (!user) {
+            throw new NotFoundException("해당하는 유저가 존재하지 않습니다.");
+        }
+
+        const club = await this.clubRepository.findOne({
+            where: { masterId: userId },
+        });
+        if (club) {
+            throw Error("동아리 장은 탈퇴할 수 없습니다.");
+        }
+        const withdraw = await this.userRepository.update(userId, {
+            clubId: null,
+        });
+
+        return withdraw;
+    }
+
+    async expelMember(userId: number, expelMemeberDto: ExpelMemberDto) {
+        const { nickName } = expelMemeberDto;
+
+        const clubMaster = await this.clubRepository.findOne({
+            where: { masterId: userId },
+        });
+
+        if (!clubMaster) {
+            throw new NotFoundException(
+                "동아리 장만 멤버를 추방할 수 있습니다.",
+            );
+        }
+
+        const member = await this.userProfileRepository.findOne({
+            where: { nickname: nickName },
+        });
+
+        if (!member) {
+            throw new NotFoundException(
+                "해당하는 닉네임을 가진 멤버가 없습니다.",
+            );
+        }
+
+        const memberId = member.userId;
+        const expeledMember = await this.userRepository.update(memberId, {
+            clubId: null,
+        });
+
+        return expeledMember;
     }
 }
