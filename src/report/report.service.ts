@@ -53,6 +53,7 @@ export class ReportService {
                 },
             });
             const report = new Report();
+            report.title = reportDTO.title;
             report.reportContent = reportDTO.reportContent;
             report.banUserId = banUserId;
             report.reportUserId = userId;

@@ -46,6 +46,14 @@ function createReportHtml(reporterUser, reportedUser, banUserId) {
 <label for="reportedLabel">신고받는 사람:</label>
 <span id="reportedUser">${reportedUser.name}</span><br />
 
+<label for="title">제목:</label>
+<textarea
+    id="title"
+    name="title"
+    rows="1"
+    required
+></textarea><br />
+
 <label for="reportContent">신고 내용:</label>
 <textarea
     id="reportContent"
@@ -69,11 +77,13 @@ async function submitReport(banUserId) {
     try {
         const accessToken = localStorage.getItem("accessToken");
         const reportContent = document.getElementById("reportContent").value;
+        const titleValue = document.getElementById("title").value;
 
         const response = await axios.post(
             `/api/report/${banUserId}`,
             {
-                reportContent,
+                title: titleValue,
+                reportContent: reportContent,
             },
             {
                 headers: {

@@ -5,23 +5,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Modal Example</title>
 
-        <link rel="stylesheet" href="css/banlistAdmin.css" />
-
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     </head>
 
     <body onload="displayList()">
-        <h2>관리자 밴리스트</h2>
-        <listgroup>
-            <list style="margin-top: 10px" id="adminList"> </list>
+        <listgroup style="margin-top: 10px">
+            <list id="list"> </list>
         </listgroup>
 
         <div id="myModal" class="modal">
-            <div id="adminBanModal" class="modal-content">
+            <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
+                <p>모달 내용이 여기에 들어갑니다.</p>
             </div>
         </div>
     </body>
 
-    <script src="./js/banlistAdmin.js"></script>
+    <script src="./js/banlistUser.js"></script>
+    <link rel="stylesheet" href="css/banlsitUser.css" />
 </html>

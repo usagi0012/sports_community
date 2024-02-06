@@ -5,6 +5,14 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 export class ReportDTO {
     @IsNotEmpty()
     @ApiProperty({
+        example: "제목",
+        description: "타이트",
+    })
+    @IsString()
+    title: string;
+
+    @IsNotEmpty()
+    @ApiProperty({
         example: "벤해주세요",
         description: "벤 코멘트",
     })
