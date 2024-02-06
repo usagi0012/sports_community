@@ -106,4 +106,13 @@ export class MatchController {
     // ) {
     //     return await this.matchService.deleteGame(userId, matchId);
     // }
+
+    //호스트가 매치 삭제하기
+    @Delete("my/:matchId/host/delete")
+    async deleteMatch(
+        @UserId() userId: number,
+        @Param("matchId") matchId: number,
+    ) {
+        return await this.matchService.deleteMatch(userId, matchId);
+    }
 }

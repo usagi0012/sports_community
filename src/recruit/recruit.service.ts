@@ -1,7 +1,8 @@
+import { Recruit } from "./../entity/recruit.entity";
 import { error } from "console";
 import { User } from "./../entity/user.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Progress, Recruit, Status } from "../entity/recruit.entity";
+import { Progress, Status } from "../entity/recruit.entity";
 import { RecruitDTO, UpdateDto, PutDTO } from "./dto/recruit.dto";
 import { In, Not, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -30,31 +31,43 @@ export class RecruitService {
         private matchRepository: Repository<Match>,
         @InjectRepository(User)
         private userRepository: Repository<User>,
-        private readonly alarmService: Alarmservice,
+        private alarmService: Alarmservice,
     ) {}
 
     //모집 글 등록
     async postRecruit(userId: number, recruitDTO: RecruitDTO) {
         try {
-            const basicnumber = recruitDTO.totalmember;
+            const { endtime, gamedate, totalmember, ...restRecruitDTO } =
+                recruitDTO;
             const user = await this.userRepository.findOne({
                 where: {
                     id: userId,
                 },
             });
 
+            const endtimeDate = Recruit.setEndTimeFromNumber(
+                recruitDTO.gamedate,
+                recruitDTO.endtime,
+            );
+
+            const gameDate = Recruit.korGameDate(recruitDTO.gamedate);
+
+            const totalMember = recruitDTO.totalmember - 1;
             const newRecruit = this.recruitRepository.create({
-                basictotalmember: basicnumber,
+                basictotalmember: recruitDTO.totalmember,
                 hostId: userId,
                 hostName: user.name,
-
-                ...recruitDTO,
+                gamedate: gameDate,
+                endtime: endtimeDate,
+                totalmember: totalMember,
+                ...restRecruitDTO,
             });
 
             await this.recruitRepository.save(newRecruit);
 
             return {
                 message: "모집글이 등록되었습니다.",
+                newRecruit,
             };
         } catch (error) {
             console.error(error);
@@ -115,6 +128,8 @@ export class RecruitService {
         for (const myRecruit of myRecruits) {
             this.updateProgress(myRecruit);
         }
+        this.alarmService.sendAlarm(userId, "조회성공.");
+
         return myRecruits;
     }
 
@@ -131,7 +146,11 @@ export class RecruitService {
             throw new NotFoundException("내 모집글을 조회하지 못했습니다.");
         }
 
-        await this.updateProgress(myRecruit);
+        this.updateProgress(myRecruit);
+
+        const myMatches = await this.findConfirmMatch(recruitId);
+
+        console.log(myMatches);
 
         const matches = await this.matchRepository.find({
             where: {
@@ -284,20 +303,34 @@ export class RecruitService {
                 "1시간전부터는 취소 할 수 없습니다. 경기가 끝난 후 평가해주세요.",
             );
         }
+
+        const myMatches = await this.findConfirmMatch(recruitId);
+
+        console.log(myMatches);
+        for (const myMatch of myMatches) {
+            const matchUserId = myMatch.guestId;
+            console.log(matchUserId);
+            this.alarmService.sendAlarm(
+                matchUserId,
+                `${existingRecruit.title} 경기가 취소되었습니다.`,
+            );
+
+            myMatch.status = MatchStatus.CANCELCONFIRM;
+            await this.matchRepository.save(myMatch);
+        }
+
         if (existingRecruit.progress === Progress.BEFORE) {
             return await this.recruitRepository.remove(existingRecruit);
         }
-
         await this.recruitRepository.delete({ id: recruitId });
         return {
             message: "모집글이 삭제되었습니다.",
         };
     }
 
-    private async findMatch(recruitId: number) {
+    private async findConfirmMatch(recruitId: number) {
         const matches = await this.matchRepository.find({
-            where: { recruitId: recruitId },
-            select: ["id", "message", "guestName"],
+            where: { recruitId: recruitId, status: MatchStatus.CONFIRM },
         });
 
         return matches;
@@ -346,14 +379,21 @@ export class RecruitService {
                 },
             });
 
+            const endtimeDate = Recruit.setEndTimeFromNumber(
+                putDTO.gamedate,
+                putDTO.endtime,
+            );
+
+            const gameDate = Recruit.korGameDate(putDTO.gamedate);
+
             if (myRecruit) {
                 myRecruit.title = putDTO.title || myRecruit.title;
                 myRecruit.region = putDTO.region || myRecruit.region;
                 myRecruit.gps = putDTO.gps || myRecruit.gps;
                 myRecruit.content = putDTO.content || myRecruit.content;
-                myRecruit.gamedate = putDTO.gamedate || myRecruit.gamedate;
+                myRecruit.gamedate = gameDate || myRecruit.gamedate;
 
-                myRecruit.endtime = putDTO.gamedate || myRecruit.endtime;
+                myRecruit.endtime = endtimeDate || myRecruit.endtime;
 
                 myRecruit.rule = putDTO.rule || myRecruit.rule;
                 myRecruit.totalmember =

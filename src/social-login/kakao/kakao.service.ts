@@ -52,9 +52,11 @@ export class KakaoService {
             res.redirect("http://localhost:8001/api/auth/login/failure");
         } // 로그인에 실폐했을 경우 프론트 페이지를 개설해 줘야함(카카오와 네이버로그인 실패 page를 하나로 묶어서 제작)
     }
-    /// access 토큰 발급 (private)
+
+
     private generateAccessToken(id: number) {
         const payload = { userId: id };
+        console.log("이거이거이거이거이거", payload);
 
         const accessToken = this.jwtService.sign(payload, {
             secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
@@ -64,7 +66,7 @@ export class KakaoService {
         return accessToken;
     }
 
-    /// refresh 토큰 발급 (private)
+
     private generateRefreshToken(id: number) {
         const payload = { userId: id };
 
