@@ -12,6 +12,12 @@ import { find } from "lodash";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { match } from "assert";
 import { isUtf8 } from "buffer";
+import { Alarmservice } from "src/alarm/alarm.service";
+
+const now = new Date();
+const utc = now.getTime();
+const koreaTimeDiff = 9 * 60 * 60 * 1000;
+const korNow = new Date(utc + koreaTimeDiff);
 
 @Injectable()
 export class MatchService {
@@ -22,6 +28,7 @@ export class MatchService {
         private recruitRepository: Repository<Recruit>,
         @InjectRepository(User)
         private userRepository: Repository<User>,
+        private alarmService: Alarmservice,
     ) {}
 
     //나의 매치 조회
@@ -112,6 +119,11 @@ export class MatchService {
             ...matchDTO,
         });
         await this.matchRepository.save(submitMatch);
+        console.log(recruit);
+        this.alarmService.sendAlarm(
+            recruit.hostId,
+            `${user.name}님이 매치를 신청했습니다.`,
+        );
         return submitMatch;
     }
 
@@ -272,19 +284,21 @@ export class MatchService {
 
         for (const match of matches) {
             this.updateProgress(match);
+            const message = `함께 경기한 사람들을 평가해주세요!`;
+            //link부분 수정해야함
+            const link = `http://localhost:8001/index.html`;
+            this.alarmService.sendAlarm(match.guestId, message, link);
         }
 
         await this.matchRepository.save(matches);
     }
 
     private updateProgress(match: Match) {
-        const now = new Date();
-
-        if (match.gameDate.getTime() < now.getTime()) {
+        if (match.gameDate.getTime() < korNow.getTime()) {
             match.progress = Progress.DURING;
         }
 
-        if (match.endTime.getTime() < now.getTime()) {
+        if (match.endTime.getTime() < korNow.getTime()) {
             match.progress = Progress.PLEASE_EVALUATE;
         }
     }

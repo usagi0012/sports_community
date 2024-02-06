@@ -214,6 +214,11 @@ export class RecruitService {
 
             if (matchUpdateDto.status === MatchStatus.APPROVED) {
                 match.status = MatchStatus.APPROVED;
+                console.log(match);
+                this.alarmService.sendAlarm(
+                    match.guestId,
+                    `${recruit.title}에 대한 매치 신청이 승인되었습니다.`,
+                );
             } else if (matchUpdateDto.status === MatchStatus.REJECTED) {
                 match.status = MatchStatus.REJECTED;
             }
@@ -221,6 +226,7 @@ export class RecruitService {
             await this.recruitRepository.save(recruit);
             const updatedMatch = await this.matchRepository.save(match);
 
+            console.log(match.guestId);
             return updatedMatch;
         } catch (error) {
             throw error;

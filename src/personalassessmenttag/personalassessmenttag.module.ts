@@ -7,9 +7,9 @@ import { Personaltagcounter } from "src/entity/personaltagcounter.entity";
 import { Userscore } from "src/entity/userscore.entity";
 import { Recruit } from "src/entity/recruit.entity";
 import { Match } from "src/entity/match.entity";
-import { User } from "src/entity/user.entity";
 import { AlarmserviceModule } from "src/alarm/alarm.module";
-
+import { UserProfile } from "src/entity/user-profile.entity";
+import { User } from "src/entity/user.entity";
 
 @Module({
     imports: [
@@ -18,6 +18,7 @@ import { AlarmserviceModule } from "src/alarm/alarm.module";
             Userscore,
             Recruit,
             Match,
+            UserProfile,
             User,
         ]),
         AuthModule,
