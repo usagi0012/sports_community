@@ -1,3 +1,9 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadUserMenu();
+};
+
 const notificationContainer = document.getElementById("notification-container");
 const notificationTemplate = document.getElementById(
     "notification-template-content",
@@ -153,3 +159,10 @@ displayNotifications();
 //         });
 //     }
 // }
+
+async function toUp() {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+    });
+}

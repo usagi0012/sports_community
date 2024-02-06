@@ -1,3 +1,10 @@
+#container {
+    min-height: 100%;
+    width: 80%;
+    padding: 10px 30px;
+    border-left: 1px solid #dfcec3;
+}
+
 .calendar {
     display: flex;
     flex-direction: column;

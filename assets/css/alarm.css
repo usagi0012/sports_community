@@ -1,14 +1,46 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-}
 .notification {
     border: 1px solid #ccc;
     margin-bottom: 10px;
     padding: 10px;
+    display: grid;
+    grid-template-areas: "text date delete";
+    grid-template-columns: 5fr 0.8fr 0.2fr;
 }
 .delete-button {
     cursor: pointer;
     color: red;
-    margin-left: 10px;
+}
+
+#notification-container {
+    min-height: 100%;
+    width: 80%;
+    padding: 10px 30px;
+    border-left: 1px solid #dfcec3;
+}
+
+#upBtn {
+    position: fixed;
+    top: 80vh;
+    left: 92vw;
+    cursor: pointer;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 7px 5px 3px;
+}
+
+.created-at,
+.delete-button {
+    margin-top: auto;
+    text-align: center;
+    font-size: 0.8rem;
+    width: fit-content;
+}
+
+.created-at {
+    padding-top: 5px;
+}
+
+.delete-button {
+    margin-bottom: 8px;
 }
