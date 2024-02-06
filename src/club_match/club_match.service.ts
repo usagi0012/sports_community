@@ -185,8 +185,8 @@ export class ClubMatchService {
             throw new NotFoundException("조회되는 클럽 매치가 없습니다.");
         }
 
-        clubMatch.gameDate = changeTimeDTO.gamedate;
-        clubMatch.endTime = changeTimeDTO.endtime;
+        clubMatch.gameDate = changeTimeDTO.gameDate;
+        clubMatch.endTime = changeTimeDTO.endTime;
 
         return await this.clubMatchRepository.save(clubMatch);
     }

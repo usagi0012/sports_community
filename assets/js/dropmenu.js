@@ -59,7 +59,7 @@ function loadHeader() {
                     <li><a href="#">Q&A</a></li>
                 </ul>
             </li>
-            <li id="talk"><a href="#">Talk</a></li>
+            <li id="talk" onclick="toChat()"><a href="#">Talk</a></li>
         </ul>
     </div>
 </div>
@@ -338,4 +338,9 @@ async function logout() {
 //로그인 페이지로 가기
 async function toLogin() {
     window.location.href = "login.html";
+}
+
+// 채팅방 페이지로 가기
+function toChat() {
+    window.location.href = "view/chat";
 }

@@ -1,4 +1,5 @@
 /* 메인 컨테이너*/
+
 .mainContainer {
     margin: 70px auto 10px;
 }
@@ -64,6 +65,7 @@ dt {
     padding-top: 2px;
     width: 700px;
 }
+
 #gpsBtn > button:hover {
     border: 1px solid #ffb13d;
     background-color: #fff;
@@ -160,6 +162,7 @@ dt {
     text-align: center;
     margin: 10px auto;
 }
+
 #register-btn,
 #register-cancel-btn {
     font-family: "LINESeedKR-Bd";
@@ -223,6 +226,7 @@ dt {
 .board-post .info input[type="time"] {
     width: 100%;
 }
+
 #map {
     margin: 0px auto;
 }
@@ -242,6 +246,7 @@ dt {
     display: inline;
     padding-left: 10px;
 }
+
 #submit {
     margin-top: 8px;
 }

@@ -15,10 +15,10 @@ async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
     app.useWebSocketAdapter(new SocketIoAdapter(app));
-    app.useStaticAssets(join(__dirname, "..", "public")); //html,js,css (바닐라)
+    // app.useStaticAssets(join(__dirname, "..", "public")); //html,js,css (바닐라)
     app.useStaticAssets(join(__dirname, "..", "assets")); //html,js,css (바닐라)
-    app.setBaseViewsDir(join(__dirname, "..", "views"));
-    app.setBaseViewsDir(join(__dirname, "templates"));
+    // app.setBaseViewsDir(join(__dirname, "..", "views"));
+    app.setBaseViewsDir(join(__dirname, "..", "assets"));
     app.setViewEngine("ejs");
 
     app.setGlobalPrefix("api", { exclude: ["/view/chat"] });
