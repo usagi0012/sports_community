@@ -157,17 +157,14 @@
                 </div>
             </div>
         </div>
-
         <script>
             function roadAddress() {
                 const roadAddress = $("#confirmDORO").text();
                 $("#input-gps").val(roadAddress);
-
                 if (roadAddress) {
                     closeMapModal();
                 }
             }
-
             function jibunAddress() {
                 const jibunAddress = $("#confirmJUSO").text();
                 $("#input-gps").val(jibunAddress);
@@ -175,7 +172,6 @@
                     closeMapModal();
                 }
             }
-
             function openMapModal() {
                 const modal = $("#mapModal");
                 const sameContainer = $("#sameContainer");
@@ -184,19 +180,15 @@
                 sameContainer.css("z-index", 1);
                 footer.css("z-index", 1);
             }
-
             function closeMapModal() {
                 const modal = $("#mapModal");
                 modal.css("display", "none");
             }
         </script>
         <div class="footer" id="footer"></div>
-
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/recruit-post.js"></script>
-
         <script src="js/map.js"></script>
-
         <script src="./js/dropmenu.js"></script>
         <script src="./js/notification.js"></script>
     </body>

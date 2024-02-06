@@ -1,7 +1,32 @@
-// otherUser-modal.js
-
 // 모달 생성 함수
-export function createModal(userId) {
+export async function createModal(userId) {
+    //userId를 통해서 userName 가져오기
+    const accessToken = localStorage.getItem("accessToken");
+
+    // 현재 클릭한 userId 저장
+    const currentUserId = userId;
+
+    // 유저 정보 가져오기
+    let user;
+    try {
+        const response = await axios.get(`/api/user/${currentUserId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        user = response.data; // 응답에서 데이터만 가져오도록 수정
+    } catch (error) {
+        console.log("Error fetching user information:", error);
+    }
+
+    const userName = user.name;
+    console.log("이름", userName);
+
+    const existingModal = document.getElementById("userProfileModal");
+    if (existingModal) {
+        existingModal.remove();
+    }
+
     // 모달 창 생성
     const modal = document.createElement("div");
     modal.id = "userProfileModal";
@@ -16,7 +41,7 @@ export function createModal(userId) {
     userProfileSection.id = "userSection";
 
     const profileTitle = document.createElement("h2");
-    profileTitle.innerText = `${userId}의 프로필`;
+    profileTitle.innerText = `${userName}의 프로필`;
     userProfileSection.appendChild(profileTitle);
 
     const nickname = document.createElement("p");
@@ -39,13 +64,13 @@ export function createModal(userId) {
     height.innerHTML = `키: <span id="height"></span>`;
     userProfileSection.appendChild(height);
 
-    // const score = document.createElement("p");
-    // score.innerHTML = `평가 점수: <span id="score"></span>`;
-    // userProfileSection.appendChild(score);
+    const score = document.createElement("p");
+    score.innerHTML = `평가 점수: <span id="score"></span>`;
+    userProfileSection.appendChild(score);
 
-    // const tag = document.createElement("p");
-    // tag.innerHTML = `유저 태그: <span id="tag"></span>`;
-    // userProfileSection.appendChild(tag);
+    const tag = document.createElement("p");
+    tag.innerHTML = `유저 태그: <span id="tag"></span>`;
+    userProfileSection.appendChild(tag);
 
     modalContent.appendChild(userProfileSection);
 
@@ -85,29 +110,70 @@ window.closeUserModal = function () {
 async function loadUserProfile(userId) {
     try {
         const accessToken = localStorage.getItem("accessToken");
-        // userId를 이용하여 해당 유저의 프로필 정보를 가져옵니다.
-        const response = await axios.get(`/api/user/${userId}/profile`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
-        const responseTag = await axios.get(`/api/personal/tag/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
-        const responseScore = await axios.get(`/api/personal/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
 
-        console.log(responseTag);
-        console.log(responseScore);
+        // userId를 이용하여 프로필 정보 가져오기
+        let response;
+        try {
+            response = await axios.get(`/api/user/${userId}/profile`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+        } catch (error) {
+            console.error("Error fetching user profile:", error);
+            return;
+        }
+
+        //userId를 이용하여 태그정보 가져오기
+        let responseTag;
+        try {
+            responseTag = await axios.get(
+                `/api/assessment/personal/tag/${userId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                },
+            );
+        } catch (error) {
+            if (
+                error.response.data.message ===
+                "유저의 개인 태그를 찾을 수 없습니다."
+            ) {
+                document.getElementById("tag").innerText = "없음";
+            }
+            console.log("Error fetching user tags:", error);
+        }
+
+        //userId로 점수가져오기
+        let responseScore;
+        try {
+            responseScore = await axios.get(
+                `/api/assessment/personal/${userId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                },
+            );
+        } catch (error) {
+            if (
+                error.response.data.message === "유저 평점을 찾을 수 없습니다."
+            ) {
+                // "없음"을 표시할 요소의 innerText 설정
+                document.getElementById("score").innerText = "없음";
+            } else {
+                // 다른 에러 처리 로직
+                console.log("Error fetching user scores:", error);
+            }
+        }
 
         console.log("불러온 데이터", response.data.data.userProfile);
         const userProfile = response.data.data.userProfile;
-
+        const userTag = responseTag?.data?.data || {};
+        const top3Tag = Object.keys(userTag);
+        const userAbility = responseScore?.data?.data?.ability;
+        const userPersonality = responseScore?.data?.data?.personality;
         const imageContainer = document.getElementById("image");
         imageContainer.innerHTML = ""; // 기존 내용 초기화
 
@@ -115,17 +181,26 @@ async function loadUserProfile(userId) {
         imageElement.src = userProfile.image;
         imageElement.alt = "User Image";
         imageContainer.appendChild(imageElement);
+
         // 가져온 정보로 모달창 내의 프로필 부분을 업데이트
-        document.getElementById("nickname").textContent = userProfile.nickname;
-        document.getElementById("gender").textContent = userProfile.gender;
+        document.getElementById("nickname").textContent =
+            userProfile?.nickname || "없음";
+        document.getElementById("gender").textContent =
+            userProfile?.gender || "없음";
         document.getElementById("description").textContent =
-            userProfile.description;
-        document.getElementById("height").textContent = userProfile.height;
-        //변경해야함
-        // document.getElementById("score").textContent = userProfile.score;
-        // document.getElementById("tag").textContent = userProfile.tag;
+            userProfile?.description || "없음";
+        document.getElementById("height").textContent =
+            userProfile?.height || "없음";
+
+        document.getElementById("score").textContent = `실력:${
+            userAbility || "없음"
+        } 인성:${userPersonality || "없음"}`;
+
+        document.getElementById("tag").textContent =
+            top3Tag.length > 0 ? top3Tag.join(", ") : "없음";
     } catch (error) {
-        console.error("Error loading user profile:", error.message);
+        console.log(error.response.data);
+        console.error("Error loading user profile:", error);
         // 에러 처리 로직 추가
     }
 }

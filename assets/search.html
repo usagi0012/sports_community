@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Search Results</title>
+    </head>
+    <body>
+        <div id="searchContainer">
+            <div id="searchBox">
+                <form>
+                    <fieldset>
+                        <input type="search" id="searchInput" />
+                        <button type="submit" id="searchBtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+
+        <div id="clubResults">
+            <!-- Club 검색 결과가 여기에 들어갈 것입니다 -->
+        </div>
+        <div id="recruitResults">
+            <!-- Recruit 검색 결과가 여기에 들어갈 것입니다 -->
+        </div>
+        <div id="placeResults">
+            <!-- Place 검색 결과가 여기에 들어갈 것입니다 -->
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/search.js"></script>
+    </body>
+</html>

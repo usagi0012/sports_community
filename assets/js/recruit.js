@@ -1,3 +1,5 @@
+import { createModal } from "./otherUser-modal.js";
+
 window.onload = function () {
     loadHeader();
     feed();
@@ -51,8 +53,17 @@ function feed() {
                         "T",
                         10,
                     )}</div>
-                    <div class="status">${recruits.status}</div>
+                    <div class="status">${recruits.status}</div>    
                 `;
+
+                console.log(recruits);
+                const writerElement = newContent.querySelector(".writer");
+                if (writerElement) {
+                    writerElement.addEventListener("click", async function () {
+                        console.log(recruits.hostId);
+                        await createModal(recruits.hostId);
+                    });
+                }
                 boardList.appendChild(newContent);
             });
         })
