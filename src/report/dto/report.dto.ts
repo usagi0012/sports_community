@@ -10,12 +10,4 @@ export class ReportDTO {
     })
     @IsString()
     reportContent: string;
-
-    @IsNotEmpty()
-    @ApiProperty({
-        example: 1,
-        description: "벤 대상 사용자 ID",
-    })
-    @IsNumber()
-    benUserId: number;
 }

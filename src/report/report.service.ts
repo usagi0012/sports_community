@@ -17,6 +17,27 @@ export class ReportService {
         private reportRepository: Repository<Report>,
     ) {}
 
+    //벤 유저 조회하기
+    async getBanUser(userId: number, banUserId: number) {
+        try {
+            const banUser = await this.userRepository.findOne({
+                where: {
+                    id: banUserId,
+                },
+            });
+
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+
+            return { banUser, me };
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+    }
+
     //벤 신청하기
     async banUser(userId: number, banUserId: number, reportDTO: ReportDTO) {
         try {
@@ -25,12 +46,18 @@ export class ReportService {
                     id: banUserId,
                 },
             });
+
+            const User = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
             const report = new Report();
             report.reportContent = reportDTO.reportContent;
             report.banUserId = banUserId;
-            
-
             report.reportUserId = userId;
+            report.banUserName = BanUser.name;
+            report.reportUserName = User.name;
 
             return await this.reportRepository.save(report);
         } catch (error) {}
@@ -79,6 +106,7 @@ export class ReportService {
         if (ban.progress === Progress.EVALUATION_COMPLETED) {
             throw new NotFoundException("신고 진행 중입니다.");
         }
+
         return await this.reportRepository.remove(ban);
     }
 
@@ -106,7 +134,6 @@ export class ReportService {
             where: {
                 progress: Progress.EVALUATION_COMPLETED,
             },
-            select: ["id", "reportUserId", "reportContent", "banUserId"],
         });
 
         return bans;
