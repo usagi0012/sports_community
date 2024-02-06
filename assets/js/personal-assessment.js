@@ -36,10 +36,10 @@ function toggleButton(button) {
 document
     .getElementById("submit-cancel-btn")
     .addEventListener("click", function () {
-        returnCencel();
+        returnCancel();
     });
 
-function getPersonalAssessment(matchId, recruitId, playOtherUserId) {
+function getPersonalAssessment(matchId, playOtherUserId) {
     const ratingInputFirst = document.querySelector(".rating1 input");
     const ratingInputTwo = document.querySelector(".rating2 input");
 
@@ -48,8 +48,8 @@ function getPersonalAssessment(matchId, recruitId, playOtherUserId) {
 
     const token = localStorage.getItem("accessToken");
     axios
-        .post(
-            `/api/assessment/personal/${matchId}/${recruitId}/${playOtherUserId}`,
+        .put(
+            `/api/assessment/personal/${+matchId}/${+playOtherUserId}`,
             {
                 personalityAmount: personalityAmount,
                 abilityAmount: abilityAmount,
@@ -69,9 +69,7 @@ function getPersonalAssessment(matchId, recruitId, playOtherUserId) {
         });
 }
 
-/* getPersonalAssessment(10, 31); */
-
-function getPersonalTag(matchId, recruitId, playOtherUserId) {
+function getPersonalTag(matchId, playOtherUserId) {
     const token = localStorage.getItem("accessToken");
 
     const playerValues = {
@@ -112,10 +110,9 @@ function getPersonalTag(matchId, recruitId, playOtherUserId) {
             ? 1
             : 0,
     };
-
     axios
-        .post(
-            `/api/assessment/personal/tag/${matchId}/${recruitId}/${playOtherUserId}`,
+        .put(
+            `/api/assessment/personal/tag/${matchId}/${playOtherUserId}`,
             playerValues,
             {
                 headers: {
@@ -125,15 +122,13 @@ function getPersonalTag(matchId, recruitId, playOtherUserId) {
         )
         .then(function (response) {
             console.log(response.data.message);
-            /*    window.location.href = `/index.html`; */
         })
         .catch(function (error) {
-            console.log(error.response.data);
+            console.log(error);
             alert(error.response.data.message);
         });
 }
 
-/* getPersonalTag(10, 31); */
 window.onload = function () {
     returnPage();
 };
@@ -141,12 +136,11 @@ function returnPage() {
     document
         .getElementById("submit-btn")
         .addEventListener("click", function () {
-            getPersonalAssessment(12, 32, 28);
-            console.log("여기왔나");
-            getPersonalTag(12, 32, 28);
+            getPersonalAssessment(12, 28);
+            getPersonalTag(12, 28);
         });
 }
 
-function returnCencel() {
+function returnCancel() {
     window.location.href = `/index.html`;
 }
