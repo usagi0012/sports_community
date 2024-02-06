@@ -209,7 +209,6 @@ dt {
     margin-bottom: 10px;
 }
 
-
 .board-post .title input[type="text"],
 .board-post .info input[type="text"],
 .board-post .info select,
@@ -223,7 +222,7 @@ dt {
 .board-post .info input[type="date"],
 .board-post .info input[type="time"] {
     width: 100%;
-
+}
 #map {
     margin: 0px auto;
 }
@@ -256,7 +255,6 @@ dt {
     border: 1px solid #ffb13d;
     background-color: #fff;
     border-radius: 10px;
-
 }
 
 #submit:hover,

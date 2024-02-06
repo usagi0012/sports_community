@@ -1,3 +1,9 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadUserMenu();
+};
+
 document.addEventListener("DOMContentLoaded", async function () {
     try {
         // Access token 가져오기

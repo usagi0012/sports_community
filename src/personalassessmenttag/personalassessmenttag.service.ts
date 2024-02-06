@@ -4,7 +4,7 @@ import {
     NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { MoreThanOrEqual, Repository } from "typeorm";
 import { PersonalTagCounterDto } from "./dto/personaltagcounter.dto";
 import { Personaltagcounter } from "src/entity/personaltagcounter.entity";
 import { Userscore } from "src/entity/userscore.entity";
@@ -31,35 +31,24 @@ export class PersonalassessmenttagService {
         private readonly userRepository: Repository<User>,
     ) {}
 
-    async findTopThreePersonalityAmountUser(userId: number) {
+    async findTopThreePersonalityAmountUser() {
         const topThreeUsersPersonalityAmount =
             await this.userscoreRepository.find({
-                where: { userId },
+                select: { personalityAmount: true },
                 order: { personalityAmount: "DESC" },
                 take: 3,
             });
 
-        if (
-            !topThreeUsersPersonalityAmount ||
-            topThreeUsersPersonalityAmount.length === 0
-        ) {
-            throw new NotFoundException(
-                "상위 3명의 인성점수인 유저를 찾을 수 없습니다.",
-            );
-        }
+        await this.userscoreRepository.find({
+            where: { count: MoreThanOrEqual(10) },
+        });
 
-        // 필요한 데이터만 추출하여 반환
-        const result = topThreeUsersPersonalityAmount.map((user) => ({
-            userId,
-            personalityAmount: user.personalityAmount,
-        }));
-
-        return result;
+        return topThreeUsersPersonalityAmount;
     }
 
-    async findTopThreeAbilityAmountUser(userId: number) {
+    async findTopThreeAbilityAmountUser() {
         const topThreeAbilityAmountUser = await this.userscoreRepository.find({
-            where: { userId },
+            select: { abilityAmount: true },
             order: { abilityAmount: "DESC" },
             take: 3,
         });
@@ -73,12 +62,11 @@ export class PersonalassessmenttagService {
             );
         }
 
-        const result = topThreeAbilityAmountUser.map((user) => ({
-            userId,
-            abilityAmount: user.abilityAmount,
-        }));
+        await this.userscoreRepository.find({
+            where: { count: MoreThanOrEqual(10) },
+        });
 
-        return result;
+        return topThreeAbilityAmountUser;
     }
 
     async findOneUserAssessment(userId: number) {
@@ -217,34 +205,205 @@ export class PersonalassessmenttagService {
         return topThreeTagsObject;
     }
 
-    async createPersonalAssessment(
+    async updatePesonalAssessment(
         matchId: number,
-        recuritId: number,
         userId: number,
         playOtherUserId: number,
         createPersonalAssessmentDto: CreatePersonalAssessmentDto,
     ) {
-
         if (playOtherUserId === userId) {
             throw new BadRequestException(
                 "당사자 본인의 설문지를 작성할 수 없습니다.",
             );
         }
 
-        const recurit = await this.recruitRepository.findOne({
-            where: { id: recuritId },
+        let personalAssessment = await this.userscoreRepository.findOne({
+            where: { userId },
         });
-        console.log(recurit);
 
-        if (!recurit) {
+        if (!personalAssessment) {
+            const newPersonalAssessment = await this.createPersonalAssessment(
+                matchId,
+                userId,
+                playOtherUserId,
+                createPersonalAssessmentDto,
+            );
+
+            return newPersonalAssessment;
+        }
+
+        const personalMatch = await this.matchRepository.findOne({
+            where: { id: matchId },
+        });
+
+        if (!personalMatch) {
+            throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
+        }
+
+        const matchOtherUser = await this.userRepository.findOne({
+            where: { id: playOtherUserId },
+        });
+
+        if (!matchOtherUser) {
             throw new NotFoundException(
-                "해당 모임은 평가지에 참여할 수 없습니다.",
+                "같은 경기에 참석하지 않은 유저는 설문지를 작성할 수 없습니다.",
             );
         }
 
-        if (recurit.status === Status.Recruiting) {
+        if (
+            personalMatch.guestId === matchOtherUser.id &&
+            personalMatch.hostId === matchOtherUser.id
+        ) {
             throw new BadRequestException(
-                "모임이 모집 중일 경우 평가지를 작성할 수 없습니다.",
+                "당사자 본인은 자기 평가서를 작성할 수 없습니다.",
+            );
+        }
+
+        if (personalMatch.status === MatchStatus.REJECTED) {
+            throw new BadRequestException("해당 경기는 거절되었습니다.");
+        }
+
+        if (!personalMatch.hostId && !personalMatch.guestId) {
+            throw new NotFoundException(
+                "해당 모집경기에 참여하지 않은 유저는 평가지를 작성할 수 없습니다.",
+            );
+        }
+
+        if (personalMatch.hostId === personalMatch.guestId) {
+            throw new BadRequestException(
+                "해당 유저는 설문지를 작성할 수 없습니다.",
+            );
+        }
+
+        const personalAssessmentUserData =
+            await this.userscoreRepository.findOne({
+                where: { userId },
+            });
+
+        if (!personalAssessmentUserData) {
+            throw new NotFoundException(
+                "해당 유저의 평가지를 찾을 수 없습니다.",
+            );
+        }
+
+        personalAssessmentUserData.count += 1;
+
+        personalAssessmentUserData.personalityAmount +=
+            createPersonalAssessmentDto.personalityAmount;
+
+        personalAssessmentUserData.abilityAmount +=
+            createPersonalAssessmentDto.abilityAmount;
+
+        personalAssessmentUserData.personality =
+            personalAssessmentUserData.personalityAmount /
+            personalAssessmentUserData.count;
+
+        personalAssessmentUserData.ability =
+            personalAssessmentUserData.abilityAmount /
+            personalAssessmentUserData.count;
+
+        personalAssessmentUserData.personality = parseFloat(
+            personalAssessmentUserData.personality.toFixed(3),
+        );
+
+        personalAssessmentUserData.ability = parseFloat(
+            personalAssessmentUserData.ability.toFixed(3),
+        );
+
+        const personalAssessmentUser = this.userscoreRepository.save(
+            personalAssessmentUserData,
+        );
+
+        return personalAssessmentUser;
+    }
+
+    async updatePesonalTag(
+        matchId: number,
+        userId: number,
+        playOtherUserId: number,
+        personalTagCounterDto: PersonalTagCounterDto,
+    ) {
+        if (playOtherUserId === userId) {
+            throw new BadRequestException(
+                "당사자 본인의 설문지를 작성할 수 없습니다.",
+            );
+        }
+
+        let personalTagUser = await this.personaltagcounterRepository.findOne({
+            where: { userId },
+        });
+
+        if (!personalTagUser) {
+            const newPersonalTagUser = await this.createPersonalTag(
+                +matchId,
+                +userId,
+                +playOtherUserId,
+                personalTagCounterDto,
+            );
+
+            return newPersonalTagUser;
+        }
+
+        const personalMatch = await this.matchRepository.findOne({
+            where: { id: matchId },
+        });
+
+        if (!personalMatch) {
+            throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
+        }
+
+        if (personalMatch.status === MatchStatus.REJECTED) {
+            throw new BadRequestException("해당 경기는 거절되었습니다.");
+        }
+
+        const matchOtherUser = await this.userRepository.findOne({
+            where: { id: playOtherUserId },
+        });
+
+        if (!matchOtherUser) {
+            throw new NotFoundException(
+                "같은 경기에 참석하지 않은 유저는 설문지를 작성할 수 없습니다.",
+            );
+        }
+
+        if (
+            personalMatch.guestId === matchOtherUser.id &&
+            personalMatch.hostId === matchOtherUser.id
+        ) {
+            throw new BadRequestException(
+                "당사자 본인은 자기 평가서를 작성할 수 없습니다.",
+            );
+        }
+
+        if (!personalMatch.hostId && !personalMatch.guestId) {
+            throw new NotFoundException(
+                "해당 모집경기에 참여하지 않은 유저는 태그를 작성할 수 없습니다.",
+            );
+        }
+
+        for (const key in personalTagCounterDto) {
+            if (personalTagCounterDto.hasOwnProperty(key)) {
+                // 해당 key에 대한 값이 숫자이면서 1일 때만 +1 증가
+                if (personalTagCounterDto[key] === 1) {
+                    personalTagUser[key] += 1;
+                }
+            }
+        }
+        const updatedPersonalTag =
+            await this.personaltagcounterRepository.save(personalTagUser);
+
+        return updatedPersonalTag;
+    }
+
+    private async createPersonalAssessment(
+        matchId: number,
+        userId: number,
+        playOtherUserId: number,
+        createPersonalAssessmentDto: CreatePersonalAssessmentDto,
+    ) {
+        if (playOtherUserId === userId) {
+            throw new BadRequestException(
+                "당사자 본인의 설문지를 작성할 수 없습니다.",
             );
         }
 
@@ -271,12 +430,6 @@ export class PersonalassessmenttagService {
             );
         }
 
-        /* if (personalMatch.hostId) {
-            throw new BadRequestException(
-                "경기를 참여한 본인은 평가지 작성에 참여할 수 없습니다.",
-            );
-        } */
-
         if (!personalMatch.guestId && !personalMatch.hostId) {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
@@ -285,15 +438,7 @@ export class PersonalassessmenttagService {
             throw new BadRequestException("해당 경기는 거절되었습니다.");
         }
 
-        const personalMatchHost = await this.matchRepository.findOne({
-            where: { hostId: recurit.hostId },
-        });
-
-        const personalMatchGuest = await this.matchRepository.findOne({
-            where: { guestId: userId },
-        });
-
-        if (!personalMatchHost && !personalMatchGuest) {
+        if (!personalMatch.hostId && !personalMatch.guestId) {
             throw new NotFoundException(
                 "해당 모집경기에 참여하지 않은 유저는 설문지를 작성할 수 없습니다.",
             );
@@ -307,14 +452,6 @@ export class PersonalassessmenttagService {
             throw new BadRequestException(
                 "이미 평가를 제출한 사람은 제출을 할 수 없습니다.",
             );
-        }
-
-        const recruitGroup = await this.matchRepository.findOne({
-            where: { recruitId: recurit.id },
-        });
-
-        if (!recruitGroup) {
-            throw new NotFoundException("해당 모임은 존재하지 않습니다.");
         }
 
         const { ...restOfUserscore } = createPersonalAssessmentDto;
@@ -345,9 +482,8 @@ export class PersonalassessmenttagService {
         return userScore;
     }
 
-    async createPersonalTag(
+    private async createPersonalTag(
         matchId: number,
-        recuritId: number,
         userId: number,
         playOtherUserId: number,
         personalTagCounterDto: PersonalTagCounterDto,
@@ -355,22 +491,6 @@ export class PersonalassessmenttagService {
         if (playOtherUserId === userId) {
             throw new BadRequestException(
                 "당사자 본인의 설문지를 작성할 수 없습니다.",
-            );
-        }
-
-        const recurit = await this.recruitRepository.findOne({
-            where: { id: recuritId },
-        });
-
-        if (!recurit) {
-            throw new NotFoundException(
-                "해당 모임은 태그 작성에 참여할 수 없습니다.",
-            );
-        }
-
-        if (recurit.status === Status.Recruiting) {
-            throw new BadRequestException(
-                "모임이 모집 중일 경우 태그를 작성할 수 없습니다.",
             );
         }
 
@@ -419,20 +539,6 @@ export class PersonalassessmenttagService {
             throw new BadRequestException("해당 경기는 거절되었습니다.");
         }
 
-        const personalMatchHost = await this.matchRepository.findOne({
-            where: { hostId: recurit.hostId },
-        });
-
-        const personalMatchGuest = await this.matchRepository.findOne({
-            where: { guestId: userId },
-        });
-
-        if (!personalMatchHost && !personalMatchGuest) {
-            throw new NotFoundException(
-                "해당 모집경기에 참여하지 않은 유저는 태그를 작성할 수 없습니다.",
-            );
-        }
-
         const findUserTag = await this.personaltagcounterRepository.findOne({
             where: { userId },
         });
@@ -443,14 +549,6 @@ export class PersonalassessmenttagService {
             );
         }
 
-        const recruitGroup = await this.matchRepository.findOne({
-            where: { recruitId: recurit.id },
-        });
-
-        if (!recruitGroup) {
-            throw new NotFoundException("해당 모임은 존재하지 않습니다.");
-        }
-
         const { ...restOfPersonaltagcounter } = personalTagCounterDto;
         const personalTagData = await this.personaltagcounterRepository.save({
             userId,
@@ -458,257 +556,5 @@ export class PersonalassessmenttagService {
         });
 
         return personalTagData;
-    }
-
-    async updatePesonalAssessment(
-        recuritId: number,
-        matchId: number,
-        userId: number,
-        playOtherUserId: number,
-        createPersonalAssessmentDto: CreatePersonalAssessmentDto,
-    ) {
-        if (playOtherUserId === userId) {
-            throw new BadRequestException(
-                "당사자 본인의 설문지를 작성할 수 없습니다.",
-            );
-        }
-
-        const personalAssessment = await this.userscoreRepository.findOne({
-            where: { userId },
-        });
-
-        if (!personalAssessment) {
-            throw new NotFoundException(
-                "설문지가 존재하지 않은 유저는 작성할 수 없습니다.",
-            );
-        }
-
-        const recurit = await this.recruitRepository.findOne({
-            where: { id: recuritId },
-        });
-
-        if (!recurit) {
-            throw new NotFoundException(
-                "해당 모임은 평가지 작성에 참여할 수 없습니다.",
-            );
-        }
-
-        if (recurit.status === Status.Recruiting) {
-            throw new BadRequestException(
-                "모임이 모집 중일 경우 평가지를 작성할 수 없습니다.",
-            );
-        }
-
-        const personalMatch = await this.matchRepository.findOne({
-            where: { id: matchId },
-        });
-
-        if (!personalMatch) {
-            throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
-        }
-
-        const matchOtherUser = await this.userRepository.findOne({
-            where: { id: playOtherUserId },
-        });
-
-        if (!matchOtherUser) {
-            throw new NotFoundException(
-                "같은 경기에 참석하지 않은 유저는 설문지를 작성할 수 없습니다.",
-            );
-        }
-
-        if (
-            personalMatch.guestId === matchOtherUser.id &&
-            personalMatch.hostId === matchOtherUser.id
-        ) {
-            throw new BadRequestException(
-                "당사자 본인은 자기 평가서를 작성할 수 없습니다.",
-            );
-        }
-
-        /*  if (
-            personalMatch.hostId === userId &&
-            personalMatch.guestId === userId
-        ) {
-            throw new BadRequestException(
-                "경기를 참여한 본인은 태그 작성에 참여할 수 없습니다.",
-            );
-        } */
-
-        if (personalMatch.status === MatchStatus.REJECTED) {
-            throw new BadRequestException("해당 경기는 거절되었습니다.");
-        }
-
-        const personalMatchHost = await this.matchRepository.findOne({
-            where: { hostId: recurit.hostId },
-        });
-
-        const personalMatchGuest = await this.matchRepository.findOne({
-            where: { guestId: userId },
-        });
-
-        if (!personalMatchHost && !personalMatchGuest) {
-            throw new NotFoundException(
-                "해당 모집경기에 참여하지 않은 유저는 평가지를 작성할 수 없습니다.",
-            );
-        }
-
-        const recruitGroup = await this.matchRepository.findOne({
-            where: { recruitId: recurit.id },
-        });
-
-        if (!recruitGroup) {
-            throw new NotFoundException("해당 모임은 존재하지 않습니다.");
-        }
-
-        const personalAssessmentUserData =
-            await this.userscoreRepository.findOne({
-                where: { userId },
-            });
-
-        personalAssessmentUserData.count += 1;
-
-        personalAssessmentUserData.personalityAmount +=
-            createPersonalAssessmentDto.personalityAmount;
-
-        personalAssessmentUserData.abilityAmount +=
-            createPersonalAssessmentDto.abilityAmount;
-
-        personalAssessmentUserData.personality =
-            personalAssessmentUserData.personalityAmount /
-            personalAssessmentUserData.count;
-
-        personalAssessmentUserData.ability =
-            personalAssessmentUserData.abilityAmount /
-            personalAssessmentUserData.count;
-
-        personalAssessmentUserData.personality = parseFloat(
-            personalAssessmentUserData.personality.toFixed(3),
-        );
-
-        personalAssessmentUserData.ability = parseFloat(
-            personalAssessmentUserData.ability.toFixed(3),
-        );
-
-        const personalAssessmentUser = this.userscoreRepository.save(
-            personalAssessmentUserData,
-        );
-
-        return personalAssessmentUser;
-    }
-
-    async updatePesonalTag(
-        recuritId: number,
-        matchId: number,
-        userId: number,
-        playOtherUserId: number,
-        personalTagCounterDto: PersonalTagCounterDto,
-    ) {
-        if (playOtherUserId === userId) {
-            throw new BadRequestException(
-                "당사자 본인의 설문지를 작성할 수 없습니다.",
-            );
-        }
-
-        const personalTagUser = await this.personaltagcounterRepository.findOne(
-            {
-                where: { userId },
-            },
-        );
-
-        if (!personalTagUser) {
-            throw new NotFoundException("개인 태그가 존재하지 않습니다.");
-        }
-
-        const recurit = await this.recruitRepository.findOne({
-            where: { id: recuritId },
-        });
-
-        if (!recurit) {
-            throw new NotFoundException(
-                "해당 모임은 태그 작성에 참여할 수 없습니다.",
-            );
-        }
-
-        if (recurit.status === Status.Recruiting) {
-            throw new BadRequestException(
-                "모임이 모집 중일 경우 태그를 작성할 수 없습니다.",
-            );
-        }
-
-        const personalMatch = await this.matchRepository.findOne({
-            where: { id: matchId },
-        });
-
-        if (!personalMatch) {
-            throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
-        }
-
-        /*    if (
-            personalMatch.hostId === userId &&
-            personalMatch.guestId === userId
-        ) {
-            throw new BadRequestException(
-                "경기를 참여한 본인은 태그 작성에 참여할 수 없습니다.",
-            );
-        } */
-
-        if (personalMatch.status === MatchStatus.REJECTED) {
-            throw new BadRequestException("해당 경기는 거절되었습니다.");
-        }
-
-        const personalMatchHost = await this.matchRepository.findOne({
-            where: { hostId: recurit.hostId },
-        });
-
-        const personalMatchGuest = await this.matchRepository.findOne({
-            where: { guestId: userId },
-        });
-
-        const matchOtherUser = await this.userRepository.findOne({
-            where: { id: playOtherUserId },
-        });
-
-        if (!matchOtherUser) {
-            throw new NotFoundException(
-                "같은 경기에 참석하지 않은 유저는 설문지를 작성할 수 없습니다.",
-            );
-        }
-
-        if (
-            personalMatch.guestId === matchOtherUser.id &&
-            personalMatch.hostId === matchOtherUser.id
-        ) {
-            throw new BadRequestException(
-                "당사자 본인은 자기 평가서를 작성할 수 없습니다.",
-            );
-        }
-
-        if (!personalMatchHost && !personalMatchGuest) {
-            throw new NotFoundException(
-                "해당 모집경기에 참여하지 않은 유저는 태그를 작성할 수 없습니다.",
-            );
-        }
-
-        const recruitGroup = await this.matchRepository.findOne({
-            where: { recruitId: recurit.id },
-        });
-
-        if (!recruitGroup) {
-            throw new NotFoundException("해당 모임은 존재하지 않습니다.");
-        }
-
-        for (const key in personalTagCounterDto) {
-            if (personalTagCounterDto.hasOwnProperty(key) && key !== "userId") {
-                // 해당 key에 대한 값이 숫자이면서 1일 때만 +1 증가
-                if (personalTagCounterDto[key] === 1) {
-                    personalTagUser[key] += 1;
-                }
-            }
-        }
-        const updatedPersonalTag =
-            await this.personaltagcounterRepository.save(personalTagUser);
-
-        return updatedPersonalTag;
     }
 }

@@ -25,7 +25,7 @@ export class KakaoController {
         res.cookie("accessToken", accessToken);
         res.cookie("refreshToken", refreshToken);
         //redirect할 본인 페이지 주소확인
-        res.redirect("http://localhost:8001/index.html");
+        res.redirect("http://localhost:8001/index.html/code=");
     }
 
     // 카카오 로그인할 event(button, 이미지 생성후 api를 통해 진행)

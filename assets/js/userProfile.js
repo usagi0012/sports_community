@@ -1,3 +1,9 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadUserMenu();
+};
+
 document.addEventListener("DOMContentLoaded", async function () {
     try {
         // Access token 가져오기
@@ -195,12 +201,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             .getElementById("updateProfileButton")
             .addEventListener("click", function () {
                 location.href = "/userProfile-update.html";
-                console.log(location.href);
-            });
-        document
-            .getElementById("calender")
-            .addEventListener("click", function () {
-                location.href = "/calender.html";
                 console.log(location.href);
             });
     } catch (error) {

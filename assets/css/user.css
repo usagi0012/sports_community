@@ -1,0 +1,31 @@
+#userSection {
+    min-height: 100%;
+    width: 80%;
+    padding: 10px 30px;
+    border-left: 1px solid #dfcec3;
+}
+
+#userSection > h2 {
+    font-size: 2rem;
+    color: #3f3131;
+}
+
+#userSection > p {
+    padding-left: 20px;
+}
+
+#userSection > button {
+    font-family: "LINESeedKR-Bd";
+    border-radius: 7px;
+    height: 25px;
+    width: 50px;
+    padding-top: 5px;
+    margin-top: 15px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#userSection > button:hover {
+    background-color: #ffb13d;
+}

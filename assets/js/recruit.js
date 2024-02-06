@@ -60,6 +60,7 @@ function feed() {
                 const writerElement = newContent.querySelector(".writer");
                 if (writerElement) {
                     writerElement.addEventListener("click", async function () {
+                        console.log(recruits.hostId);
                         await createModal(recruits.hostId);
                     });
                 }
