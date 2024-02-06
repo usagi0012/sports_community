@@ -226,3 +226,7 @@
     right: 15px;
     font-size: 20px;
 }
+
+#expelMember-modal-overlay {
+    display: none;
+}

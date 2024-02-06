@@ -73,8 +73,12 @@
                         placeholder="닉네임을 입력하세요"
                     />
                     <br />
-                    <button id="submit-btn">제출</button>
-                    <button id="close-btn">닫기</button>
+                    <button id="submit-btn" onclick="expelMember()">
+                        제출
+                    </button>
+                    <button id="close-btn" onclick="closeExpelMemberModal()">
+                        닫기
+                    </button>
                 </div>
             </div>
         </div>
@@ -177,10 +181,14 @@
 
             function expelMember() {
                 const token = localStorage.getItem("accessToken");
+                const nickNameInput = document.querySelector("#nickname");
+                console.log("?", nickNameInput);
+                const nickName = nickNameInput.value;
+                console.log("닉네임", nickName);
                 axios
                     .put(
                         "/api/club/expelMember",
-                        {},
+                        { nickName },
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,
@@ -192,6 +200,8 @@
                         console.log("button clicked");
 
                         alert("멤버 추방에 성공했습니다.");
+
+                        closeExpelMemberModal();
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -199,6 +209,20 @@
 
                         return;
                     });
+            }
+
+            function openExpelMemberModal() {
+                const expelMemberModal = document.querySelector(
+                    "#expelMember-modal-overlay",
+                );
+                expelMemberModal.style.display = "flex";
+            }
+
+            function closeExpelMemberModal() {
+                const expelMemberModal = document.querySelector(
+                    "#expelMember-modal-overlay",
+                );
+                expelMemberModal.style.display = "none";
             }
         </script>
         <script src="./js/notification.js"></script>

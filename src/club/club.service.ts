@@ -286,6 +286,7 @@ export class ClubService {
 
     async expelMember(userId: number, expelMemeberDto: ExpelMemberDto) {
         const { nickName } = expelMemeberDto;
+        console.log("***확인1***");
 
         const clubMaster = await this.clubRepository.findOne({
             where: { masterId: userId },
@@ -296,22 +297,26 @@ export class ClubService {
                 "동아리 장만 멤버를 추방할 수 있습니다.",
             );
         }
-
+        console.log("***확인2***");
         const member = await this.userProfileRepository.findOne({
             where: { nickname: nickName },
+            select: ["id", "nickname", "userId"],
         });
-
+        console.log(member);
+        console.log("***확인3***");
         if (!member) {
             throw new NotFoundException(
                 "해당하는 닉네임을 가진 멤버가 없습니다.",
             );
         }
-
+        console.log("***확인4***");
         const memberId = member.userId;
+        console.log(memberId);
+        console.log("***확인4.5***");
         const expeledMember = await this.userRepository.update(memberId, {
             clubId: null,
         });
-
+        console.log("***확인5***");
         return expeledMember;
     }
 }
