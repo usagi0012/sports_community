@@ -33,8 +33,12 @@ a {
 .menubarContainer {
     position: absolute;
     left: 9.5vw;
+}
+
+.menubarContainer:hover {
     z-index: 2;
 }
+
 .menu {
     width: 100%;
     min-width: 800px;

@@ -89,7 +89,7 @@ function getRecruitDetail(recruitId) {
                 </dl>
                 <dl class="gps">
                 <dd id="gpsBtn" onclick="openMapModal('${recruitDetail.gps}')">
-                    ${recruitDetail.gps}
+                    위치 보기
                 </dd>
             </dl>
             
@@ -138,7 +138,7 @@ function openMapModal(gpsData) {
     var modal = document.getElementById("mapModal");
     console.log(gpsData);
 
-    modal.style.display = "block";
+    modal.style.display = "flex";
     showWhere(gpsData);
 }
 

@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onog Recruit Detail</title>
-        <meta name="description" content="Onog RecruitDetailPage" />
+        <title>Onong Recruit Detail</title>
+        <meta name="description" content="Onong RecruitDetailPage" />
         <link rel="icon" href="./resources/favicon.ico" />
         <link
             rel="stylesheet"
@@ -52,35 +52,30 @@
                     </div>
                 </div>
 
-
-            <div class="board-wrap">
-                <div class="board-title">
-                    <strong>피드</strong>
-                    <p>오농 커뮤니티</p>
-                </div>
-                <div class="board-detail-wrap">
-                    <div class="board-detail"></div>
-                    <div class="bt-wrap">
-                        <a href="./recruit.html" class="on">목록</a>
-                        <a href="#" id="modalOpenButton">신청</a>
+                <div class="board-wrap">
+                    <div class="board-detail-wrap">
+                        <div class="board-detail"></div>
+                        <div class="buttonContainer" id="buttonContainer">
+                            <button class="modalOpenBtn" id="modalOpenButton">
+                                신청
+                            </button>
+                            <button class="toListBtn" onclick="toRecruit()">
+                                목록
+                            </button>
+                        </div>
                     </div>
-                <div class="buttonContainer" id="buttonContainer">
-                    <button class="modalOpenBtn" id="modalOpenButton">
-                        신청
-                    </button>
-                    <button class="toListBtn" onclick="toRecruit()">
-                        목록
-                    </button>
                 </div>
-            </div>
-        </div>
-        <div id="mapModal" class="modal">
-            <div class="adreess" id="adreess"></div>
+                <div id="mapModal" class="mapModal">
+                    <div class="mapMadalContent">
+                        <div class="adreess" id="adreess"></div>
 
-            <div id="map" style="width: 800px; height: 600px"></div>
+                        <div id="map" style="width: 500px; height: 500px"></div>
 
-            <div class="modalBtnContainer">
-                <button onclick="closeMapModal()">닫기</button>
+                        <div class="modalBtnContainer">
+                            <button onclick="closeMapModal()">닫기</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
