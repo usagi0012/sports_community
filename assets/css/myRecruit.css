@@ -1,0 +1,41 @@
+/* 메인 컨테이너*/
+.titleContainer {
+    margin-top: 80px;
+    width: 100%;
+    min-height: 50px;
+}
+
+.titleFlex {
+    width: 100%;
+    display: flex;
+    float: left;
+}
+
+h3 {
+    padding: 10px 0px 7px;
+    margin: 0px;
+}
+
+#myWriteRecruit,
+#myApplyRecruit {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    cursor: pointer;
+}
+
+#myWriteRecruit {
+    background-color: #ff771c;
+    color: #fff;
+}
+
+.mainContainer {
+    margin: 0px auto 10px;
+    border: 1px solid #ffb13d;
+}
+
+/* 카드 부분*/

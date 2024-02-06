@@ -1,9 +1,23 @@
+import { UserId } from "./../auth/decorators/userId.decorator";
+import { Progress } from "./../entity/match.entity";
 import { MatchDTO } from "./dto/match.dto";
 import { Match, MatchStatus } from "../entity/match.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { Not, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Recruit, Status } from "../entity/recruit.entity";
+import { User } from "./../entity/user.entity";
+import { userInfo } from "os";
+import { find } from "lodash";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import { match } from "assert";
+import { isUtf8 } from "buffer";
+import { Alarmservice } from "src/alarm/alarm.service";
+
+const now = new Date();
+const utc = now.getTime();
+const koreaTimeDiff = 9 * 60 * 60 * 1000;
+const korNow = new Date(utc + koreaTimeDiff);
 
 @Injectable()
 export class MatchService {
@@ -12,99 +26,323 @@ export class MatchService {
         private matchRepository: Repository<Match>,
         @InjectRepository(Recruit)
         private recruitRepository: Repository<Recruit>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
+        private alarmService: Alarmservice,
     ) {}
 
+    //나의 매치 조회
     async getMyMatch(userId: number) {
         const matches = await this.matchRepository.find({
             where: {
-                guestid: userId,
+                guestId: userId,
             },
         });
-
         return matches;
     }
 
-    async findMyMatch(id: number, userid: number) {
+    //나의매치 상세조회
+    async findMyMatch(matchId: number, userId: number) {
         const findmatch = await this.matchRepository.findOne({
             where: {
-                id: id,
+                id: matchId,
             },
         });
 
-        if (findmatch.guestid !== userid) {
+        if (findmatch.guestId !== userId) {
             throw new NotFoundException(
-                `matchid ${id}에 대한 권한이 없습니다.`,
+                `matchid ${matchId}에 대한 권한이 없습니다.`,
             );
         }
-
+        findmatch.updateProgress();
         return findmatch;
     }
 
-    async postMatch(id: number, userid: number, matchDTO: MatchDTO) {
+    //매치 신청하기
+    async postMatch(recruitId: number, userId: number, matchDTO: MatchDTO) {
         const findRecruit = await this.recruitRepository.findOne({
             where: {
-                id: id,
+                id: recruitId,
             },
         });
-
         if (!findRecruit) {
             throw new NotFoundException(
-                `Recruit with id ${id} 을 찾을 수 없습니다.`,
+                `Recruit with id ${recruitId} 을 찾을 수 없습니다.`,
             );
         }
-
         if (findRecruit.status === Status.Complete) {
             throw new NotFoundException("모집이 완료되었습니다.");
         }
 
-        await this.checkMatch(id, userid);
-
-        const hostId = findRecruit.hostid;
-        const submitMatch = this.matchRepository.create({
-            guestid: userid,
-            recuritedid: id,
-            hostid: hostId,
-            ...matchDTO,
-        });
-
-        await this.matchRepository.save(submitMatch);
-        return submitMatch;
-    }
-
-    async deleteMatch(id: number, userid: number) {
-        const findmatch = await this.findMyMatch(id, userid);
-
-        if (findmatch.guestid !== userid) {
+        if (findRecruit.hostId === userId) {
             throw new NotFoundException(
-                `matchid ${id}에 대한 권한이 없습니다.`,
+                "본인의 모집 공고에는 신청이 불가합니다.",
             );
         }
 
-        const RecruitId = findmatch.recuritedid;
-        const Recruit = await this.recruitRepository.findOne({
+        await this.checkMatch(recruitId, userId);
+        const user = await this.userRepository.findOne({
             where: {
-                id: RecruitId,
+                id: userId,
             },
         });
-        if ((findmatch.status = MatchStatus.APPROVED)) {
-            Recruit.totalmember += 1;
-            if (Recruit.status === Status.Complete) {
-                Recruit.status = Status.Recruiting;
-            }
+        const myMatches = await this.getMyMatch(userId);
 
-            await this.recruitRepository.save(Recruit);
+        for (const match of myMatches) {
+            const matchGamedate = match.gameDate;
+            const matchEndtime = match.endTime;
+
+            if (
+                findRecruit.gamedate >= matchGamedate &&
+                findRecruit.gamedate <= matchEndtime
+            ) {
+                throw new NotFoundException(
+                    "이미 그 시간에 신청한 매치가 있습니다.",
+                );
+            }
         }
-        await this.matchRepository.remove(findmatch);
+
+        const recruit = await this.recruitRepository.findOne({
+            where: { id: recruitId },
+        });
+        const submitMatch = this.matchRepository.create({
+            gameDate: findRecruit.gamedate,
+            endTime: findRecruit.endtime,
+            guestId: userId,
+            guestName: user.name,
+            recruitId: recruitId,
+            hostId: recruit.hostId,
+            hostName: recruit.hostName,
+            recruitTitle: recruit.title,
+            gps: recruit.gps,
+
+            ...matchDTO,
+        });
+        await this.matchRepository.save(submitMatch);
+        console.log(recruit);
+        this.alarmService.sendAlarm(
+            recruit.hostId,
+            `${user.name}님이 매치를 신청했습니다.`,
+        );
+        return submitMatch;
     }
 
-    private async checkMatch(id: number, userid: number) {
-        const matche = await this.matchRepository.findOne({
+    // 신청 취소하기
+    async cancelMatch(matchId: number, userId: number) {
+        const findmatch = await this.findMyMatch(matchId, userId);
+
+        if (findmatch.guestId !== userId) {
+            throw new NotFoundException(
+                `matchid ${matchId}에 대한 권한이 없습니다.`,
+            );
+        }
+
+        if (findmatch.status === MatchStatus.CONFIRM) {
+            throw new NotFoundException("컴펀된 경기는 취소할 수 없습니다.");
+        }
+
+        findmatch.status = MatchStatus.CANCELCONFIRM;
+
+        return await this.matchRepository.save(findmatch);
+    }
+    //본인 매치에서 경기한 유저아이디 조회
+    async findGameUser(userId: number, matchId: number) {
+        const findmatch = await this.findMyMatch(matchId, userId);
+
+        if (!findmatch) {
+            throw new NotFoundException(`Match ${matchId}을 찾을 수 없습니다.`);
+        }
+
+        const matches = await this.matchRepository.find({
             where: {
-                recuritedid: id,
+                recruitId: findmatch.recruitId,
+                status: MatchStatus.CONFIRM,
             },
         });
-        if (matche && matche.guestid == userid) {
+
+        // if (!matches || matches.length === 0) {
+        //     throw new NotFoundException("컴펌된 유저가 없습니다.");
+        // }
+
+        return [findmatch, matches];
+    }
+
+    //매치 컴펌하기
+    async confirmMatch(matchId: number, userId: number) {
+        const findMatch = await this.findMyMatch(matchId, userId);
+
+        const recruitId = findMatch.recruitId;
+
+        const recruit = await this.recruitRepository.findOne({
+            where: {
+                id: recruitId,
+            },
+        });
+
+        console.log(recruit);
+
+        if (findMatch.status === MatchStatus.CONFIRM) {
+            throw new NotFoundException("이미 참석하기로한 경기입니다.");
+        }
+
+        if (findMatch.status === MatchStatus.APPLICATION_COMPLETE) {
+            throw new NotFoundException("처리중입니다.");
+        }
+
+        if (findMatch.status === MatchStatus.REJECTED) {
+            findMatch.status = MatchStatus.CANCELCONFIRM;
+
+            await this.matchRepository.save(findMatch);
+        } else if (findMatch.status === MatchStatus.APPROVED) {
+            if (recruit.status === Status.Complete) {
+                findMatch.status = MatchStatus.CANCELCONFIRM;
+                await this.matchRepository.save(findMatch);
+                throw new NotFoundException("모집 완료된 경기입니다.");
+            }
+
+            findMatch.status = MatchStatus.CONFIRM;
+            recruit.totalmember -= 1;
+
+            if (recruit.totalmember === 0) {
+                recruit.status = Status.Complete;
+                await this.recruitRepository.save(recruit);
+
+                const anotherMatches = await this.matchRepository.find({
+                    where: {
+                        recruitId: recruitId,
+                        status: Not(
+                            MatchStatus.CONFIRM && MatchStatus.CANCELCONFIRM,
+                        ),
+                    },
+                });
+
+                for (const individualMatch of anotherMatches) {
+                    individualMatch.status = MatchStatus.CANCELCONFIRM;
+                    await this.matchRepository.save(individualMatch);
+                }
+            }
+            await this.recruitRepository.save(recruit);
+            await this.matchRepository.save(findMatch);
+        }
+        return findMatch;
+    }
+
+    // 경기 평가완료하기
+    async doneGame(userId: number, matchId: number) {
+        const findMatch = await this.findMyMatch(matchId, userId);
+
+        if (findMatch.progress === Progress.EVALUATION_COMPLETED) {
+            throw new NotFoundException("이미 평가완료하였습니다. ");
+        }
+
+        if (findMatch.endTime >= new Date()) {
+            throw new NotFoundException("경기가 끝난 후 평가 가능합니다.");
+        }
+
+        findMatch.evaluate = true;
+        findMatch.progress = Progress.EVALUATION_COMPLETED;
+
+        return await this.matchRepository.save(findMatch);
+    }
+    //컴펌후 삭제하기
+    async deleteCancelGame(userId: number, matchId: number) {
+        const findMatch = await this.findMyMatch(matchId, userId);
+
+        if (!findMatch) {
+            throw new NotFoundException("매치를 찾을 수 없습니다.");
+        }
+
+        if (findMatch.progress === Progress.EVALUATION_COMPLETED) {
+            return await this.matchRepository.remove(findMatch);
+        }
+
+        if (findMatch.status === MatchStatus.CONFIRM) {
+            throw new NotFoundException("이미 컴펌한 경기입니다.");
+        }
+
+        if (findMatch.status !== MatchStatus.CANCELCONFIRM) {
+            throw new NotFoundException("취소 후 삭제할 수 있습니다.");
+        }
+
+        return await this.matchRepository.remove(findMatch);
+    }
+
+    private async checkMatch(recruitId: number, UserId: number) {
+        const matche = await this.matchRepository.findOne({
+            where: {
+                recruitId: recruitId,
+            },
+        });
+        if (matche && matche.guestId == UserId) {
             throw new NotFoundException("이미 신청하셨습니다.");
+        }
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async handleCron() {
+        const matches = await this.matchRepository.find();
+
+        for (const match of matches) {
+            this.updateProgress(match);
+            const message = `함께 경기한 사람들을 평가해주세요!`;
+            //link부분 수정해야함
+            const link = `http://localhost:8001/index.html`;
+            this.alarmService.sendAlarm(match.guestId, message, link);
+        }
+
+        await this.matchRepository.save(matches);
+    }
+
+    private updateProgress(match: Match) {
+        if (match.gameDate.getTime() < korNow.getTime()) {
+            match.progress = Progress.DURING;
+        }
+
+        if (match.endTime.getTime() < korNow.getTime()) {
+            match.progress = Progress.PLEASE_EVALUATE;
+        }
+    }
+
+    //호스트가 매치 삭제하기
+    async deleteMatch(userId: number, matchId: number) {
+        try {
+            const match = await this.matchRepository.findOne({
+                where: {
+                    id: matchId,
+                    hostId: userId,
+                },
+            });
+
+            if (!match) {
+                throw new Error("Match not found");
+            }
+
+            const recruitId = match.recruitId;
+            const recruit = await this.recruitRepository.findOne({
+                where: {
+                    id: recruitId,
+                },
+            });
+
+            if (!recruit) {
+                throw new Error("Recruit not found");
+            }
+
+            if (match.status === MatchStatus.CONFIRM) {
+                recruit.totalmember += 1;
+                if (recruit.status === Status.Complete) {
+                    recruit.status = Status.Recruiting;
+                }
+                await this.recruitRepository.save(recruit);
+            }
+
+            match.status = MatchStatus.CANCELCONFIRM;
+            await this.matchRepository.save(match);
+
+            return { message: "경기가 취소되었습니다." };
+        } catch (error) {
+            console.error(error.message);
+            throw new Error(error);
         }
     }
 }

@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Onog Club Details</title>
+        <meta name="description" content="Onog ClubDetailPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="css/club-detail.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
+    </head>
+
+    <body>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer" id="mainContainer">
+                <div class="buttonContainer" id="buttonContainer">
+                    <!-- 내 동아리 들어가면 동아리 수정 버튼 띄우기 -->
+                    <button class="updateBtn" onclick="moveToUpdatePage() ">
+                        동아리 정보 수정
+                    </button>
+                    <button class="applyingBtn" onclick="openApplyingModal()">
+                        동아리 신청
+                    </button>
+                    <button class="matchBtn" onclick="openClubMatchModal()">
+                        동아리 대결 신청
+                    </button>
+                    <script src="./js/clubMatchModal.js"></script>
+                    <button class="toMyClubBtn" onclick="toMyClub()">
+                        관리페이지 이동
+                    </button>
+
+                    <!-- 내 동아리 들어가면 동아리 삭제 버튼 띄우기 -->
+                    <button class="deleteBtn" onclick="deleteCheck()">
+                        동아리 삭제
+                    </button>
+                </div>
+
+                <!-- 동아리 신청 모달창 -->
+                <div id="applyingClubModal" class="modal">
+                    <div class="modal-content">
+                        <!-- 기본값으로 클릭한 동아리의 id가 들어가도록 설정하기 
+                하지만 사용자에게 보여주는 값은 동아리 "이름"이 보여질 수 있도록 하기 -->
+                        <label for="description" id="applyDescription"
+                            >지원 이유</label
+                        >
+                        <textarea id="description1"></textarea>
+                        <div class="modalBtnContainer">
+                            <button onclick="submitApplyingForm()">제출</button>
+                            <button onclick="closeApplyingModal()">닫기</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="clubDetailContainer" id="clubDetailContainer">
+                    <div class="firstRow">
+                        <div class="name">이름</div>
+                        <div class="region">지역</div>
+                        <div class="createdAt">생성일자</div>
+                    </div>
+                    <div class="secondRow">
+                        <div class="clubMaster">동호회장</div>
+                        <div class="member">회원수</div>
+                        <div class="score">점수</div>
+                    </div>
+                    <div class="detialRow">
+                        <div class="details">상세설명</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer" id="footer"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="module" src="./js/club-detail.js"></script>
+        <script src="./js/dropmenu.js"></script>
+        <script>
+            const clubNameDiv = document.querySelector(".name");
+            const clubNameDisplay = document.querySelector("#clubNameDisplay");
+            const clubNameDetail = document.querySelector(".clubNameDetail");
+            console.log("클럽네임", clubNameDiv);
+            // console.log(clubNameDetail);
+            // console.log("durl", clubNameDetail.textContent);
+            // console.log("클럽이름", clubNameDiv);
+            // console.log("클럽상세이름", clubNameDiv.children);
+            // console.log(clubNameDiv.children[0].textContent);
+            clubNameDisplay.innerHTML = ``;
+
+            function openModal() {
+                document.getElementById("updateClubModal").style.display =
+                    "flex";
+            }
+
+            function closeModal() {
+                document.getElementById("updateClubModal").style.display =
+                    "none";
+            }
+
+            function openApplyingModal() {
+                document.getElementById("applyingClubModal").style.display =
+                    "flex";
+            }
+
+            function closeApplyingModal() {
+                document.getElementById("applyingClubModal").style.display =
+                    "none";
+            }
+
+            function submitApplyingForm() {
+                const urlParams = new URLSearchParams(window.location.search);
+                console.log("urlParams", urlParams);
+                let clubId = urlParams.get("id");
+
+                // const authorized = localStorage.getItem("authorized");
+                // const token = JSON.parse(authorized).accessToken.value;
+                const token = localStorage.getItem("accessToken");
+
+                const inputMessage = document.querySelector("#description1");
+                const message = inputMessage.value;
+                console.log("메세지값", message);
+                console.log("메세지 타입", typeof message);
+
+                axios
+                    .post(
+                        `/api/applying-club/${clubId}`,
+                        {
+                            message,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        },
+                    )
+                    .then(function (response) {
+                        console.log(response);
+                        if (
+                            response.data.error ==
+                            "지원서 신청은 한 곳만 가능합니다."
+                        ) {
+                            alert(response.data.error);
+                        } else {
+                            alert(response.data.message);
+                        }
+                        closeApplyingModal();
+                    })
+                    .catch(function (error) {
+                        console.log(error.response);
+                        alert(error.response.data.message);
+                    });
+            }
+
+            function deleteCheck() {
+                // alert(`${clubNameDiv} 동아리를 정말로 삭제하시겠습니까?`);
+                const urlParams = new URLSearchParams(window.location.search);
+                console.log("urlParams", urlParams);
+                let clubId = urlParams.get("id");
+
+                // const authorized = localStorage.getItem("authorized");
+                // const token = JSON.parse(authorized).accessToken.value;
+                const token = localStorage.getItem("accessToken");
+
+                axios
+                    .delete(`api/club/${clubId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    })
+                    .then(function (response) {
+                        console.log(response);
+                        alert(`${response.data.message}`);
+                        window.location.href = "club.html";
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+
+                        // if (error.response.data.message === "Unauthorized") {
+                        //     alert("동아리 생성자만 삭제할 수 있습니다.");
+                        // }
+                    });
+            }
+
+            function moveToUpdatePage() {
+                const urlParams = new URLSearchParams(window.location.search);
+                console.log("urlParams", urlParams);
+                let clubId = urlParams.get("id");
+
+                window.location.href = `update-club.html?id=${clubId}`;
+            }
+        </script>
+
+        <!-- 클럽매치 모달창 -->
+        <div id="clubMatchModal" class="modal">
+            <div id="modalContainer"></div>
+            <div class="modal-content" style="width: 400px">
+                <div class="modal-body">
+                    <form
+                        id="clubMatchForm"
+                        onsubmit="clubMatchApplication(event)"
+                    >
+                        <div class="form-group">
+                            <label for="message">Message:</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="message"
+                                name="message"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="Information">Information:</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="Information"
+                                name="Information"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="gamedate">Game Date:</label>
+                            <input
+                                type="datetime-local"
+                                class="form-control"
+                                id="gamedate"
+                                name="gamedate"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="endtime">End Time:</label>
+                            <input
+                                type="datetime-local"
+                                class="form-control"
+                                id="endtime"
+                                name="endtime"
+                                required
+                            />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Submit
+                        </button>
+                    </form>
+                </div>
+                <button onclick="closeClubMatchModal()">닫기</button>
+            </div>
+        </div>
+        <!-- 클럽매치 모달창 -->
+        <script src="./js/notification.js"></script>
+    </body>
+</html>

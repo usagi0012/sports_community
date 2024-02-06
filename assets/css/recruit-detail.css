@@ -1,0 +1,201 @@
+/* 메인 컨테이너*/
+
+.mainContainer {
+    margin-top: 70px;
+}
+
+.modalOpenBtn,
+.toListBtn {
+    font-family: "LINESeedKR-Bd";
+    width: 110px;
+    height: 35px;
+    margin: 5px auto;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #eeeeee;
+    cursor: pointer;
+}
+
+.modalOpenBtn:hover,
+.toListBtn:hover {
+    background-color: #ffb13d;
+}
+
+.top {
+    padding: 10px 0px;
+}
+
+.title {
+    font-size: 2rem;
+    color: #1f1c1c;
+    padding-left: 10px;
+}
+
+.firstRow,
+.secondRow,
+.cont {
+    display: flex;
+    padding: 10px 15px;
+    border-top: 1.5px solid #4c3c36;
+}
+
+dd {
+    color: #000000;
+    border-left: 4px double #4c3c36;
+    width: 70%;
+    margin: 0px auto;
+    padding: 0px 15px;
+}
+
+.hostName,
+.rule {
+    width: 30%;
+    display: flex;
+    color: #6b6968;
+}
+
+.region,
+.member {
+    width: 25%;
+    display: flex;
+    color: #6b6968;
+}
+
+.status {
+    width: 25%;
+    display: flex;
+    color: #6b6968;
+}
+
+.gps {
+    width: 20%;
+    display: flex;
+    color: #6b6968;
+}
+
+.gamedate {
+    width: 45%;
+    display: flex;
+    color: #6b6968;
+}
+
+#gpsBtn {
+    padding-top: 2px;
+    border: 1px solid #6b6968;
+    background-color: #eeeeee;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#gpsBtn:hover {
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+}
+
+.cont {
+    font-size: 1.1rem;
+    min-height: 30vh;
+    border-bottom: 1.5px solid #4c3c36;
+    padding-top: 20px;
+}
+
+.buttonContainer {
+    text-align: center;
+}
+
+#applyModal {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    position: absolute;
+    background-color: #ffffff;
+    width: 500px;
+    height: 350px;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+#applyModal.hidden {
+    display: none;
+}
+
+.applyLabel {
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 10px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.applyMessage {
+    margin-left: 15px;
+    font-size: 1.1rem;
+}
+
+#description1 {
+    display: block;
+    margin: 10px auto;
+    font-family: "LINESeedKR-Bd";
+    padding: 8px;
+    min-height: 150px;
+    min-width: 400px;
+}
+
+.modalBtnContainer {
+    text-align: center;
+}
+
+.modalBtnContainer > button {
+    font-family: "LINESeedKR-Bd";
+    border-radius: 7px;
+    height: 25px;
+    padding-top: 5px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.modalBtnContainer > button:hover {
+    background-color: #ffb13d;
+}
+
+#mapModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border: 2px solid red;
+    /* Debugging border */
+}
+
+#mapModal button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#mapModal button:hover {
+    background-color: #2980b9;
+}
+
+#mapModal .modal-content {
+    border: 2px solid black;
+}

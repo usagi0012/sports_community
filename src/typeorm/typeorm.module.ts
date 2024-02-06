@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
+
 @Module({})
 export class TypeormModule {
     static forRoot(): DynamicModule {
@@ -14,7 +15,7 @@ export class TypeormModule {
                 database: configService.get<string>("DATABASE_NAME"),
                 autoLoadEntities: true,
                 synchronize: true,
-                // logging: true,
+                logging: true,
             }),
             inject: [ConfigService],
         });

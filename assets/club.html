@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Onog ClubList</title>
+        <meta name="description" content="Onog ClubListPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="css/club.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
+    </head>
+    <body>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer" id="mainContainer">
+                <div class="club">
+                    <button class="createBtn" onclick="moveToCreateClub()">
+                        동아리 생성
+                    </button>
+                    <!-- <button
+                        class="myClubApplication"
+                        onclick="moveToGetMyClubApplication()"
+                    >
+                        내 동아리 신청서 조회
+                    </button> -->
+                </div>
+                <div class="title">
+                    <div>번호</div>
+                    <div>동아리명</div>
+                    <div>지역</div>
+                    <div>동아리장</div>
+                    <div>점수</div>
+                </div>
+                <div class="club-list"></div>
+            </div>
+        </div>
+        <div class="footer" id="footer"></div>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="module" src="./js/club.js"></script>
+        <script src="./js/dropmenu.js"></script>
+        <!-- <script src="./js/club-detail.js"></script> -->
+        <script>
+            function moveToCreateClub() {
+                // 동아리 생성 페이지 이동 전 로그인이 되어 있는지 확인
+                // const authorized = localStorage.getItem("authorized");
+                // const token = JSON.parse(authorized).accessToken.value;
+
+                window.location.href = "create-club.html";
+            }
+
+            function moveToGetMyClubApplication() {
+                const token = localStorage.getItem("accessToken");
+                axios
+                    .get("/api/applying-club", {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    })
+                    .then(function (response) {
+                        console.log(response);
+                        if (response.data.statusCode !== 200) {
+                            alert(`${response.data.error}`);
+                            return;
+                        }
+                        window.location.href = "my-club-application.html";
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        alert("동아리 장만 조회할 수 있습니다.");
+                        return;
+                    });
+            }
+
+            function getMyClubApplication() {
+                isClubMaster();
+                moveToGetMyClubApplication();
+            }
+
+            // 클릭시 유저 프로필 모달창 나오게 하기(예시.. 삭제 하셔도 됩니다)
+            // const clubLeaders = document.querySelectorAll(".club-leader");
+            // clubLeaders.forEach((leader) => {
+            //     // 모달이 보이지 않도록 초기화
+            //     const modal = document.getElementById("userProfileModal");
+            //     if (modal) {
+            //         modal.style.display = "none";
+            //     }
+
+            //     leader.addEventListener("click", () => {
+            //         const userId = leader.dataset.userId;
+            //         openUserModal(2);
+            //     });
+            // });
+        </script>
+        <script src="./js/notification.js"></script>
+    </body>
+</html>

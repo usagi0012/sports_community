@@ -1,3 +1,4 @@
+import { Recruit } from "./../entity/recruit.entity";
 import {
     Controller,
     Body,
@@ -15,8 +16,9 @@ import { RecruitService } from "./recruit.service";
 import { User } from "../entity/user.entity";
 import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { UserId } from "../auth/decorators/userId.decorator";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("매치 모집 글")
 @Controller("recruit")
 @ApiBearerAuth("accessToken")
 @UseGuards(accessTokenGuard)
@@ -29,8 +31,7 @@ export class RecruitController {
         @UserId() userId: number,
         @Body() recruitDTO: RecruitDTO,
     ) {
-        const hostId = userId;
-        return await this.recruitService.postRecruit(hostId, recruitDTO);
+        return await this.recruitService.postRecruit(userId, recruitDTO);
     }
     //모집 글 조회
     @Get("")
@@ -38,65 +39,90 @@ export class RecruitController {
         return await this.recruitService.getRecruit();
     }
     //모집 글 상세조회
-    @Get(":id")
-    async findRecruit(@Param("id") id: number) {
-        return await this.recruitService.findRecruit(id);
-    }
-
-    //모집 글 수정
-    @Put(":id")
-    async putRecruit(
-        @UserId() userId: number,
-        @Body() putDTO: PutDTO,
-        @Param("id") id: number,
-    ) {
-        const hostId = userId;
-
-        return await this.recruitService.putRecruit(hostId, putDTO, id);
-    }
-
-    //모집 글 status 수정
-    @Put("status/:id")
-    async updateRecruit(
-        @UserId() userId: number,
-        @Body() updateDto: UpdateDto,
-        @Param("id") id: number,
-    ) {
-        const hostId = userId;
-        return await this.recruitService.updateRecruit(hostId, updateDto, id);
-    }
-    //모집 글 삭제
-    @Delete(":id")
-    async deleteRecruit(@UserId() userId: number, @Param("id") id: number) {
-        const hostId = userId;
-        return await this.recruitService.deleteRecruit(hostId, id);
+    @Get(":recruitId")
+    async findRecruit(@Param("recruitId") recruitId: number) {
+        return await this.recruitService.findRecruit(recruitId);
     }
 
     // 내 모집글
-    @Get("my/recruit")
+    @Get("my/post")
     async myRecruit(@UserId() userId: number) {
-        return await this.recruitService.myRecruit(userId);
+        const recruits = await this.recruitService.myRecruit(userId);
+
+        return recruits;
     }
 
     // 내 모집글 상세 조회
-    @Get("my/recruit/:id")
-    async findMyRecruit(@UserId() userId: number, @Param("id") id: number) {
-        return await this.recruitService.findMyRecruit(userId, id);
+    @Get("my/post/:recruitId")
+    async findMyRecruit(
+        @UserId() userId: number,
+        @Param("recruitId") recruitId: number,
+    ) {
+        return await this.recruitService.findMyRecruit(userId, recruitId);
     }
 
-    // 호스트 매치 상세조회
-    @Get("my/match/:matchid")
-    async checkMatch(@UserId() userId: number, @Param("matchid") id: number) {
-        return await this.recruitService.checkMatch(userId, id);
+    // 모집글 매치 상세조회
+    @Get("my/post/match/:matchId")
+    async checkMatch(
+        @UserId() userId: number,
+        @Param("matchId") matchId: number,
+    ) {
+        return await this.recruitService.checkMatch(userId, matchId);
     }
 
     // 모집글 승인/거절
-    @Put("my/match/:matchid")
+    @Put("my/post/match/:matchId")
     async putMatch(
         @UserId() userId: number,
-        @Param("matchid") id: number,
+        @Param("matchId") matchId: number,
         @Body() matchUpdateDto: MatchUpdateDto,
     ) {
-        return await this.recruitService.putMatch(userId, matchUpdateDto, id);
+        return await this.recruitService.putMatch(
+            userId,
+            matchUpdateDto,
+            matchId,
+        );
+    }
+
+    //본인 모집글 참석 컴펌한 유저 조회
+    @Get("my/post/:recruitId/user")
+    async getGameUser(
+        @UserId() userId: number,
+        @Param("recruitId") recruitId: number,
+    ) {
+        return await this.recruitService.getGameUser(userId, recruitId);
+    }
+
+    //평가완료하기
+    @Put("my/post/:recurtId/evaluate")
+    async evaluateGame(
+        @UserId() userId: number,
+        @Param("recurtId") recruitId: number,
+    ) {
+        return await this.recruitService.evaluateGame(userId, recruitId);
+    }
+
+    //모집 글 삭제
+    @Delete("my/post/:recurtId")
+    async deleteRecruit(
+        @UserId() userId: number,
+        @Param("recurtId") recruitId: number,
+    ) {
+        const hostId = userId;
+        await this.recruitService.deleteRecruit(hostId, recruitId);
+
+        return {
+            message: "해당 모집글이 삭제되었습니다.",
+        };
+    }
+
+    //모집 글 수정
+    @Put("my/post/match/edit/:recruitId")
+    async editMatch(
+        @UserId() userId: number,
+        @Param("recruitId") recruitId: number,
+        @Body() putDTO: PutDTO,
+    ) {
+        return await this.recruitService.editMatch(userId, putDTO, recruitId);
     }
 }

@@ -6,8 +6,6 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
     OneToMany,
-    JoinTable,
-    Relation,
 } from "typeorm";
 import { User } from "./user.entity";
 import { toUSVString } from "util";
@@ -27,7 +25,7 @@ export class Club {
     @Column()
     region: Region;
 
-    @Column()
+    @Column({ default: 1 })
     members: number;
 
     @Column()

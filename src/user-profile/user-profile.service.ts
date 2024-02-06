@@ -3,6 +3,7 @@ import {
     HttpException,
     HttpStatus,
     Injectable,
+    NotAcceptableException,
     NotFoundException,
     Req,
 } from "@nestjs/common";
@@ -13,6 +14,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/entity/user.entity";
 import { Repository } from "typeorm";
 import { NotFoundError } from "rxjs";
+import { AwsService } from "../aws/aws.service";
+import { Alarmservice } from "src/alarm/alarm.service";
 
 @Injectable()
 export class UserProfileService {
@@ -21,19 +24,19 @@ export class UserProfileService {
         private readonly userProfileRepository: Repository<UserProfile>,
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly awsService: AwsService,
+        private readonly alarmService: Alarmservice,
     ) {}
     //프로필 작성하기
-    async create(userId: number, createUserProfileDto: CreateUserProfileDto) {
-        //userId값 가져오기
-        const existingNickname = await this.userProfileRepository.findOne({
-            where: {
-                nickname: createUserProfileDto.nickname,
-            },
+    async create(
+        userId: number,
+        createUserProfileDto: CreateUserProfileDto,
+        file: Express.Multer.File,
+    ) {
+        //유저 찾기
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
         });
-        //중복되는 닉네임 불가능
-        if (existingNickname) {
-            throw new BadRequestException("이미 존재하는 닉네임입니다");
-        }
 
         // 사용자가 이미 프로필을 작성했는지 확인
         const existingProfile = await this.userProfileRepository.findOne({
@@ -43,27 +46,74 @@ export class UserProfileService {
         });
 
         if (existingProfile) {
-            // 프로필이 있는경우 수정하라는 에러 뱉기
+            // 프로필이 있는 경우 수정하라는 에러 뱉기
             throw new BadRequestException(
                 "프로필을 이미 작성하셨습니다. 수정해주세요",
             );
         }
 
-        // 새로운 프로필 생성 및 저장
+        // 닉네임이 기재되었을 때 중복 여부 확인
+        if (createUserProfileDto.nickname) {
+            const existingNickname = await this.userProfileRepository.findOne({
+                where: {
+                    nickname: createUserProfileDto.nickname,
+                },
+            });
+
+            if (existingNickname) {
+                throw new BadRequestException("이미 존재하는 닉네임입니다");
+            }
+        }
+
+        // 이미지 업로드할 경우
+        if (file) {
+            const uploadedFilePath = await this.awsService.fileupload(file);
+            console.log("이미지", uploadedFilePath);
+
+            // 닉네임이 기재되지 않았을 때 디폴트값 이름
+            if (!createUserProfileDto.nickname) {
+                createUserProfileDto.nickname = user.name;
+            }
+
+            const newProfile = this.userProfileRepository.create({
+                ...createUserProfileDto,
+                image: uploadedFilePath,
+                user: user,
+            });
+
+            const savedProfile =
+                await this.userProfileRepository.save(newProfile);
+
+            // 생성된 프로필 반환
+            return {
+                statusCode: 201,
+                message: "프로필을 생성했습니다.",
+                data: { savedProfile },
+            };
+        }
+
+        // 이미지 업로드가 없을 경우
+        // 닉네임이 기재되지 않았을 때 디폴트값 이름
+        if (!createUserProfileDto.nickname) {
+            createUserProfileDto.nickname = user.name;
+        }
+
         const newProfile = this.userProfileRepository.create({
             ...createUserProfileDto,
-            user: { id: userId },
+            user: { id: user.id },
         });
+
         const savedProfile = await this.userProfileRepository.save(newProfile);
         delete savedProfile.user;
 
-        // 저장된 프로필 반환 또는 다양한 응답 방식으로 설정
+        // 생성된 프로필 반환
         return {
             statusCode: 201,
             message: "프로필을 생성했습니다.",
             data: { savedProfile },
         };
     }
+
     //id를 이용해서 프로필 찾기
     async findOne(userId) {
         const userProfile = await this.userProfileRepository.findOne({
@@ -81,16 +131,33 @@ export class UserProfileService {
     }
 
     //프로필 수정하기
-    async update(userId: number, updateUserProfileDto: UpdateUserProfileDto) {
-        const { nickname, description, image, height, gender } =
-            updateUserProfileDto;
-        //닉네임이 존재하면 중복 불가능
-        const existingNickname = await this.userProfileRepository.findOne({
-            where: {
-                nickname: updateUserProfileDto.nickname,
-            },
-            relations: ["user"],
+    async update(
+        userId: number,
+        updateUserProfileDto: UpdateUserProfileDto,
+        file,
+    ) {
+        const { nickname, description, height, gender } = updateUserProfileDto;
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
         });
+        if (userId !== user.id) {
+            throw new NotAcceptableException("권한이 없습니다.");
+        }
+
+        //닉네임이 존재하면 중복 불가능
+        if (nickname !== undefined && nickname !== null) {
+            const existingNickname = await this.userProfileRepository.findOne({
+                where: {
+                    nickname: updateUserProfileDto.nickname,
+                },
+                relations: ["user"],
+            });
+            if (updateUserProfileDto.nickname) {
+                if (existingNickname && existingNickname.user.id !== userId) {
+                    throw new BadRequestException("이미 존재하는 닉네임입니다");
+                }
+            }
+        }
         //프로필이 존재하는지 확인
         const existingProfile = await this.userProfileRepository.findOne({
             where: { userId },
@@ -98,29 +165,48 @@ export class UserProfileService {
         if (!existingProfile) {
             throw new NotFoundException("프로필을 먼저 작성해주세요");
         }
-        if (updateUserProfileDto.nickname) {
-            if (existingNickname && existingNickname.user.id !== userId) {
-                throw new BadRequestException("이미 존재하는 닉네임입니다");
-            }
-        }
+
         //성별은 바꿀수 없음
         if (gender) {
             if (existingProfile.gender !== gender) {
                 throw new BadRequestException("성별은 바꿀수 없습니다.");
             }
         }
+        //이미지 업로드할경우
+        if (file) {
+            const uploadedFilePath = await this.awsService.fileupload(file);
+            await this.userProfileRepository.update(
+                { userId: user.id }, // 첫 번째 매개변수: 업데이트할 엔터티를 식별하는 조건
+                {
+                    ...updateUserProfileDto,
+                    image: uploadedFilePath,
+                },
+            );
+
+            const updatedProfile = await this.userProfileRepository.findOne({
+                where: { userId },
+                relations: ["user"],
+            });
+            // 생성된 프로필 반환
+            return {
+                statusCode: 201,
+                message: "프로필을 수정했습니다.",
+                data: { updatedProfile },
+            };
+        }
         await this.userProfileRepository.update(
             { userId },
             {
                 nickname,
                 description,
-                image,
                 height,
                 gender,
             },
         );
+
         const updatedProfile = await this.userProfileRepository.findOne({
             where: { userId },
+            relations: ["user"],
         });
         delete updatedProfile.user;
         return {

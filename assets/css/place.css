@@ -1,0 +1,51 @@
+/* 메인 컨테이너*/
+.mainContainer {
+    margin-top: 70px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(250px, 300px));
+    justify-content: space-between;
+}
+
+.placeContainer {
+    height: 20rem;
+    width: 100%;
+    cursor: pointer;
+}
+
+.image {
+    overflow: hidden;
+    object-fit: cover;
+}
+
+.image > img {
+    width: 100%;
+}
+
+.name {
+    font-size: 1.2rem;
+    margin: 5px 3px 3px 5px;
+    text-decoration: underline;
+}
+
+.address {
+    font-size: 0.9rem;
+    margin: 0px 5px 3px 7px;
+}
+/* 페이지네이션 컨테이너 */
+#pagenationContainer {
+    margin: 70px auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.pageContainer > a {
+    margin: 0px 5px;
+    text-decoration: none;
+    color: #666;
+}
+
+#prevBtn,
+#nextBtn {
+    margin: 0px 8px;
+}
