@@ -5,6 +5,7 @@ import { Recruit } from "../entity/recruit.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Match } from "../entity/match.entity";
 import { User } from "../entity/user.entity";
+import { Alarmservice } from "src/alarm/alarm.service";
 import { AlarmserviceModule } from "src/alarm/alarm.module";
 @Module({
     imports: [

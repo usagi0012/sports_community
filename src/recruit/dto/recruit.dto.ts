@@ -39,8 +39,8 @@ export class RecruitDTO {
 
     @IsNotEmpty()
     @ApiProperty({ description: "끝나는시간", example: "2024-01-24T00:30:00Z" })
-    @IsDate()
-    endtime: Date;
+    @IsNumber()
+    endtime: number;
 
     @IsNotEmpty()
     @ApiProperty({ description: "룰", example: "3대3" })
@@ -86,9 +86,9 @@ export class PutDTO {
     gamedate: Date;
 
     @IsOptional()
-    @ApiProperty({ description: "종료", example: "2024-01-24T00:10:00Z" })
-    @IsDate()
-    endtime: Date;
+    @ApiProperty({ description: "종료", example: 2 })
+    @IsNumber()
+    endtime: number;
 
     @IsOptional()
     @ApiProperty({ description: "역할", example: "3대3" })
