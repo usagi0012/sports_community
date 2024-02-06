@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Modal Example</title>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    </head>
+
+    <body onload="displayList()">
+        <listgroup style="margin-top: 10px">
+            <list id="list"> </list>
+        </listgroup>
+
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <p>모달 내용이 여기에 들어갑니다.</p>
+            </div>
+        </div>
+    </body>
+
+    <script src="./js/banlistUser.js"></script>
+    <link rel="stylesheet" href="css/banlsitUser.css" />
+</html>

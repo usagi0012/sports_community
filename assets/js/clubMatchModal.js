@@ -13,7 +13,7 @@ function closeClubMatchModal() {
     document.getElementById("clubMatchModal").style.display = "none";
 }
 
-async function clubMatchApplication() {
+async function clubMatchApplication(event) {
     event.preventDefault();
 
     try {
@@ -22,9 +22,9 @@ async function clubMatchApplication() {
         const clubId = urlParams.get("id");
 
         const message = document.getElementById("message").value;
-        const Information = document.getElementById("Information").value;
-        const gamedate = document.getElementById("gamedate").value;
-        const endtime = document.getElementById("endtime").value;
+        const information = document.getElementById("Information").value;
+        const gameDate = document.getElementById("gamedate").value;
+        const endTime = document.getElementById("endtime").value;
 
         const accessToken = localStorage.getItem("accessToken");
 
@@ -32,9 +32,9 @@ async function clubMatchApplication() {
             `/api/clubmatch/${clubId}`,
             {
                 message,
-                Information,
-                gamedate,
-                endtime,
+                information,
+                gameDate,
+                endTime,
             },
             {
                 headers: {

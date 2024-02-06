@@ -1,4 +1,4 @@
-window.onload = function() {
+window.onload = function () {
     loadHeader();
     displayMatchInfo();
     loadFooter();
@@ -29,7 +29,7 @@ async function displayMatchInfo() {
 
 function createMatchHTML(match) {
     return `
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    <button type="button" >
         <div id="match-${match.id}" matchId="${match.id}" onclick="displayMatchUser(${match.id})">
             <h1>${match.recruitTitle}</h1>
             <div><strong>모집장:</strong> ${match.hostName} </div>
@@ -150,12 +150,16 @@ async function displayMatchUser(matchId) {
         matchInfo.innerHTML = matchInfoHtml;
         userButton.innerHTML = matchUserButtonHtml;
 
-        $("#exampleModal").modal("show");
+        document.getElementById("exampleModal").style.display = "block";
     } catch (error) {
         console.log(error.response.data);
         alert(error.response.data.message);
         window.location.reload();
     }
+}
+
+function closeModal() {
+    document.getElementById("exampleModal").style.display = "none";
 }
 
 function createMatchInfoHtml(myMatch) {
@@ -173,7 +177,7 @@ function createMatchInfoHtml(myMatch) {
 
 function createMatchUserHtml(user) {
     return `
-            <button type="button" class="btn btn-secondary">
+            <button type="button" >
              ${user.guestName}, progress: ${user.progress}
             </button>
         `;
@@ -182,11 +186,11 @@ function createMatchUserHtml(user) {
 function createMatchUserButtonHtml(matchId) {
     return `
         <div>
-            <button class="cancelButton btn btn-danger" data-matchId="${matchId}" onclick="cancelButton(${matchId})">취소하기</button>
-            <button class="evaluateButton btn btn-success" data-matchId="${matchId}" onclick="evaluateButton(${matchId})">평가완료</button>
+            <button  data-matchId="${matchId}" onclick="cancelButton(${matchId})">취소하기</button>
+            <button  data-matchId="${matchId}" onclick="evaluateButton(${matchId})">평가완료</button>
  
-            <button type="button" class="btn btn-danger" data-matchId="${matchId}" onclick="deleteButton(${matchId})">삭제하기</button>
-            <button type="button" class="btn btn-success" data-matchId="${matchId}" onclick="confirmButton(${matchId})">컴펌하기</button>
+            <button  data-matchId="${matchId}" onclick="deleteButton(${matchId})">삭제하기</button>
+            <button  data-matchId="${matchId}" onclick="confirmButton(${matchId})">컴펌하기</button>
              </div>
     `;
 }

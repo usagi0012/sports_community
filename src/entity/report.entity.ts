@@ -8,6 +8,7 @@ import {
     JoinColumn,
 } from "typeorm";
 import { User } from "./user.entity";
+import { IsNotEmpty } from "class-validator";
 export enum Progress {
     APPROVED = "승인",
     REJECTED = "거절",
@@ -21,6 +22,11 @@ export class Report {
     id: number;
 
     @Column()
+    @IsNotEmpty()
+    title: string;
+
+    @Column()
+    @IsNotEmpty()
     reportContent: string;
 
     @Column({
@@ -34,7 +40,13 @@ export class Report {
     reportUserId: number;
 
     @Column()
+    reportUserName: string;
+
+    @Column()
     banUserId: number;
+
+    @Column()
+    banUserName: string;
 
     @CreateDateColumn()
     createdAt: Date;

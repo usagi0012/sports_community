@@ -31,9 +31,7 @@ async function displayRecruitInfo() {
 
 function createRecruitHTML(recruit) {
     return `
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myRecruitModal" onclick="findRecruit(${
-            recruit.id
-        })">
+        <button type="button" onclick="findRecruit(${recruit.id})">
             <h1>${recruit.title}</h1>
             <p><strong>규칙 :</strong> ${recruit.rule}</p>
             <p><strong>경기 날짜 :</strong> ${recruit.gamedate.slice(
@@ -91,11 +89,23 @@ async function findRecruit(recruitId) {
         //모집글 상세보기 모달창에 쓰이는 버튼
         const recurtIdButtonHTML = createRecurtIdButtonHTML(findRecruit);
         recurtIdButton.innerHTML = recurtIdButtonHTML;
+
+        openRecruitModal();
     } catch (error) {
         console.log(error.response.data);
         alert(error.response.data.message);
         window.location.reload();
     }
+}
+
+function openRecruitModal() {
+    const modal = document.getElementById("myRecruitModal");
+    modal.style.display = "block";
+}
+
+function closeRecruitModal() {
+    const modal = document.getElementById("myRecruitModal");
+    modal.style.display = "none";
 }
 
 function createRecurtIdButtonHTML(findRecruit) {
@@ -110,7 +120,7 @@ function createRecurtIdButtonHTML(findRecruit) {
 
 function createConfirmUsersHTML(confirmUser) {
     return `
-        <button type="button" class="btn btn-secondary" >
+        <button type="button"  >
             <p><strong>Name:</strong> ${confirmUser.guestName}</p>
             <p><strong>Progress:</strong> ${confirmUser.progress}</p>
             <p><strong>Status:</strong> ${confirmUser.status}</p>
@@ -200,6 +210,7 @@ async function application(recruitId) {
             const buttonHTML = createButtonHTML(guest);
             modalContentContainer.innerHTML += [guestHTML, buttonHTML];
         });
+        openRecruitUserModal();
     } catch (error) {
         console.log(error.response.data);
         alert(error.response.data.message);
@@ -209,7 +220,7 @@ async function application(recruitId) {
 
 function createGuestHTML(guest) {
     return `
-    <button type="button" class="btn btn-primary">
+    <button type="button" >
     <h7><strong></strong>${guest.message}</h7>
         <p><strong>게스트:</strong>${guest.guestName}</p>
         <p ><strong>상태:</strong>${guest.status}</p>
@@ -220,8 +231,8 @@ function createGuestHTML(guest) {
 function createButtonHTML(guest) {
     return `
         <div>
-            <button type="button" class="btn btn-success"  onclick="approvebutton(${guest.id})">승인</button>
-            <button type="button" class="btn btn-danger"  onclick="rejectbutton(${guest.id})">거절</button>
+            <button type="button"   onclick="approvebutton(${guest.id})">승인</button>
+            <button type="button"   onclick="rejectbutton(${guest.id})">거절</button>
 
         </div>
     `;
@@ -292,4 +303,14 @@ function createEvaluateButtonHtml(recruitId) {
             <button class="evaluateButton" data-recruitId="${recruitId}" onclick="evaluateGuest(${recruitId})">평가완료하기</button>
         </div>
     `;
+}
+
+function openRecruitUserModal() {
+    const modal = document.getElementById("recruitUserModal");
+    modal.style.display = "block";
+}
+
+function closeRecruitUserModal() {
+    const modal = document.getElementById("recruitUserModal");
+    modal.style.display = "none";
 }
