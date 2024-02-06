@@ -90,6 +90,7 @@ export class RecruitService {
                 totalmember: true,
                 status: true,
             },
+            order: { id: "DESC" },
         });
 
         return Recruit;

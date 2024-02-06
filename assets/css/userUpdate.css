@@ -1,0 +1,48 @@
+#userUpdate {
+    min-height: 100%;
+    width: 80%;
+    padding: 10px 30px;
+    border-left: 1px solid #dfcec3;
+}
+
+#userUpdate > h2 {
+    font-size: 2rem;
+    color: #3f3131;
+}
+
+#userUpdate > p {
+    padding-left: 20px;
+}
+
+#userUpdate > div {
+    height: 80px;
+}
+
+#userUpdate > div > label {
+    display: block;
+    margin: 10px;
+}
+
+#userUpdate > div > input {
+    border-radius: 15px;
+    background-color: #e2e2e2;
+    margin-left: 20px;
+    padding-left: 15px;
+    display: block;
+}
+
+#userUpdate > p > button {
+    font-family: "LINESeedKR-Bd";
+    border-radius: 7px;
+    height: 25px;
+    width: 100px;
+    padding-top: 5px;
+    margin-top: 15px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#userUpdate > p > button:hover {
+    background-color: #ffb13d;
+}

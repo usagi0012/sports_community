@@ -1,10 +1,14 @@
 import {
     BadRequestException,
+    Body,
     ConflictException,
+    HttpStatus,
     Injectable,
     MethodNotAllowedException,
     NotAcceptableException,
     NotFoundException,
+    Param,
+    Post,
     UnauthorizedException,
 } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -22,6 +26,8 @@ import { google } from "googleapis";
 
 @Injectable()
 export class UserService {
+    personalassessmenttagService: any;
+    alarmService: any;
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
@@ -48,7 +54,6 @@ export class UserService {
         }
 
         const user = await this.userRepository.save(createUserDto);
-
         return user;
     }
 

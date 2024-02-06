@@ -1,3 +1,9 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadUserMenu();
+};
+
 document.addEventListener("DOMContentLoaded", function () {
     // 이벤트 리스너 등록
     document
