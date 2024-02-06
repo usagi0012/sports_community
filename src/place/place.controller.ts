@@ -19,7 +19,7 @@ export class PlaceController {
 
     //장소 R
     @Get()
-    async showData(@Query("page") page: number) {
-        return await this.placeService.showSpaces(page);
+    async showData(@Query("page") page: number, @Query("size") size: number) {
+        return await this.placeService.showSpaces(+page, +size);
     }
 }

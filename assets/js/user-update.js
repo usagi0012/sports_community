@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
     getUserInfo();
+    loadHeader();
+    loadFooter();
+    loadUserMenu();
 });
 
 // function isValidEmail(email) {

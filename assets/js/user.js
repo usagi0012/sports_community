@@ -1,3 +1,9 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadUserMenu();
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
     try {
         // localStorage에서 토큰 읽기
