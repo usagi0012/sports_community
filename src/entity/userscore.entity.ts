@@ -70,12 +70,6 @@ export class Userscore {
     })
     abilityAmount: number;
 
-    @IsNotEmpty({ message: "MVP를 뽑아주세요." })
-    @IsNumber()
-    @Column()
-    @ApiProperty({ description: "MVP", default: 1 })
-    mvp: number;
-
     @IsNumber()
     @Column({ default: 0 })
     @ApiProperty({ description: "평가 횟수" })

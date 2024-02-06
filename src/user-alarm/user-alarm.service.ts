@@ -28,6 +28,7 @@ export class UserAlarmService {
     async getUserAlarms(userId: number) {
         const getAlarms = await this.userAlarmRepository.find({
             where: { user: { id: userId } },
+            order: { createdAt: "desc" },
         });
         return {
             statusCode: 200,

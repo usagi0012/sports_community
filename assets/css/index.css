@@ -20,14 +20,19 @@
     grid-template-rows: 1fr 0.5fr 1.5fr 1fr;
 }
 
+.noProfileContainer {
+    z-index: 1;
+    margin: 30px 0;
+    border: 2px solid #dfcec3;
+    border-radius: 20px;
+    height: 80px;
+    text-align: center;
+}
+
 .noprofile {
-    grid-area: description;
     font-size: 1.6rem;
     cursor: pointer;
-    text-align: right;
-    position: relative;
-    left: 150px;
-    width: 430px;
+    margin-top: 20px;
     height: 50px;
     padding: 5px 0px;
 }
