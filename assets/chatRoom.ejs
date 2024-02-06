@@ -1,24 +1,24 @@
 <html>
     <head>
-        <link
+        <!-- <link
             href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
             rel="stylesheet"
             id="bootstrap-css"
-        />
+        /> -->
         <link
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
             type="text/css"
             rel="stylesheet"
         />
-        <link href="/style.css" type="text/css" rel="stylesheet" />
+        <link href="/assets/css/style.css" type="text/css" rel="stylesheet" />
         <script
             src="https://cdn.socket.io/3.1.3/socket.io.min.js"
             integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
             crossorigin="anonymous"
         ></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    </head>
+        <!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    </head> -->
 
     <body>
         <div class="container">
@@ -143,9 +143,7 @@
         function showButton() {
             const roomId = localStorage.getItem("thisRoomId");
             // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
-            const authorized = localStorage.getItem("authorized");
-            const data = JSON.parse(authorized);
-            const accessToken = data.accessToken.value;
+            const accessToken = localStorage.getItem("accessToken");
 
             axios
                 .get(`/api/chat-invitation/${roomId}`, {
@@ -172,9 +170,7 @@
 
         function getRoomMessage(roomId) {
             // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
-            const authorized = localStorage.getItem("authorized");
-            const data = JSON.parse(authorized);
-            const accessToken = data.accessToken.value;
+            const accessToken = localStorage.getItem("accessToken");
 
             axios
                 .get(`/api/message/${roomId}`, {
@@ -236,9 +232,8 @@
 
         // 채팅방 연결
         function connectSocket() {
-            const authorized = localStorage.getItem("authorized");
-            const data = JSON.parse(authorized);
-            const accessToken = data.accessToken.value;
+            const accessToken = localStorage.getItem("accessToken");
+
             console.log("엑세스 토큰", accessToken);
             const socket = io("http://localhost:5000", {
                 query: {
@@ -441,9 +436,7 @@
             const nickName = $("#nickname").val();
             const roomId = localStorage.getItem("thisRoomId");
             // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
-            const authorized = localStorage.getItem("authorized");
-            const data = JSON.parse(authorized);
-            const accessToken = data.accessToken.value;
+            const accessToken = localStorage.getItem("accessToken");
 
             axios
                 .post(
@@ -473,9 +466,7 @@
             const nickName = $("#expel-nickname").val();
             const roomId = localStorage.getItem("thisRoomId");
             // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
-            const authorized = localStorage.getItem("authorized");
-            const data = JSON.parse(authorized);
-            const accessToken = data.accessToken.value;
+            const accessToken = localStorage.getItem("accessToken");
 
             axios
                 .delete(`/api/chat-invitation/${roomId}`, {
