@@ -1,7 +1,7 @@
 // otherUser-modal.js
 
 // 모달 생성 함수
-function createModal(userId) {
+export function createModal(userId) {
     // 모달 창 생성
     const modal = document.createElement("div");
     modal.id = "userProfileModal";
@@ -91,6 +91,19 @@ async function loadUserProfile(userId) {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
+        const responseTag = await axios.get(`/api/personal/tag/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        const responseScore = await axios.get(`/api/personal/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        console.log(responseTag);
+        console.log(responseScore);
 
         console.log("불러온 데이터", response.data.data.userProfile);
         const userProfile = response.data.data.userProfile;
@@ -116,6 +129,3 @@ async function loadUserProfile(userId) {
         // 에러 처리 로직 추가
     }
 }
-
-// 모달 생성 함수 호출
-createModal("2");

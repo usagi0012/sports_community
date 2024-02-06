@@ -9,11 +9,7 @@ import {
     BeforeUpdate,
 } from "typeorm";
 
-export enum Region {
-    Region1 = "Region1",
-    Region2 = "Region2",
-}
-
+import { Region } from "src/enumtypes/clubregion.type";
 export enum Rule {
     threeOnThree = "3대3",
     fourOnFour = "4대4",
@@ -109,5 +105,23 @@ export class Recruit {
         if (this.endtime < korNow) {
             this.progress = Progress.PLEASE_EVALUATE;
         }
+    }
+
+    static setEndTimeFromNumber(gameDate: Date, durationInHours: number): Date {
+        const adjustedGameDate = new Date(
+            gameDate.getTime() + 9 * 60 * 60 * 1000,
+        );
+
+        const futureEndTime = new Date(
+            adjustedGameDate.getTime() + durationInHours * 60 * 60 * 1000,
+        );
+        return futureEndTime;
+    }
+
+    static korGameDate(gameDate: Date): Date {
+        const adjustedGameDate = new Date(
+            gameDate.getTime() + 9 * 60 * 60 * 1000,
+        );
+        return adjustedGameDate;
     }
 }

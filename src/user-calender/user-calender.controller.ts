@@ -62,7 +62,7 @@ export class UserCalenderController {
         @Body() updateUserCalenderDto: UpdateUserCalenderDto,
     ) {
         console.log("들어온 캘린더ID", calenderId);
-
+        // this.alarmService.sendAlarm(userId, "확인");
         return this.userCalenderService.update(
             +userId,
             calenderId,

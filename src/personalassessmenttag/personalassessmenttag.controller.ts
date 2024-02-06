@@ -26,11 +26,9 @@ export class PersonalassessmenttagController {
         private readonly alarmService: Alarmservice,
     ) {}
     @Get("/personal/topThree/personality")
-    async findTopThreePersonalityAmountUser(@UserId() userId: number) {
+    async findTopThreePersonalityAmountUser() {
         const data =
-            await this.personalassessmenttagService.findTopThreePersonalityAmountUser(
-                userId,
-            );
+            await this.personalassessmenttagService.findTopThreePersonalityAmountUser();
 
         return {
             statusCode: HttpStatus.OK,
@@ -40,11 +38,9 @@ export class PersonalassessmenttagController {
     }
 
     @Get("/personal/topThree/ability")
-    async findTopThreeAbilityAmountUser(@UserId() userId: number) {
+    async findTopThreeAbilityAmountUser() {
         const data =
-            await this.personalassessmenttagService.findTopThreeAbilityAmountUser(
-                userId,
-            );
+            await this.personalassessmenttagService.findTopThreeAbilityAmountUser();
 
         return {
             statusCode: HttpStatus.OK,
@@ -103,61 +99,17 @@ export class PersonalassessmenttagController {
         };
     }
 
-    @Post("/personal/:matchId/:recuritedId")
-    async createPersonalAssessment(
-        @Param("matchId") matchId: number,
-        @Param("recuritedId") recuritedId: number,
-        @UserId() userId: number,
-        @Body() createPersonalAssessmentDto: CreatePersonalAssessmentDto,
-    ) {
-        const data =
-            await this.personalassessmenttagService.createPersonalAssessment(
-                matchId,
-                recuritedId,
-                userId,
-                createPersonalAssessmentDto,
-            );
-        this.alarmService.sendAlarm(userId, "평가지가 제출되었습니다.");
-        return {
-            statusCode: HttpStatus.CREATED,
-            message: "개인 평가지가 제출되었습니다.",
-            data,
-        };
-    }
-
-    @Post("/personal/tag/:matchId/:recuritedId")
-    async createPersonalTag(
-        @Param("matchId") matchId: number,
-        @Param("recuritedId") recuritedId: number,
-        @UserId() userId: number,
-        @Body() personalTagCounterDto: PersonalTagCounterDto,
-    ) {
-        const data = await this.personalassessmenttagService.createPersonalTag(
-            matchId,
-            recuritedId,
-            userId,
-            personalTagCounterDto,
-        );
-
-        this.alarmService.sendAlarm(userId, "개인 태그가 제출되었습니다.");
-        return {
-            statusCode: HttpStatus.CREATED,
-            message: "개인 태그가 제출되었습니다.",
-            data,
-        };
-    }
-
-    @Put("/personal/:matchId/:recuritedId")
+    @Put("/personal/:matchId/:playOtherUserId")
     async updatePesonalAssessment(
         @Param("matchId") matchId: number,
-        @Param("recuritedId") recuritedId: number,
+        @Param("playOtherUserId") playOtherUserId: number,
         @UserId() userId: number,
         @Body() createPersonalAssessmentDto: CreatePersonalAssessmentDto,
     ) {
         const data =
             await this.personalassessmenttagService.updatePesonalAssessment(
-                recuritedId,
                 matchId,
+                playOtherUserId,
                 userId,
                 createPersonalAssessmentDto,
             );
@@ -165,21 +117,21 @@ export class PersonalassessmenttagController {
         this.alarmService.sendAlarm(userId, "개인 평가지가 제출되었습니다.");
         return {
             statusCode: HttpStatus.OK,
-            message: "개인 평가지가 수정되었습니다.",
+            message: "개인 평가지가 제출되었습니다.",
             data,
         };
     }
 
-    @Put("/personal/tag/:matchId/:recuritedId")
+    @Put("/personal/tag/:matchId/:playOtherUserId")
     async updatePesonalTag(
         @Param("matchId") matchId: number,
-        @Param("recuritedId") recuritedId: number,
+        @Param("playOtherUserId") playOtherUserId: number,
         @UserId() userId: number,
         @Body() personalTagCounterDto: PersonalTagCounterDto,
     ) {
         const data = await this.personalassessmenttagService.updatePesonalTag(
             matchId,
-            recuritedId,
+            playOtherUserId,
             userId,
             personalTagCounterDto,
         );
@@ -187,7 +139,7 @@ export class PersonalassessmenttagController {
         this.alarmService.sendAlarm(userId, "개인 태그가 제출되었습니다.");
         return {
             statusCode: HttpStatus.OK,
-            message: "개인 태그가 수정되었습니다.",
+            message: "개인 태그가 제출되었습니다.",
             data,
         };
     }

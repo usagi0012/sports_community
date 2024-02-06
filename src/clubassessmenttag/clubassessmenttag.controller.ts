@@ -24,6 +24,17 @@ export class ClubassessmenttagController {
         private readonly clubassessmenttagService: ClubassessmenttagService,
     ) {}
 
+    @Get("/club")
+    async findTopThreeClub() {
+        const data = await this.clubassessmenttagService.findTopThreeClub();
+
+        return {
+            statusCode: HttpStatus.OK,
+            message: "클럽 탑 3점수가 조회되었습니다.",
+            data,
+        };
+    }
+
     @Get("/club/:clubId")
     async findOneClubAssessment(@Param("clubId") clubId: number) {
         const data =
@@ -46,59 +57,15 @@ export class ClubassessmenttagController {
         };
     }
 
-    @Post("/club/:clubMatchId/:clubId")
-    async createClubAssessment(
-        @Param("clubMatchId") clubMatchId: number,
-        @Param("clubId") clubId: number,
-        @UserId() userId: number,
-        @Body() createClubAssessmenttagDto: CreateClubassessmenttagDto,
-    ) {
-        const data = await this.clubassessmenttagService.createClubAssessment(
-            clubMatchId,
-            clubId,
-            userId,
-            createClubAssessmenttagDto,
-        );
-
-        return {
-            statusCode: HttpStatus.OK,
-            message: "클럽 평가지가 제출되었습니다.",
-            data,
-        };
-    }
-
-    @Post("/club/tag/:clubMatchId/:clubId")
-    async createClubTag(
-        @Param("clubMatchId") clubMatchId: number,
-        @Param("clubId") clubId: number,
-        @UserId() userId: number,
-        @Body() clubTagCounterDto: ClubTagCounterDto,
-    ) {
-        const data = await this.clubassessmenttagService.createClubTag(
-            clubMatchId,
-            clubId,
-            userId,
-            clubTagCounterDto,
-        );
-
-        return {
-            statusCode: HttpStatus.OK,
-            message: "클럽 태그가 제출되었습니다.",
-            data,
-        };
-    }
-
-    @Put("/club/:clubMatchId/:clubId")
+    @Put("/club/:clubMatchId/:myClubId")
     async updateClubAssessment(
         @Param("clubMatchId") clubMatchId: number,
-        @Param("clubId") clubId: number,
-        @UserId() userId: number,
+        @Param("myClubId") myClubId: number,
         @Body() createClubAssessmenttagDto: CreateClubassessmenttagDto,
     ) {
         const data = this.clubassessmenttagService.updateClubAssessment(
-            clubMatchId,
-            clubId,
-            userId,
+            +clubMatchId,
+            +myClubId,
             createClubAssessmenttagDto,
         );
 
@@ -109,17 +76,15 @@ export class ClubassessmenttagController {
         };
     }
 
-    @Put("/club/tag/:clubMatchId/:clubId")
+    @Put("/club/tag/:clubMatchId/:myClubId")
     async updateClubTag(
         @Param("clubMatchId") clubMatchId: number,
-        @Param("clubId") clubId: number,
-        @UserId() userId: number,
+        @Param("myClubId") myClubId: number,
         @Body() clubTagCounterDto: ClubTagCounterDto,
     ) {
         const data = this.clubassessmenttagService.updateClubTag(
-            clubMatchId,
-            clubId,
-            userId,
+            +clubMatchId,
+            +myClubId,
             clubTagCounterDto,
         );
 

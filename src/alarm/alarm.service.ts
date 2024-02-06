@@ -13,13 +13,13 @@ export class Alarmservice {
 
     constructor(private readonly userAlarmService: UserAlarmService) {}
 
-    sendAlarm(userId: number, message: string): void {
+    sendAlarm(userId: number, message: string, link?: string): void {
         // 알림 전송 로직
-        const eventData = { message };
+        const eventData = { message, link };
         const event: CustomMessageEvent = { data: eventData };
 
         this.users$.next({ id: userId, event });
-        this.userAlarmService.saveUserAlarm(userId, message);
+        this.userAlarmService.saveUserAlarm(userId, message, link);
     }
 
     getAlarmObservable(userId: number): Observable<CustomMessageEvent> {

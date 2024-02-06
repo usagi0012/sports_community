@@ -70,6 +70,11 @@ export class ApplyingClubService {
             message,
         });
 
+        this.alramService.sendAlarm(
+            club.masterId,
+            `동호회 신청이 들어왔습니다.
+            지원 이유 : ${message}`,
+        );
         return application;
     }
 
@@ -221,11 +226,18 @@ export class ApplyingClubService {
             clubId,
         });
 
+        // 요청 승인시 club의 member를 1 늘리기
+        const addMember = club.members +1;
+
+        await this.ClubRepository.update(clubId, {
+            members: addMember
+        })
+
         // 요청 승인시 지원서를 작성한 user에게 알림 보내기
         // 알림 보내기 로직
 
         const message = `${club.name}동호회 가입 신청이 승인되었습니다.`;
-        // await this.alramService.sendAlarm(memberId, message);
+        this.alramService.sendAlarm(memberId, message);
 
         return joinedUser;
     }

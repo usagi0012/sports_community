@@ -13,9 +13,25 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
         />
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <link rel="stylesheet" href="css/dropBar.css" />
         <link rel="stylesheet" href="./css/recruit-post.css" />
+        <script
+            async
+            src="https://code.jquery.com/jquery-3.6.4.min.js"
+        ></script>
+
+        <script
+            type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils"
+        ></script>
+        <script
+            type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils&submodules=geocoder"
+        ></script>
+        <style></style>
     </head>
+
     <body>
         <div id="sameContainer"></div>
         <div class="bodyContainer">
@@ -42,30 +58,79 @@
                                     id="regionSelect"
                                     placeholder="지역을 선택해주세요."
                                 >
-                                    <option value="Region1">Region1</option>
-                                    <option value="Region2">Region2</option>
+                                    <option value="0">서울</option>
+                                    <option value="1">부산</option>
+                                    <option value="2">대구</option>
+                                    <option value="3">인천</option>
+                                    <option value="4">광주</option>
+                                    <option value="5">대전</option>
+                                    <option value="6">울산</option>
+                                    <option value="7">세종</option>
+                                    <option value="8">경기</option>
+                                    <option value="9">강원</option>
+                                    <option value="10">충청북도</option>
+                                    <option value="11">충청남도</option>
+                                    <option value="12">경상북도</option>
+                                    <option value="13">경상남도</option>
+                                    <option value="14">전라북도</option>
+                                    <option value="15">전라남도</option>
+                                    <option value="16">제주도</option>
                                 </select>
                             </dd>
                         </dl>
                         <dl class="gps">
                             <dt>gps</dt>
-                            <dd id="gpsBtn">위치 지정</dd>
+                            <dd id="gpsBtn">
+                                <button onclick="openMapModal()">지도</button>
+                                <input id="input-gps" type="text" readonly />
+                            </dd>
                         </dl>
-
                         <dl class="gamedate">
                             <dt>경기 시간</dt>
                             <div class="dateContainer">
                                 <dd>
                                     <input
                                         id="input-gamedate"
+                                        type="date"
+                                        placeholder="경기 날짜를 입력하세요"
                                         type="datetime-local"
                                         placeholder="경기 시작 시간을 입력하세요."
                                     />
                                 </dd>
                                 <dd id="blank">~</dd>
                                 <dd>
+                                    <label for="input-runtime-hours"
+                                        >런닝타임 (시간):</label
+                                    >
                                     <input
-                                        id="input-endtime"
+                                        id="input-runtime-hours"
+                                        type="number"
+                                        placeholder="시간"
+                                        min="0"
+                                        step="1"
+                                    />
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>경기규칙</dt>
+                                <dd>
+                                    <select
+                                        id="ruleSelect"
+                                        placeholder="경기 규칙을 선택하세요"
+                                    >
+                                        <option value="3대3">3대3</option>
+                                        <option value="4대4">4대4</option>
+                                        <option value="5대5">5대5</option>
+                                    </select>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>모집인원</dt>
+                                <dd>
+                                    <input
+                                        id="input-totalmember"
+                                        type="text"
+                                        placeholder="모집 인원을 입력하세요"
                                         type="datetime-local"
                                         placeholder="경기 종료 시간을 입력하세요."
                                     />
@@ -111,11 +176,80 @@
                 <button id="register-cancel-btn">취소</button>
             </div>
         </div>
+        <div id="mapModal" class="mapModal" onclick="closeMapModal()">
+            <div class="modal-content" onclick="event.stopPropagation();">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">장소 설정</h1>
+                    <span class="close-button" onclick="closeMapModal()"
+                        >&times;</span
+                    >
+                </div>
+                <div class="modal-body">
+                    <div id="map" style="width: 450px; height: 450px"></div>
+                    <input
+                        type="text"
+                        id="address"
+                        placeholder="주소를 입력하세요"
+                    />
+                    <button id="submit">검색</button>
+                    <button id="confirm">확인</button>
+                    <button id="confirmDORO" onclick="roadAddress()">
+                        도로명 주소
+                    </button>
+                    <button id="confirmJUSO" onclick="jibunAddress()">
+                        지번 주소
+                    </button>
+                    <div id="checkbox"></div>
+                </div>
+                <div class="modal-footer">
+                    <button id="getCurrentLocation">현재 위치로 이동</button>
+                    <button type="button" onclick="closeMapModal()">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
 
+        <script>
+            function roadAddress() {
+                const roadAddress = $("#confirmDORO").text();
+                $("#input-gps").val(roadAddress);
+
+                if (roadAddress) {
+                    closeMapModal();
+                }
+            }
+
+            function jibunAddress() {
+                const jibunAddress = $("#confirmJUSO").text();
+                $("#input-gps").val(jibunAddress);
+                if (jibunAddress) {
+                    closeMapModal();
+                }
+            }
+
+            function openMapModal() {
+                const modal = $("#mapModal");
+                const sameContainer = $("#sameContainer");
+                const footer = $("#footer");
+                modal.css("display", "block");
+                sameContainer.css("z-index", 1);
+                footer.css("z-index", 1);
+            }
+
+            function closeMapModal() {
+                const modal = $("#mapModal");
+                modal.css("display", "none");
+            }
+        </script>
         <div class="footer" id="footer"></div>
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/recruit-post.js"></script>
+
+        <script src="js/map.js"></script>
+
         <script src="./js/dropmenu.js"></script>
+        <script src="./js/notification.js"></script>
     </body>
 </html>
