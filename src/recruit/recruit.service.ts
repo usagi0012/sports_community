@@ -128,7 +128,6 @@ export class RecruitService {
         for (const myRecruit of myRecruits) {
             this.updateProgress(myRecruit);
         }
-        this.alarmService.sendAlarm(userId, "조회성공.");
 
         return myRecruits;
     }

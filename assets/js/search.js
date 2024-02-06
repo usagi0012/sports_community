@@ -34,21 +34,6 @@ window.onload = async function () {
             // 다른 페이지에서 검색한 경우
             await displaySearchResults(searchQuery);
         }
-
-        const searchBtn = document.getElementById("searchBtn");
-        searchBtn.addEventListener("click", function (event) {
-            event.preventDefault();
-
-            // 검색 버튼 클릭 시 새로운 검색을 수행하도록 하기
-            const newSearchInput = document
-                .getElementById("searchInput")
-                .value.trim();
-
-            // 검색 결과 페이지로 이동하면서 현재 선택된 카테고리 정보와 함께 전달
-            window.location.href = `search.html?q=${encodeURIComponent(
-                newSearchInput,
-            )}&from=${from}`;
-        });
     } catch (error) {
         console.error("Error during page load:", error);
     }
@@ -114,13 +99,44 @@ function displayResults(container, results, category) {
     }
 
     results.forEach((result) => {
+        const resultItem = document.createElement("div");
+
+        // 클릭 이벤트 추가
+        resultItem.addEventListener("click", function () {
+            // 클릭된 결과에 따라 상세 페이지로 이동
+            const detailPageURL = getDetailPageURL(result, category);
+            if (detailPageURL) {
+                window.location.href = detailPageURL;
+            }
+        });
+
         if (result.address) {
-            return (container.innerHTML += `<div>${result.name} - ${result.address}</div>`);
+            resultItem.innerHTML = `<div>${result.name} - ${result.address}</div>`;
         } else if (result.title && result.content) {
-            console.log(result.title);
-            return (container.innerHTML += `<div>${result.title} - ${result.content}</div>`);
+            resultItem.innerHTML = `<div>${result.title} - ${result.content}</div>`;
         } else {
-            container.innerHTML += `<div>${result.name} - ${result.description}</div>`;
+            resultItem.innerHTML = `<div>${result.name} - ${result.description}</div>`;
         }
+
+        container.appendChild(resultItem);
     });
+}
+
+// 결과의 상세 페이지 URL을 생성하는 함수
+function getDetailPageURL(result, category) {
+    // 각 카테고리에 따라 상세 페이지 URL 생성 로직 추가
+    if (category === "동아리") {
+        return `/club-detail.html?id=${result.id}`;
+    }
+    if (category === "모집글") {
+        return `/recruit-detail.html?id=${result.id}`;
+    }
+    if (category === "장소") {
+        return `https://shareit.kr/venue/${result.link}`;
+    }
+    // 다른 카테고리에 대한 상세 페이지 URL 생성 로직 추가
+    // ...
+
+    // 기본적으로는 빈 문자열 반환
+    return "";
 }

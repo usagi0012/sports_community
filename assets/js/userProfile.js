@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 },
             });
 
-            if (club.status === 200) {
+            if (club.data !== "") {
                 const clubName = club.data.name;
                 document.getElementById("club").innerText = clubName;
             } else {
@@ -178,6 +178,10 @@ document.addEventListener("DOMContentLoaded", async function () {
                 });
 
                 const clubId = +user.data.clubId;
+
+                if (!clubId) {
+                    return alert("가입한 동아리가 없습니다.");
+                }
 
                 // 동아리 상세페이지 URL 생성
                 const clubDetailURL = `/club-detail.html?id=${clubId}`;
