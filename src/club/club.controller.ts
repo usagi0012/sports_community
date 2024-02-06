@@ -144,6 +144,13 @@ export class ClubController {
         return this.clubService.createClub(createClubDto, userId, file);
     }
 
+    // 동아리 멤버 불러오기
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("/member/:clubId")
+    getAllClubMember(@Param("clubId") clubId: number) {
+        return this.clubService.getAllClubMember(clubId);
+    }
     //동아리 정보 수정
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)

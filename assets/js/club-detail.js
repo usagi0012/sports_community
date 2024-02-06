@@ -7,6 +7,7 @@ window.onload = function () {
     hasClub();
     isClubMaster();
     isMyClub();
+    getMember(clubId);
     loadFooter();
 };
 const regionData = [
@@ -178,5 +179,28 @@ function hasClub() {
             console.log(error);
             console.log(error.message);
             console.log("에러메세지");
+        });
+}
+
+function getMember(clubId) {
+    const token = localStorage.getItem("accessToken");
+    axios
+        .get(`/api/club/member/${clubId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            console.log("멤버", response);
+            response.data.forEach((nickName) => {
+                const memberListDiv = document.querySelector(".memberList");
+                const nickNameDiv = document.createElement("div");
+                nickNameDiv.className = "nickName";
+                nickNameDiv.innerHTML = `${nickName}`;
+                memberListDiv.appendChild(nickNameDiv);
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
         });
 }

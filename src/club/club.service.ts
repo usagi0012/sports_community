@@ -199,14 +199,9 @@ export class ClubService {
         const user = await this.userRepository.findOne({
             where: { id: userId },
         });
-        console.log("클럽!!!", clubId);
-        console.log(typeof clubId);
-        console.log("유저클럽!!", user.clubId);
-        console.log(typeof user.clubId);
         if (!user.clubId) {
             throw new NotFoundException("동호회에 가입되지 않은 유저입니다.");
         }
-        console.log("이건?");
         if (clubId !== user.clubId) {
             throw new NotFoundException("동호회에 가입된 사람이 아닙니다");
         }
@@ -286,7 +281,6 @@ export class ClubService {
 
     async expelMember(userId: number, expelMemeberDto: ExpelMemberDto) {
         const { nickName } = expelMemeberDto;
-        console.log("***확인1***");
 
         const clubMaster = await this.clubRepository.findOne({
             where: { masterId: userId },
@@ -297,26 +291,59 @@ export class ClubService {
                 "동아리 장만 멤버를 추방할 수 있습니다.",
             );
         }
-        console.log("***확인2***");
         const member = await this.userProfileRepository.findOne({
             where: { nickname: nickName },
             select: ["id", "nickname", "userId"],
         });
         console.log(member);
-        console.log("***확인3***");
         if (!member) {
             throw new NotFoundException(
                 "해당하는 닉네임을 가진 멤버가 없습니다.",
             );
         }
-        console.log("***확인4***");
         const memberId = member.userId;
-        console.log(memberId);
-        console.log("***확인4.5***");
         const expeledMember = await this.userRepository.update(memberId, {
             clubId: null,
         });
         console.log("***확인5***");
         return expeledMember;
+    }
+
+    async getAllClubMember(clubId: number) {
+        console.log("클럽아뒤", clubId);
+        const userInfos = await this.userRepository.find({ where: { clubId } });
+        if (!userInfos.length) {
+            throw new NotFoundException("존재하지 않는 동아리입니다.");
+        }
+
+        let users = [];
+        userInfos.forEach((userInfo) => {
+            users.push(userInfo.id);
+            console.log("userInfoId", userInfo.id);
+        });
+
+        console.log("유저스", users);
+
+        // 비동기 작업을 기다리고 결과를 모두 수집하기 위해 Promise.all 사용
+        const nickNames = await Promise.all(
+            users.map(async (userId) => {
+                console.log("userId", userId);
+                const userProfile = await this.userProfileRepository.findOne({
+                    where: { userId },
+                });
+
+                if (!userProfile) {
+                    throw new NotFoundException(
+                        "유저 프로필이 존재하지 않습니다.",
+                    );
+                }
+                console.log("유저 프로필", userProfile);
+                console.log("유저프로필닉네임", userProfile.nickname);
+                return userProfile.nickname;
+            }),
+        );
+
+        console.log("닉", nickNames);
+        return nickNames;
     }
 }

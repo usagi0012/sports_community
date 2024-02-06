@@ -6,10 +6,11 @@ import { Club } from "src/entity/club.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ClubApplication } from "src/entity/club-application.entity";
 import { AlarmserviceModule } from "src/alarm/alarm.module";
+import { UserProfile } from "src/entity/user-profile.entity";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([User, Club, ClubApplication]),
+        TypeOrmModule.forFeature([User, Club, ClubApplication, UserProfile]),
         AlarmserviceModule,
     ],
     controllers: [ApplyingClubController],

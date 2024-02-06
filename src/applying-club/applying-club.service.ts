@@ -14,6 +14,7 @@ import { PermissionApplicationDto } from "./dto/permission-application.dto";
 import { ApplicationReviewDto } from "./dto/applicationReview.dto";
 import { ClubApplicationStatus } from "../entity/club-application.entity";
 import { Alarmservice } from "../alarm/alarm.service";
+import { UserProfile } from "src/entity/user-profile.entity";
 
 @Injectable()
 export class ApplyingClubService {
@@ -24,6 +25,8 @@ export class ApplyingClubService {
         private readonly ClubRepository: Repository<Club>,
         @InjectRepository(User)
         private readonly UserRepository: Repository<User>,
+        @InjectRepository(UserProfile)
+        private readonly userProfileRepository: Repository<UserProfile>,
         private readonly alramService: Alarmservice,
     ) {}
 
@@ -145,7 +148,6 @@ export class ApplyingClubService {
 
     async getApplicationOfMyClub(userId: number) {
         // 동호회 장이 아니면 열람 불가
-
         const user = await this.UserRepository.findOne({
             where: { id: userId },
         });
@@ -158,11 +160,23 @@ export class ApplyingClubService {
             throw new ForbiddenException("동호회 장만 조회할 수 있습니다.");
         }
 
-        const application = await this.clubApplicationRepository.find({
+        const applications = await this.clubApplicationRepository.find({
             where: { clubId },
         });
+        console.log("지원자들", applications);
 
-        return application;
+        const nicknames = await Promise.all(
+            applications.map(async (app) => {
+                const userProfile = await this.userProfileRepository.findOne({
+                    where: { userId: app.userId },
+                });
+                console.log("앱 유저아이디", app.userId);
+                console.log("유저 프로필", userProfile);
+                return userProfile.nickname;
+            }),
+        );
+
+        return { applications, nicknames };
     }
 
     async reviewApplication(
