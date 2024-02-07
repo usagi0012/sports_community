@@ -1,42 +1,21 @@
-* {
-    margin: 0;
-    padding: 0;
-    /*   box-sizing: border-box; */
-}
-
-html {
-    font-size: 10px;
-}
-
-ul,
-li {
-    list-style: none;
-}
-
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    min-width: 320px;
-    font-size: 16px;
-    width: 50%;
-}
-
 .assessment-title {
-    align-items: center; /* 가운데 정렬을 위해 추가 */
+    align-items: center;
+    /* 가운데 정렬을 위해 추가 */
     margin-bottom: 30px;
     margin-left: 0;
 }
 
 .main-show {
     display: flex;
-    justify-content: center; /* 가운데 정렬을 위해 추가 */
-    align-items: center; /* 가운데 정렬을 위해 추가 */
+    justify-content: center;
+    /* 가운데 정렬을 위해 추가 */
+    align-items: center;
+    /* 가운데 정렬을 위해 추가 */
     flex-direction: column;
-    font-size: 2rem; /* 전체 폰트 크기 설정, 원하는 크기로 조절하세요 */
-    margin: 20px; /* 가요소 전체의 마진 설정 */
+    font-size: 2rem;
+    /* 전체 폰트 크기 설정, 원하는 크기로 조절하세요 */
+    margin: 20px;
+    /* 가요소 전체의 마진 설정 */
 }
 
 .main-show .question {
@@ -53,16 +32,17 @@ body {
     font-size: 0;
     display: flex;
     align-items: center;
-    justify-content: center; /* 수정된 부분 */
+    justify-content: center;
+    /* 수정된 부분 */
     flex-wrap: wrap;
-    gap: 10px; /* 버튼 간의 간격 조절 */
+    gap: 10px;
+    /* 버튼 간의 간격 조절 */
     margin-right: 0;
 }
 
 .bt-wrap a {
     display: inline-block;
     min-width: 80px;
-
     padding: 10px;
     margin: 5px;
     cursor: pointer;
@@ -155,4 +135,19 @@ body {
 .submit-wrap a.on {
     background: #000;
     color: #fff;
+}
+
+/* 모달창 */
+
+#myPersonal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
 }
