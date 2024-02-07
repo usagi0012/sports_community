@@ -521,9 +521,9 @@ export class PersonalassessmenttagService {
             where: { userId },
         });
 
-        if (userScore) {
-            throw new BadRequestException("이미 태그를 가지고 있습니다.");
-        }
+        // if (userScore) {
+        //     throw new BadRequestException("이미 태그를 가지고 있습니다.");
+        // }
 
         if (personalMatch.status === MatchStatus.REJECTED) {
             throw new BadRequestException("해당 경기는 거절되었습니다.");

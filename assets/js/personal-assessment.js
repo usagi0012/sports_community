@@ -33,11 +33,11 @@ function toggleButton(button) {
     }
 }
 
-// document
-//     .getElementById("submit-cancel-btn")
-//     .addEventListener("click", function () {
-//         returnCancel();
-//     });
+document
+    .getElementById("submit-cancel-btn")
+    .addEventListener("click", function () {
+        closePersonal();
+    });
 
 async function getPersonalAssessment(matchId, playOtherUserId) {
     try {
@@ -132,6 +132,8 @@ async function getPersonalTag(matchId, playOtherUserId) {
                 },
             },
         );
+
+        console.log("태그평가 완료됨");
     } catch (error) {
         alert(error.response.data.message);
     }
@@ -147,16 +149,16 @@ async function getPersonalTag(matchId, playOtherUserId) {
 // }
 // |
 
-function returnCancel() {
-    window.location.href = `/index.html`;
-}
+// function returnCancel() {
+//     window.location.href = `/index.html`;
+// }
 
 function openPersonal() {
     var modal = document.getElementById("myPersonal");
     modal.style.display = "block";
 }
 
-function closeModal() {
+function closePersonal() {
     var modal = document.getElementById("myPersonal");
     modal.style.display = "none";
 }
