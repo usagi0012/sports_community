@@ -31,6 +31,7 @@ import { ChatInvitationModule } from "./chat-invitation/chat-invitation.module";
 import { MessageModule } from "./message/message.module";
 import { ReportModule } from "./report/report.module";
 import { BanlistModule } from "./banlist/banlist.module";
+import { UpdatedRankModule } from './updated-rank/updated-rank.module';
 
 @Module({
     imports: [
@@ -62,6 +63,7 @@ import { BanlistModule } from "./banlist/banlist.module";
         MessageModule,
         ReportModule,
         BanlistModule,
+        UpdatedRankModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],
