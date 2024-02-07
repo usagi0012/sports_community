@@ -73,10 +73,12 @@ export class ClubController {
 
             return withdraw;
         } catch (error) {
-            console.log(error);
+            console.log("1", error);
+            console.log("2", error.message);
         }
     }
 
+    // 멤버 추방
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Put("/expelMember")
@@ -91,6 +93,7 @@ export class ClubController {
         }
     }
 
+    // 내동아리
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Get("/myClubId")

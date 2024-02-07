@@ -1,5 +1,6 @@
 import {
     ConflictException,
+    ForbiddenException,
     Injectable,
     NotFoundException,
     UnauthorizedException,
@@ -256,7 +257,7 @@ export class ClubService {
             where: { masterId: userId },
         });
         if (club) {
-            throw Error("동아리 장은 탈퇴할 수 없습니다.");
+            throw new ForbiddenException("동아리 장은 탈퇴할 수 없습니다.");
         }
         const withdraw = await this.userRepository.update(userId, {
             clubId: null,

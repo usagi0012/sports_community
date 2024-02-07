@@ -21,7 +21,7 @@
         <div id="sameContainer"></div>
         <div class="bodyContainer">
             <div class="mainContainer" id="mainContainer">
-                <select id="regionDropdown">
+                <select id="regionDropdown" onchange="getClub('region')">
                     <option value="">지역 선택</option>
 
                     <option value="서울">서울</option>
@@ -46,9 +46,9 @@
                     <button class="createBtn" onclick="moveToCreateClub()">
                         동아리 생성
                     </button>
-                    <button id="sortByLocation" onclick="getClub('region')">
+                    <!-- <button id="sortByLocation" onclick="getClub('region')">
                         지역별
-                    </button>
+                    </button> -->
                     <button id="sortByLatest" onclick="getClub('latest')">
                         최신순
                     </button>

@@ -105,12 +105,8 @@ export class ChatBackEndGateway
     //메시지가 전송되면 모든 유저에게 메시지 전송
     @SubscribeMessage("sendMessage")
     async sendMessage(client: Socket, data: any) {
-        console.log("서버에서 받아짐?");
         const { roomId, message } = data;
-        console.log("&*&*&*&", roomId, message);
-        console.log(typeof roomId);
         // console.log("서버", await this.server.in(roomId).fetchSockets());
-        console.log("!!!!", client.id, client.data.nickname);
         // roomId 받아지는 것 같은데?
         //client=>this.server
         // this.server.to(roomId) : 나를 포함한 방 전원에게 보내는 것
