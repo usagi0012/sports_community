@@ -74,9 +74,10 @@
         </div>
         <div class="footer" id="footer"></div>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script type="module" src="./js/club.js"></script>
+        <script src="./js/club.js"></script>
         <script src="./js/dropmenu.js"></script>
         <script src="./js/search.js"></script>
+        <script src="./js/otherUser-modal.js"></script>
         <!-- <script src="./js/club-detail.js"></script> -->
         <script>
             const regions = [
@@ -182,8 +183,19 @@
 
                             // 백엔드에서 클럽id에 해당하는 이름 보내줘야 할 듯.
                             const clubMaster = document.createElement("div");
-                            clubMaster.className = "clubMaster";
-                            clubMaster.innerHTML = `${club.masterName}`;
+                            const clubNameP2 = document.createElement("p");
+                            clubNameP2.textContent = club.masterName;
+
+                            // 클릭 이벤트 추가
+                            clubNameP2.addEventListener(
+                                "click",
+                                function (event) {
+                                    event.stopPropagation();
+                                    createModal(club.masterId);
+                                },
+                            );
+
+                            clubMaster.appendChild(clubNameP2);
                             clubInfoDiv.appendChild(clubMaster);
 
                             const clubScore = document.createElement("div");
@@ -236,23 +248,7 @@
                 isClubMaster();
                 moveToGetMyClubApplication();
             }
-
-            // 클릭시 유저 프로필 모달창 나오게 하기(예시.. 삭제 하셔도 됩니다)
-            // const clubLeaders = document.querySelectorAll(".club-leader");
-            // clubLeaders.forEach((leader) => {
-            //     // 모달이 보이지 않도록 초기화
-            //     const modal = document.getElementById("userProfileModal");
-            //     if (modal) {
-            //         modal.style.display = "none";
-            //     }
-
-            //     leader.addEventListener("click", () => {
-            //         const userId = leader.dataset.userId;
-            //         openUserModal(2);
-            //     });
-            // });
         </script>
         <script src="./js/notification.js"></script>
-        <script type="module" src="./js/otherUser-modal.js"></script>
     </body>
 </html>

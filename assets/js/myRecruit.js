@@ -232,14 +232,12 @@ function createGuestHTML(guest) {
     return `
     <button type="button" >
     <h7><strong></strong>${guest.message}</h7>
-        <p><strong>게스트:</strong>${guest.guestName}</p>
+        <p><strong>게스트:</strong><span class="guestName" onclick="createModal('${guest.guestId}')">${guest.guestName}</span></p>
         <p ><strong>상태:</strong>${guest.status}</p>
     </button>
     `;
 }
-{
-    /* <span class="guestName" onclick="createModal('${guest.guestId}')">${guest.guestName}</span> */
-}
+
 
 function createButtonHTML(guest) {
     return `

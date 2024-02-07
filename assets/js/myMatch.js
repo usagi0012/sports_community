@@ -189,11 +189,15 @@ function createMatchUserHtml(user) {
     const matchId = user.id;
     const playOtherUserId = user.guestId;
     return `
-            <button type="button" class="userInMatch">
-             <p>${user.guestName}</p>
-            </button>
+        <button type="button" class="userInMatch" onclick="handleUserButtonClick('${user.guestId}')">
+            <p>${user.guestName}</p>
+        </button>
             <button onclick="displayPersonal('${matchId}', '${playOtherUserId}')">평가 <button>
         `;
+
+// 새로운 함수 추가
+function handleUserButtonClick(userId) {
+    createModal(userId);
 }
 
 function createMatchUserButtonHtml(matchId) {
