@@ -183,10 +183,15 @@ function createMatchInfoHtml(myMatch) {
 
 function createMatchUserHtml(user) {
     return `
-            <button type="button" class="userInMatch">
-             <p>${user.guestName}</p>
-            </button>
-        `;
+        <button type="button" class="userInMatch" onclick="handleUserButtonClick('${user.guestId}')">
+            <p>${user.guestName}</p>
+        </button>
+    `;
+}
+
+// 새로운 함수 추가
+function handleUserButtonClick(userId) {
+    createModal(userId);
 }
 
 function createMatchUserButtonHtml(matchId) {
