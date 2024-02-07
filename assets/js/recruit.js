@@ -1,3 +1,5 @@
+import { createModal } from "./otherUser-modal.js";
+
 window.onload = function () {
     loadHeader();
     feed();
@@ -76,6 +78,7 @@ function feed() {
         });
 }
 
+
 function toRecruitPost() {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
@@ -96,3 +99,4 @@ function filterByCategory() {
     currentFilterCategory = regionFilterElement.value;
     feed();
 }
+

@@ -73,35 +73,27 @@ function getProfile(token) {
                     <div class="score" id="MVPCount">MVP: 10 회</div>
                 </div>
                 <button type="button" id="alarmBtn">
-                    <i class="fas fa-solid fa-bell"></i>
+                    <i class="fas fa-solid fa-bell" onclick="toAlarm()"></i>
                 </button>
-                <button type="button" id="profileUpdateBtn">
+                <button type="button" id="profileUpdateBtn" onclick="toUpdateUserProfile()">
                     수정하기
                 </button>
                 <div class="calenderContainer">
-                    <button type="button" id="calenderBtn">캘린더 →</button>
+                    <button type="button" id="calenderBtn" onclick="toCalender()">캘린더 →</button>
                 </div>`;
                 profileContainer.innerHTML = profile;
             })
             .catch(function (error) {
                 console.log(error);
                 if (error.response.data.message == "프로필 정보가 없습니다.") {
+                    profileContainer.classList.remove("profileContainer");
+                    profileContainer.classList.add("noProfileContainer");
                     profile = `
-                    <div class="noprofile">
-                    아직 프로필이 없습니다. 프로필 작성 →
+                    <div class="noprofile" onclick="toPostUserProfile()">
+                    프로필을 작성해야 원활한 커뮤니티 활동이 가능합니다.  프로필 작성 →
                     </div>`;
                     profileContainer.innerHTML = profile;
                 }
             });
     }
-}
-
-{
-    /* <div class="image">
-<img src="resources/profile.jpeg" id="profileImage" />
-</div>
-<div class="nickname">닉네임</div>
-<div class="noprofile">
-아직 프로필이 없습니다. 프로필 작성 →
-</div> */
 }

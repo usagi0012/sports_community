@@ -4,120 +4,185 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <title>캘린더</title>
+        <title>Onong User Calendar</title>
+        <meta name="description" content="Onong UserCalendarPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="css/userMenu.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
         <link rel="stylesheet" href="css/calender.css" />
     </head>
     <body>
-        <h2>캘린더</h2>
-        <!-- html 작성 시작 -->
-        <div id="container">
-            <div class="petsitter-info"></div>
-            <div class="detail-info">
-                <div class="reservation">
-                    <div class="calendar1">
-                        <!-- calendar -->
-                        <div class="calendar">
-                            <p class="calendar-reservation">일정 관리</p>
-                            <!-- 연도, 월 -->
-                            <nav class="calendar-yearmonth">
-                                <div class="calendar-yearmonth__btn">
-                                    <i class="fa-solid fa-arrow-left">⇦</i>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer">
+                <div class="userMenuContianer" id="userMenuContianer"></div>
+                <!-- html 작성 시작 -->
+                <div id="container">
+                    <div class="petsitter-info"></div>
+                    <div class="detail-info">
+                        <div class="reservation">
+                            <div class="calendar1">
+                                <!-- calendar -->
+                                <div class="calendar">
+                                    <!-- 연도, 월 -->
+                                    <nav class="calendar-yearmonth">
+                                        <div class="calendar-yearmonth__btn">
+                                            <i
+                                                class="fa-solid fa-arrow-left"
+                                            ></i>
+                                        </div>
+                                        <div
+                                            class="calendar-yearmonth__col"
+                                        ></div>
+                                        <div class="calendar-yearmonth__btn">
+                                            <i
+                                                class="fa-solid fa-arrow-right"
+                                            ></i>
+                                        </div>
+                                    </nav>
+                                    <!-- 요일 -->
+                                    <div class="calendar-days">
+                                        <div class="calendar-day">
+                                            <span>S</span>
+                                        </div>
+                                        <div class="calendar-day">
+                                            <span>M</span>
+                                        </div>
+                                        <div class="calendar-day">
+                                            <span>T</span>
+                                        </div>
+                                        <div class="calendar-day">
+                                            <span>W</span>
+                                        </div>
+                                        <div class="calendar-day">
+                                            <span>T</span>
+                                        </div>
+                                        <div class="calendar-day">
+                                            <span>F</span>
+                                        </div>
+                                        <div class="calendar-day">
+                                            <span>S</span>
+                                        </div>
+                                    </div>
+                                    <!-- 일자 -->
+                                    <div class="calendar-date"></div>
                                 </div>
-                                <div class="calendar-yearmonth__col"></div>
-                                <div class="calendar-yearmonth__btn">
-                                    <i class="fa-solid fa-arrow-right">⇨</i>
-                                </div>
-                            </nav>
-                            <!-- 요일 -->
-                            <div class="calendar-days">
-                                <div class="calendar-day"><span>S</span></div>
-                                <div class="calendar-day"><span>M</span></div>
-                                <div class="calendar-day"><span>T</span></div>
-                                <div class="calendar-day"><span>W</span></div>
-                                <div class="calendar-day"><span>T</span></div>
-                                <div class="calendar-day"><span>F</span></div>
-                                <div class="calendar-day"><span>S</span></div>
                             </div>
-                            <!-- 일자 -->
-                            <div class="calendar-date"></div>
                         </div>
+                        <div class="review"></div>
                     </div>
                 </div>
-                <div class="review"></div>
+                <!-- html 작성 끝 -->
+                <!-- 모달 HTML -->
+                <div id="createCalendarModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal()"
+                            >&times;</span
+                        >
+                        <h2>캘린더 일정 생성</h2>
+                        <form id="calendarForm">
+                            <label for="title">제목:</label>
+                            <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                required
+                            />
+
+                            <label for="date">날짜:</label>
+                            <input type="date" id="date" name="date" required />
+
+                            <label for="description">내용:</label>
+                            <textarea
+                                id="description"
+                                name="description"
+                            ></textarea>
+
+                            <label for="color">색상:</label>
+                            <input
+                                type="color"
+                                id="color"
+                                name="color"
+                                value="#ff0000"
+                                required
+                            />
+
+                            <button type="submit">일정 생성</button>
+                            <button type="button" id="closeCreateModalBtn">
+                                닫기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="updateCalendarModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeUpdateModal()"
+                            >&times;</span
+                        >
+                        <h2>내 일정</h2>
+                        <form id="updateCalendarForm">
+                            <!-- 수정 폼 내용 추가 -->
+                            <!-- 예: 제목, 설명, 색상 등을 수정할 수 있는 입력 필드들 -->
+                            <label for="updateTitle">제목</label>
+                            <input
+                                type="text"
+                                id="updateTitle"
+                                name="updateTitle"
+                                required
+                            />
+
+                            <label for="updateDescription">설명</label>
+                            <textarea
+                                id="updateDescription"
+                                name="updateDescription"
+                            ></textarea>
+
+                            <label for="updateColor">색상</label>
+                            <input
+                                type="color"
+                                id="updateColor"
+                                name="updateColor"
+                            />
+
+                            <button type="submit">수정</button>
+                            <button type="button" id="deleteButtonId">
+                                삭제
+                            </button>
+                            <button type="button" id="closeUpdateModalBtn">
+                                닫기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div id="titleModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeTitleModal()"
+                            >&times;</span
+                        >
+                        <h2 id="titleModalTitle"></h2>
+                        <ul id="titleModalList"></ul>
+                        <button type="button" id="createCalendarBtn">
+                            일정 생성
+                        </button>
+                        <button type="button" id="closeTitleModalBtn">
+                            닫기
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- html 작성 끝 -->
-        <!-- 모달 HTML -->
-        <div id="createCalendarModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h2>캘린더 일정 생성</h2>
-                <form id="calendarForm">
-                    <label for="title">제목:</label>
-                    <input type="text" id="title" name="title" required />
-
-                    <label for="date">날짜:</label>
-                    <input type="date" id="date" name="date" required />
-
-                    <label for="description">내용:</label>
-                    <textarea id="description" name="description"></textarea>
-
-                    <label for="color">색상:</label>
-                    <input
-                        type="color"
-                        id="color"
-                        name="color"
-                        value="#ff0000"
-                        required
-                    />
-
-                    <button type="submit">일정 생성</button>
-                    <button type="button" id="closeCreateModalBtn">닫기</button>
-                </form>
-            </div>
-        </div>
-
-        <div id="updateCalendarModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeUpdateModal()">&times;</span>
-                <h2>내 일정</h2>
-                <form id="updateCalendarForm">
-                    <!-- 수정 폼 내용 추가 -->
-                    <!-- 예: 제목, 설명, 색상 등을 수정할 수 있는 입력 필드들 -->
-                    <label for="updateTitle">제목</label>
-                    <input
-                        type="text"
-                        id="updateTitle"
-                        name="updateTitle"
-                        required
-                    />
-
-                    <label for="updateDescription">설명</label>
-                    <textarea
-                        id="updateDescription"
-                        name="updateDescription"
-                    ></textarea>
-
-                    <label for="updateColor">색상</label>
-                    <input type="color" id="updateColor" name="updateColor" />
-
-                    <button type="submit">수정</button>
-                    <button type="button" id="deleteButtonId">삭제</button>
-                    <button type="button" id="closeUpdateModalBtn">닫기</button>
-                </form>
-            </div>
-        </div>
-        <div id="titleModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeTitleModal()">&times;</span>
-                <h2 id="titleModalTitle"></h2>
-                <ul id="titleModalList"></ul>
-                <button type="button" id="createCalendarBtn">일정 생성</button>
-                <button type="button" id="closeTitleModalBtn">닫기</button>
-            </div>
-        </div>
+        <div class="footer" id="footer"></div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="module" src="./js/calender.js"></script>
+        <script src="./js/dropmenu.js"></script>
     </body>
 </html>

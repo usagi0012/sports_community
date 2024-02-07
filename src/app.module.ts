@@ -26,6 +26,11 @@ import { PlaceModule } from "./place/place.module";
 import { KakaoModule } from "./social-login/kakao/kakao.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { UserAlarmModule } from "./user-alarm/user-alarm.module";
+import { SearchModule } from "./search/search.module";
+import { ChatInvitationModule } from "./chat-invitation/chat-invitation.module";
+import { MessageModule } from "./message/message.module";
+import { ReportModule } from "./report/report.module";
+import { BanlistModule } from "./banlist/banlist.module";
 
 @Module({
     imports: [
@@ -52,6 +57,11 @@ import { UserAlarmModule } from "./user-alarm/user-alarm.module";
         KakaoModule,
         NaverModule,
         UserAlarmModule,
+        SearchModule,
+        ChatInvitationModule,
+        MessageModule,
+        ReportModule,
+        BanlistModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],

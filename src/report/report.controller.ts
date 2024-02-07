@@ -26,6 +26,14 @@ import { UserType } from "src/entity/user.entity";
 export class ReportController {
     constructor(private readonly reportService: ReportService) {}
 
+    //벤 유저 조회하기
+    @Get(":banUserId")
+    async getBanUser(
+        @UserId() userId: number,
+        @Param("banUserId") banUserId: number,
+    ) {
+        return await this.reportService.getBanUser(userId, banUserId);
+    }
     //벤 신청하기
     @Post(":banUserId")
     async banUser(
@@ -36,7 +44,7 @@ export class ReportController {
         return await this.reportService.banUser(userId, banUserId, reportDTO);
     }
     //본인이 신청한 벤 조회하기
-    @Get("me")
+    @Get("banlist/me")
     async getMyBan(@UserId() userId: number) {
         return await this.reportService.getMyBan(userId);
     }
@@ -50,7 +58,7 @@ export class ReportController {
     }
 
     //APPROVE/CANCEL된 리포트 컴펌하여 삭제하기
-    @Delete("me/:reportId")
+    @Put("me/:reportId")
     async confirmBan(
         @UserId() userId: number,
         @Param("reportId") reportId: number,
@@ -69,7 +77,7 @@ export class ReportController {
         return await this.reportService.deleteBan(userId, reportId);
     }
     //어드민 벤 명단보기
-    @Get("admin")
+    @Get("admin/banlist")
     async getBan(@UserId() userId: number) {
         return await this.reportService.getBan(userId);
     }

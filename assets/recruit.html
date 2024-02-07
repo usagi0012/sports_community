@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onog Recruit Feed</title>
-        <meta name="description" content="Onog RecruitFeedPage" />
+        <title>Onong Recruit Feed</title>
+        <meta name="description" content="Onong RecruitFeedPage" />
         <link rel="icon" href="./resources/favicon.ico" />
         <link
             rel="stylesheet"
@@ -15,6 +15,7 @@
         />
         <link rel="stylesheet" href="css/dropBar.css" />
         <link rel="stylesheet" href="./css/recruit.css" />
+        <link rel="stylesheet" href="css/otherUser-modal.css" />
     </head>
     <body>
         <div id="sameContainer"></div>
@@ -68,8 +69,19 @@
         <div class="footer" id="footer"></div>
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="./js/recruit.js"></script>
+        <script type="module" src="./js/recruit.js" defer></script>
         <script src="./js/dropmenu.js"></script>
         <script src="./js/notification.js"></script>
+        <script type="module" src="./js/otherUser-modal.js"></script>
+        <script>
+            function toRecruitPost() {
+                const accessToken = localStorage.getItem("accessToken");
+                if (!accessToken) {
+                    alert("로그인 후 이용 가능합니다.");
+                } else {
+                    window.location.href = "recruit-post.html";
+                }
+            }
+        </script>
     </body>
 </html>

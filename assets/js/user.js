@@ -1,3 +1,9 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadUserMenu();
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
     try {
         // localStorage에서 토큰 읽기
@@ -20,7 +26,6 @@ document.addEventListener("DOMContentLoaded", async () => {
               <h2>내 정보</h2>
               <p>이름: ${user.name}</p> 
               <p>이메일: ${user.email}</p>
-              <p>비밀번호: ********</p> 
              
 
       

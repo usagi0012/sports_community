@@ -257,4 +257,10 @@ export class ClubService {
 
         return true;
     }
+
+    // async getClubByUserId(userId) {
+    //     const myclub = await this.clubRepository.findOne({
+    //         where: {},
+    //     });
+    // }
 }
