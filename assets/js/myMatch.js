@@ -134,6 +134,8 @@ async function displayMatchUser(matchId) {
         const myMatch = response.data[0];
         const confirmUser = response.data[1];
 
+        console.log("confirmUser", confirmUser);
+
         const matchUser = document.getElementById("matchUser");
         matchUser.innerHTML = "";
         const userButton = document.getElementById("userButton");

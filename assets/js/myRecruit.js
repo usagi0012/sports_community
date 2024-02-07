@@ -363,8 +363,14 @@ async function submit(matchId, playOtherUserId) {
         await getPersonalAssessment(matchId, playOtherUserId);
         await getPersonalTag(matchId, playOtherUserId);
 
-        window.location.reload();
+        alert("평가완료");
+        endPersonal();
     } catch (error) {
         console.error(error);
     }
+}
+
+function endPersonal() {
+    var modal = document.getElementById("myPersonal");
+    modal.style.display = "none";
 }

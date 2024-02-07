@@ -39,7 +39,7 @@ document
         closePersonal();
     });
 
-function getPersonalAssessment(matchId, playOtherUserId) {
+async function getPersonalAssessment(matchId, playOtherUserId) {
     try {
         const ratingInputFirst = document.querySelector(".rating1 input");
         const ratingInputTwo = document.querySelector(".rating2 input");
@@ -69,7 +69,7 @@ function getPersonalAssessment(matchId, playOtherUserId) {
     }
 }
 
-function getPersonalTag(matchId, playOtherUserId) {
+async function getPersonalTag(matchId, playOtherUserId) {
     try {
         const token = localStorage.getItem("accessToken");
 

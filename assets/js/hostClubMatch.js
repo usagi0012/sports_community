@@ -108,8 +108,9 @@ async function getGuestClub(hostMatchId) {
 
         const guestClub = response.data[1];
         const clubMatch = response.data[0];
-
-        const guestClubHTML = createGuestClubHTML(guestClub);
+        console.log("guest", guestClub);
+        console.log("match", clubMatch);
+        const guestClubHTML = createGuestClubHTML(guestClub, clubMatch);
         const hostClubButtonHTML = createHostClubButtonHTML(hostMatchId);
         const clubMatchHTML = createClubMatchHTML(clubMatch);
         const deleteButtonHTML = createDeleteButtonHTML(hostMatchId);
@@ -129,7 +130,9 @@ function createDeleteButtonHTML(hostMatchId) {
     `;
 }
 
-function createGuestClubHTML(guestClub) {
+function createGuestClubHTML(guestClub, clubMatch) {
+    const clubMatchId = clubMatch.id;
+    const myClubId = clubMatch.guest_clubId;
     return `
         <div>
             <h2>${guestClub.name}</h2>
@@ -143,6 +146,8 @@ function createGuestClubHTML(guestClub) {
             <p><strong>Members:</strong> ${guestClub.members}</p>
             <p><strong>Description:</strong> ${guestClub.description}</p>
         </div>
+        <button onclick="displayClubAss('${clubMatchId}', '${myClubId}')"  >평가</button>
+
     `;
 }
 
@@ -168,6 +173,7 @@ function createClubMatchHTML(clubMatch) {
             <p><strong>evaluation:</strong> ${clubMatch.host_evaluate}</p>
             <p><strong>Status:</strong> ${clubMatch.status}</p>
         </div>
+        
     `;
 }
 
@@ -224,39 +230,38 @@ function closeHostMatchModal() {
 }
 
 //평가하기
-async function displayPersonal(matchId, playOtherUserId) {
+async function displayClubAss(clubMatchId, myClubId) {
     try {
-        console.log("displayPersonal", matchId, playOtherUserId);
+        console.log("displayPersonal", clubMatchId, myClubId);
         const personalEvaluation = document.getElementById("submit-btn");
         personalEvaluation.innerHTML = "";
         const personalEvaluationHTML = createpersonalEvaluationHTML(
-            matchId,
-            playOtherUserId,
+            clubMatchId,
+            myClubId,
         );
         personalEvaluation.innerHTML = personalEvaluationHTML;
-        openPersonal();
+        openclubAssessment();
     } catch (error) {}
 }
 
-function createpersonalEvaluationHTML(matchId, playOtherUserId) {
-    console.log("createpersonalEvaluationHTML", matchId, playOtherUserId);
+function createpersonalEvaluationHTML(clubMatchId, myClubId) {
+    console.log("createpersonalEvaluationHTML", clubMatchId, myClubId);
     return `
-        <button onclick="submit('${matchId}', '${playOtherUserId}')" class="on">제출</button>
+        <button onclick="submit('${clubMatchId}', '${myClubId}')" class="on">제출</button>
     `;
 }
 
-function openPersonal(confirmUser) {
-    var modal = document.getElementById("myPersonal");
-    console.log(confirmUser);
-    modal.style.display = "block";
+function openclubAssessment() {
+    var clubAssessmentModal = document.getElementById("clubAssessment");
+    clubAssessmentModal.style.display = "block";
 }
-
-async function submit(matchId, playOtherUserId) {
+async function submit(clubMatchId, myClubId) {
     try {
-        console.log("submit", matchId, playOtherUserId);
-        await getPersonalAssessment(matchId, playOtherUserId);
-        await getPersonalTag(matchId, playOtherUserId);
+        console.log("submit", clubMatchId, myClubId);
+        await getClubAssessment(clubMatchId, myClubId);
+        await getClubTag(clubMatchId, myClubId);
 
+        alert("평가완료");
         window.location.reload();
     } catch (error) {
         console.error(error);
