@@ -1,4 +1,6 @@
 window.onload = async function () {
+    loadHeader();
+    loadFooter();
     try {
         // 현재 페이지 URL에서 query와 from 추출
         const urlParams = new URLSearchParams(window.location.search);

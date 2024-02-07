@@ -73,12 +73,3 @@ function feed() {
             window.location.href = "index.html";
         });
 }
-
-function toRecruitPost() {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-        alert("로그인 후 이용 가능합니다.");
-    } else {
-        window.location.href = "recruit-post.html";
-    }
-}
