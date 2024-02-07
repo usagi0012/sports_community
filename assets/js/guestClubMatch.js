@@ -59,6 +59,9 @@ async function findHostClub(guestMatchId) {
         const clubMatch = response.data[0];
         const hostClub = response.data[1];
 
+        console.log("club", clubMatch);
+        console.log("host", hostClub);
+
         const hostClubContainer = document.getElementById("hostClub");
         const guestModalButtonContainer =
             document.getElementById("guestModalButton");
@@ -67,7 +70,7 @@ async function findHostClub(guestMatchId) {
         guestModalButtonContainer.innerHTML = "";
 
         const guestModalButtonHTML = createGuestModalButtonHTML(clubMatch);
-        const hostClubHTML = createHostClubHTML(hostClub);
+        const hostClubHTML = createHostClubHTML(hostClub, clubMatch);
         const matchHtml = createMatchHTML(clubMatch);
 
         guestModalButtonContainer.innerHTML += guestModalButtonHTML;
@@ -110,7 +113,10 @@ function createMatchHTML(clubMatch) {
     `;
 }
 
-function createHostClubHTML(hostClub) {
+function createHostClubHTML(hostClub, clubMatch) {
+    const clubMatchId = clubMatch.id;
+    const myClubId = clubMatch.guest_clubId;
+
     return `
     
         <div id="${hostClub.id}">
@@ -125,6 +131,8 @@ function createHostClubHTML(hostClub) {
             <p><strong>Description:</strong> ${hostClub.description}</p>
             <p><strong>Members:</strong> ${hostClub.members}</p>
         </div>
+        <button onclick="displayClubAss('${clubMatchId}', '${myClubId}')"  >평가</button>
+
     `;
 }
 
@@ -225,5 +233,44 @@ async function deleteGuestMatch(clubMatchId) {
         console.error(error);
         alert(error.response.data.message);
         window.location.reload();
+    }
+}
+
+//평가하기
+async function displayClubAss(clubMatchId, myClubId) {
+    try {
+        console.log("displayPersonal", clubMatchId, myClubId);
+        const personalEvaluation = document.getElementById("submit-btn");
+        personalEvaluation.innerHTML = "";
+        const personalEvaluationHTML = createpersonalEvaluationHTML(
+            clubMatchId,
+            myClubId,
+        );
+        personalEvaluation.innerHTML = personalEvaluationHTML;
+        openclubAssessment();
+    } catch (error) {}
+}
+
+function createpersonalEvaluationHTML(clubMatchId, myClubId) {
+    console.log("createpersonalEvaluationHTML", clubMatchId, myClubId);
+    return `
+        <button onclick="submit('${clubMatchId}', '${myClubId}')" class="on">제출</button>
+    `;
+}
+
+function openclubAssessment() {
+    var clubAssessmentModal = document.getElementById("clubAssessment");
+    clubAssessmentModal.style.display = "block";
+}
+async function submit(clubMatchId, myClubId) {
+    try {
+        console.log("submit", clubMatchId, myClubId);
+        await getClubAssessment(clubMatchId, myClubId);
+        await getClubTag(clubMatchId, myClubId);
+
+        alert("평가완료");
+        window.location.reload();
+    } catch (error) {
+        console.error(error);
     }
 }

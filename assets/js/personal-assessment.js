@@ -36,19 +36,21 @@ function toggleButton(button) {
 document
     .getElementById("submit-cancel-btn")
     .addEventListener("click", function () {
-        returnCancel();
+        closePersonal();
     });
 
-function getPersonalAssessment(matchId, playOtherUserId) {
-    const ratingInputFirst = document.querySelector(".rating1 input");
-    const ratingInputTwo = document.querySelector(".rating2 input");
+async function getPersonalAssessment(matchId, playOtherUserId) {
+    try {
+        const ratingInputFirst = document.querySelector(".rating1 input");
+        const ratingInputTwo = document.querySelector(".rating2 input");
 
-    const personalityAmount = +ratingInputFirst.value;
-    const abilityAmount = +ratingInputTwo.value;
+        console.log(matchId, playOtherUserId);
+        const personalityAmount = +ratingInputFirst.value;
+        const abilityAmount = +ratingInputTwo.value;
 
-    const token = localStorage.getItem("accessToken");
-    axios
-        .put(
+        const token = localStorage.getItem("accessToken");
+
+        axios.put(
             `/api/assessment/personal/${+matchId}/${+playOtherUserId}`,
             {
                 personalityAmount: personalityAmount,
@@ -59,59 +61,69 @@ function getPersonalAssessment(matchId, playOtherUserId) {
                     Authorization: `Bearer ${token}`,
                 },
             },
-        )
-        .then(function (response) {
-            console.log(response.data.message);
-        })
-        .catch(function (error) {
-            console.log(error);
-            alert(error.response.data.message);
-        });
+        );
+        console.log("개인평가 완료됨");
+    } catch (error) {
+        console.error(error);
+        alert(error.response.data.message);
+    }
 }
 
-function getPersonalTag(matchId, playOtherUserId) {
-    const token = localStorage.getItem("accessToken");
+async function getPersonalTag(matchId, playOtherUserId) {
+    try {
+        const token = localStorage.getItem("accessToken");
 
-    const playerValues = {
-        chisu: document.getElementById("post-btn1").classList.contains("on")
-            ? 1
-            : 0,
-        curry: document.getElementById("post-btn2").classList.contains("on")
-            ? 1
-            : 0,
-        daeman: document.getElementById("post-btn3").classList.contains("on")
-            ? 1
-            : 0,
-        irving: document.getElementById("post-btn4").classList.contains("on")
-            ? 1
-            : 0,
-        jorden: document.getElementById("post-btn5").classList.contains("on")
-            ? 1
-            : 0,
-        late: document.getElementById("post-btn6").classList.contains("on")
-            ? 1
-            : 0,
-        mean: document.getElementById("post-btn7").classList.contains("on")
-            ? 1
-            : 0,
-        run: document.getElementById("post-btn8").classList.contains("on")
-            ? 1
-            : 0,
-        teawoong: document.getElementById("post-btn9").classList.contains("on")
-            ? 1
-            : 0,
-        thief: document.getElementById("post-btn10").classList.contains("on")
-            ? 1
-            : 0,
-        yakbird: document.getElementById("post-btn11").classList.contains("on")
-            ? 1
-            : 0,
-        zaza: document.getElementById("post-btn12").classList.contains("on")
-            ? 1
-            : 0,
-    };
-    axios
-        .put(
+        const playerValues = {
+            chisu: document.getElementById("post-btn1").classList.contains("on")
+                ? 1
+                : 0,
+            curry: document.getElementById("post-btn2").classList.contains("on")
+                ? 1
+                : 0,
+            daeman: document
+                .getElementById("post-btn3")
+                .classList.contains("on")
+                ? 1
+                : 0,
+            irving: document
+                .getElementById("post-btn4")
+                .classList.contains("on")
+                ? 1
+                : 0,
+            jorden: document
+                .getElementById("post-btn5")
+                .classList.contains("on")
+                ? 1
+                : 0,
+            late: document.getElementById("post-btn6").classList.contains("on")
+                ? 1
+                : 0,
+            mean: document.getElementById("post-btn7").classList.contains("on")
+                ? 1
+                : 0,
+            run: document.getElementById("post-btn8").classList.contains("on")
+                ? 1
+                : 0,
+            teawoong: document
+                .getElementById("post-btn9")
+                .classList.contains("on")
+                ? 1
+                : 0,
+            thief: document
+                .getElementById("post-btn10")
+                .classList.contains("on")
+                ? 1
+                : 0,
+            yakbird: document
+                .getElementById("post-btn11")
+                .classList.contains("on")
+                ? 1
+                : 0,
+            zaza: document.getElementById("post-btn12").classList.contains("on")
+                ? 1
+                : 0,
+        };
+        axios.put(
             `/api/assessment/personal/tag/${matchId}/${playOtherUserId}`,
             playerValues,
             {
@@ -119,28 +131,34 @@ function getPersonalTag(matchId, playOtherUserId) {
                     Authorization: `Bearer ${token}`,
                 },
             },
-        )
-        .then(function (response) {
-            console.log(response.data.message);
-        })
-        .catch(function (error) {
-            console.log(error);
-            alert(error.response.data.message);
-        });
+        );
+
+        console.log("태그평가 완료됨");
+    } catch (error) {
+        alert(error.response.data.message);
+    }
 }
 
-window.onload = function () {
-    returnPage();
-};
-function returnPage() {
-    document
-        .getElementById("submit-btn")
-        .addEventListener("click", function () {
-            getPersonalAssessment(12, 28);
-            getPersonalTag(12, 28);
-        });
+// function returnPage() {
+//     document
+//         .getElementById("submit-btn")
+//         .addEventListener("click", function () {
+//             getPersonalAssessment();
+//             getPersonalTag();
+//         });
+// }
+// |
+
+// function returnCancel() {
+//     window.location.href = `/index.html`;
+// }
+
+function openPersonal() {
+    var modal = document.getElementById("myPersonal");
+    modal.style.display = "block";
 }
 
-function returnCancel() {
-    window.location.href = `/index.html`;
+function closePersonal() {
+    var modal = document.getElementById("myPersonal");
+    modal.style.display = "none";
 }
