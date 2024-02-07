@@ -222,3 +222,43 @@ function openHostMatchModal() {
 function closeHostMatchModal() {
     document.getElementById("hostMatchModal").style.display = "none";
 }
+
+//평가하기
+async function displayPersonal(matchId, playOtherUserId) {
+    try {
+        console.log("displayPersonal", matchId, playOtherUserId);
+        const personalEvaluation = document.getElementById("submit-btn");
+        personalEvaluation.innerHTML = "";
+        const personalEvaluationHTML = createpersonalEvaluationHTML(
+            matchId,
+            playOtherUserId,
+        );
+        personalEvaluation.innerHTML = personalEvaluationHTML;
+        openPersonal();
+    } catch (error) {}
+}
+
+function createpersonalEvaluationHTML(matchId, playOtherUserId) {
+    console.log("createpersonalEvaluationHTML", matchId, playOtherUserId);
+    return `
+        <button onclick="submit('${matchId}', '${playOtherUserId}')" class="on">제출</button>
+    `;
+}
+
+function openPersonal(confirmUser) {
+    var modal = document.getElementById("myPersonal");
+    console.log(confirmUser);
+    modal.style.display = "block";
+}
+
+async function submit(matchId, playOtherUserId) {
+    try {
+        console.log("submit", matchId, playOtherUserId);
+        await getPersonalAssessment(matchId, playOtherUserId);
+        await getPersonalTag(matchId, playOtherUserId);
+
+        window.location.reload();
+    } catch (error) {
+        console.error(error);
+    }
+}

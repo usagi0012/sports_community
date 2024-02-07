@@ -46,19 +46,20 @@ async function getClubAssessment(clubMatchId, myClubId) {
     const abilityAmount = +ratingInputTwo.value;
 
     const token = localStorage.getItem("accessToken");
-    axios
-        .put(
-            `/api/assessment/club/${+clubMatchId}/${+myClubId}`,
-            {
-                personalityAmount: personalityAmount,
-                abilityAmount: abilityAmount,
+    axios.put(
+        `/api/assessment/club/${+clubMatchId}/${+myClubId}`,
+        {
+            personalityAmount: personalityAmount,
+            abilityAmount: abilityAmount,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
             },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            },
-        )
+        },
+    );
+    console
+        .log("평가완료")
         .then(function (response) {
             console.log(response.data.message);
         })
@@ -68,7 +69,7 @@ async function getClubAssessment(clubMatchId, myClubId) {
         });
 }
 
-function getClubTag(clubMatchId, myClubId) {
+async function getClubTag(clubMatchId, myClubId) {
     const token = localStorage.getItem("accessToken");
     const playerValues = {
         buksan: document.getElementById("post-btn1").classList.contains("on")
@@ -113,16 +114,18 @@ function getClubTag(clubMatchId, myClubId) {
             : 0,
     };
 
-    axios
-        .put(
-            `/api/assessment/club/tag/${clubMatchId}/${myClubId}`,
-            playerValues,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+    axios.put(
+        `/api/assessment/club/tag/${clubMatchId}/${myClubId}`,
+        playerValues,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
             },
-        )
+        },
+    );
+    console
+        .log("태그평가완료")
+
         .then(function (response) {
             console.log(response.data.message);
         })
@@ -132,18 +135,26 @@ function getClubTag(clubMatchId, myClubId) {
         });
 }
 
-window.onload = function () {
-    returnPage();
-};
-function returnPage() {
-    document
-        .getElementById("submit-btn")
-        .addEventListener("click", function () {
-            getClubAssessment(1, 3);
-            getClubTag(1, 3);
-        });
-}
+// function returnPage() {
+//     document
+//         .getElementById("submit-btn")
+//         .addEventListener("click", function () {
+//             getClubAssessment(1, 3);
+//             getClubTag(1, 3);
+//         });
+// }
 
-function returnCancel() {
-    window.location.href = `/index.html`;
+// function returnCancel() {
+//     window.location.reload();
+// // }
+
+// function openclubAssessment() {
+//     var clubAssessmentModal = document.getElementById("clubAssessment");
+//     clubAssessmentModal.style.display = "block";
+// }
+
+// closeModal 함수 정의
+function closeclubAssessment() {
+    var clubAssessmentModal = document.getElementById("clubAssessment");
+    clubAssessmentModal.style.display = "none";
 }

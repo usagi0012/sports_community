@@ -39,7 +39,7 @@ document
         closePersonal();
     });
 
-async function getPersonalAssessment(matchId, playOtherUserId) {
+function getPersonalAssessment(matchId, playOtherUserId) {
     try {
         const ratingInputFirst = document.querySelector(".rating1 input");
         const ratingInputTwo = document.querySelector(".rating2 input");
@@ -50,7 +50,7 @@ async function getPersonalAssessment(matchId, playOtherUserId) {
 
         const token = localStorage.getItem("accessToken");
 
-        await axios.put(
+        axios.put(
             `/api/assessment/personal/${+matchId}/${+playOtherUserId}`,
             {
                 personalityAmount: personalityAmount,
@@ -69,7 +69,7 @@ async function getPersonalAssessment(matchId, playOtherUserId) {
     }
 }
 
-async function getPersonalTag(matchId, playOtherUserId) {
+function getPersonalTag(matchId, playOtherUserId) {
     try {
         const token = localStorage.getItem("accessToken");
 
@@ -123,7 +123,7 @@ async function getPersonalTag(matchId, playOtherUserId) {
                 ? 1
                 : 0,
         };
-        await axios.put(
+        axios.put(
             `/api/assessment/personal/tag/${matchId}/${playOtherUserId}`,
             playerValues,
             {
