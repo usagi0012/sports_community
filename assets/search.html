@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onong User</title>
-        <meta name="description" content="Onong UserPage" />
+        <title>Onong Search Results</title>
+        <meta name="description" content="Onong Search Results" />
         <link rel="icon" href="./resources/favicon.ico" />
         <link
             rel="stylesheet"
@@ -13,27 +13,29 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
         />
-        <link rel="stylesheet" href="css/userMenu.css" />
+        <link rel="stylesheet" href="css/search.css" />
         <link rel="stylesheet" href="css/dropBar.css" />
-        <link rel="stylesheet" href="css/user.css" />
     </head>
     <body>
         <div id="sameContainer"></div>
         <div class="bodyContainer">
-            <div class="mainContainer">
-                <div class="userMenuContianer" id="userMenuContianer"></div>
-                <section id="userSection">
-                    <h2>내 정보</h2>
-                    <p>이름: <span id="userName"></span></p>
-                    <p>이메일: <span id="userEmail"></span></p>
-                    <p>비밀번호: <span>********</span></p>
-                </section>
+            <div class="mainContainer" id="mainContainer">
+                <div id="clubResults">
+                    <!-- Club 검색 결과가 여기에 들어갈 것입니다 -->
+                </div>
+                <div id="recruitResults">
+                    <!-- Recruit 검색 결과가 여기에 들어갈 것입니다 -->
+                </div>
+                <div id="placeResults">
+                    <!-- Place 검색 결과가 여기에 들어갈 것입니다 -->
+                </div>
             </div>
         </div>
+
         <div class="footer" id="footer"></div>
+
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="./js/user.js"></script>
+        <script src="./js/search.js"></script>
         <script src="./js/dropmenu.js"></script>
-        <script src="./js/notification.js"></script>
     </body>
 </html>

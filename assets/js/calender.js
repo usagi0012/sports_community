@@ -128,18 +128,19 @@ function prevMonthDraw() {
     init.drawCalendar();
 }
 
-// function resetModalInputs() {
-//     document.getElementById("title").value = "";
-//     document.getElementById("description").value = "";
-//     document.getElementById("color").value = "";
-//     // 필요한 경우 다른 입력 필드들도 초기화
-// }
+function resetModalInputs() {
+    document.getElementById("title").value = "";
+    document.getElementById("description").value = "";
+    document.getElementById("color").value = "";
+    // 필요한 경우 다른 입력 필드들도 초기화
+}
 
 //모달열기
 async function openModal(date) {
     const createModal = document.getElementById("createCalendarModal");
 
-    // resetModalInputs();
+    resetModalInputs();
+
     createModal.style.display = "block";
     document.getElementById("date").value = date
         ? date.toISOString().split("T")[0]
@@ -281,7 +282,8 @@ async function loadEventForSelectedDate(selectedDate) {
 
         if (response.data.message === "해당 날짜에 등록된 일정이 없습니다.") {
             console.log("일정을 등록해주세요");
-            return openModal(selectedDate);
+            // 일정이 없는 경우, 빈 목록과 "일정 생성" 버튼을 보여줌
+            openTitleModal([]);
         } else {
             const existDate = response.data.data.calenders;
 
@@ -340,7 +342,7 @@ function openTitleModal(existDate) {
     // 생성 버튼에 클릭 이벤트 추가
     const createCalendarBtn = document.getElementById("createCalendarBtn");
     createCalendarBtn.addEventListener("click", function (event) {
-        openModal(existDate[0].date);
+        openModal(existDate.length > 0 ? existDate[0].date : selectedDate);
         titleModal.style.display = "none";
     });
 

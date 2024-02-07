@@ -4,7 +4,7 @@
     padding: 10px;
     display: grid;
     grid-template-areas: "text date delete";
-    grid-template-columns: 5fr 0.8fr 0.2fr;
+    grid-template-columns: 4.8fr 1fr 0.2fr;
 }
 .delete-button {
     cursor: pointer;
@@ -39,8 +39,4 @@
 
 .created-at {
     padding-top: 5px;
-}
-
-.delete-button {
-    margin-bottom: 8px;
 }

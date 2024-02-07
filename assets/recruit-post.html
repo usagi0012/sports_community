@@ -1,43 +1,63 @@
 <!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Onong Recruit Create</title>
+        <meta name="description" content="Onong RecruitCreatePage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <link rel="stylesheet" href="css/dropBar.css" />
+        <link rel="stylesheet" href="./css/recruit-post.css" />
+        <script
+            async
+            src="https://code.jquery.com/jquery-3.6.4.min.js"
+        ></script>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Onog Recruit Create</title>
-    <meta name="description" content="Onog RecruitCreatePage" />
-    <link rel="icon" href="./resources/favicon.ico" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer"
-    />
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <link rel="stylesheet" href="css/dropBar.css" />
-    <link rel="stylesheet" href="./css/recruit-post.css" />
-    <script async src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script
+            type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils"
+        ></script>
+        <script
+            type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils&submodules=geocoder"
+        ></script>
+        <style></style>
+    </head>
 
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils"></script>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils&submodules=geocoder"></script>
-    <style></style>
-</head>
-
-<body>
-    <div id="sameContainer"></div>
-    <div class="bodyContainer">
-        <div class="mainContainer" id="mainContainer">
-            <label class="titleLabel">모집 글 작성</label>
-            <div id="contentContainer">
-                <div class="title">
-                    <dl>
-                        <dt>제목</dt>
-                        <dd>
-                            <input id="inputTitle" type="text" placeholder="제목을 입력하세요" />
-                        </dd>
-                    </dl>
-                </div>
-                <div class="info">
-                    <dl class="region">
-                        <dt>지역</dt>
-                        <dd>
-                            <select id="regionSelect" placeholder="지역을 선택해주세요.">
+    <body>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer" id="mainContainer">
+                <label class="titleLabel">모집 글 작성</label>
+                <div id="contentContainer">
+                    <div class="title">
+                        <dl>
+                            <dt>제목</dt>
+                            <dd>
+                                <input
+                                    id="inputTitle"
+                                    type="text"
+                                    placeholder="제목을 입력하세요"
+                                />
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="info">
+                        <dl class="region">
+                            <dt>지역</dt>
+                            <dd>
+                                <select
+                                    id="regionSelect"
+                                    placeholder="지역을 선택해주세요."
+                                >
                                     <option value="0">서울</option>
                                     <option value="1">부산</option>
                                     <option value="2">대구</option>
@@ -56,49 +76,51 @@
                                     <option value="15">전라남도</option>
                                     <option value="16">제주도</option>
                                 </select>
-                        </dd>
-                    </dl>
-                    <dl class="gps">
-                        <dt>gps</dt>
-                        <dd id="gpsBtn">
-                            <button onclick="openMapModal()">지도</button>
-                            <input id="input-gps" type="text" readonly />
-                        </dd>
-                    </dl>
-                    <dl class="gamedate">
-                        <dt>경기 시간</dt>
-                        <div class="dateContainer">
-                            <dd>
-                                <input id="input-gamedate" type="date" placeholder="경기 날짜를 입력하세요" type="datetime-local" placeholder="경기 시작 시간을 입력하세요." />
                             </dd>
-                            <dd id="blank">~</dd>
+                        </dl>
+                        <dl class="gps">
+                            <dt>gps</dt>
+                            <dd id="gpsBtn">
+                                <button onclick="openMapModal()">지도</button>
+                                <input id="input-gps" type="text" readonly />
+                            </dd>
+                        </dl>
+                        <dl class="gamedate">
+                            <dt>경기 시작 시간</dt>
                             <dd>
-                                <label for="input-runtime-hours">런닝타임 (시간):</label
-                                    >
-                                    <input
-                                        id="input-runtime-hours"
-                                        type="number"
-                                        placeholder="시간"
-                                        min="0"
-                                        step="1"
-                                    />
-                                </dd>
-                            </dl>
-                            <dl>
-                                <dt>경기규칙</dt>
-                                <dd>
-                                    <select
-                                        id="ruleSelect"
-                                        placeholder="경기 규칙을 선택하세요"
-                                    >
-                                        <option value="3대3">3대3</option>
-                                        <option value="4대4">4대4</option>
-                                        <option value="5대5">5대5</option>
-                                    </select>
-                                </dd>
-                            </dl>
-                            <dl>
-
+                                <input
+                                    id="input-gamedate"
+                                    placeholder="경기 날짜를 입력하세요"
+                                    type="datetime-local"
+                                    placeholder="경기 시작 시간을 입력하세요."
+                                />
+                            </dd>
+                        </dl>
+                        <dl class="runtime">
+                            <dt>런타임 (경기 시간)</dt>
+                            <dd>
+                                <input
+                                    id="input-runtime-hours"
+                                    type="number"
+                                    placeholder="시간"
+                                    min="0"
+                                    step="1"
+                                />
+                            </dd>
+                        </dl>
+                        <dl class="rule">
+                            <dt>경기규칙</dt>
+                            <dd>
+                                <select
+                                    id="ruleSelect"
+                                    placeholder="경기 규칙을 선택하세요"
+                                >
+                                    <option value="3대3">3대3</option>
+                                    <option value="4대4">4대4</option>
+                                    <option value="5대5">5대5</option>
+                                </select>
+                            </dd>
+                        </dl>
                         <dl class="totalmember">
                             <dt>모집인원</dt>
                             <dd>
@@ -157,17 +179,14 @@
                 </div>
             </div>
         </div>
-
         <script>
             function roadAddress() {
                 const roadAddress = $("#confirmDORO").text();
                 $("#input-gps").val(roadAddress);
-
                 if (roadAddress) {
                     closeMapModal();
                 }
             }
-
             function jibunAddress() {
                 const jibunAddress = $("#confirmJUSO").text();
                 $("#input-gps").val(jibunAddress);
@@ -175,7 +194,6 @@
                     closeMapModal();
                 }
             }
-
             function openMapModal() {
                 const modal = $("#mapModal");
                 const sameContainer = $("#sameContainer");
@@ -184,19 +202,15 @@
                 sameContainer.css("z-index", 1);
                 footer.css("z-index", 1);
             }
-
             function closeMapModal() {
                 const modal = $("#mapModal");
                 modal.css("display", "none");
             }
         </script>
         <div class="footer" id="footer"></div>
-
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/recruit-post.js"></script>
-
         <script src="js/map.js"></script>
-
         <script src="./js/dropmenu.js"></script>
         <script src="./js/notification.js"></script>
     </body>
