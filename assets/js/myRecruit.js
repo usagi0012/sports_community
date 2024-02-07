@@ -234,7 +234,9 @@ function createGuestHTML(guest) {
     </button>
     `;
 }
-
+{
+    /* <span class="guestName" onclick="createModal('${guest.guestId}')">${guest.guestName}</span> */
+}
 function createButtonHTML(guest) {
     return `
         <div>
