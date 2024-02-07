@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Club } from "../entity/club.entity";
 import { UserService } from "../user/user.service";
-import { Repository } from "typeorm";
+import { FindManyOptions, FindOptions, Repository } from "typeorm";
 import { CreateClubDto } from "./dto/createClub.dto";
 import { UpdateClubDto } from "./dto/updateClub.dto";
 import { AwsService } from "../aws/aws.service";
@@ -63,45 +63,61 @@ export class ClubService {
 
         let clubs;
         let total;
-
+        let findOption: FindManyOptions<Club> = {
+            select: ["id", "name", "region", "masterId", "score", "createdAt"],
+            relations: ["users"],
+            take: 30,
+            skip: 0,
+        };
         switch (sortBy) {
             case "region":
-                [clubs, total] = await this.clubRepository.findAndCount({
-                    select: ["id", "name", "region", "masterId", "score"],
-                    relations: ["users"],
-                    where: { region: region },
-                    take: 30,
-                    skip: 0,
-                });
-                console.log("clubs", clubs);
+                findOption = { ...findOption, where: { region } };
+                // [clubs, total] = await this.clubRepository.findAndCount({
+                //         select: ["id", "name", "region", "masterId", "score"],
+                //         relations: ["users"],
+                //         where: { region: region },
+                //         take: 30,
+                //         skip: 0,
+                //     });
+                //     console.log("clubs", clubs);
                 break;
             case "latest":
-                [clubs, total] = await this.clubRepository.findAndCount({
-                    select: ["id", "name", "region", "masterId", "score"],
-                    relations: ["users"],
-                    order: { createdAt: "DESC" },
-                    take: 30,
-                    skip: 0,
-                });
+                findOption = { ...findOption, order: { createdAt: "desc" } };
+                // [clubs, total] = await this.clubRepository.findAndCount({
+                //     select: [
+                //         "id",
+                //         "name",
+                //         "region",
+                //         "masterId",
+                //         "score",
+                //         "createdAt",
+                //     ],
+                //     relations: ["users"],
+                //     order: { createdAt: "desc" },
+                //     take: 30,
+                //     skip: 0,
+                // });
                 break;
             case "score":
-                [clubs, total] = await this.clubRepository.findAndCount({
-                    select: ["id", "name", "region", "masterId", "score"],
-                    relations: ["users"],
-                    order: { score: "desc" },
-                    take: 30,
-                    skip: 0,
-                });
+                findOption = { ...findOption, order: { score: "desc" } };
+                // [clubs, total] = await this.clubRepository.findAndCount({
+                //     select: ["id", "name", "region", "masterId", "score"],
+                //     relations: ["users"],
+                //     order: { score: "desc" },
+                //     take: 30,
+                //     skip: 0,
+                // });
                 break;
-            default:
-                [clubs, total] = await this.clubRepository.findAndCount({
-                    select: ["id", "name", "region", "masterId", "score"],
-                    relations: ["users"],
-                    take: 30,
-                    skip: 0,
-                });
-                break;
+            // default:
+            //     [clubs, total] = await this.clubRepository.findAndCount({
+            //         select: ["id", "name", "region", "masterId", "score"],
+            //         relations: ["users"],
+            //         take: 30,
+            //         skip: 0,
+            //     });
+            //     break;
         }
+        [clubs, total] = await this.clubRepository.findAndCount(findOption);
         console.log("club잘 뽑아짐?", clubs);
         const clubsWithMasterNames = await Promise.all(
             clubs.map(async (club) => {
