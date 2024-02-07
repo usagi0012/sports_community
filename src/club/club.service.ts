@@ -28,38 +28,10 @@ export class ClubService {
         private readonly awsService: AwsService,
     ) {}
 
-    // async getAllClubs() {
-    // const clubs = await this.clubRepository.find({
-    //     select: ["id", "name", "region", "masterId", "score"],
-    //     relations: ["users"], // Include the users relation
-    // });
-
-    //     const clubsWithMasterNames = await Promise.all(
-    //         clubs.map(async (club) => {
-    //             const master = club.users.find(
-    //                 (user) => user.id === club.masterId,
-    //             );
-
-    //             return {
-    //                 ...club,
-    //                 masterName: master ? master.name : null,
-    //             };
-    //         }),
-    //     );
-
-    //     return clubsWithMasterNames;
-    // }
-
     // take랑 skip 배분을 잘 해줘야 값이 뜨ㅡ네;;
     async getAllClubs(sortBy, region, page: number, itemsPerPage: number = 30) {
         const skip = (page - 1) * itemsPerPage;
         console.log("region***", region);
-        // const [clubs, total] = await this.clubRepository.findAndCount({
-        //     select: ["id", "name", "region", "masterId", "score"],
-        //     relations: ["users"],
-        //     take: 30,
-        //     skip: 0,
-        // });
 
         let clubs;
         let total;
@@ -72,53 +44,18 @@ export class ClubService {
         switch (sortBy) {
             case "region":
                 findOption = { ...findOption, where: { region } };
-                // [clubs, total] = await this.clubRepository.findAndCount({
-                //         select: ["id", "name", "region", "masterId", "score"],
-                //         relations: ["users"],
-                //         where: { region: region },
-                //         take: 30,
-                //         skip: 0,
-                //     });
-                //     console.log("clubs", clubs);
                 break;
             case "latest":
                 findOption = { ...findOption, order: { createdAt: "desc" } };
-                // [clubs, total] = await this.clubRepository.findAndCount({
-                //     select: [
-                //         "id",
-                //         "name",
-                //         "region",
-                //         "masterId",
-                //         "score",
-                //         "createdAt",
-                //     ],
-                //     relations: ["users"],
-                //     order: { createdAt: "desc" },
-                //     take: 30,
-                //     skip: 0,
-                // });
                 break;
             case "score":
                 findOption = { ...findOption, order: { score: "desc" } };
-                // [clubs, total] = await this.clubRepository.findAndCount({
-                //     select: ["id", "name", "region", "masterId", "score"],
-                //     relations: ["users"],
-                //     order: { score: "desc" },
-                //     take: 30,
-                //     skip: 0,
-                // });
                 break;
-            // default:
-            //     [clubs, total] = await this.clubRepository.findAndCount({
-            //         select: ["id", "name", "region", "masterId", "score"],
-            //         relations: ["users"],
-            //         take: 30,
-            //         skip: 0,
-            //     });
-            //     break;
         }
+        // 조건에 맞게 조회하기(순서, 지역)
         [clubs, total] = await this.clubRepository.findAndCount(findOption);
-        console.log("club잘 뽑아짐?", clubs);
+        console.log("clubs", clubs);
+
         const clubsWithMasterNames = await Promise.all(
             clubs.map(async (club) => {
                 const master = club.users.find(
@@ -132,14 +69,6 @@ export class ClubService {
             }),
         );
 
-        // console.log("?!?", {
-        //     data: clubsWithMasterNames,
-        //     meta: {
-        //         total,
-        //         page,
-        //         last_page: Math.ceil(total / 30),
-        //     },
-        // });
         return {
             data: clubsWithMasterNames,
             meta: {

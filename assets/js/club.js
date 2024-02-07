@@ -42,8 +42,6 @@ function getClub(sortBy) {
         .then(function (response) {
             console.log("*******", response);
             response.data.data.forEach((club) => {
-                console.log("club", club);
-                console.log("clubId입니다", club.id);
                 const clubListDiv = document.querySelector(".club-list");
 
                 const clubInfoDiv = document.createElement("div");
