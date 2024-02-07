@@ -1,3 +1,8 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+};
+
 //guest매치 조회하기
 async function getGuestMatch() {
     const accessToken = localStorage.getItem("accessToken");

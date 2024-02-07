@@ -1,3 +1,47 @@
+/* 메인 컨테이너*/
+
+.titleContainer {
+    margin-top: 80px;
+    width: 100%;
+    min-height: 50px;
+    margin-bottom: 0px;
+}
+
+.titleFlex {
+    width: 100%;
+    display: flex;
+    float: left;
+    height: 50px;
+}
+
+h3 {
+    padding: 10px 0px 7px;
+    margin: 0px;
+}
+
+#myClubHostMatch,
+#myClubGuestMatch {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid #ff771c;
+    background-color: #fff;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    cursor: pointer;
+}
+
+#myClubHostMatch {
+    background-color: #ff771c;
+    color: #fff;
+}
+
+.mainContainer {
+    margin: 0px auto 10px;
+    border: 1px solid #ff771c;
+    min-height: 20rem;
+}
+
 /* 모달창 */
 
 #hostMatchModal {

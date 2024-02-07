@@ -227,6 +227,34 @@
     font-size: 20px;
 }
 
+.form-group > input {
+    width: 470px;
+    background-color: #eeeeee;
+    border-radius: 10px;
+    color: #000000;
+    margin: 10px 20px 10px 10px;
+    padding: 0px 10px;
+}
+
+.btnBox {
+    width: 100%;
+    text-align: center;
+}
+
+.btnBox > button {
+    font-family: "LINESeedKR-Bd";
+    border-radius: 7px;
+    height: 25px;
+    padding-top: 5px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.btnBox > button:hover {
+    background-color: #ffb13d;
+}
+
 #expelMember-modal-overlay {
     display: none;
 }

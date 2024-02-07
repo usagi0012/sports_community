@@ -31,45 +31,38 @@
                 </div>
             </div>
             <div class="mainContainer" id="mainContainer">
-                <div>
+                <div id="myMatch-info">
                     <div id="myMatch"></div>
-                </div>
-                <div class="custom-modal" id="exampleModal">
-                    <div class="modal-dialog" id="myMatchUser">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1
-                                    class="modal-title fs-5"
-                                    id="exampleModalLabel"
-                                >
-                                    경기정보
-                                </h1>
-                                <button
-                                    type="button"
-                                    onclick="closeModal()"
-                                ></button>
-                            </div>
-                            <div class="modal-body">
-                                <div id="matchInfo"></div>
-                                <div id="matchButtons"></div>
-                            </div>
-                            <div class="modal-body">
-                                <h2>경기 참석 유저</h2>
-                                <div id="matchUser"></div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" onclick="closeModal()">
-                                    닫기
-                                </button>
-                                <div class="userButton" id="userButton"></div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
 
         <div class="footer" id="footer"></div>
+        <div class="custom-modal" id="exampleModal">
+            <div class="modal-dialog" id="myMatchUser">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            경기정보
+                        </h1>
+                    </div>
+                    <div class="modal-body">
+                        <div id="matchInfo"></div>
+                        <div id="matchButtons"></div>
+                    </div>
+                    <div class="modal-body">
+                        <h2>경기 참석 유저</h2>
+                        <div id="matchUser"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="userButton" id="userButton"></div>
+                        <button type="button" onclick="closeModal()">
+                            닫기
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/myMatch.js"></script>
