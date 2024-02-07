@@ -10,19 +10,36 @@
             type="text/css"
             rel="stylesheet"
         /> -->
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
         <link rel="stylesheet" href="/css/style.css" type="text/css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
         <script
             src="https://cdn.socket.io/3.1.3/socket.io.min.js"
             integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
             crossorigin="anonymous"
         ></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    </head> -->
+        <!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script> -->
+    </head>
 
     <body>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer">
         <div class="container">
-            <h3 class="text-center">Messaging</h3>
+            <h3 class="text-center">Onong
+                <div class="btn-container">
+                    <button type="button" id="invite-modal-btn">초대</button>
+                    <button type="button" id="expel-modal-btn">추방</button>
+                </div>
+            </h3>
             <div class="messaging">
                 <div class="inbox_msg">
                     <div class="inbox_people">
@@ -51,39 +68,31 @@
                         <div class="inbox_chat chatRoomList"></div>
                     </div>
                     <div class="mesgs">
-                        <div class="msg_history chat">fff</div>
+                        <div class="msg_history chat"></div>
                         <div class="type_msg">
                             <div class="input_msg_write">
                                 <input
                                     type="text"
                                     class="write_msg"
-                                    placeholder="Type a message"
+                                    placeholder="   메세지를 입력하세요"
                                 />
-                                <button type="button" id="invite-modal-btn">
-                                    초대
-                                </button>
-                                <button type="button" id="expel-modal-btn">
-                                    추방
-                                </button>
                                 <button
                                     class="msg_send_btn sendMessage"
                                     type="button"
                                 >
-                                    <i
-                                        class="fa fa-paper-plane-o"
-                                        aria-hidden="true"
-                                    ></i>
+                                전송
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <p class="text-center top_spac">
-                   
-                </p>
+                <p class="text-center2 top_spac"></p>
             </div>
         </div>
+    </div>
+</div>
+<div class="footer" id="footer"></div>
         <div id="invite-modal-overlay">
             <div id="modal">
                 <label for="nickname">초대할 유저 닉네임: </label>
@@ -110,30 +119,18 @@
                 <button id="expel-close-btn">닫기</button>
             </div>
         </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/dropmenu.js" defer></script>
     </body>
-    <!--
-    <body>
-        <div>
-            <h3>채팅방 목록</h3><br/>
-            <ul class="chatRoomList">
-            </ul>
-            <button class="createChatRoom">채팅방 만들기</button>
-        </div>
-        <div>
-            <h3>"<span class="roomName"></span>" 채팅내용</h3><br/>
-            <ul class="chat">
-            </ul>
-        </div>
-        <input type="text" class="text"/>
-        <button class="sendMessage">sned</button>
-        <br/>
-        <input type="text" class="nickname"/>
-        <button class="setNickname">setNickname</button>
-        <script>
-        </script>
-    </body>-->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
     <script>
+        window.onload = function () {
+            loadHeader();
+            loadFooter();
+        };
         // 내가 채팅방의 생성자인 경우에만 멤버 초대하기  가능
         function showButton() {
             const roomId = localStorage.getItem("thisRoomId");
@@ -188,8 +185,8 @@
                             html += '<div class="sent_msg">';
                             html += "<p>" + message.content + "</p>";
                             // html += timeDate;
-                            html += `${message.userId} | `;
-                            html += `${message.createdAt.slice(11, 16)} | `;
+                            html += `${message.userId}    | `;
+                            html += `${message.createdAt.slice(11, 16)}    | `;
                             html += message.createdAt.slice(0, 10);
                             html += "</div>";
                             html += "</div>";
@@ -199,8 +196,8 @@
                             html += '<div class="received_withd_msg">';
                             html += "<p>" + message.content + "</p>";
                             // html += timeDate;
-                            html += `${message.userId} | `;
-                            html += `${message.createdAt.slice(11, 16)} | `;
+                            html += `${message.userId}    | `;
+                            html += `${message.createdAt.slice(11, 16)}    | `;
                             html += message.createdAt.slice(0, 10);
                             html += "</div>";
                             html += "</div>";
@@ -392,7 +389,7 @@
         });
 
         // 채팅방 입장
-        $(document).on("click", ".enterChatRoom", function () {
+        $(document).on("click", ".enterChatRoom", function (event) {
             const thisRoomId = $(this).attr("data-roomId");
             const roomId = localStorage.getItem("thisRoomId");
             console.log("enter시 룸 아이디", roomId);
@@ -402,6 +399,13 @@
                 $(".roomName").text(myInfo.room.roomName);
                 $(".chat").html("");
             });
+
+            // 클릭된 요소의 텍스트 가져오기
+            const clickedText = $(this).text();
+
+            // 'title' 요소의 'innerHTML'로 설정
+            $(".recent_heading").children(":first").html(clickedText);
+
             //null 필요 x (API로 대체)
             socket.emit("getChatRoomList", null);
             showButton();
