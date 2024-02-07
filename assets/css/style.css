@@ -322,3 +322,9 @@ img {
     grid-template-columns: 1fr 1fr;
     text-align: center;
 }
+
+.centered-text-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

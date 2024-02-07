@@ -21,6 +21,7 @@ export class ChatInvitationController {
     ) {}
 
     // 방의 주인인지 확인해야 함.
+    // 채팅방 초대
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Post("/:roomId")
@@ -44,15 +45,15 @@ export class ChatInvitationController {
                 data: invitation,
             };
         } catch (error) {
+            console.log("zz", error.message);
             return {
-                statusCode: 400,
-                message: "멤버 초대에 실패했습니다.",
-                error: error.meessage,
+                data: `${error.message}`,
             };
         }
     }
 
     // 방의 주인인지 확인해야함.
+    // 채팅방 추방
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Delete("/:roomId")

@@ -37,7 +37,7 @@
                     </button>
 
                     <!-- 내 동아리 들어가면 동아리 삭제 버튼 띄우기 -->
-                    <button class="deleteBtn" onclick="deleteCheck()">
+                    <button class="deleteBtn" onclick="confirmDelete()">
                         동아리 삭제
                     </button>
                 </div>
@@ -162,6 +162,17 @@
                     });
             }
 
+            function confirmDelete() {
+                let result = confirm("동아리를 정말로 삭제하시겠습니까?");
+                if (result) {
+                    console.log("확인 누름");
+                    deleteCheck();
+                } else {
+                    console.log("취소 누름");
+                    alert("동아리 삭제를 취소했습니다.");
+                }
+            }
+
             function deleteCheck() {
                 // alert(`${clubNameDiv} 동아리를 정말로 삭제하시겠습니까?`);
                 const urlParams = new URLSearchParams(window.location.search);
@@ -185,6 +196,7 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                        alert("동아리 삭제에 실패했습니다.");
 
                         // if (error.response.data.message === "Unauthorized") {
                         //     alert("동아리 생성자만 삭제할 수 있습니다.");

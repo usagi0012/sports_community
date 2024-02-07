@@ -55,7 +55,7 @@ export class ChatInvitationService {
             where: { userId: memberId, chatId: roomId },
         });
         if (joinedUser) {
-            throw new Error("이미 채팅방에 존재하는 유저입니다.");
+            throw new ForbiddenException("이미 채팅방에 존재하는 유저입니다.");
         }
         const invitation = await this.participantsRepository.save({
             userId: memberId,

@@ -357,5 +357,10 @@ async function toLogin() {
 
 // 채팅방 페이지로 가기
 function toChat() {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+        alert("로그인 후 이용가능합니다.");
+        return;
+    }
     window.location.href = "chatRoom.html";
 }

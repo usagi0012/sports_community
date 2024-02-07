@@ -36,8 +36,8 @@
         <div class="container">
             <h3 class="text-center">Onong
                 <div class="btn-container">
-                    <button type="button" id="invite-modal-btn">초대</button>
-                    <button type="button" id="expel-modal-btn">추방</button>
+                    <button type="button" id="invite-modal-btn" class="centered-text-button">초대</button>
+                    <button type="button" id="expel-modal-btn" class="centered-text-button">추방</button>
                 </div>
             </h3>
             <div class="messaging">
@@ -70,19 +70,22 @@
                     <div class="mesgs">
                         <div class="msg_history chat"></div>
                         <div class="type_msg">
+                            <form class="msg-form">
                             <div class="input_msg_write">
                                 <input
                                     type="text"
                                     class="write_msg"
+                                    id="input-message"
                                     placeholder="   메세지를 입력하세요"
                                 />
                                 <button
                                     class="msg_send_btn sendMessage"
-                                    type="button"
+                                    type="submit"
                                 >
                                 전송
                                 </button>
                             </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -130,13 +133,15 @@
         window.onload = function () {
             loadHeader();
             loadFooter();
+            $("#invite-modal-btn").css("display", "none");
+            $("#expel-modal-btn").css("display", "none");
         };
         // 내가 채팅방의 생성자인 경우에만 멤버 초대하기  가능
         function showButton() {
             const roomId = localStorage.getItem("thisRoomId");
             // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
             const accessToken = localStorage.getItem("accessToken");
-
+            console.log("====roomId====",roomId)
             axios
                 .get(`/api/chat-invitation/${roomId}`, {
                     headers: {
@@ -145,7 +150,7 @@
                 })
                 .then(function (response) {
                     console.log("****리스폰스****", response);
-                    if (response.data.data) {
+                    if (response.data.data && roomId) {
                         console.log("****");
                         console.log("response.data.data", response.data.data);
                         $("#invite-modal-btn").css("display", "flex");
@@ -428,15 +433,16 @@
             $("#expel-modal-overlay").css("display", "none");
         });
 
-        // 모달 제출 버튼
-        $("#submit-btn").on("click", function () {
+        $(".msg-form").on("submit", function (e) {
+            e.preventDefault(); // 폼의 기본 동작 방지
+
             console.log("submit");
 
-            const nickName = $("#nickname").val();
+            const nickName = $("#input-message").val();
             const roomId = localStorage.getItem("thisRoomId");
             // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
             const accessToken = localStorage.getItem("accessToken");
-
+            console.log("====roomId====",roomId)
             axios
                 .post(
                     `/api/chat-invitation/${roomId}`,
@@ -451,13 +457,59 @@
                 )
                 .then(function (response) {
                     console.log(response);
+                    if(response.data.data == "존재하지 않는 유저입니다."){
+                        alert("채팅방에 존재하지 않는 멤버입니다.");
+                        return;
+                    }
+
                     alert("멤버 초대에 성공했습니다.");
                 })
                 .catch(function (error) {
                     console.log(error);
                     alert("멤버 초대에 실패했습니다.");
                 });
+            });
+
+        // 버튼 클릭 이벤트 (선택 사항)
+        $("#submit-btn").on("click", function () {
+            $("#myForm").submit(); // 폼 제출
         });
+
+        // 모달 제출 버튼
+        // $("#submit-btn").on("click", function () {
+        //     console.log("submit");
+
+        //     const nickName = $("#nickname").val();
+        //     const roomId = localStorage.getItem("thisRoomId");
+        //     // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
+        //     const accessToken = localStorage.getItem("accessToken");
+        //     console.log("====roomId====",roomId)
+        //     axios
+        //         .post(
+        //             `/api/chat-invitation/${roomId}`,
+        //             {
+        //                 nickName,
+        //             },
+        //             {
+        //                 headers: {
+        //                     Authorization: `Bearer ${accessToken}`,
+        //                 },
+        //             },
+        //         )
+        //         .then(function (response) {
+        //             console.log(response);
+        //             if(response.data.data == "존재하지 않는 유저입니다."){
+        //                 alert("채팅방에 존재하지 않는 멤버입니다.");
+        //                 return;
+        //             }
+
+        //             alert("멤버 초대에 성공했습니다.");
+        //         })
+        //         .catch(function (error) {
+        //             console.log(error);
+        //             alert("멤버 초대에 실패했습니다.");
+        //         });
+        // });
 
         $("#expel-submit-btn").on("click", function () {
             console.log("expel-submit");
@@ -477,7 +529,11 @@
                     },
                 })
                 .then(function (response) {
-                    console.log(response);
+                    console.log("==추방==",response);
+                    if(response.data.error) {
+                        alert(`${response.data.error}`)
+                        return;
+                    }
                     alert("멤버 추방이 완료되었습니다.");
                 })
                 .catch(function (error) {
