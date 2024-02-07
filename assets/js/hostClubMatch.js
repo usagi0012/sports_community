@@ -1,3 +1,8 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+};
+
 async function displayHostClubMatchInfo() {
     try {
         const accessToken = localStorage.getItem("accessToken");

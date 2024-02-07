@@ -258,6 +258,14 @@ async function toMyMatch() {
 async function toClub() {
     window.location.href = "club.html";
 }
+//동아리 매치 호스트 페이지로 이동
+async function toMyClubHostMatch() {
+    window.location.href = "hostClubMatch.html";
+}
+//동아리 매치 게스트 페이지로 이동
+async function toMyClubGuestMatch() {
+    window.location.href = "guestClubMatch.html";
+}
 //내 동아리 페이지로 이동
 async function toMyClub() {
     const token = localStorage.getItem("accessToken");

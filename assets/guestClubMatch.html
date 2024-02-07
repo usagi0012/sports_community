@@ -3,17 +3,38 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-
+        <title>Onong My Club Match</title>
+        <meta name="description" content="Onong Club Match Page" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="css/dropBar.css" />
         <link rel="stylesheet" href="./css/guestClubMatch.css" />
     </head>
 
     <body onload="getGuestMatch()">
-        <div>
-            <h2>내가 보낸 클럽 매치</h2>
-            <div id="guestClubMatch"></div>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="titleContainer">
+                <div class="titleFlex">
+                    <h3 id="myClubHostMatch" onclick="toMyClubHostMatch()">
+                        내가 받은 클럽매치
+                    </h3>
+                    <h3 id="myClubGuestMatch" onclick="toMyClubGuestMatch()">
+                        내가 신청한 매치
+                    </h3>
+                </div>
+            </div>
+            <div class="mainContainer" id="mainContainer">
+                <div id="guestClubMatch"></div>
+            </div>
         </div>
 
+        <div class="footer" id="footer"></div>
         <div class="modal" id="guestMatchModal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -37,5 +58,6 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/guestClubMatch.js"></script>
         <script src="./js/notification.js"></script>
+        <script src="./js/dropmenu.js"></script>
     </body>
 </html>

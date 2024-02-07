@@ -198,7 +198,7 @@
         <!-- 클럽매치 모달창 -->
         <div id="clubMatchModal" class="modal">
             <div id="modalContainer"></div>
-            <div class="modal-content" style="width: 400px">
+            <div class="modal-content" style="width: 500px">
                 <div class="modal-body">
                     <form
                         id="clubMatchForm"
@@ -244,11 +244,14 @@
                                 required
                             />
                         </div>
-
-                        <button type="submit">Submit</button>
+                        <div class="btnBox">
+                            <button type="submit">Submit</button>
+                            <button onclick="closeClubMatchModal()">
+                                닫기
+                            </button>
+                        </div>
                     </form>
                 </div>
-                <button onclick="closeClubMatchModal()">닫기</button>
             </div>
         </div>
         <!-- 클럽매치 모달창 -->
