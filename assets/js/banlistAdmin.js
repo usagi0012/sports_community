@@ -151,10 +151,12 @@ async function confirmAction(banUserId, reportId) {
             case "penalty":
                 await handleAction("penalty", banUserId, reportId);
                 showFeedback("징계 처리 완료하였습니다.");
+                window.location.reload();
                 break;
             case "permanentBan":
                 await handleAction("permanentBan", banUserId, reportId);
                 showFeedback("영구 벤 처리 완료하였습니다.");
+                window.location.reload();
                 break;
             default:
                 console.error("Invalid option");

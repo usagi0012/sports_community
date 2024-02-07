@@ -58,7 +58,7 @@ export class ReportController {
     }
 
     //APPROVE/CANCEL된 리포트 컴펌하여 삭제하기
-    @Put("me/:reportId")
+    @Delete("me/confirm/:reportId")
     async confirmBan(
         @UserId() userId: number,
         @Param("reportId") reportId: number,

@@ -15,6 +15,7 @@ export enum ActionType {
     PENALTY = "penalty",
     PERMANENT_BAN = "permanentBan",
 }
+import moment from "moment-timezone";
 
 @Entity({
     name: "banlist",
@@ -43,11 +44,14 @@ export class Banlist {
     duration?: Date;
 
     static setDurationFromNumber(numberValue: number): Date {
-        const currentDate = new Date();
-        const futureDate = new Date(
-            currentDate.getTime() + numberValue * 24 * 60 * 60 * 1000,
-        );
+        const now = moment();
+        const korNow = now.tz("Asia/Seoul");
 
-        return new Date(futureDate.toDateString());
+        console.log(korNow.format());
+
+        const futureDate = korNow.clone().add(numberValue, "days");
+
+        console.log(futureDate.format());
+        return futureDate.toDate();
     }
 }

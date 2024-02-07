@@ -7,7 +7,11 @@ import { PenaltyDTO } from "./dto/penalty.dto";
 import { ActionType, Banlist } from "./../entity/banlist.entity";
 import { LessThan, Repository } from "typeorm";
 import { Cron, CronExpression } from "@nestjs/schedule";
-Banlist;
+
+const now = new Date();
+const utc = now.getTime();
+const koreaTimeDiff = 9 * 60 * 60 * 1000;
+const korNow = new Date(utc + koreaTimeDiff);
 @Injectable()
 export class BanlistService {
     constructor(
@@ -16,6 +20,7 @@ export class BanlistService {
         @InjectRepository(Banlist)
         private banlistRepository: Repository<Banlist>,
     ) {}
+
     // 신고받은 회원 경고하기
     async warningUser(userId: number, banUserId: number) {
         try {
@@ -51,11 +56,13 @@ export class BanlistService {
             const banlist = new Banlist();
             banlist.actionType = ActionType.PENALTY;
             banlist.banListUser = banListUser;
+
             banlist.duration = Banlist.setDurationFromNumber(
                 penaltyDTO.duration,
             );
 
             console.log(banlist.duration);
+            console.log(korNow);
 
             banListUser.userType = UserType.BANNED_USER;
 
