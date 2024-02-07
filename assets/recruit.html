@@ -42,9 +42,19 @@
         <div class="footer" id="footer"></div>
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script type="module" src="./js/recruit.js"></script>
+        <script type="module" src="./js/recruit.js" defer></script>
         <script src="./js/dropmenu.js"></script>
         <script src="./js/notification.js"></script>
         <script type="module" src="./js/otherUser-modal.js"></script>
+        <script>
+            function toRecruitPost() {
+                const accessToken = localStorage.getItem("accessToken");
+                if (!accessToken) {
+                    alert("로그인 후 이용 가능합니다.");
+                } else {
+                    window.location.href = "recruit-post.html";
+                }
+            }
+        </script>
     </body>
 </html>

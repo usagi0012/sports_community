@@ -289,6 +289,11 @@ async function toPlace() {
     window.location.href = "place.html";
 }
 
+//준비중
+function needUpdateFunction() {
+    alert("업데이트 예정 서비스입니다.");
+}
+
 //로그아웃 하기
 async function logout() {
     const accessToken = localStorage.getItem("accessToken");

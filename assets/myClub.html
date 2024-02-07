@@ -36,7 +36,9 @@
                         동아리 삭제
                     </button>
 
-                    <button class="matchManagement">대결 관리</button>
+                    <button class="matchManagement" onclick="toMyClubMatch()">
+                        대결 관리
+                    </button>
                 </div>
                 <div class="clubDetailContainer" id="clubDetailContainer">
                     <div class="firstRow">
@@ -62,6 +64,10 @@
         <script type="module" src="./js/myClub.js"></script>
         <script src="./js/dropmenu.js"></script>
         <script>
+            function toMyClubMatch() {
+                window.location.href = "hostClubMatch.html";
+            }
+
             function deleteCheck() {
                 // alert(`${clubNameDiv} 동아리를 정말로 삭제하시겠습니까?`);
                 const token = localStorage.getItem("accessToken");
