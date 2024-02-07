@@ -14,7 +14,8 @@ function loadHeader() {
     <div id="searchBox">
         <form>
             <fieldset>
-                <input type="search" /><button
+                <input type="search" maxlength="15"
+                 placeholder="최대 15글자 입력가능합니다."/><button
                     type="submit"
                     id="searchBtn"
                 >
@@ -283,6 +284,7 @@ async function toMyClub() {
             console.log("제발", response);
             if (response.data.data === true) {
                 alert("가입된 동아리가 없습니다.");
+                window.location.href = "myApplication.html";
             } else {
                 window.location.href = "myClub.html";
             }
@@ -355,5 +357,5 @@ async function toLogin() {
 
 // 채팅방 페이지로 가기
 function toChat() {
-    window.location.href = "view/chat";
+    window.location.href = "chatRoom.html";
 }
