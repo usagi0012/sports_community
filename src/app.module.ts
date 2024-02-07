@@ -28,6 +28,9 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { UserAlarmModule } from "./user-alarm/user-alarm.module";
 import { ChatInvitationModule } from "./chat-invitation/chat-invitation.module";
 import { MessageModule } from "./message/message.module";
+import { ReportModule } from "./report/report.module";
+import { BanlistModule } from "./banlist/banlist.module";
+
 
 @Module({
     imports: [
@@ -56,6 +59,8 @@ import { MessageModule } from "./message/message.module";
         UserAlarmModule,
         ChatInvitationModule,
         MessageModule,
+        ReportModule,
+        BanlistModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],

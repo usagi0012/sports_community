@@ -70,11 +70,21 @@ async function findHostClub(guestMatchId) {
         guestModalButtonContainer.innerHTML += guestModalButtonHTML;
         hostClubContainer.innerHTML += hostClubHTML + matchHtml;
 
-        $("#guestMatchModal").modal("show");
+        openModal();
     } catch (error) {
         console.error(error);
         alert(error.response.data);
     }
+}
+
+function openModal() {
+    const modal = document.getElementById("guestMatchModal");
+    modal.style.display = "block";
+}
+
+function closeModal() {
+    const modal = document.getElementById("guestMatchModal");
+    modal.style.display = "none";
 }
 
 function createMatchHTML(clubMatch) {
@@ -83,10 +93,14 @@ function createMatchHTML(clubMatch) {
         <h2>경기 정보</h2>
             <p><strong>Message:</strong> ${clubMatch.message}</p>
             <p><strong>Information:</strong> ${clubMatch.information}</p>
-            <p><strong>End Time:</strong> ${clubMatch.endTime}</p>
-            <p><strong>Game Date:</strong> ${clubMatch.gameDate}</p>
-            <p><strong>Guest Evaluation:</strong> ${clubMatch.guest_evaluate}</p>
-            <p><strong>Host Evaluation:</strong> ${clubMatch.host_evaluate}</p>
+            <p><strong>End Time:</strong> ${clubMatch.endTime.slice(
+                "T",
+                16,
+            )}</p>
+            <p><strong>Game Date:</strong> ${clubMatch.gameDate.slice(
+                "T",
+                16,
+            )}</p>
             <p><strong>Progress:</strong> ${clubMatch.progress}</p>
             <p><strong>Status:</strong> ${clubMatch.status}</p>
         </div>
@@ -111,23 +125,23 @@ function createHostClubHTML(hostClub) {
     `;
 }
 
-function createGuestModalButtonHTML(guestMatchId) {
+function createGuestModalButtonHTML(clubMatch) {
     return `
     <div class="GuestClubButton">
-        <button class="approveButton btn btn-danger" onclick="cancelGuestMatch(${guestMatchId})">취소하기</button>
-        <button class="rejectButton btn btn-success" onclick="confirmGuestMatch(${guestMatchId})")">컴펌하기</button>
-        <button class="deleteButton btn btn-danger" onclick="deleteGuestMatch(${guestMatchId})">삭제하기</button>
+        <button class="approveButton btn btn-danger" onclick="cancelGuestMatch(${clubMatch.id})">취소하기</button>
+        <button class="rejectButton btn btn-success" onclick="confirmGuestMatch(${clubMatch.id})")">컴펌하기</button>
+        <button class="deleteButton btn btn-danger" onclick="deleteGuestMatch(${clubMatch.id})">삭제하기</button>
     </div>
     `;
 }
 
 // 게스트 매치 취소하기
-async function cancelGuestMatch(guestMatchId) {
+async function cancelGuestMatch(clubMatchId) {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
         await axios.put(
-            `/api/clubmatch/guest/cancel/${guestMatchId}`,
+            `/api/clubmatch/guest/cancel/${clubMatchId}`,
             {
                 status: "취소",
             },
@@ -147,11 +161,11 @@ async function cancelGuestMatch(guestMatchId) {
 }
 
 //게스트 컴펌하기
-async function confirmGuestMatch(guestMatchId) {
+async function confirmGuestMatch(clubMatchId) {
     const accessToken = localStorage.getItem("accessToken");
     try {
         await axios.put(
-            `/api/clubmatch/guest/confirm/${guestMatchId}`,
+            `/api/clubmatch/guest/confirm/${clubMatchId}`,
             {},
             {
                 headers: {
@@ -170,11 +184,11 @@ async function confirmGuestMatch(guestMatchId) {
 }
 
 //guest 경기 평가 완료하기
-async function evaluateGuestMatch(guestMatchId) {
+async function evaluateGuestMatch(clubMatchId) {
     const accessToken = localStorage.getItem("accessToken");
     try {
         await axios.put(
-            `/api/clubmatch/guest/evaluate/${guestMatchId}`,
+            `/api/clubmatch/guest/evaluate/${clubMatchId}`,
             {},
             {
                 headers: {
@@ -193,10 +207,10 @@ async function evaluateGuestMatch(guestMatchId) {
 }
 
 //취소된 경기 삭제하기
-async function deleteGuestMatch(guestMatchId) {
+async function deleteGuestMatch(clubMatchId) {
     const accessToken = localStorage.getItem("accessToken");
     try {
-        await axios.delete(`/api/clubmatch/delete/${guestMatchId}`, {
+        await axios.delete(`/api/clubmatch/delete/${clubMatchId}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },

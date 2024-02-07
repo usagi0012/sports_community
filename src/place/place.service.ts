@@ -76,11 +76,14 @@ export class PlaceService {
     }
 
     //장소 불러오기
-    async showSpaces(page: number) {
+    async showSpaces(page: number, size: number) {
+        if (!size) {
+            size = 28;
+        }
         const [place, total] = await this.placeRepository.findAndCount({
             select: ["id", "name", "address", "image", "link"],
-            take: 28,
-            skip: (page - 1) * 28,
+            take: size,
+            skip: (page - 1) * size,
         });
 
         return {
@@ -88,7 +91,7 @@ export class PlaceService {
             meta: {
                 total,
                 page,
-                lastPage: Math.ceil(total / 28),
+                lastPage: Math.ceil(total / size),
             },
         };
     }
