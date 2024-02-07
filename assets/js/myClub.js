@@ -135,6 +135,9 @@ function getMyClubId() {
                         updateBtn.style.display = "block";
                         const deleteBtn = document.querySelector(".deleteBtn");
                         deleteBtn.style.display = "block";
+                        const expelMemberBtn =
+                            document.querySelector(".expelMemberBtn");
+                        expelMemberBtn.style.display = "block";
                         const myClubApplication =
                             document.querySelector(".myClubApplication");
                         myClubApplication.style.display = "block";
@@ -175,6 +178,9 @@ function isMyClub() {
                 updateBtn.style.display = "block";
                 const deleteBtn = document.querySelector(".deleteBtn");
                 deleteBtn.style.display = "block";
+                const expelMemberBtn =
+                    document.querySelector(".expelMemberBtn");
+                expelMemberBtn.style.display = "block";
             } else {
             }
         })

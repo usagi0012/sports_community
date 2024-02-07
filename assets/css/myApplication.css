@@ -4,8 +4,8 @@
 
 #buttonContainer {
     display: grid;
-    grid-template-areas: "match update delete . application expelMember withdraw";
-    grid-template-columns: 1fr 1fr 1fr 2fr 1fr 1fr 1fr;
+    grid-template-areas: "match update delete . application";
+    grid-template-columns: 1fr 1fr 1fr 4fr 1fr;
 }
 
 .matchBtn,
@@ -47,15 +47,6 @@
 
 .deleteBtn {
     grid-area: delete;
-    display: none;
-}
-
-.withdrawBtn {
-    grid-area: withdraw;
-}
-
-.expelMemberBtn {
-    grid-area: expelMember;
     display: none;
 }
 
@@ -225,8 +216,4 @@
     top: 10px;
     right: 15px;
     font-size: 20px;
-}
-
-#expelMember-modal-overlay {
-    display: none;
 }
