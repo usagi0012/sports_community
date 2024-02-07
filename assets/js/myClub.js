@@ -76,10 +76,14 @@ export default function getClubDetail(clubId) {
             createdAtDiv.appendChild(createdAt);
 
             const clubMasterDiv = document.querySelector(".clubMaster");
-            const clubMaster = document.createElement("div");
-            clubMaster.className = "clubMasterDetail";
-            clubMaster.innerHTML += `${response.data.users[0].name}`;
-            clubMasterDiv.appendChild(clubMaster);
+            const clubMasterDetail = document.createElement("div");
+            clubMasterDetail.className = "clubMasterDetail";
+            clubMasterDetail.innerHTML = `${response.data.users[0].name}`;
+            // 클릭 이벤트 리스너 등록
+            clubMasterDetail.addEventListener("click", function () {
+                createModal(response.data.users[0].id);
+            });
+            clubMasterDiv.appendChild(clubMasterDetail);
 
             const detailsDiv = document.querySelector(".details");
 

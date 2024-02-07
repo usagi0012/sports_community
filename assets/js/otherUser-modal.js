@@ -1,5 +1,5 @@
 // 모달 생성 함수
-export async function createModal(userId) {
+async function createModal(userId) {
     //userId를 통해서 userName 가져오기
     const accessToken = localStorage.getItem("accessToken");
 
@@ -22,10 +22,15 @@ export async function createModal(userId) {
     const userName = user.name;
     console.log("이름", userName);
 
+    // 이미 열려 있는 모달 찾기
     const existingModal = document.getElementById("userProfileModal");
     if (existingModal) {
-        existingModal.remove();
+        // 모달이 이미 열려 있다면 내용을 업데이트하고 리턴
+        updateModalContent(existingModal, userName, userId);
+        return;
     }
+
+    // 모달이 없는 경우에만 아래 코드 실행
 
     // 모달 창 생성
     const modal = document.createElement("div");
@@ -45,7 +50,7 @@ export async function createModal(userId) {
     userProfileSection.appendChild(profileTitle);
 
     const nickname = document.createElement("p");
-    nickname.innerHTML = `닉네임: <span id="nickname"></span>`;
+    nickname.innerHTML = `닉네임: <span id="modalNickname"></span>`;
     userProfileSection.appendChild(nickname);
 
     const image = document.createElement("p");
@@ -88,6 +93,15 @@ export async function createModal(userId) {
 
     // 모달 열기
     openUserModal(userId);
+}
+
+// 모달 업데이트 함수
+function updateModalContent(modal, userName, userId) {
+    // 모달창 내의 프로필 정보를 가져오고 업데이트하는 함수 호출
+    loadUserProfile(userId);
+
+    // 모달창을 화면에 표시하는 코드 추가
+    modal.style.display = "block";
 }
 
 // 유저 프로필 모달창 열기
@@ -182,9 +196,10 @@ async function loadUserProfile(userId) {
         imageElement.alt = "User Image";
         imageContainer.appendChild(imageElement);
 
+        console.log(userProfile.nickname);
         // 가져온 정보로 모달창 내의 프로필 부분을 업데이트
-        document.getElementById("nickname").textContent =
-            userProfile?.nickname || "없음";
+        document.getElementById("modalNickname").textContent =
+            userProfile.nickname;
         document.getElementById("gender").textContent =
             userProfile?.gender || "없음";
         document.getElementById("description").textContent =

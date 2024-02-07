@@ -1,5 +1,3 @@
-import { createModal } from "./otherUser-modal.js";
-
 window.onload = function () {
     const urlParams = new URLSearchParams(window.location.search);
     console.log("urlParams", urlParams);
@@ -32,7 +30,7 @@ const regionData = [
     "제주도",
 ];
 
-export default function getClubDetail(clubId) {
+function getClubDetail(clubId) {
     // 보내는 순서 알아보기(header, params)
     // const authorized = localStorage.getItem("authorized");
     // const token = JSON.parse(authorized).accessToken.value;
@@ -83,6 +81,11 @@ export default function getClubDetail(clubId) {
             const clubMaster = document.createElement("div");
             clubMaster.className = "clubMasterDetail";
             clubMaster.innerHTML += `${response.data.users[0].name}`;
+            // 클릭 이벤트 추가
+            clubMaster.addEventListener("click", function () {
+                createModal(response.data.users[0].id);
+            });
+
             clubMasterDiv.appendChild(clubMaster);
 
             const detailsDiv = document.querySelector(".details");
