@@ -12,6 +12,7 @@ function initNotification() {
     };
 
     eventSource.onerror = (error) => {
+        eventSource.close();
         console.error("SSE Error:", error);
     };
 
@@ -27,6 +28,12 @@ function initNotification() {
             }
         };
     }
+
+    window.onbeforeunload = () => {
+        if (eventSource) {
+            eventSource.close();
+        }
+    };
 }
 
 // 해당 스크립트 파일의 기능을 초기화하는 함수를 추가

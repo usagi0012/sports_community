@@ -1,3 +1,5 @@
+import { createModal } from "./otherUser-modal.js";
+
 window.onload = function () {
     const urlParams = new URLSearchParams(window.location.search);
     console.log("urlParams", urlParams);
@@ -182,25 +184,37 @@ function hasClub() {
         });
 }
 
-function getMember(clubId) {
+async function getMember(clubId) {
     const token = localStorage.getItem("accessToken");
-    axios
-        .get(`/api/club/member/${clubId}`, {
+
+    try {
+        const clubMember = await axios.get(`/api/club/${clubId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-        })
-        .then(function (response) {
-            console.log("멤버", response);
-            response.data.forEach((nickName) => {
-                const memberListDiv = document.querySelector(".memberList");
-                const nickNameDiv = document.createElement("div");
-                nickNameDiv.className = "nickName";
-                nickNameDiv.innerHTML = `${nickName}`;
-                memberListDiv.appendChild(nickNameDiv);
-            });
-        })
-        .catch(function (error) {
-            console.log(error);
         });
+
+        const userIds = clubMember.data.users.map((user) => user.id);
+
+        const membersResponse = await axios.get(`/api/club/member/${clubId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log("멤버", membersResponse);
+        membersResponse.data.forEach((nickName, index) => {
+            const memberListDiv = document.querySelector(".memberList");
+            const nickNameDiv = document.createElement("div");
+            nickNameDiv.addEventListener("click", () => {
+                // 클릭된 닉네임의 ID만을 전달하되, 배열로 전달
+                createModal([userIds[index]]);
+            });
+            nickNameDiv.className = "nickName";
+            nickNameDiv.innerHTML = `${nickName}`;
+            memberListDiv.appendChild(nickNameDiv);
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
