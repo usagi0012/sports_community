@@ -5,46 +5,49 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Onong UserProfile</title>
+        <meta name="description" content="Onong UserProfilePage" />
         <link rel="icon" href="./resources/favicon.ico" />
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-        <title>User Profile</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="css/userMenu.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
+        <link rel="stylesheet" href="css/userProfile.css" />
     </head>
     <body>
-        <div class="logo">
-            <img src="resources/logo.png" id="logo" />
-            <input type="text" placeholder="Search..." />
-            <button>검색</button>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer">
+                <div class="userMenuContianer" id="userMenuContianer"></div>
+                <section id="userSection">
+                    <h2>내 프로필</h2>
+                    <p>닉네임: <span id="nickname"></span></p>
+                    <p>이미지: <span id="image"></span></p>
+                    <p>성별: <span id="gender"></span></p>
+                    <p>자기소개: <span id="description"></span></p>
+                    <p>키: <span id="height"></span></p>
+                    <p>선호 포지션: <span id="position"></span></p>
+                    <p>평가 점수: <span id="score"></span></p>
+                    <p>유저 태그: <span id="tag"></span></p>
+                    <p>
+                        <button id="updateProfileButton">
+                            프로필 수정하기
+                        </button>
+                    </p>
+                </section>
+            </div>
         </div>
+        <div class="footer" id="footer"></div>
 
-        <nav>
-            <ul>
-                <li><a href="#feed">피드</a></li>
-                <li><a href="#club">동호회</a></li>
-                <li><a href="#stadium">경기장</a></li>
-                <li><a href="#platform">플랫폼 이용안내</a></li>
-                <li><a href="#talk">Talk</a></li>
-            </ul>
-        </nav>
-
-        <section id="userSection">
-            <h2>내 프로필</h2>
-            <p>닉네임:<span id="nickname"></span></p>
-            <p>이미지:<span id="image"></span></p>
-            <p>성별:<span id="gender"></span></p>
-            <p>자기소개:<span id="description"></span></p>
-            <p>키:<span id="height"></span></p>
-            <p>선호 포지션:<span id="position"></span></p>
-            <p>평가 점수:<span id="score"></span></p>
-            <p>유저 태그:<span id="tag"></span></p>
-            <p><button id="updateProfileButton">프로필 수정하기</button></p>
-            <p><button id="calender">캘린더</button></p>
-        </section>
-
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/userProfile.js"></script>
+        <script src="./js/dropmenu.js"></script>
         <script src="./js/notification.js"></script>
     </body>
 </html>

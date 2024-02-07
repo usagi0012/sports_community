@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onog Club Details</title>
-        <meta name="description" content="Onog ClubDetailPage" />
+        <title>Onong Club Details</title>
+        <meta name="description" content="Onong ClubDetailPage" />
         <link rel="icon" href="./resources/favicon.ico" />
         <link
             rel="stylesheet"
@@ -46,7 +46,19 @@
                         멤버 추방
                     </button>
 
-                    <button class="matchManagement">대결 관리</button>
+                    <button class="withdrawBtn" onclick="withdrawClub()">
+                        동아리 탈퇴
+                    </button>
+                    <button
+                        class="expelMemberBtn"
+                        onclick="openExpelMemberModal()"
+                    >
+                        멤버 추방
+                    </button>
+
+                    <button class="matchManagement" onclick="toMyClubMatch()">
+                        대결 관리
+                    </button>
                 </div>
                 <div class="clubDetailContainer" id="clubDetailContainer">
                     <div class="firstRow">
@@ -89,6 +101,10 @@
         <script type="module" src="./js/myClub.js"></script>
         <script src="./js/dropmenu.js"></script>
         <script>
+            function toMyClubMatch() {
+                window.location.href = "hostClubMatch.html";
+            }
+
             function deleteCheck() {
                 // alert(`${clubNameDiv} 동아리를 정말로 삭제하시겠습니까?`);
                 const token = localStorage.getItem("accessToken");

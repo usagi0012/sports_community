@@ -1,5 +1,6 @@
 // import axios from "axios";
 import getClubDetail from "./club-detail.js";
+import { createModal } from "./otherUser-modal.js";
 const region = [
     "서울",
     "부산",
@@ -109,7 +110,17 @@ function getClub(sortBy) {
                 const clubMaster = document.createElement("div");
                 clubMaster.className = "clubMaster";
                 clubMaster.innerHTML = `${club.masterName}`;
+                clubMaster.addEventListener(
+                    "click",
+                    (function (masterId) {
+                        return function () {
+                            createModal(masterId);
+                        };
+                    })(club.masterId),
+                );
                 clubInfoDiv.appendChild(clubMaster);
+
+                console.log(club);
 
                 const clubScore = document.createElement("div");
                 clubScore.className = "clubScore";

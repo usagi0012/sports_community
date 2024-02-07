@@ -9,6 +9,7 @@ import { Banlist } from "../entity/banlist.entity";
 import { Report } from "../entity/report.entity";
 import { AlarmserviceModule } from "src/alarm/alarm.module";
 import { Alarmservice } from "src/alarm/alarm.service";
+import { Userscore } from "src/entity/userscore.entity";
 
 @Module({
     imports: [

@@ -3,34 +3,37 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Onong User</title>
+        <meta name="description" content="Onong UserPage" />
         <link rel="icon" href="./resources/favicon.ico" />
-        <title>User</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="css/userMenu.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
+        <link rel="stylesheet" href="css/user.css" />
     </head>
     <body>
-        <div class="logo">
-            <img src="resources/logo.png" id="logo" />
-            <input type="text" placeholder="Search..." />
-            <button>검색</button>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer">
+                <div class="userMenuContianer" id="userMenuContianer"></div>
+                <section id="userSection">
+                    <h2>내 정보</h2>
+                    <p>이름: <span id="userName"></span></p>
+                    <p>이메일: <span id="userEmail"></span></p>
+                    <p>비밀번호: <span>********</span></p>
+                </section>
+            </div>
         </div>
-
-        <nav>
-            <ul>
-                <li><a href="#feed">피드</a></li>
-                <li><a href="#club">동호회</a></li>
-                <li><a href="#stadium">경기장</a></li>
-                <li><a href="#platform">플랫폼 이용안내</a></li>
-                <li><a href="#talk">Talk</a></li>
-            </ul>
-        </nav>
-
-        <section id="userSection">
-            <h2>내 정보</h2>
-            <p>이름: <span id="userName"></span></p>
-            <p>이메일: <span id="userEmail"></span></p>
-            <p>비밀번호: ********</p>
-        </section>
+        <div class="footer" id="footer"></div>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/user.js"></script>
+        <script src="./js/dropmenu.js"></script>
         <script src="./js/notification.js"></script>
     </body>
 </html>

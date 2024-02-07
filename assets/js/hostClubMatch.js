@@ -111,8 +111,7 @@ async function getGuestClub(hostMatchId) {
         deleteButtonContainer.innerHTML = deleteButtonHTML;
         guestClubContainer.innerHTML = guestClubHTML + clubMatchHTML;
         hostClubButtonContainer.innerHTML = hostClubButtonHTML;
-
-        $("#hostMatchModal").modal("show");
+        openHostMatchModal();
     } catch (error) {
         console.error(error);
         alert(error.response);
@@ -121,7 +120,6 @@ async function getGuestClub(hostMatchId) {
 
 function createDeleteButtonHTML(hostMatchId) {
     return ` 
-    <button class="deleteButton btn btn-danger" data-matchId="${hostMatchId}" onclick="deleteClubMatch(${hostMatchId})">삭제하기</button>   
     `;
 }
 
@@ -147,6 +145,7 @@ function createHostClubButtonHTML(hostMatchId) {
         <div class="hostClubButton">
             <button class="approveButton btn btn-success" onclick="approvebutton(${hostMatchId})">승인</button>
             <button class="rejectButton btn btn-danger" onclick="rejectbutton(${hostMatchId})">거절</button>
+            <button class="deleteButton btn btn-danger" data-matchId="${hostMatchId}" onclick="deleteClubMatch(${hostMatchId})">삭제하기</button>   
             <button class="confirmButton btn btn-success" data-matchId="${hostMatchId}" onclick="confirmButton(${hostMatchId})">컴펌하기</button>
         </div>
     `;
@@ -208,4 +207,12 @@ async function rejectbutton(hostMatchId) {
         alert(error.response.data.message);
         window.location.reload();
     }
+}
+
+function openHostMatchModal() {
+    document.getElementById("hostMatchModal").style.display = "block";
+}
+
+function closeHostMatchModal() {
+    document.getElementById("hostMatchModal").style.display = "none";
 }

@@ -1,0 +1,72 @@
+#userSection {
+    min-height: 100%;
+    width: 80%;
+    padding: 10px 30px;
+    border-left: 1px solid #dfcec3;
+}
+
+#userSection > h2 {
+    font-size: 2rem;
+    color: #3f3131;
+}
+
+#userSection > div {
+    height: 70px;
+}
+
+#userSection > div > label {
+    display: block;
+    margin: 15px 10px 5px;
+}
+
+input,
+#gender {
+    margin-left: 20px;
+}
+
+#gender {
+    font-family: "LINESeedKR-Bd";
+    font-size: 0.8rem;
+    height: 25px;
+    width: 100px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#nickname,
+#height,
+#description {
+    border-radius: 15px;
+    background-color: #e2e2e2;
+    padding-left: 15px;
+    display: block;
+    color: rgb(63, 63, 63);
+}
+
+#updateProfileButton,
+#submitProfileButton {
+    font-family: "LINESeedKR-Bd";
+    border-radius: 7px;
+    height: 25px;
+    width: 130px;
+    padding-top: 5px;
+    margin-top: 15px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#updateProfileButton:hover,
+#submitProfileButton:hover {
+    background-color: #ffb13d;
+}
+
+#position {
+    display: flex;
+}
+
+#position > label > input {
+    height: 20px;
+    width: 20px;
+    margin: 0px 10px 0px 5px;
+}

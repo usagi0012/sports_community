@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onog My Recruit</title>
-        <meta name="description" content="Onog MyRecruitPage" />
+        <title>Onong My Recruit</title>
+        <meta name="description" content="Onong MyRecruitPage" />
         <link rel="icon" href="./resources/favicon.ico" />
         <link
             rel="stylesheet"
@@ -13,10 +13,7 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
         />
-        <link
-            rel="stylesheet"
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        />
+
         <link rel="stylesheet" href="css/dropBar.css" />
         <link rel="stylesheet" href="./css/myRecruit.css" />
     </head>
@@ -62,12 +59,6 @@
                                 >
                                     모집글 상세정보
                                 </h1>
-                                <button
-                                    type="button"
-                                    class="btn-close"
-                                    data-dismiss="modal"
-                                    aria-label="Close"
-                                ></button>
                             </div>
                             <div class="modal-body">
                                 <div id="myRecruit"></div>
@@ -78,8 +69,8 @@
                                 <div id="RecruitButton"></div>
                                 <button
                                     type="button"
-                                    class="btn btn-secondary"
                                     data-dismiss="modal"
+                                    onclick="closeRecruitModal()"
                                 >
                                     닫기
                                 </button>
@@ -90,14 +81,8 @@
 
                 <!-- 신청목록 모달 -->
 
-                <div
-                    class="modal fade"
-                    id="recruitUserModal"
-                    tabindex="-1"
-                    aria-labelledby="recruitUserModalLabel"
-                    aria-hidden="true"
-                >
-                    <div class="modal-dialog" id="recruitUserModalDialog">
+                <div id="recruitUserModal">
+                    <div id="recruitUserModalDialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h1
@@ -106,25 +91,13 @@
                                 >
                                     신청 목록
                                 </h1>
-                                <button
-                                    type="button"
-                                    class="btn-close"
-                                    data-dismiss="modal"
-                                    aria-label="Close"
-                                ></button>
                             </div>
-                            <div class="modal-body">
-                                <div
-                                    style="margin-bottom: 10px"
-                                    id="recruitUser"
-                                ></div>
-                            </div>
+                            <div class="modal-body" id="recruitUser"></div>
                             <div class="modal-footer">
                                 <div>
                                     <button
                                         type="button"
-                                        class="btn btn-secondary"
-                                        data-dismiss="modal"
+                                        onclick="closeRecruitUserModal()"
                                     >
                                         닫기
                                     </button>
@@ -138,8 +111,6 @@
 
         <div class="footer" id="footer"></div>
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/myRecruit.js"></script>
         <script src="./js/dropmenu.js"></script>

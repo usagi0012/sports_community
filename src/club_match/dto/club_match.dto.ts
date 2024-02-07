@@ -11,17 +11,17 @@ export class ClubMatchDTO {
     @IsNotEmpty()
     @ApiProperty({ description: "정보", example: "어디서 어디서 보자" })
     @IsString()
-    Information: string;
+    information: string;
 
     @IsNotEmpty()
     @ApiProperty({ description: "경기시간", example: "2024-01-23T00:00:00Z" })
     @IsDate()
-    gamedate: Date;
+    gameDate: Date;
 
     @IsNotEmpty()
     @ApiProperty({ description: "끝나는시간", example: "2024-01-23T00:30:00Z" })
     @IsDate()
-    endtime: Date;
+    endTime: Date;
 }
 
 export class CheckClubMatchDTO {
@@ -34,10 +34,10 @@ export class ChangeTimeDTO {
     @IsNotEmpty()
     @ApiProperty({ description: "경기시간", example: "2024-01-23T03:00:00Z" })
     @IsDate()
-    gamedate: Date;
+    gameDate: Date;
 
     @IsNotEmpty()
     @ApiProperty({ description: "끝나는시간", example: "2024-01-23T03:30:00Z" })
     @IsDate()
-    endtime: Date;
+    endTime: Date;
 }

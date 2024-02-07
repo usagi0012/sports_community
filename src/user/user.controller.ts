@@ -87,6 +87,14 @@ export class UserController {
         return this.userService.checkPassword(+id, checkPasswordDto);
     }
 
+    //다른사람 정보 조회
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("/:userId")
+    findUserByIdAll(@Param("userId") id: number) {
+        return this.userService.findUserByIdAll(+id);
+    }
+
     // //수정시 이메일 인증코드 확인
     // @ApiBearerAuth("accessToken")
     // @UseGuards(accessTokenGuard)

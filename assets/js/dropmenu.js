@@ -24,6 +24,7 @@ function loadHeader() {
         </form>
     </div>
     <div id="authBtn"></div>
+    <div id="miniProfile" onclick="toUser()"></div>
 </div>
 <div class="menubarContainer">
     <div class="menuBar">
@@ -58,22 +59,50 @@ function loadHeader() {
                     <li><a href="#">Q&A</a></li>
                 </ul>
             </li>
-            <li id="talk"><a href="#">Talk</a></li>
+            <li id="talk" onclick="toChat()"><a href="#">Talk</a></li>
         </ul>
     </div>
 </div>
     `;
     getAuthBtn();
+    searchBtn();
 }
 
 //헤더 안에 로그아웃 상태면 로그인 버튼, 로그인 상태면 로그아웃 버튼
 function getAuthBtn() {
     const authBtn = document.getElementById("authBtn");
+    const miniProfile = document.getElementById("miniProfile");
     const token = localStorage.getItem("accessToken");
     try {
         authBtn.innerHTML = "";
         if (token) {
-            authBtn.innerHTML = `<div onclick="logout()">Log Out</div>`;
+            axios
+                .get("/api/user/me/profile", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then(function (response) {
+                    const user = response.data.data.userProfile;
+                    console.log(user);
+                    authBtn.innerHTML = `
+                    <div onclick="logout()">Log Out</div>`;
+                    miniProfile.innerHTML = `
+                    <div class="miniProfile"><img src="${user.image}" class="miniProfileImg" />${user.nickname}</div>
+                    `;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    if (
+                        error.response.data.message == "프로필 정보가 없습니다."
+                    ) {
+                        getName(token);
+                    }
+                    if (error.response.data.message == "accessToken expired") {
+                        authBtn.innerHTML = `
+                        <div onclick="logout()">Log Out</div>`;
+                    }
+                });
         } else {
             authBtn.innerHTML = `<div onclick="toLogin()">Log In</div>`;
         }
@@ -100,10 +129,108 @@ function loadFooter() {
     `;
 }
 
+//유저 메뉴바 불러오기
+function loadUserMenu() {
+    const userMenuContianer = document.getElementById("userMenuContianer");
+    userMenuContianer.innerHTML = `
+    <ul>
+        <li onclick="toUser()">사용자 정보</li>
+        <li onclick="toUserProfile()">프로필</li>
+        <li onclick="toCalender()">캘린더</li>
+        <li onclick="toAlarm()">알림</li>
+    </ul>
+    `;
+}
+
+//이름 불러오기
+async function getName(token) {
+    axios
+        .get("/api/user/me", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            const user = response.data;
+            console.log(user);
+            authBtn.innerHTML = `
+            <div onclick="logout()">Log Out</div>
+            `;
+            miniProfile.innerHTML = `
+            <div><img src="./resources/profile.jpeg" class="miniProfileImg"/>${user.name} 님<div>
+            `;
+        })
+        .catch(function (error) {
+            console.error("Error fetching profile:", error);
+        });
+}
+
+function searchBtn() {
+    const searchBox = document.getElementById("searchBox");
+    const searchBtn = searchBox.querySelector("button");
+
+    searchBtn.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        // 여기에서 검색어를 입력하는 input 요소를 찾아옵니다.
+        const searchInput = searchBox.querySelector("input[type=search]");
+        const searchQuery = searchInput.value.trim(); // 검색어 값 가져오기
+
+        let from = "";
+        if (
+            window.location.pathname.includes("club.html") ||
+            window.location.pathname.includes("myClub.html")
+        ) {
+            from = "club";
+        } else if (window.location.pathname.includes("place.html")) {
+            from = "place";
+        } else if (
+            window.location.pathname.includes("recruit.html") ||
+            window.location.pathname.includes("myRecruit.html")
+        ) {
+            from = "recruit";
+        }
+
+        if (from) {
+            window.location.href = `search.html?from=${from}&q=${encodeURIComponent(
+                searchQuery,
+            )}`;
+        } else {
+            window.location.href = `search.html?q=${encodeURIComponent(
+                searchQuery,
+            )}`;
+        }
+    });
+}
+
 //메뉴바 클릭시 이동
 //홈으로 이동
 async function toHome() {
     window.location.href = "index.html";
+}
+//유저 정보 페이지 이동
+async function toUser() {
+    window.location.href = "user.html";
+}
+//유저 프로필 페이지 이동
+async function toUserProfile() {
+    window.location.href = "userProfile.html";
+}
+//유저 프로필 등록 페이지 이동
+async function toPostUserProfile() {
+    window.location.href = "userProfile-post.html";
+}
+//유저 프로필 수정 페이지 이동
+async function toUpdateUserProfile() {
+    window.location.href = "userProfile-update.html";
+}
+//알람 페이지 이동
+async function toAlarm() {
+    window.location.href = "alarm.html";
+}
+//캘린더 페이지 이동
+async function toCalender() {
+    window.location.href = "calender.html";
 }
 //모집글 페이지로 이동
 async function toRecruit() {
@@ -163,6 +290,11 @@ async function toPlace() {
     window.location.href = "place.html";
 }
 
+//준비중
+function needUpdateFunction() {
+    alert("업데이트 예정 서비스입니다.");
+}
+
 //로그아웃 하기
 async function logout() {
     const accessToken = localStorage.getItem("accessToken");
@@ -187,7 +319,6 @@ async function logout() {
             window.location.href = "index.html";
         } catch (error) {
             console.log(error);
-            alert("로그아웃에 실패하였습니다.");
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
             window.location.href = "index.html";
@@ -203,7 +334,7 @@ async function logout() {
             }
         }
     } else {
-        alert("로그인 상태가 아닙니다.");
+        alert("로그아웃에 실패하였습니다.");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         window.location.href = "index.html";
@@ -213,4 +344,9 @@ async function logout() {
 //로그인 페이지로 가기
 async function toLogin() {
     window.location.href = "login.html";
+}
+
+// 채팅방 페이지로 가기
+function toChat() {
+    window.location.href = "view/chat";
 }

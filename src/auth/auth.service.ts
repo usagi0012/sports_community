@@ -250,6 +250,7 @@ export class AuthService {
     /// access 토큰 발급 (private)
     private generateAccessToken(id: number) {
         const payload = { userId: id };
+
         const accessToken = this.jwtService.sign(payload, {
             secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
             expiresIn: this.configService.get<string>("JWT_ACCESS_TOKEN_EXP"),
