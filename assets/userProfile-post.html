@@ -25,7 +25,13 @@
                 <section id="userSection">
                     <h2>내 프로필</h2>
                     <div>
-                        <label>닉네임</label><input type="text" id="nickname" />
+                        <label>닉네임</label
+                        ><input
+                            type="text"
+                            id="nickname"
+                            maxlength="10"
+                            placeholder="최대 10글자 입력가능합니다."
+                        />
                     </div>
                     <div>
                         <label>이미지</label
@@ -40,10 +46,20 @@
                     </div>
                     <div>
                         <label>자기소개</label
-                        ><input type="text" id="description" />
+                        ><input
+                            type="text"
+                            id="description"
+                            maxlength="50"
+                            placeholder="최대 50글자 입력가능합니다."
+                        />
                     </div>
                     <div>
-                        <label>키</label><input type="number" id="height" />
+                        <label>키</label
+                        ><input
+                            type="number"
+                            id="height"
+                            oninput="handleOnInput(this, 5)"
+                        />
                     </div>
                     <div id="position">
                         <label>선호 포지션</label>

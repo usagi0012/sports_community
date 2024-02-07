@@ -50,7 +50,11 @@
                         <label for="description" id="applyDescription"
                             >지원 이유</label
                         >
-                        <textarea id="description1"></textarea>
+                        <textarea
+                            id="description1"
+                            maxlength="100"
+                            placeholder="최대 100글자 입력가능합니다."
+                        ></textarea>
                         <div class="modalBtnContainer">
                             <button onclick="submitApplyingForm()">제출</button>
                             <button onclick="closeApplyingModal()">닫기</button>
@@ -212,6 +216,8 @@
                                 id="message"
                                 name="message"
                                 required
+                                maxlength="30"
+                                placeholder="최대 30글자 입력가능합니다."
                             />
                         </div>
                         <div class="form-group">
@@ -222,6 +228,8 @@
                                 id="Information"
                                 name="Information"
                                 required
+                                maxlength="30"
+                                placeholder="최대 30글자 입력가능합니다."
                             />
                         </div>
                         <div class="form-group">
