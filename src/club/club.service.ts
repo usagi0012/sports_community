@@ -51,17 +51,58 @@ export class ClubService {
     // }
 
     // take랑 skip 배분을 잘 해줘야 값이 뜨ㅡ네;;
-    async getAllClubs(page: number, itemsPerPage: number = 30) {
+    async getAllClubs(sortBy, region, page: number, itemsPerPage: number = 30) {
         const skip = (page - 1) * itemsPerPage;
+        console.log("region***", region);
+        // const [clubs, total] = await this.clubRepository.findAndCount({
+        //     select: ["id", "name", "region", "masterId", "score"],
+        //     relations: ["users"],
+        //     take: 30,
+        //     skip: 0,
+        // });
 
-        const [clubs, total] = await this.clubRepository.findAndCount({
-            select: ["id", "name", "region", "masterId", "score"],
-            relations: ["users"],
-            take: 30,
-            skip: 0,
-        });
-        console.log("Clubs:", clubs);
-        console.log("Total:", total);
+        let clubs;
+        let total;
+
+        switch (sortBy) {
+            case "region":
+                [clubs, total] = await this.clubRepository.findAndCount({
+                    select: ["id", "name", "region", "masterId", "score"],
+                    relations: ["users"],
+                    where: { region: region },
+                    take: 30,
+                    skip: 0,
+                });
+                console.log("clubs", clubs);
+                break;
+            case "latest":
+                [clubs, total] = await this.clubRepository.findAndCount({
+                    select: ["id", "name", "region", "masterId", "score"],
+                    relations: ["users"],
+                    order: { createdAt: "DESC" },
+                    take: 30,
+                    skip: 0,
+                });
+                break;
+            case "score":
+                [clubs, total] = await this.clubRepository.findAndCount({
+                    select: ["id", "name", "region", "masterId", "score"],
+                    relations: ["users"],
+                    order: { score: "desc" },
+                    take: 30,
+                    skip: 0,
+                });
+                break;
+            default:
+                [clubs, total] = await this.clubRepository.findAndCount({
+                    select: ["id", "name", "region", "masterId", "score"],
+                    relations: ["users"],
+                    take: 30,
+                    skip: 0,
+                });
+                break;
+        }
+        console.log("club잘 뽑아짐?", clubs);
         const clubsWithMasterNames = await Promise.all(
             clubs.map(async (club) => {
                 const master = club.users.find(
@@ -75,14 +116,14 @@ export class ClubService {
             }),
         );
 
-        console.log("?!?", {
-            data: clubsWithMasterNames,
-            meta: {
-                total,
-                page,
-                last_page: Math.ceil(total / 30),
-            },
-        });
+        // console.log("?!?", {
+        //     data: clubsWithMasterNames,
+        //     meta: {
+        //         total,
+        //         page,
+        //         last_page: Math.ceil(total / 30),
+        //     },
+        // });
         return {
             data: clubsWithMasterNames,
             meta: {

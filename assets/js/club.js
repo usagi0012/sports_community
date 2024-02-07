@@ -36,9 +36,9 @@ window.onload = function () {
     loadFooter();
 };
 
-function getClub(event) {
+function getClub(sortBy) {
     axios
-        .get("/api/club")
+        .get(`/api/club?sortBy=${sortBy}`)
         .then(function (response) {
             console.log("*******", response);
             response.data.data.forEach((club) => {

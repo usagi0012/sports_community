@@ -30,8 +30,11 @@ export class ClubController {
 
     //동아리 전체 조회
     @Get()
-    getAllClubs(/* @Query("page") page: number */) {
-        return this.clubService.getAllClubs(3);
+    getAllClubs(
+        /* @Query("page") page: number */ @Query("sortBy") sortBy: string,
+        @Query("region") region: number,
+    ) {
+        return this.clubService.getAllClubs(sortBy, region, 3);
     }
 
     // 동아리에 가입된 사람인지 확인
