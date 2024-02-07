@@ -30,27 +30,27 @@ function getMyClubApplication() {
                 );
                 // 신청서 내용들을 하나로 감싸주는 div = clubApplication
                 const clubApplication = document.createElement("div");
-                clubApplication.className = `${clubApplication} ${application.userId} ${application.clubId}`;
+                clubApplication.className = "clubApplicationCard";
 
-                const user = document.createElement("div");
-                user.className = "user";
-                user.innerHTML = `${application.userId}`;
-                clubApplication.appendChild(user);
+                // const user = document.createElement("div");
+                // user.className = "user";
+                // user.innerHTML = `${application.userId}`;
+                // clubApplication.appendChild(user);
 
                 const nickName = response.data.data.nicknames[idx];
                 const nickNameDiv = document.createElement("div");
                 nickNameDiv.className = "nickNameDiv";
-                nickNameDiv.innerHTML = `${nickName}`;
+                nickNameDiv.innerHTML = `닉네임: ${nickName}`;
                 clubApplication.appendChild(nickNameDiv);
 
                 const message = document.createElement("div");
                 message.className = "message";
-                message.innerHTML = `${application.message}`;
+                message.innerHTML = `신청 메세지: ${application.message}`;
                 clubApplication.appendChild(message);
 
                 const status = document.createElement("div");
                 status.className = "status";
-                status.innerHTML = `${application.status}`;
+                status.innerHTML = `상태: ${application.status}`;
                 clubApplication.appendChild(status);
                 myClubAppplicationList.appendChild(clubApplication);
 

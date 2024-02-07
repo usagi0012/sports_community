@@ -172,7 +172,12 @@ export class ApplyingClubService {
                 });
                 console.log("앱 유저아이디", app.userId);
                 console.log("유저 프로필", userProfile);
-                return userProfile.nickname;
+                if (!userProfile) {
+                    const userName = user.name;
+                    return userName;
+                }
+                const userName = userProfile.nickname;
+                return userName;
             }),
         );
 

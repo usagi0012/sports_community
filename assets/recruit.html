@@ -69,7 +69,7 @@
         <div class="footer" id="footer"></div>
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script type="module" src="./js/recruit.js" defer></script>
+        <script type="module" src="./js/recruit.js"></script>
         <script src="./js/dropmenu.js"></script>
         <script src="./js/notification.js"></script>
         <script type="module" src="./js/otherUser-modal.js"></script>
@@ -81,6 +81,20 @@
                 } else {
                     window.location.href = "recruit-post.html";
                 }
+            }
+
+            function filterByRegion() {
+                const regionFilterElement =
+                    document.getElementById("regionFilter");
+                currentFilterRegion = regionFilterElement.value;
+                feed();
+            }
+
+            function filterByCategory() {
+                const regionFilterElement =
+                    document.getElementById("CategoryFilter");
+                currentFilterCategory = regionFilterElement.value;
+                feed();
             }
         </script>
     </body>

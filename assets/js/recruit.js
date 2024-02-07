@@ -73,11 +73,9 @@ function feed() {
         })
         .catch(function (error) {
             console.log(error.response.data);
-            alert("로그인 후 이용 가능합니다.");
             window.location.href = "index.html";
         });
 }
-
 
 function toRecruitPost() {
     const accessToken = localStorage.getItem("accessToken");
@@ -87,16 +85,3 @@ function toRecruitPost() {
         window.location.href = "recruit-post.html";
     }
 }
-
-function filterByRegion() {
-    const regionFilterElement = document.getElementById("regionFilter");
-    currentFilterRegion = regionFilterElement.value;
-    feed();
-}
-
-function filterByCategory() {
-    const regionFilterElement = document.getElementById("CategoryFilter");
-    currentFilterCategory = regionFilterElement.value;
-    feed();
-}
-

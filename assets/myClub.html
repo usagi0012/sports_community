@@ -46,16 +46,6 @@
                         멤버 추방
                     </button>
 
-                    <button class="withdrawBtn" onclick="withdrawClub()">
-                        동아리 탈퇴
-                    </button>
-                    <button
-                        class="expelMemberBtn"
-                        onclick="openExpelMemberModal()"
-                    >
-                        멤버 추방
-                    </button>
-
                     <button class="matchManagement" onclick="toMyClubMatch()">
                         대결 관리
                     </button>
@@ -76,26 +66,31 @@
                     </div>
                 </div>
             </div>
-            <div id="expelMember-modal-overlay">
-                <div id="modal">
-                    <label for="nickname">추방할 유저 닉네임: </label>
+        </div>
+    </div>
+
+    <div class="footer" id="footer"></div>
+            <div class="modal" id="expelMember-modal-overlay">
+                <div class="modal-content" id="modal">
+                    <label for="nickname">추방할 유저 닉네임 </label>
                     <input
                         type="text"
                         id="nickname"
                         placeholder="닉네임을 입력하세요"
                     />
-                    <br />
-                    <button id="submit-btn" onclick="expelMember()">
-                        제출
-                    </button>
-                    <button id="close-btn" onclick="closeExpelMemberModal()">
-                        닫기
-                    </button>
+                    <div class="modalBtnContainer">
+                        <button id="submit-btn" onclick="expelMember()">
+                            제출
+                        </button>
+                        <button
+                            id="close-btn"
+                            onclick="closeExpelMemberModal()"
+                        >
+                            닫기
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="footer" id="footer"></div>
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="module" src="./js/myClub.js"></script>
@@ -190,7 +185,6 @@
                     .catch(function (error) {
                         console.log(error);
                         console.log("button failed");
-
                         return;
                     });
             }
