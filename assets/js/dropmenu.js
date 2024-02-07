@@ -216,5 +216,5 @@ async function toLogin() {
 
 // 채팅방 페이지로 가기
 function toChat() {
-    window.location.href = "view/chat";
+    window.location.href = "chatRoom.html";
 }
