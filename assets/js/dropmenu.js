@@ -14,7 +14,8 @@ function loadHeader() {
     <div id="searchBox">
         <form>
             <fieldset>
-                <input type="search" /><button
+                <input type="search" maxlength="15"
+                 placeholder="최대 15글자 입력가능합니다."/><button
                     type="submit"
                     id="searchBtn"
                 >
