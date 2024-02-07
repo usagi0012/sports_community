@@ -14,7 +14,8 @@ function loadHeader() {
     <div id="searchBox">
         <form>
             <fieldset>
-                <input type="search" /><button
+                <input type="search" maxlength="15"
+                 placeholder="최대 15글자 입력가능합니다."/><button
                     type="submit"
                     id="searchBtn"
                 >
@@ -258,6 +259,14 @@ async function toMyMatch() {
 async function toClub() {
     window.location.href = "club.html";
 }
+//동아리 매치 호스트 페이지로 이동
+async function toMyClubHostMatch() {
+    window.location.href = "hostClubMatch.html";
+}
+//동아리 매치 게스트 페이지로 이동
+async function toMyClubGuestMatch() {
+    window.location.href = "guestClubMatch.html";
+}
 //내 동아리 페이지로 이동
 async function toMyClub() {
     const token = localStorage.getItem("accessToken");
@@ -275,6 +284,7 @@ async function toMyClub() {
             console.log("제발", response);
             if (response.data.data === true) {
                 alert("가입된 동아리가 없습니다.");
+                window.location.href = "myApplication.html";
             } else {
                 window.location.href = "myClub.html";
             }

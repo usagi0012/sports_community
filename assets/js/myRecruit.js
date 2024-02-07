@@ -31,7 +31,9 @@ async function displayRecruitInfo() {
 
 function createRecruitHTML(recruit) {
     return `
-        <button type="button" onclick="findRecruit(${recruit.id})">
+        <button type="button" class="recruitBtn" onclick="findRecruit(${
+            recruit.id
+        })">
             <h1>${recruit.title}</h1>
             <p><strong>규칙 :</strong> ${recruit.rule}</p>
             <p><strong>경기 날짜 :</strong> ${recruit.gamedate.slice(
@@ -45,7 +47,7 @@ function createRecruitHTML(recruit) {
 
 function createRecruitButtonHTML(recruit) {
     return `
-        <div>
+        <div class="recruitListBtn">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#recruitUserModal" onclick="application(${recruit.id})">신청목록</button>
         </div>
     `;
@@ -120,9 +122,8 @@ function createRecurtIdButtonHTML(findRecruit) {
 
 function createConfirmUsersHTML(confirmUser) {
     return `
-        <button type="button"  >
+        <button type="button" class="userInMatch">
             <p><strong>Name:</strong> ${confirmUser.guestName}</p>
-            <p><strong>Progress:</strong> ${confirmUser.progress}</p>
             <p><strong>Status:</strong> ${confirmUser.status}</p>
         </div>
     `;
@@ -131,17 +132,23 @@ function createConfirmUsersHTML(confirmUser) {
 function createmyRecruitMatchHTML(findRecruit) {
     return `
 <div>
-    <h4>${findRecruit.title}</h4>
-    <p><strong>위치:</strong> ${findRecruit.gps}</p>
-    <p><strong>모집장:</strong> ${findRecruit.hostName}</p>
-    <p><strong>지역:</strong> ${findRecruit.region}</p>
-    <p><strong>경기방식:</strong> ${findRecruit.rule}</p>
-    <p><strong>모집인원</strong> ${findRecruit.totalmember}</p>
-    <p><strong>경기시간:</strong> ${findRecruit.gamedate}</p>
-    <p><strong>경기END타임:</strong> ${findRecruit.endtime}</p>
-    <p><strong>특이사항:</strong> ${findRecruit.content}</p>
-    <p><strong>진행상황:</strong> ${findRecruit.progress}</p>
-    <p><strong>상태:</strong> ${findRecruit.status}</p>
+    <h3>${findRecruit.title}</h3>
+    <p><strong>위치: </strong> ${findRecruit.gps}</p>
+    <p><strong>모집장: </strong> ${findRecruit.hostName}</p>
+    <p><strong>지역: </strong> ${findRecruit.region}</p>
+    <p><strong>경기방식: </strong> ${findRecruit.rule}</p>
+    <p><strong>모집인원: </strong> ${findRecruit.totalmember}</p>
+    <p><strong>경기시작시간: </strong> ${findRecruit.gamedate.slice(
+        0,
+        10,
+    )} ${findRecruit.gamedate.slice(11, 19)}</p>
+    <p><strong>경기종료시간: </strong> ${findRecruit.endtime.slice(
+        0,
+        10,
+    )}  ${findRecruit.endtime.slice(11, 19)}</p>
+    <p><strong>내용: </strong> ${findRecruit.content}</p>
+    <p><strong>상태: </strong> ${findRecruit.status}</p>
+    <p><strong>진행상황: </strong> ${findRecruit.progress}</p>
 </div>
 `;
 }
@@ -208,7 +215,7 @@ async function application(recruitId) {
         guestData.forEach((guest) => {
             const guestHTML = createGuestHTML(guest);
             const buttonHTML = createButtonHTML(guest);
-            modalContentContainer.innerHTML += [guestHTML, buttonHTML];
+            modalContentContainer.innerHTML += [guestHTML + buttonHTML];
         });
         openRecruitUserModal();
     } catch (error) {
@@ -227,7 +234,9 @@ function createGuestHTML(guest) {
     </button>
     `;
 }
-
+{
+    /* <span class="guestName" onclick="createModal('${guest.guestId}')">${guest.guestName}</span> */
+}
 function createButtonHTML(guest) {
     return `
         <div>

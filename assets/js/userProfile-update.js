@@ -179,3 +179,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         console.error("프로필 정보 가져오기 중 에러 발생:", error);
     }
 });
+
+function handleOnInput(el, maxlength) {
+    if (el.value.length > maxlength) {
+        el.value = el.value.substr(0, maxlength);
+    }
+}

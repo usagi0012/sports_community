@@ -16,7 +16,7 @@ export enum MatchStatus {
     APPROVED = "승인",
     REJECTED = "거절",
     CANCEL = "취소",
-    CONFIRM = "학인",
+    CONFIRM = "확인",
     CANCELCONFIRM = "취소한 매치",
 }
 

@@ -50,7 +50,11 @@
                         <label for="description" id="applyDescription"
                             >지원 이유</label
                         >
-                        <textarea id="description1"></textarea>
+                        <textarea
+                            id="description1"
+                            maxlength="100"
+                            placeholder="최대 100글자 입력가능합니다."
+                        ></textarea>
                         <div class="modalBtnContainer">
                             <button onclick="submitApplyingForm()">제출</button>
                             <button onclick="closeApplyingModal()">닫기</button>
@@ -73,6 +77,7 @@
                     </div>
                 </div>
             </div>
+            <div class="memberList">멤버목록</div>
         </div>
 
         <div class="footer" id="footer"></div>
@@ -80,6 +85,7 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="module" src="./js/club-detail.js"></script>
         <script src="./js/dropmenu.js"></script>
+        <script type="module" src="./js/otherUser-modal.js"></script>
         <script>
             const clubNameDiv = document.querySelector(".name");
             const clubNameDisplay = document.querySelector("#clubNameDisplay");
@@ -198,7 +204,7 @@
         <!-- 클럽매치 모달창 -->
         <div id="clubMatchModal" class="modal">
             <div id="modalContainer"></div>
-            <div class="modal-content" style="width: 400px">
+            <div class="modal-content" style="width: 500px">
                 <div class="modal-body">
                     <form
                         id="clubMatchForm"
@@ -212,6 +218,8 @@
                                 id="message"
                                 name="message"
                                 required
+                                maxlength="30"
+                                placeholder="최대 30글자 입력가능합니다."
                             />
                         </div>
                         <div class="form-group">
@@ -222,6 +230,8 @@
                                 id="Information"
                                 name="Information"
                                 required
+                                maxlength="30"
+                                placeholder="최대 30글자 입력가능합니다."
                             />
                         </div>
                         <div class="form-group">
@@ -244,11 +254,14 @@
                                 required
                             />
                         </div>
-
-                        <button type="submit">Submit</button>
+                        <div class="btnBox">
+                            <button type="submit">Submit</button>
+                            <button onclick="closeClubMatchModal()">
+                                닫기
+                            </button>
+                        </div>
                     </form>
                 </div>
-                <button onclick="closeClubMatchModal()">닫기</button>
             </div>
         </div>
         <!-- 클럽매치 모달창 -->

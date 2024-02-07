@@ -1,7 +1,13 @@
+window.onload = function () {
+    loadHeader();
+    getGuestMatch();
+    loadFooter();
+};
+
 //guest매치 조회하기
 async function getGuestMatch() {
-    const accessToken = localStorage.getItem("accessToken");
     try {
+        const accessToken = localStorage.getItem("accessToken");
         const response = await axios.get(`/api/clubmatch/guest`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -24,19 +30,18 @@ async function getGuestMatch() {
     }
 }
 
-//게스트클럽 html
+// 게스트클럽 HTML 생성 함수
 function createGuestClubMatchHTML(guestClubMatch) {
     return `
         <div class="guest-match-item">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#guestMatchModal" id="guestMatch-${guestClubMatch.id}" guestMatchId="${guestClubMatch.id}" onclick="findHostClub(${guestClubMatch.id})">
-            <h4>${guestClubMatch.message}</h4>    
-            <p><strong>away Club Name:</strong> ${guestClubMatch.host_club_name}</p> 
-            <p><strong>Status:</strong> ${guestClubMatch.status}</p>
+            <button type="button" id="guestMatch-${guestClubMatch.id}" guestMatchId="${guestClubMatch.id}" onclick="findHostClub(${guestClubMatch.id})">
+                <h4>${guestClubMatch.message}</h4>    
+                <p><strong>away Club Name:</strong> ${guestClubMatch.host_club_name}</p> 
+                <p><strong>Status:</strong> ${guestClubMatch.status}</p>
             </button>
         </div>
     `;
 }
-
 // guest 매치 상세 조회
 async function findHostClub(guestMatchId) {
     const accessToken = localStorage.getItem("accessToken");
@@ -50,8 +55,6 @@ async function findHostClub(guestMatchId) {
                 },
             },
         );
-
-        console.log(response.data);
 
         const clubMatch = response.data[0];
         const hostClub = response.data[1];

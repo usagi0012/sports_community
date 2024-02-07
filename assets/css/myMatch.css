@@ -4,12 +4,14 @@
     margin-top: 80px;
     width: 100%;
     min-height: 50px;
+    margin-bottom: 0px;
 }
 
 .titleFlex {
     width: 100%;
     display: flex;
     float: left;
+    height: 50px;
 }
 
 h3 {
@@ -22,7 +24,7 @@ h3 {
     width: 50%;
     display: inline-block;
     text-align: center;
-    border: 1px solid #ffb13d;
+    border: 1px solid #ff771c;
     background-color: #fff;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
@@ -36,11 +38,28 @@ h3 {
 
 .mainContainer {
     margin: 0px auto 10px;
-    border: 1px solid #ffb13d;
+    border: 1px solid #ff771c;
+    min-height: 20rem;
 }
 
 /* 카드 부분*/
+#myMatch {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    justify-content: space-between;
+    text-align: center;
+}
 
+#myMatch > button {
+    font-family: "LINESeedKR-Bd";
+    width: 90%;
+    text-align: center;
+    margin: 10px auto;
+    background-color: #fff;
+    border-radius: 15px;
+    border: 1px solid #ffb13d;
+    cursor: pointer;
+}
 /* 모달창 */
 
 .custom-modal {
@@ -61,6 +80,7 @@ h3 {
 }
 
 .modal-content {
+    min-width: 400px;
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -98,4 +118,53 @@ h3 {
 
 .btn-secondary:hover {
     background-color: #5a6268;
+}
+
+.modal-body > h2 {
+    border-top: 1px dotted #ff771c;
+    padding-top: 20px;
+    margin-bottom: 5px;
+}
+
+#matchUser {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: space-between;
+}
+
+.userInMatch {
+    width: 90%;
+    margin: 10px auto;
+    font-family: "LINESeedKR-Bd";
+    text-align: center;
+    background-color: #fff;
+    border-radius: 15px;
+    border: 1px solid #ffb13d;
+}
+
+.modal-footer > button,
+#userButton > div > button {
+    font-family: "LINESeedKR-Bd";
+    background-color: #ffb13d;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    width: fit-content;
+    height: 30px;
+    padding-top: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.modal-footer > button {
+    margin-left: 10px;
+}
+
+.modal-footer > button:hover,
+#userButton > div > button:hover {
+    background-color: #fff;
+    color: black;
+    box-shadow: 2px 2px 2px gray;
+    border: 1px solid #ffb13d;
 }

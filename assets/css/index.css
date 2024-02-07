@@ -13,7 +13,7 @@
     display: grid;
     grid-template-areas:
         "image nickname gender tag alarm calender"
-        "image height . . . calender"
+        "image height position position position calender"
         "image description description description description calender"
         "score score score score updateBtn calender";
     grid-template-columns: 1fr 1fr 0.3fr 1fr 0.7fr 2fr;
@@ -80,6 +80,12 @@
     padding-left: 10px;
 }
 
+.position {
+    grid-area: position;
+    font-size: 0.9rem;
+    padding-left: 10px;
+}
+
 .description {
     grid-area: description;
     padding: 0px 10px;
@@ -116,6 +122,15 @@
 .calenderContainer {
     grid-area: calender;
     border-left: 1px dashed #666;
+}
+
+#calenderBtn {
+    background-color: #fff;
+    font-family: "LINESeedKR-Bd";
+    border: none;
+    font-size: 1.2rem;
+    margin: 10px;
+    cursor: pointer;
 }
 
 #profileUpdateBtn {
