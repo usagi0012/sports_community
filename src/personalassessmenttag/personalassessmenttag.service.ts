@@ -21,8 +21,6 @@ export class PersonalassessmenttagService {
         private readonly userscoreRepository: Repository<Userscore>,
         @InjectRepository(Personaltagcounter)
         private readonly personaltagcounterRepository: Repository<Personaltagcounter>,
-        @InjectRepository(Recruit)
-        private readonly recruitRepository: Repository<Recruit>,
         @InjectRepository(Match)
         private readonly matchRepository: Repository<Match>,
         @InjectRepository(UserProfile)
@@ -103,11 +101,11 @@ export class PersonalassessmenttagService {
                 key !== "userId" &&
                 key !== "createdAt" &&
                 key !== "updatedAt" &&
-                key !== "userId",
+                key !== "userProfile",
         );
 
         // 태그 열 중에서 최댓값을 가진 열 찾기
-        const maxTagColumn = tagColumns.reduce((maxColumn, currentColumn) => {
+        tagColumns.reduce((maxColumn, currentColumn) => {
             if (userTag[currentColumn] > userTag[maxColumn]) {
                 return currentColumn;
             }
@@ -116,7 +114,7 @@ export class PersonalassessmenttagService {
 
         // 최대값을 기준으로 상위 3개 태그 추출
         const topThreeTags = tagColumns
-            .filter((column) => column !== maxTagColumn)
+            .filter((column) => column)
             .sort((a, b) => userTag[b] - userTag[a])
             .slice(0, 3);
 
@@ -157,14 +155,6 @@ export class PersonalassessmenttagService {
     }
 
     async findOtherOneUserTag(userId: number) {
-        const userProfile = await this.userProfileRepository.findOne({
-            where: { userId },
-        });
-
-        if (!userProfile) {
-            throw new NotFoundException("해당 유저를 찾을 수 없습니다.");
-        }
-
         const userTag = await this.personaltagcounterRepository.findOne({
             where: { userId },
         });
@@ -183,7 +173,7 @@ export class PersonalassessmenttagService {
         );
 
         // 태그 열 중에서 최댓값을 가진 열 찾기
-        const maxTagColumn = tagColumns.reduce((maxColumn, currentColumn) => {
+        tagColumns.reduce((maxColumn, currentColumn) => {
             if (userTag[currentColumn] > userTag[maxColumn]) {
                 return currentColumn;
             }
@@ -192,7 +182,7 @@ export class PersonalassessmenttagService {
 
         // 최대값을 기준으로 상위 3개 태그 추출
         const topThreeTags = tagColumns
-            .filter((column) => column !== maxTagColumn)
+            .filter((column) => column)
             .sort((a, b) => userTag[b] - userTag[a])
             .slice(0, 3);
 
