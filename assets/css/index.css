@@ -13,21 +13,26 @@
     display: grid;
     grid-template-areas:
         "image nickname gender tag alarm calender"
-        "image height . . . calender"
+        "image height position position position calender"
         "image description description description description calender"
         "score score score score updateBtn calender";
     grid-template-columns: 1fr 1fr 0.3fr 1fr 0.7fr 2fr;
     grid-template-rows: 1fr 0.5fr 1.5fr 1fr;
 }
 
+.noProfileContainer {
+    z-index: 1;
+    margin: 30px 0;
+    border: 2px solid #dfcec3;
+    border-radius: 20px;
+    height: 80px;
+    text-align: center;
+}
+
 .noprofile {
-    grid-area: description;
     font-size: 1.6rem;
     cursor: pointer;
-    text-align: right;
-    position: relative;
-    left: 150px;
-    width: 430px;
+    margin-top: 20px;
     height: 50px;
     padding: 5px 0px;
 }
@@ -75,6 +80,12 @@
     padding-left: 10px;
 }
 
+.position {
+    grid-area: position;
+    font-size: 0.9rem;
+    padding-left: 10px;
+}
+
 .description {
     grid-area: description;
     padding: 0px 10px;
@@ -111,6 +122,15 @@
 .calenderContainer {
     grid-area: calender;
     border-left: 1px dashed #666;
+}
+
+#calenderBtn {
+    background-color: #fff;
+    font-family: "LINESeedKR-Bd";
+    border: none;
+    font-size: 1.2rem;
+    margin: 10px;
+    cursor: pointer;
 }
 
 #profileUpdateBtn {
@@ -206,6 +226,7 @@
 .plusName {
     font-size: 2rem;
     color: #3f3131;
+    cursor: pointer;
 }
 
 .plusInnerContainer {
@@ -230,6 +251,7 @@
     width: 90%;
     font-size: 1.2rem;
     border-bottom: 1px solid #a08989;
+    cursor: pointer;
 }
 
 .plusData:hover {

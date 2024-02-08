@@ -48,32 +48,27 @@ export class NaverService {
         else res.redirect("http://localhost:8001/api/auth/login/failure");
         // 로그인에 실폐했을 경우 프론트 페이지를 개설해 줘야함(카카오와 네이버로그인 실패 page를 하나로 묶어서 제작)
     }
-    private generateRefreshToken(userId: number): string {
-        const payload = { sub: userId };
-        const secret = this.configService.get<string>(
-            "JWT_REFRESH_TOKEN_SECRET",
-        );
-        const expiresIn = this.configService.get<string>(
-            "JWT_REFRESH_TOKEN_EXP",
-        );
-        return this.jwtService.sign(payload, {
-            secret,
-            expiresIn,
+
+    private generateRefreshToken(id: number) {
+        const payload = { userId: id };
+
+        const refreshToken = this.jwtService.sign(payload, {
+            secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
+            expiresIn: this.configService.get<string>("JWT_REFRESH_TOKEN_EXP"),
         });
+
+        return refreshToken;
     }
 
-    private generateAccessToken(userId: number): string {
-        const payload = { sub: userId };
-        const secret = this.configService.get<string>(
-            "JWT_ACCESS_TOKEN_SECRET",
-        );
-        const expiresIn = this.configService.get<string>(
-            "JWT_ACCESS_TOKEN_EXP",
-        );
-
-        return this.jwtService.sign(payload, {
-            secret,
-            expiresIn,
+    /// access 토큰 발급 (private)
+    private generateAccessToken(id: number) {
+        const payload = { userId: id };
+        const accessToken = this.jwtService.sign(payload, {
+            secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
+            expiresIn: this.configService.get<string>("JWT_ACCESS_TOKEN_EXP"),
         });
+
+        return accessToken;
+
     }
 }

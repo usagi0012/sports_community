@@ -1,3 +1,9 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadUserMenu();
+};
+
 document.addEventListener("DOMContentLoaded", function () {
     // 이벤트 리스너 등록
     document
@@ -69,5 +75,11 @@ async function postProfile() {
         } else {
             alert("프로필 작성중 오류발생.");
         }
+    }
+}
+
+function handleOnInput(el, maxlength) {
+    if (el.value.length > maxlength) {
+        el.value = el.value.substr(0, maxlength);
     }
 }

@@ -1,0 +1,175 @@
+#myPersonal {
+    max-width: 500px;
+    max-height: 700px;
+}
+
+.assessment-title {
+    align-items: center;
+    /* 가운데 정렬을 위해 추가 */
+    margin: 0;
+}
+
+.assessment-title > h1 {
+    font-size: 2rem;
+}
+
+.main-show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 20px;
+}
+
+.main-show .question {
+    font-size: 1.5rem;
+}
+
+.main-show > div:last-child {
+    margin-top: 10px;
+}
+
+.bt-wrap {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 수정된 부분 */
+    flex-wrap: wrap;
+    gap: 10px;
+    /* 버튼 간의 간격 조절 */
+    margin-right: 0;
+}
+
+.bt-wrap a {
+    display: inline-block;
+    min-width: 80px;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    border: 1px solid rgb(243, 185, 95);
+    border-radius: 2px;
+    transition: background-color 0.3s ease;
+    font-size: 1.4rem;
+}
+
+.bt-wrap a:first-child {
+    margin-left: 0;
+}
+
+#post-btn1,
+#post-btn2,
+#post-btn3,
+#post-btn4,
+#post-btn5,
+#post-btn6,
+#post-btn7,
+#post-btn8,
+#post-btn9,
+#post-btn10,
+#post-btn11,
+#post-btn12 {
+    padding: 10px;
+    margin: 5px;
+    background: rgb(243, 185, 95);
+    color: #000;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.rating_box1,
+.rating_box2 {
+    display: flex;
+}
+
+.rating1,
+.rating2 {
+    position: relative;
+    color: #ddd;
+    font-size: 30px;
+    text-align: center;
+}
+
+.rating1 input,
+.rating2 input {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.rating_star1,
+.rating_star2 {
+    width: 0;
+    color: #ffc107;
+    position: absolute;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+/* 모달 스타일 */
+
+.clubAssessmentModal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.clubAssessmentModal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+} */
+
+.submit-wrap {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#submit-btn > button,
+#submit-cancel-btn {
+    font-family: "LINESeedKR-Bd";
+    margin: 10px;
+    width: 50px;
+    height: 25px;
+    padding-top: 5px;
+    border-radius: 7px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#submit-btn > button:hover,
+#submit-cancel-btn:hover {
+    box-shadow: 2px 2px 2px gray;
+}

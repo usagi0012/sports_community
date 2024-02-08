@@ -15,7 +15,6 @@ export class TypeormModule {
                 database: configService.get<string>("DATABASE_NAME"),
                 autoLoadEntities: true,
                 synchronize: true,
-                // logging: true,
             }),
             inject: [ConfigService],
         });

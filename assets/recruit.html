@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onog Recruit Feed</title>
-        <meta name="description" content="Onog RecruitFeedPage" />
+        <title>Onong Recruit Feed</title>
+        <meta name="description" content="Onong RecruitFeedPage" />
         <link rel="icon" href="./resources/favicon.ico" />
         <link
             rel="stylesheet"
@@ -15,6 +15,7 @@
         />
         <link rel="stylesheet" href="css/dropBar.css" />
         <link rel="stylesheet" href="./css/recruit.css" />
+        <link rel="stylesheet" href="css/otherUser-modal.css" />
     </head>
     <body>
         <div id="sameContainer"></div>
@@ -23,6 +24,33 @@
                 <button class="createBtn" onclick="toRecruitPost()">
                     글 작성
                 </button>
+                <select id="regionFilter" onchange="filterByRegion()">
+                    <option value="all">지역선택</option>
+                    <option value="0">서울</option>
+                    <option value="1">부산</option>
+                    <option value="2">대구</option>
+                    <option value="3">인천</option>
+                    <option value="4">광주</option>
+                    <option value="5">대전</option>
+                    <option value="6">울산</option>
+                    <option value="7">세종</option>
+                    <option value="8">경기</option>
+                    <option value="9">강원</option>
+                    <option value="10">충청북도</option>
+                    <option value="11">충청남도</option>
+                    <option value="12">경상북도</option>
+                    <option value="13">경상남도</option>
+                    <option value="14">전라북도</option>
+                    <option value="15">전라남도</option>
+                    <option value="16">제주도</option>
+                </select>
+                <select id="CategoryFilter" onchange="filterByCategory()">
+                    <option value="all">카테고리</option>
+                    <option value="3대3">3대3</option>
+                    <option value="4대4">4대4</option>
+                    <option value="5대5">5대5</option>
+                </select>
+
                 <div class="boardContainer">
                     <div class="boardTitleContainer">
                         <div class="num" id="numTitle">번호</div>
@@ -43,5 +71,31 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/recruit.js"></script>
         <script src="./js/dropmenu.js"></script>
+        <script src="./js/notification.js"></script>
+        <script src="./js/otherUser-modal.js"></script>
+        <script>
+            function toRecruitPost() {
+                const accessToken = localStorage.getItem("accessToken");
+                if (!accessToken) {
+                    alert("로그인 후 이용 가능합니다.");
+                } else {
+                    window.location.href = "recruit-post.html";
+                }
+            }
+
+            function filterByRegion() {
+                const regionFilterElement =
+                    document.getElementById("regionFilter");
+                currentFilterRegion = regionFilterElement.value;
+                feed();
+            }
+
+            function filterByCategory() {
+                const regionFilterElement =
+                    document.getElementById("CategoryFilter");
+                currentFilterCategory = regionFilterElement.value;
+                feed();
+            }
+        </script>
     </body>
 </html>

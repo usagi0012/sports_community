@@ -9,7 +9,7 @@ function getMyClubApplication() {
     // console.log("urlParams", urlParams);
     // let clubId = urlParams.get("id");
     // console.log("clubId", clubId);
-
+    console.log("here");
     const token = localStorage.getItem("accessToken");
 
     axios
@@ -23,28 +23,34 @@ function getMyClubApplication() {
             alert(`${response.data.message}`);
 
             //userId , message, status
-            response.data.data.forEach((application) => {
+            response.data.data.applications.forEach((application, idx) => {
                 console.log("어플", application);
                 const myClubAppplicationList = document.querySelector(
                     ".my-club-application",
                 );
                 // 신청서 내용들을 하나로 감싸주는 div = clubApplication
                 const clubApplication = document.createElement("div");
-                clubApplication.className = `${clubApplication} ${application.userId} ${application.clubId}`;
+                clubApplication.className = "clubApplicationCard";
 
-                const user = document.createElement("div");
-                user.className = "user";
-                user.innerHTML = `${application.userId}`;
-                clubApplication.appendChild(user);
+                // const user = document.createElement("div");
+                // user.className = "user";
+                // user.innerHTML = `${application.userId}`;
+                // clubApplication.appendChild(user);
+
+                const nickName = response.data.data.nicknames[idx];
+                const nickNameDiv = document.createElement("div");
+                nickNameDiv.className = "nickNameDiv";
+                nickNameDiv.innerHTML = `닉네임: ${nickName}`;
+                clubApplication.appendChild(nickNameDiv);
 
                 const message = document.createElement("div");
                 message.className = "message";
-                message.innerHTML = `${application.message}`;
+                message.innerHTML = `신청 메세지: ${application.message}`;
                 clubApplication.appendChild(message);
 
                 const status = document.createElement("div");
                 status.className = "status";
-                status.innerHTML = `${application.status}`;
+                status.innerHTML = `상태: ${application.status}`;
                 clubApplication.appendChild(status);
                 myClubAppplicationList.appendChild(clubApplication);
 
@@ -115,6 +121,16 @@ function getMyClubApplication() {
                 });
                 clubApplication.appendChild(rejectionBtn);
             });
+
+            // response.data.data.nicknames.forEach((nickname) => {
+            //     const myClubAppplicationList = document.querySelector(
+            //         ".my-club-application",
+            //     );
+            //     const nickNameDiv = document.createElement("div");
+            //     nickNameDiv.className = "nickNameDiv";
+            //     nickNameDiv.innerHTML = `${nickname}`;
+            //     myClubAppplicationList.appendChild(nickNameDiv);
+            // });
         })
         .catch(function (error) {
             console.log(error);

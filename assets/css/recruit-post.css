@@ -1,4 +1,5 @@
 /* 메인 컨테이너*/
+
 .mainContainer {
     margin: 70px auto 10px;
 }
@@ -44,7 +45,9 @@ dt {
 .region,
 .gps,
 .rule,
-.totalmember {
+.totalmember,
+.gamedate,
+.runtime {
     display: flex;
 }
 
@@ -64,6 +67,7 @@ dt {
     padding-top: 2px;
     width: 700px;
 }
+
 #gpsBtn > button:hover {
     border: 1px solid #ffb13d;
     background-color: #fff;
@@ -91,30 +95,24 @@ dt {
     padding-top: 2px;
 }
 
-.dateContainer {
-    display: flex;
-    margin-left: 20px;
-    margin-top: 10px;
-}
-
-.dateContainer > dd {
+.gamedate > dd,
+.runtime > dd {
     width: 35%;
-    margin: 0px;
 }
 
-.dateContainer > dd > input {
+.gamedate > dt,
+.runtime > dt {
+    margin: auto 0px auto 15px;
+}
+
+.gamedate > dd > input,
+.runtime > dd > input {
     width: 100%;
     background-color: #e9e9e9;
     color: black;
     border-radius: 10px;
     padding: 0px 10px;
     cursor: pointer;
-}
-
-#blank {
-    width: 5%;
-    margin: auto 10px auto 15px;
-    text-align: center;
 }
 
 .totalmember > dt {
@@ -130,6 +128,10 @@ dt {
     padding: 0px 10px;
 }
 
+.content {
+    margin-top: 15px;
+}
+
 #input-content {
     font-family: "LINESeedKR-Bd";
     min-height: 10rem;
@@ -140,10 +142,6 @@ dt {
     border-radius: 10px;
     padding: 10px;
     border: none;
-}
-
-.board-post .content {
-    border-bottom: 1px solid #000;
 }
 
 .board-post .content textarea {
@@ -160,6 +158,7 @@ dt {
     text-align: center;
     margin: 10px auto;
 }
+
 #register-btn,
 #register-cancel-btn {
     font-family: "LINESeedKR-Bd";
@@ -209,6 +208,21 @@ dt {
     margin-bottom: 10px;
 }
 
+.board-post .title input[type="text"],
+.board-post .info input[type="text"],
+.board-post .info select,
+.board-post .info input[type="date"],
+.board-post .info input[type="time"] {
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.board-post .info select,
+.board-post .info input[type="date"],
+.board-post .info input[type="time"] {
+    width: 100%;
+}
+
 #map {
     margin: 0px auto;
 }
@@ -228,6 +242,7 @@ dt {
     display: inline;
     padding-left: 10px;
 }
+
 #submit {
     margin-top: 8px;
 }

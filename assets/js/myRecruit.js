@@ -31,7 +31,7 @@ async function displayRecruitInfo() {
 
 function createRecruitHTML(recruit) {
     return `
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myRecruitModal" onclick="findRecruit(${
+        <button type="button" class="recruitBtn" onclick="findRecruit(${
             recruit.id
         })">
             <h1>${recruit.title}</h1>
@@ -47,7 +47,7 @@ function createRecruitHTML(recruit) {
 
 function createRecruitButtonHTML(recruit) {
     return `
-        <div>
+        <div class="recruitListBtn">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#recruitUserModal" onclick="application(${recruit.id})">신청목록</button>
         </div>
     `;
@@ -91,11 +91,23 @@ async function findRecruit(recruitId) {
         //모집글 상세보기 모달창에 쓰이는 버튼
         const recurtIdButtonHTML = createRecurtIdButtonHTML(findRecruit);
         recurtIdButton.innerHTML = recurtIdButtonHTML;
+
+        openRecruitModal();
     } catch (error) {
         console.log(error.response.data);
         alert(error.response.data.message);
         window.location.reload();
     }
+}
+
+function openRecruitModal() {
+    const modal = document.getElementById("myRecruitModal");
+    modal.style.display = "block";
+}
+
+function closeRecruitModal() {
+    const modal = document.getElementById("myRecruitModal");
+    modal.style.display = "none";
 }
 
 function createRecurtIdButtonHTML(findRecruit) {
@@ -109,29 +121,37 @@ function createRecurtIdButtonHTML(findRecruit) {
 }
 
 function createConfirmUsersHTML(confirmUser) {
+    const matchId = confirmUser.id;
+    const playOtherUserId = confirmUser.guestId;
     return `
-        <button type="button" class="btn btn-secondary" >
+        <div type="button"  class="userInMatch">
             <p><strong>Name:</strong> ${confirmUser.guestName}</p>
-            <p><strong>Progress:</strong> ${confirmUser.progress}</p>
             <p><strong>Status:</strong> ${confirmUser.status}</p>
         </div>
+        <button onclick="displayPersonal('${matchId}', '${playOtherUserId}')">평가</button> 
     `;
 }
 
 function createmyRecruitMatchHTML(findRecruit) {
     return `
 <div>
-    <h4>${findRecruit.title}</h4>
-    <p><strong>위치:</strong> ${findRecruit.gps}</p>
-    <p><strong>모집장:</strong> ${findRecruit.hostName}</p>
-    <p><strong>지역:</strong> ${findRecruit.region}</p>
-    <p><strong>경기방식:</strong> ${findRecruit.rule}</p>
-    <p><strong>모집인원</strong> ${findRecruit.totalmember}</p>
-    <p><strong>경기시간:</strong> ${findRecruit.gamedate}</p>
-    <p><strong>경기END타임:</strong> ${findRecruit.endtime}</p>
-    <p><strong>특이사항:</strong> ${findRecruit.content}</p>
-    <p><strong>진행상황:</strong> ${findRecruit.progress}</p>
-    <p><strong>상태:</strong> ${findRecruit.status}</p>
+    <h3>${findRecruit.title}</h3>
+    <p><strong>위치: </strong> ${findRecruit.gps}</p>
+    <p><strong>모집장: </strong> ${findRecruit.hostName}</p>
+    <p><strong>지역: </strong> ${findRecruit.region}</p>
+    <p><strong>경기방식: </strong> ${findRecruit.rule}</p>
+    <p><strong>모집인원: </strong> ${findRecruit.totalmember}</p>
+    <p><strong>경기시작시간: </strong> ${findRecruit.gamedate.slice(
+        0,
+        10,
+    )} ${findRecruit.gamedate.slice(11, 19)}</p>
+    <p><strong>경기종료시간: </strong> ${findRecruit.endtime.slice(
+        0,
+        10,
+    )}  ${findRecruit.endtime.slice(11, 19)}</p>
+    <p><strong>내용: </strong> ${findRecruit.content}</p>
+    <p><strong>상태: </strong> ${findRecruit.status}</p>
+    <p><strong>진행상황: </strong> ${findRecruit.progress}</p>
 </div>
 `;
 }
@@ -198,8 +218,9 @@ async function application(recruitId) {
         guestData.forEach((guest) => {
             const guestHTML = createGuestHTML(guest);
             const buttonHTML = createButtonHTML(guest);
-            modalContentContainer.innerHTML += [guestHTML, buttonHTML];
+            modalContentContainer.innerHTML += [guestHTML + buttonHTML];
         });
+        openRecruitUserModal();
     } catch (error) {
         console.log(error.response.data);
         alert(error.response.data.message);
@@ -209,19 +230,20 @@ async function application(recruitId) {
 
 function createGuestHTML(guest) {
     return `
-    <button type="button" class="btn btn-primary">
+    <button type="button" >
     <h7><strong></strong>${guest.message}</h7>
-        <p><strong>게스트:</strong>${guest.guestName}</p>
+        <p><strong>게스트:</strong><span class="guestName" onclick="createModal('${guest.guestId}')">${guest.guestName}</span></p>
         <p ><strong>상태:</strong>${guest.status}</p>
     </button>
     `;
 }
 
+
 function createButtonHTML(guest) {
     return `
         <div>
-            <button type="button" class="btn btn-success"  onclick="approvebutton(${guest.id})">승인</button>
-            <button type="button" class="btn btn-danger"  onclick="rejectbutton(${guest.id})">거절</button>
+            <button type="button"   onclick="approvebutton(${guest.id})">승인</button>
+            <button type="button"   onclick="rejectbutton(${guest.id})">거절</button>
 
         </div>
     `;
@@ -292,4 +314,61 @@ function createEvaluateButtonHtml(recruitId) {
             <button class="evaluateButton" data-recruitId="${recruitId}" onclick="evaluateGuest(${recruitId})">평가완료하기</button>
         </div>
     `;
+}
+
+function openRecruitUserModal() {
+    const modal = document.getElementById("recruitUserModal");
+
+    modal.style.display = "block";
+}
+
+function closeRecruitUserModal() {
+    const modal = document.getElementById("recruitUserModal");
+    modal.style.display = "none";
+}
+
+//평가하기
+async function displayPersonal(matchId, playOtherUserId) {
+    try {
+        console.log("displayPersonal", matchId, playOtherUserId);
+        const personalEvaluation = document.getElementById("submit-btn");
+        personalEvaluation.innerHTML = "";
+        const personalEvaluationHTML = createpersonalEvaluationHTML(
+            matchId,
+            playOtherUserId,
+        );
+        personalEvaluation.innerHTML = personalEvaluationHTML;
+        openPersonal();
+    } catch (error) {}
+}
+
+function createpersonalEvaluationHTML(matchId, playOtherUserId) {
+    console.log("createpersonalEvaluationHTML", matchId, playOtherUserId);
+    return `
+        <button onclick="submit('${matchId}', '${playOtherUserId}')" class="on">제출</button>
+    `;
+}
+
+function openPersonal(confirmUser) {
+    var modal = document.getElementById("myPersonal");
+    console.log(confirmUser);
+    modal.style.display = "block";
+}
+
+async function submit(matchId, playOtherUserId) {
+    try {
+        console.log("submit", matchId, playOtherUserId);
+        await getPersonalAssessment(matchId, playOtherUserId);
+        await getPersonalTag(matchId, playOtherUserId);
+
+        alert("평가완료");
+        endPersonal();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function endPersonal() {
+    var modal = document.getElementById("myPersonal");
+    modal.style.display = "none";
 }

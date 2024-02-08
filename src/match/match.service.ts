@@ -1,3 +1,4 @@
+import { UserId } from "./../auth/decorators/userId.decorator";
 import { Progress } from "./../entity/match.entity";
 import { MatchDTO } from "./dto/match.dto";
 import { Match, MatchStatus } from "../entity/match.entity";
@@ -10,6 +11,13 @@ import { userInfo } from "os";
 import { find } from "lodash";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { match } from "assert";
+import { isUtf8 } from "buffer";
+import { Alarmservice } from "src/alarm/alarm.service";
+
+const now = new Date();
+const utc = now.getTime();
+const koreaTimeDiff = 9 * 60 * 60 * 1000;
+const korNow = new Date(utc + koreaTimeDiff);
 
 @Injectable()
 export class MatchService {
@@ -20,6 +28,7 @@ export class MatchService {
         private recruitRepository: Repository<Recruit>,
         @InjectRepository(User)
         private userRepository: Repository<User>,
+        private alarmService: Alarmservice,
     ) {}
 
     //나의 매치 조회
@@ -65,12 +74,33 @@ export class MatchService {
             throw new NotFoundException("모집이 완료되었습니다.");
         }
 
+        // if (findRecruit.hostId === userId) {
+        //     throw new NotFoundException(
+        //         "본인의 모집 공고에는 신청이 불가합니다.",
+        //     );
+        // }
+
         await this.checkMatch(recruitId, userId);
         const user = await this.userRepository.findOne({
             where: {
                 id: userId,
             },
         });
+        const myMatches = await this.getMyMatch(userId);
+
+        for (const match of myMatches) {
+            const matchGamedate = match.gameDate;
+            const matchEndtime = match.endTime;
+
+            if (
+                findRecruit.gamedate >= matchGamedate &&
+                findRecruit.gamedate <= matchEndtime
+            ) {
+                throw new NotFoundException(
+                    "이미 그 시간에 신청한 매치가 있습니다.",
+                );
+            }
+        }
 
         const recruit = await this.recruitRepository.findOne({
             where: { id: recruitId },
@@ -89,6 +119,11 @@ export class MatchService {
             ...matchDTO,
         });
         await this.matchRepository.save(submitMatch);
+        console.log(recruit);
+        this.alarmService.sendAlarm(
+            recruit.hostId,
+            `${user.name}님이 매치를 신청했습니다.`,
+        );
         return submitMatch;
     }
 
@@ -125,9 +160,9 @@ export class MatchService {
             },
         });
 
-        if (!matches || matches.length === 0) {
-            throw new NotFoundException("컴펌된 유저가 없습니다.");
-        }
+        // if (!matches || matches.length === 0) {
+        //     throw new NotFoundException("컴펌된 유저가 없습니다.");
+        // }
 
         return [findmatch, matches];
     }
@@ -186,6 +221,7 @@ export class MatchService {
                     await this.matchRepository.save(individualMatch);
                 }
             }
+            await this.recruitRepository.save(recruit);
             await this.matchRepository.save(findMatch);
         }
         return findMatch;
@@ -248,20 +284,64 @@ export class MatchService {
 
         for (const match of matches) {
             this.updateProgress(match);
+            const message = `함께 경기한 사람들을 평가해주세요!`;
+            //link부분 수정해야함
+            this.alarmService.sendAlarm(match.guestId, message);
         }
 
         await this.matchRepository.save(matches);
     }
 
     private updateProgress(match: Match) {
-        const now = new Date();
-
-        if (match.gameDate.getTime() < now.getTime()) {
+        if (match.gameDate.getTime() < korNow.getTime()) {
             match.progress = Progress.DURING;
         }
 
-        if (match.endTime.getTime() < now.getTime()) {
+        if (match.endTime.getTime() < korNow.getTime()) {
             match.progress = Progress.PLEASE_EVALUATE;
+        }
+    }
+
+    //호스트가 매치 삭제하기
+    async deleteMatch(userId: number, matchId: number) {
+        try {
+            const match = await this.matchRepository.findOne({
+                where: {
+                    id: matchId,
+                    hostId: userId,
+                },
+            });
+
+            if (!match) {
+                throw new Error("Match not found");
+            }
+
+            const recruitId = match.recruitId;
+            const recruit = await this.recruitRepository.findOne({
+                where: {
+                    id: recruitId,
+                },
+            });
+
+            if (!recruit) {
+                throw new Error("Recruit not found");
+            }
+
+            if (match.status === MatchStatus.CONFIRM) {
+                recruit.totalmember += 1;
+                if (recruit.status === Status.Complete) {
+                    recruit.status = Status.Recruiting;
+                }
+                await this.recruitRepository.save(recruit);
+            }
+
+            match.status = MatchStatus.CANCELCONFIRM;
+            await this.matchRepository.save(match);
+
+            return { message: "경기가 취소되었습니다." };
+        } catch (error) {
+            console.error(error.message);
+            throw new Error(error);
         }
     }
 }

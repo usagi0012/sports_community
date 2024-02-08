@@ -77,3 +77,15 @@
 .title > a:hover {
     text-decoration: underline;
 }
+
+#regionFilter,
+#CategoryFilter {
+    font-family: "LINESeedKR-Bd";
+    border: 1px solid #ffb13d;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    padding: 5px;
+    cursor: pointer;
+    height: 25px;
+    margin: 10px 3px;
+}

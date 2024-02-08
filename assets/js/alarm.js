@@ -1,3 +1,9 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadUserMenu();
+};
+
 const notificationContainer = document.getElementById("notification-container");
 const notificationTemplate = document.getElementById(
     "notification-template-content",
@@ -9,16 +15,11 @@ const accessToken = localStorage.getItem("accessToken");
 async function displayNotifications() {
     try {
         // 서버에 알림 목록을 가져오는 GET 요청
-        const response = await axios.get(
-            "http://localhost:8001/api/userAlarm",
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`, // Access Token을 헤더에 추가
-                },
+        const response = await axios.get("/api/userAlarm", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`, // Access Token을 헤더에 추가
             },
-        );
-        console.log(response.data.data.getAlarms);
-
+        });
         const notifications = response.data.data.getAlarms;
         notificationContainer.innerHTML = "";
         notifications.forEach((notification) => {
@@ -84,14 +85,11 @@ async function deleteNotification(deleteButton) {
 
     try {
         // 서버에 알림 삭제를 요청하는 DELETE 요청
-        await axios.delete(
-            `http://localhost:8001/api/userAlarm/${notificationId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`, // Access Token을 헤더에 추가
-                },
+        await axios.delete(`/api/userAlarm/${notificationId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`, // Access Token을 헤더에 추가
             },
-        );
+        });
 
         // 삭제된 알림을 UI에서 제거
         notificationElement.remove();
@@ -153,3 +151,10 @@ displayNotifications();
 //         });
 //     }
 // }
+
+async function toUp() {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+    });
+}

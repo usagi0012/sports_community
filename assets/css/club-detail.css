@@ -4,8 +4,8 @@
 
 #buttonContainer {
     display: grid;
-    grid-template-areas: "match update delete . application";
-    grid-template-columns: 1fr 1fr 1fr 4fr 1fr;
+    grid-template-areas: "match update delete . application expelMember withdraw";
+    grid-template-columns: 1fr 1fr 1fr 2fr 1fr 1fr 1fr;
 }
 
 .matchBtn,
@@ -14,7 +14,9 @@
 .applyingBtn,
 .myClubApplication,
 .matchManagement,
-.toMyClubBtn {
+.toMyClubBtn,
+.expelMemberBtn,
+.withdrawBtn {
     font-family: "LINESeedKR-Bd";
     width: 110px;
     height: 35px;
@@ -32,7 +34,9 @@
 .applyingBtn:hover,
 .myClubApplication:hover,
 .matchManagement:hover,
-.toMyClubBtn:hover {
+.toMyClubBtn:hover,
+.expelMemberBtn:hover,
+.withdrawBtn:hover {
     background-color: #ffb13d;
 }
 
@@ -47,6 +51,15 @@
 
 .deleteBtn {
     grid-area: delete;
+    display: none;
+}
+
+.withdrawBtn {
+    grid-area: withdraw;
+}
+
+.expelMemberBtn {
+    grid-area: expelMember;
     display: none;
 }
 
@@ -216,4 +229,90 @@
     top: 10px;
     right: 15px;
     font-size: 20px;
+}
+
+.form-group > input {
+    width: 470px;
+    background-color: #eeeeee;
+    border-radius: 10px;
+    color: #000000;
+    margin: 10px 20px 10px 10px;
+    padding: 0px 10px;
+}
+
+.btnBox {
+    width: 100%;
+    text-align: center;
+}
+
+.btnBox > button {
+    font-family: "LINESeedKR-Bd";
+    border-radius: 7px;
+    height: 25px;
+    padding-top: 5px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.btnBox > button:hover {
+    background-color: #ffb13d;
+}
+
+/* #expelMember-modal-overlay {
+    display: none;
+} */
+
+#expelMember-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 오버레이 배경색 및 투명도 조절 */
+    display: none; /* 초기에는 화면에 표시되지 않음 */
+    justify-content: center;
+    align-items: center;
+}
+
+#modal {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 300px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+#nickname {
+    width: 100%;
+}
+
+#expelMember-modal-overlay > .modal-content > label {
+    display: block;
+}
+
+#expelMember-modal-overlay > .modal-content > input {
+    background-color: #eeeeee;
+    border-radius: 15px;
+    border: none;
+    margin: 15px;
+    padding-left: 10px;
+}
+
+.memberList {
+    margin-top: 30px;
+}
+
+.memberList > label {
+    font-size: 1.3rem;
+    color: #3f3131;
+}
+
+.memberList > .nickName {
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.memberList > .nickName:hover {
+    text-decoration: underline;
 }

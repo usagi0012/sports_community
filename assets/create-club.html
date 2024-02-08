@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onog Create Club</title>
-        <meta name="description" content="Onog CreateClubPage" />
+        <title>Onong Create Club</title>
+        <meta name="description" content="Onong CreateClubPage" />
         <link rel="icon" href="./resources/favicon.ico" />
         <link
             rel="stylesheet"
@@ -23,7 +23,12 @@
                 <label id="containerLabel">동아리 생성하기</label>
                 <div id="nameContainer">
                     <label for="name" id="nameLabel">이름</label>
-                    <input type="text" id="name" />
+                    <input
+                        type="text"
+                        id="name"
+                        maxlength="12"
+                        placeholder="최대 12글자 입력가능합니다."
+                    />
                 </div>
                 <div id="locationContainer">
                     <label for="location" id="locationLabel">지역</label>
@@ -51,7 +56,11 @@
                     <label for="description" id="descriptionLabel"
                         >소개글</label
                     >
-                    <textarea id="description"></textarea>
+                    <textarea
+                        id="description"
+                        maxlength="100"
+                        placeholder="최대 100글자 입력가능합니다."
+                    ></textarea>
                 </div>
                 <input type="file" id="fileInput" />
                 <button onclick="submitForm()" id="createClubBtn">생성</button>
@@ -105,5 +114,6 @@
                 window.location.href = "club.html";
             }
         </script>
+        <script src="./js/notification.js"></script>
     </body>
 </html>

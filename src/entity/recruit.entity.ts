@@ -106,4 +106,22 @@ export class Recruit {
             this.progress = Progress.PLEASE_EVALUATE;
         }
     }
+
+    static setEndTimeFromNumber(gameDate: Date, durationInHours: number): Date {
+        const adjustedGameDate = new Date(
+            gameDate.getTime() + 9 * 60 * 60 * 1000,
+        );
+
+        const futureEndTime = new Date(
+            adjustedGameDate.getTime() + durationInHours * 60 * 60 * 1000,
+        );
+        return futureEndTime;
+    }
+
+    static korGameDate(gameDate: Date): Date {
+        const adjustedGameDate = new Date(
+            gameDate.getTime() + 9 * 60 * 60 * 1000,
+        );
+        return adjustedGameDate;
+    }
 }

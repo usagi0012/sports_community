@@ -7,6 +7,7 @@ window.onload = function () {
     hasClub();
     isClubMaster();
     isMyClub();
+    getMember(clubId);
     loadFooter();
 };
 const regionData = [
@@ -29,7 +30,7 @@ const regionData = [
     "제주도",
 ];
 
-export default function getClubDetail(clubId) {
+function getClubDetail(clubId) {
     // 보내는 순서 알아보기(header, params)
     // const authorized = localStorage.getItem("authorized");
     // const token = JSON.parse(authorized).accessToken.value;
@@ -80,6 +81,11 @@ export default function getClubDetail(clubId) {
             const clubMaster = document.createElement("div");
             clubMaster.className = "clubMasterDetail";
             clubMaster.innerHTML += `${response.data.users[0].name}`;
+            // 클릭 이벤트 추가
+            clubMaster.addEventListener("click", function () {
+                createModal(response.data.users[0].id);
+            });
+
             clubMasterDiv.appendChild(clubMaster);
 
             const detailsDiv = document.querySelector(".details");
@@ -179,4 +185,39 @@ function hasClub() {
             console.log(error.message);
             console.log("에러메세지");
         });
+}
+
+async function getMember(clubId) {
+    const token = localStorage.getItem("accessToken");
+
+    try {
+        const clubMember = await axios.get(`/api/club/${clubId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        const userIds = clubMember.data.users.map((user) => user.id);
+
+        const membersResponse = await axios.get(`/api/club/member/${clubId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log("멤버", membersResponse);
+        membersResponse.data.forEach((nickName, index) => {
+            const memberListDiv = document.querySelector(".memberList");
+            const nickNameDiv = document.createElement("div");
+            nickNameDiv.addEventListener("click", () => {
+                // 클릭된 닉네임의 ID만을 전달하되, 배열로 전달
+                createModal([userIds[index]]);
+            });
+            nickNameDiv.className = "nickName";
+            nickNameDiv.innerHTML = `${nickName}`;
+            memberListDiv.appendChild(nickNameDiv);
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }

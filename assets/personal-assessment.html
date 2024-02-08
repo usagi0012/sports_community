@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/personal-assessment.css" />
+</head>
+
+<body>
+
+    <button onclick="openModal()">모듈 열기</button>
+
+    <div id="myPersonal">
+        <div id="personalContent">
+            <div class="main-show">
+                <div class="assessment-title">
+                    <h1>개 인 평 가</h1>
+                </div>
+                <div>
+                    <div>
+                        <div class="question">태도는 어떤가요?</div>
+                        <div class="rating_box1">
+                            <div class="rating1">
+                                ★★★★★
+                                <span class="rating_star1">★★★★★</span>
+                                <input type="range" value="1" step="0.5" min="0" max="5" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question">실력은 어떤가요?</div>
+                        <div class="rating_box2">
+                            <div class="rating2">
+                                ★★★★★
+                                <span class="rating_star2">★★★★★</span>
+                                <input type="range" value="1" step="0.5" min="0" max="5" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>#당신이 생각하는 이 사람의 캐릭터는?</h2>
+                        <div class="bt-wrap">
+                            <a id="post-btn1" onclick="toggleButton(this)">조던</a>
+                            <a id="post-btn2" onclick="toggleButton(this)">정대만</a>
+                            <a id="post-btn3" onclick="toggleButton(this)">서태웅</a>
+                            <a id="post-btn4" onclick="toggleButton(this)">채치수</a>
+                            <a id="post-btn5" onclick="toggleButton(this)">커리</a>
+                            <a id="post-btn6" onclick="toggleButton(this)">어빙</a>
+                            <a id="post-btn7" onclick="toggleButton(this)">으악새</a>
+                            <a id="post-btn8" onclick="toggleButton(this)">지각</a>
+                            <a id="post-btn9" onclick="toggleButton(this)">도망감</a>
+                            <a id="post-btn10" onclick="toggleButton(this)">도둑</a>
+                            <a id="post-btn11" onclick="toggleButton(this)">예민함</a>
+                            <a id="post-btn12" onclick="toggleButton(this)">파출리아</a>
+                        </div>
+
+                        <div class="submit-wrap">
+                            <a id="submit-btn" class="on">제출</a>
+                            <a id="submit-cancel-btn">취소</a>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</body>
+<script src="./js/personal-assessment.js"></script>
+
+</html>

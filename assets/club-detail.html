@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onog Club Details</title>
-        <meta name="description" content="Onog ClubDetailPage" />
+        <title>Onong Club Details</title>
+        <meta name="description" content="Onong ClubDetailPage" />
         <link rel="icon" href="./resources/favicon.ico" />
         <link
             rel="stylesheet"
@@ -15,6 +15,7 @@
         />
         <link rel="stylesheet" href="css/club-detail.css" />
         <link rel="stylesheet" href="css/dropBar.css" />
+        <link rel="stylesheet" href="css/otherUser-modal.css" />
     </head>
 
     <body>
@@ -32,13 +33,12 @@
                     <button class="matchBtn" onclick="openClubMatchModal()">
                         동아리 대결 신청
                     </button>
-                    <script src="./js/clubMatchModal.js"></script>
                     <button class="toMyClubBtn" onclick="toMyClub()">
                         관리페이지 이동
                     </button>
 
                     <!-- 내 동아리 들어가면 동아리 삭제 버튼 띄우기 -->
-                    <button class="deleteBtn" onclick="deleteCheck()">
+                    <button class="deleteBtn" onclick="confirmDelete()">
                         동아리 삭제
                     </button>
                 </div>
@@ -51,7 +51,11 @@
                         <label for="description" id="applyDescription"
                             >지원 이유</label
                         >
-                        <textarea id="description1"></textarea>
+                        <textarea
+                            id="description1"
+                            maxlength="100"
+                            placeholder="최대 100글자 입력가능합니다."
+                        ></textarea>
                         <div class="modalBtnContainer">
                             <button onclick="submitApplyingForm()">제출</button>
                             <button onclick="closeApplyingModal()">닫기</button>
@@ -74,13 +78,15 @@
                     </div>
                 </div>
             </div>
+            <div class="memberList"><label>멤버목록</label></div>
         </div>
 
         <div class="footer" id="footer"></div>
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script type="module" src="./js/club-detail.js"></script>
+        <script src="./js/club-detail.js"></script>
         <script src="./js/dropmenu.js"></script>
+        <script src="./js/otherUser-modal.js"></script>
         <script>
             const clubNameDiv = document.querySelector(".name");
             const clubNameDisplay = document.querySelector("#clubNameDisplay");
@@ -157,6 +163,17 @@
                     });
             }
 
+            function confirmDelete() {
+                let result = confirm("동아리를 정말로 삭제하시겠습니까?");
+                if (result) {
+                    console.log("확인 누름");
+                    deleteCheck();
+                } else {
+                    console.log("취소 누름");
+                    alert("동아리 삭제를 취소했습니다.");
+                }
+            }
+
             function deleteCheck() {
                 // alert(`${clubNameDiv} 동아리를 정말로 삭제하시겠습니까?`);
                 const urlParams = new URLSearchParams(window.location.search);
@@ -180,6 +197,7 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                        alert("동아리 삭제에 실패했습니다.");
 
                         // if (error.response.data.message === "Unauthorized") {
                         //     alert("동아리 생성자만 삭제할 수 있습니다.");
@@ -199,7 +217,7 @@
         <!-- 클럽매치 모달창 -->
         <div id="clubMatchModal" class="modal">
             <div id="modalContainer"></div>
-            <div class="modal-content" style="width: 400px">
+            <div class="modal-content" style="width: 500px">
                 <div class="modal-body">
                     <form
                         id="clubMatchForm"
@@ -213,6 +231,8 @@
                                 id="message"
                                 name="message"
                                 required
+                                maxlength="30"
+                                placeholder="최대 30글자 입력가능합니다."
                             />
                         </div>
                         <div class="form-group">
@@ -223,6 +243,8 @@
                                 id="Information"
                                 name="Information"
                                 required
+                                maxlength="30"
+                                placeholder="최대 30글자 입력가능합니다."
                             />
                         </div>
                         <div class="form-group">
@@ -245,15 +267,19 @@
                                 required
                             />
                         </div>
-
-                        <button type="submit" class="btn btn-primary">
-                            Submit
-                        </button>
+                        <div class="btnBox">
+                            <button type="submit">Submit</button>
+                            <button onclick="closeClubMatchModal()">
+                                닫기
+                            </button>
+                        </div>
                     </form>
                 </div>
-                <button onclick="closeClubMatchModal()">닫기</button>
             </div>
         </div>
         <!-- 클럽매치 모달창 -->
+
+        <script src="./js/clubMatchModal.js"></script>
+        <script src="./js/notification.js"></script>
     </body>
 </html>

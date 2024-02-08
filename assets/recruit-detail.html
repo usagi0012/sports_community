@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onog Recruit Detail</title>
-        <meta name="description" content="Onog RecruitDetailPage" />
+        <title>Onong Recruit Detail</title>
+        <meta name="description" content="Onong RecruitDetailPage" />
         <link rel="icon" href="./resources/favicon.ico" />
         <link
             rel="stylesheet"
@@ -15,8 +15,24 @@
         />
         <link rel="stylesheet" href="css/dropBar.css" />
         <link rel="stylesheet" href="./css/recruit-detail.css" />
+        <link rel="stylesheet" href="./css/otherUser-modal.css" />
+        <script
+            async
+            src="https://code.jquery.com/jquery-3.6.4.min.js"
+        ></script>
+
+        <script
+            type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils"
+        ></script>
+        <script
+            type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=vql3g28ils&submodules=geocoder"
+        ></script>
+        <style></style>
     </head>
-    <body>
+
+    <body onLoad="showWhere()">
         <div id="sameContainer"></div>
         <div class="bodyContainer">
             <div class="mainContainer" id="mainContainer">
@@ -26,7 +42,11 @@
                     <div class="modal-content">
                         <!--  <span class="close" onclick="closeModal()">&times;</span> -->
                         <label class="applyLabel">매치 신청하기</label>
-                        <label for="description" class="applyMessage"
+                        <label
+                            for="description"
+                            class="applyMessage"
+                            maxlength="50"
+                            placeholder="최대 50글자 입력가능합니다."
                             >신청 메세지</label
                         >
                         <textarea id="description1"></textarea>
@@ -37,13 +57,29 @@
                     </div>
                 </div>
 
-                <div class="buttonContainer" id="buttonContainer">
-                    <button class="modalOpenBtn" id="modalOpenButton">
-                        신청
-                    </button>
-                    <button class="toListBtn" onclick="toRecruit()">
-                        목록
-                    </button>
+                <div class="board-wrap">
+                    <div class="board-detail-wrap">
+                        <div class="board-detail"></div>
+                        <div class="buttonContainer" id="buttonContainer">
+                            <button class="modalOpenBtn" id="modalOpenButton">
+                                신청
+                            </button>
+                            <button class="toListBtn" onclick="toRecruit()">
+                                목록
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="mapModal" class="mapModal">
+                    <div class="mapMadalContent">
+                        <div class="adreess" id="adreess"></div>
+
+                        <div id="map" style="width: 500px; height: 500px"></div>
+
+                        <div class="modalBtnContainer">
+                            <button onclick="closeMapModal()">닫기</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -53,5 +89,10 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/recruit-detail.js"></script>
         <script src="./js/dropmenu.js"></script>
+        <script src="./js/notification.js"></script>
+        <script src="./js/otherUser-modal.js"></script>
+        <script>
+            "js/showWhere.js";
+        </script>
     </body>
 </html>

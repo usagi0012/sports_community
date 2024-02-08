@@ -6,3 +6,42 @@
     font-size: 2rem;
     color: #3f3131;
 }
+
+.my-club-application {
+    text-align: center;
+}
+
+.clubApplicationCard {
+    font-family: "LINESeedKR-Bd";
+    width: 90%;
+    text-align: center;
+    margin: 10px auto;
+    background-color: #fff;
+    border-radius: 15px;
+    border: 1px solid #ffb13d;
+    padding: 15px;
+}
+
+.clubApplicationCard > div {
+    margin-bottom: 10px;
+}
+
+.clubApplicationCard > button {
+    margin: 0px 5px;
+    font-family: "LINESeedKR-Bd";
+    background-color: #ff771c;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    width: fit-content;
+    height: 30px;
+    padding-top: 4px;
+    cursor: pointer;
+}
+
+.clubApplicationCard > button:hover {
+    background-color: #fff;
+    color: black;
+    box-shadow: 2px 2px 2px gray;
+    border: 1px solid #ff771c;
+}

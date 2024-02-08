@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onog.login</title>
-        <meta name="description" content="Onog Integrated Login Platform" />
+        <title>Onong login</title>
+        <meta name="description" content="Onong Integrated Login Platform" />
         <link rel="icon" href="./resources/favicon.ico" />
         <link rel="stylesheet" href="css/login.css" />
     </head>
@@ -21,9 +21,24 @@
             >
                 <h1>로그인</h1>
                 <label for="email">이메일 주소:</label>
-                <input type="email" id="email" name="email" required />
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    maxlength="40"
+                    placeholder="아이디"
+                />
                 <label for="password">비밀번호:</label>
-                <input type="password" id="password" name="password" required />
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    minlength="8"
+                    maxlength="20"
+                    placeholder="비밀번호"
+                />
                 <span id="findPassword" onclick="toForgotPassword()"
                     >비밀번호를 잊어버리셨나요?</span
                 >
@@ -40,5 +55,6 @@
         </div>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/login.js"></script>
+        <script src="./js/dropmenu.js"></script>
     </body>
 </html>

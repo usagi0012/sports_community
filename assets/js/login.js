@@ -22,12 +22,19 @@ async function submitForm(event) {
 }
 
 document.getElementById("Kakao").addEventListener("click", function () {
-    kakaoLogin();
+    // kakaoLogin();
+    needUpdateFunction();
 });
 
 document.getElementById("Naver").addEventListener("click", function () {
-    naverLogin();
+    // naverLogin();
+    needUpdateFunction();
 });
+
+//준비중
+function needUpdateFunction() {
+    alert("업데이트 예정 서비스입니다.");
+}
 
 // 네이버 로그인을 위한 api 진입
 function naverLogin() {

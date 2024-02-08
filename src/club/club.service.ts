@@ -1,5 +1,6 @@
 import {
     ConflictException,
+    ForbiddenException,
     Injectable,
     NotFoundException,
     UnauthorizedException,
@@ -7,11 +8,13 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Club } from "../entity/club.entity";
 import { UserService } from "../user/user.service";
-import { Repository } from "typeorm";
+import { FindManyOptions, FindOptions, Repository } from "typeorm";
 import { CreateClubDto } from "./dto/createClub.dto";
 import { UpdateClubDto } from "./dto/updateClub.dto";
 import { AwsService } from "../aws/aws.service";
 import { User } from "src/entity/user.entity";
+import { ExpelMemberDto } from "./dto/expelMember.dto";
+import { UserProfile } from "src/entity/user-profile.entity";
 
 @Injectable()
 export class ClubService {
@@ -20,44 +23,40 @@ export class ClubService {
         private readonly clubRepository: Repository<Club>,
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        @InjectRepository(UserProfile)
+        private readonly userProfileRepository: Repository<UserProfile>,
         private readonly userService: UserService,
         private readonly awsService: AwsService,
     ) {}
 
-    // async getAllClubs() {
-    // const clubs = await this.clubRepository.find({
-    //     select: ["id", "name", "region", "masterId", "score"],
-    //     relations: ["users"], // Include the users relation
-    // });
-
-    //     const clubsWithMasterNames = await Promise.all(
-    //         clubs.map(async (club) => {
-    //             const master = club.users.find(
-    //                 (user) => user.id === club.masterId,
-    //             );
-
-    //             return {
-    //                 ...club,
-    //                 masterName: master ? master.name : null,
-    //             };
-    //         }),
-    //     );
-
-    //     return clubsWithMasterNames;
-    // }
-
     // take랑 skip 배분을 잘 해줘야 값이 뜨ㅡ네;;
-    async getAllClubs(page: number, itemsPerPage: number = 30) {
+    async getAllClubs(sortBy, region, page: number, itemsPerPage: number = 30) {
         const skip = (page - 1) * itemsPerPage;
+        console.log("region***", region);
 
-        const [clubs, total] = await this.clubRepository.findAndCount({
-            select: ["id", "name", "region", "masterId", "score"],
+        let clubs;
+        let total;
+        let findOption: FindManyOptions<Club> = {
+            select: ["id", "name", "region", "masterId", "score", "createdAt"],
             relations: ["users"],
             take: 30,
             skip: 0,
-        });
-        console.log("Clubs:", clubs);
-        console.log("Total:", total);
+        };
+        switch (sortBy) {
+            case "region":
+                findOption = { ...findOption, where: { region } };
+                break;
+            case "latest":
+                findOption = { ...findOption, order: { createdAt: "desc" } };
+                break;
+            case "score":
+                findOption = { ...findOption, order: { score: "desc" } };
+                break;
+        }
+        // 조건에 맞게 조회하기(순서, 지역)
+        [clubs, total] = await this.clubRepository.findAndCount(findOption);
+        console.log("clubs", clubs);
+
         const clubsWithMasterNames = await Promise.all(
             clubs.map(async (club) => {
                 const master = club.users.find(
@@ -71,14 +70,6 @@ export class ClubService {
             }),
         );
 
-        console.log("?!?", {
-            data: clubsWithMasterNames,
-            meta: {
-                total,
-                page,
-                last_page: Math.ceil(total / 30),
-            },
-        });
         return {
             data: clubsWithMasterNames,
             meta: {
@@ -195,14 +186,9 @@ export class ClubService {
         const user = await this.userRepository.findOne({
             where: { id: userId },
         });
-        console.log("클럽!!!", clubId);
-        console.log(typeof clubId);
-        console.log("유저클럽!!", user.clubId);
-        console.log(typeof user.clubId);
         if (!user.clubId) {
             throw new NotFoundException("동호회에 가입되지 않은 유저입니다.");
         }
-        console.log("이건?");
         if (clubId !== user.clubId) {
             throw new NotFoundException("동호회에 가입된 사람이 아닙니다");
         }
@@ -256,5 +242,95 @@ export class ClubService {
         }
 
         return true;
+    }
+
+    async withdrawClub(userId: number) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+
+        if (!user) {
+            throw new NotFoundException("해당하는 유저가 존재하지 않습니다.");
+        }
+
+        const club = await this.clubRepository.findOne({
+            where: { masterId: userId },
+        });
+        if (club) {
+            throw new ForbiddenException("동아리 장은 탈퇴할 수 없습니다.");
+        }
+        const withdraw = await this.userRepository.update(userId, {
+            clubId: null,
+        });
+
+        return withdraw;
+    }
+
+    async expelMember(userId: number, expelMemeberDto: ExpelMemberDto) {
+        const { nickName } = expelMemeberDto;
+
+        const clubMaster = await this.clubRepository.findOne({
+            where: { masterId: userId },
+        });
+
+        if (!clubMaster) {
+            throw new NotFoundException(
+                "동아리 장만 멤버를 추방할 수 있습니다.",
+            );
+        }
+        const member = await this.userProfileRepository.findOne({
+            where: { nickname: nickName },
+            select: ["id", "nickname", "userId"],
+        });
+        console.log(member);
+        if (!member) {
+            throw new NotFoundException(
+                "해당하는 닉네임을 가진 멤버가 없습니다.",
+            );
+        }
+        const memberId = member.userId;
+        const expeledMember = await this.userRepository.update(memberId, {
+            clubId: null,
+        });
+        console.log("***확인5***");
+        return expeledMember;
+    }
+
+    async getAllClubMember(clubId: number) {
+        console.log("클럽아뒤", clubId);
+        const userInfos = await this.userRepository.find({ where: { clubId } });
+        if (!userInfos.length) {
+            throw new NotFoundException("존재하지 않는 동아리입니다.");
+        }
+
+        let users = [];
+        userInfos.forEach((userInfo) => {
+            users.push(userInfo.id);
+            console.log("userInfoId", userInfo.id);
+        });
+
+        console.log("유저스", users);
+
+        // 비동기 작업을 기다리고 결과를 모두 수집하기 위해 Promise.all 사용
+        const nickNames = await Promise.all(
+            users.map(async (userId) => {
+                console.log("userId", userId);
+                const userProfile = await this.userProfileRepository.findOne({
+                    where: { userId },
+                });
+
+                if (!userProfile) {
+                    throw new NotFoundException(
+                        "유저 프로필이 존재하지 않습니다.",
+                    );
+                }
+                console.log("유저 프로필", userProfile);
+                console.log("유저프로필닉네임", userProfile.nickname);
+                return userProfile.nickname;
+            }),
+        );
+
+        console.log("닉", nickNames);
+        return nickNames;
     }
 }

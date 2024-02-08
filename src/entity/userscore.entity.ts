@@ -3,8 +3,6 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinColumn,
-    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
@@ -13,7 +11,6 @@ import {
     MAX_SCORE,
     MIN_SCORE,
 } from "src/personalassessmenttag/constants/score.constant";
-import { UserProfile } from "./user-profile.entity";
 
 @Entity({ name: "userscore" })
 export class Userscore {
@@ -23,7 +20,7 @@ export class Userscore {
 
     @IsNumber()
     @Column()
-    profileId: number;
+    userId: number;
 
     @IsNumber()
     @Column({
@@ -37,7 +34,7 @@ export class Userscore {
     personality: number;
 
     @IsNotEmpty({ message: "개인성격 점수를 입력해주세요." })
-    @Min(MIN_SCORE, { message: "최소 점수는 1입니다." })
+    @Min(MIN_SCORE, { message: "최소 점수는 0입니다." })
     @Max(MAX_SCORE, { message: "최대 점수는 5입니다." })
     @IsNumber()
     @ApiProperty({
@@ -62,7 +59,7 @@ export class Userscore {
     ability: number;
 
     @IsNotEmpty({ message: "실력점수를 입력해주세요." })
-    @Min(MIN_SCORE, { message: "최소 점수는 1입니다." })
+    @Min(MIN_SCORE, { message: "최소 점수는 0입니다." })
     @Max(MAX_SCORE, { message: "최대 점수는 5입니다." })
     @IsNumber()
     @Column({ default: 0 })
@@ -72,12 +69,6 @@ export class Userscore {
         example: "2",
     })
     abilityAmount: number;
-
-    @IsNotEmpty({ message: "MVP를 뽑아주세요." })
-    @IsNumber()
-    @Column()
-    @ApiProperty({ description: "MVP", default: 1 })
-    mvp: number;
 
     @IsNumber()
     @Column({ default: 0 })
@@ -89,8 +80,4 @@ export class Userscore {
 
     @UpdateDateColumn()
     updatedAt: Date;
-
-    @OneToOne(() => UserProfile, (userprofile) => userprofile.userscore)
-    @JoinColumn()
-    userProfile: UserProfile;
 }
