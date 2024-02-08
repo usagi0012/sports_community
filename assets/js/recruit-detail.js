@@ -77,7 +77,9 @@ function getRecruitDetail(recruitId) {
                 <div class="firstRow">
                     <dl class="hostName">
                         <dt>작성자</dt>
-                        <dd>${recruitDetail.hostName}</dd>
+                        <dd onclick="createModal(${recruitDetail.hostId})">${
+                            recruitDetail.hostName
+                        }</dd>
                     </dl>
                     <dl class="region">
                         <dt>지역</dt>
