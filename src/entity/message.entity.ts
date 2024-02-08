@@ -18,6 +18,9 @@ export class Message {
     @Column({ nullable: false })
     userId: number;
 
+    @Column({ nullable: false })
+    userName: string;
+
     @Column()
     content: string;
 

@@ -14,7 +14,7 @@ export class MessageService {
         const messages = await this.messageRepository.find({
             where: { roomId },
             order: { createdAt: "ASC" },
-            cache: true, // 적절한 캐시 설정을 추가하기
+            cache: true, // 적절한 캐시 설정을 추가하기,
         });
 
         return messages;

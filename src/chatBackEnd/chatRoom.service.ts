@@ -17,6 +17,7 @@ import { ConfigService } from "@nestjs/config";
 import { Participants } from "src/entity/participants.entity";
 import { Message } from "src/entity/message.entity";
 import { WsException } from "@nestjs/websockets";
+import { User } from "src/entity/user.entity";
 
 @Injectable()
 export class ChatRoomService {
@@ -28,6 +29,8 @@ export class ChatRoomService {
         private readonly participantsRepository: Repository<Participants>,
         @InjectRepository(Message)
         private readonly messageRepository: Repository<Message>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService,
     ) {
@@ -203,15 +206,32 @@ export class ChatRoomService {
         return userId;
     }
 
-    saveMessage(client: Socket, message: string, roomId: string) {
+    async saveMessage(client: Socket, message: string, roomId: string) {
         const userId = this.verifyToken(client);
 
+        const userInfo = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        const userName = userInfo.name;
         console.log({ userId, roomId });
         // roomId 형태가 아니라 roomId에 title 형태가 들어있어서 roomId 형태로 가져오긴 해야함.
         this.messageRepository.save({
             userId: +userId,
             roomId: +roomId,
             content: message,
+            userName,
         });
+    }
+
+    async getName(client: Socket) {
+        const userId = this.verifyToken(client);
+        console.log("==소켓userId==", userId);
+        const userInfo = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        console.log("==userInfo==", userInfo);
+        const userName = userInfo.name;
+        console.log("==userName==", userName);
+        return userName;
     }
 }
