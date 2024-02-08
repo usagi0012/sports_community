@@ -22,7 +22,8 @@ async function submitForm(event) {
 }
 
 document.getElementById("Kakao").addEventListener("click", function () {
-    kakaoLogin();
+    // kakaoLogin();
+    needUpdateFunction();
 });
 
 document.getElementById("Naver").addEventListener("click", function () {
