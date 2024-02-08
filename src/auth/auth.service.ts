@@ -119,7 +119,7 @@ export class AuthService {
             await this.userService.update(userId, { isVerified: true });
 
             // 인증이 성공한 경우 리다이렉트할 URL 반환
-            return "http://localhost:8001/login.html";
+            return `${this.configService.get<string>("LOCAL")}:8001/login.html`;
         } catch (error) {
             // 토큰이 유효하지 않은 경우 예외 처리
             console.error("Token Verification Error:", error);

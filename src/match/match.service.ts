@@ -286,8 +286,7 @@ export class MatchService {
             this.updateProgress(match);
             const message = `함께 경기한 사람들을 평가해주세요!`;
             //link부분 수정해야함
-            const link = `http://localhost:8001/index.html`;
-            this.alarmService.sendAlarm(match.guestId, message, link);
+            this.alarmService.sendAlarm(match.guestId, message);
         }
 
         await this.matchRepository.save(matches);
