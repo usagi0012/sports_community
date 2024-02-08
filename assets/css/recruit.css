@@ -78,27 +78,14 @@
     text-decoration: underline;
 }
 
-#regionFilter {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    padding: 5px; /* 적절한 패딩 값 설정 */
-    border: none; /* 적절한 테두리 설정 */
-    border-radius: 4px; /* 적절한 테두리 반지름 설정 */
-}
-
-/* 드롭다운 화살표 스타일링 */
-#regionFilter::-ms-expand {
-    display: none;
-}
-
-#regionFilter::after {
-    content: "▼"; /* 적절한 드롭다운 화살표 아이콘 설정 */
-    font-size: 12px; /* 아이콘 크기 조절 */
-    color: #333; /* 아이콘 색상 설정 */
-    position: absolute;
-    top: 50%;
-    right: 10px; /* 우측 여백 조절 */
-    transform: translateY(-50%);
-    pointer-events: none;
+#regionFilter,
+#CategoryFilter {
+    font-family: "LINESeedKR-Bd";
+    border: 1px solid #ffb13d;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    padding: 5px;
+    cursor: pointer;
+    height: 25px;
+    margin: 10px 3px;
 }

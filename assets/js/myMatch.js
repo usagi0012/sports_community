@@ -194,6 +194,7 @@ function createMatchUserHtml(user) {
         </button>
             <button onclick="displayPersonal('${matchId}', '${playOtherUserId}')">평가 <button>
         `;
+}
 
 // 새로운 함수 추가
 function handleUserButtonClick(userId) {
@@ -252,7 +253,7 @@ async function submit(matchId, playOtherUserId) {
     }
 }
 
-function endPersonal() {
-    var modal = document.getElementById("myPersonal");
+async function endPersonal() {
+    const modal = document.getElementById("myPersonal");
     modal.style.display = "none";
 }

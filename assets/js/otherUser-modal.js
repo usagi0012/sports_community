@@ -70,7 +70,7 @@ async function createModal(userId) {
     userProfileSection.appendChild(height);
 
     const score = document.createElement("p");
-    score.innerHTML = `평가 점수: <span id="score"></span>`;
+    score.innerHTML = `평가: <span id="score"></span>`;
     userProfileSection.appendChild(score);
 
     const tag = document.createElement("p");
@@ -101,7 +101,7 @@ function updateModalContent(modal, userName, userId) {
     loadUserProfile(userId);
 
     // 모달창을 화면에 표시하는 코드 추가
-    modal.style.display = "block";
+    modal.style.display = "flex";
 }
 
 // 유저 프로필 모달창 열기
@@ -111,7 +111,7 @@ function openUserModal(userId) {
 
     // 모달창을 화면에 표시하는 코드 추가
     const modal = document.getElementById("userProfileModal");
-    modal.style.display = "block";
+    modal.style.display = "flex";
 }
 
 // 유저 프로필 모달창 닫기
