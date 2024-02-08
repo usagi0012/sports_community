@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { UserService } from "src/user/user.service";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
-import { join } from "path";
 
 @Injectable()
 export class KakaoService {
@@ -46,17 +45,21 @@ export class KakaoService {
         res.cookie("access_token", accessToken, { httpOnly: true });
         if (user) {
             res.redirect(
-                `http://localhost:8001/api/auth/kakao/success?accessToken=${accessToken}&refreshToken=${refreshToken}`, //받아주는 페이지 만들어야함
+                `${this.configService.get<string>(
+                    "LOCAL",
+                )}/api/auth/kakao/success?accessToken=${accessToken}&refreshToken=${refreshToken}`, //받아주는 페이지 만들어야함
             );
         } else {
-            res.redirect("http://localhost:8001/api/auth/login/failure");
+            res.redirect(
+                `${this.configService.get<string>(
+                    "LOCAL",
+                )}/api/auth/login/failure`,
+            );
         } // 로그인에 실폐했을 경우 프론트 페이지를 개설해 줘야함(카카오와 네이버로그인 실패 page를 하나로 묶어서 제작)
     }
 
-
     private generateAccessToken(id: number) {
         const payload = { userId: id };
-        console.log("이거이거이거이거이거", payload);
 
         const accessToken = this.jwtService.sign(payload, {
             secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
@@ -65,7 +68,6 @@ export class KakaoService {
 
         return accessToken;
     }
-
 
     private generateRefreshToken(id: number) {
         const payload = { userId: id };
