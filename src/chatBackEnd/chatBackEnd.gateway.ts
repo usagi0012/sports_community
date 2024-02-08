@@ -19,10 +19,8 @@ import { ApiBearerAuth } from "@nestjs/swagger";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 
-@WebSocketGateway(5000, {
-    cors: {
-        origin: "http://localhost:8001",
-    },
+@WebSocketGateway({
+    transports: ["websocket"],
 })
 export class ChatBackEndGateway
     implements OnGatewayConnection, OnGatewayDisconnect
