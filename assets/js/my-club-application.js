@@ -63,6 +63,9 @@ function getMyClubApplication() {
                 approveBtn.className = "approval";
                 approveBtn.innerHTML = "승인";
                 approveBtn.addEventListener("click", () => {
+                    console.log("clicked!!");
+                    console.log("==userId==", userId);
+                    console.log("==clubId==", clubId);
                     axios
                         .put(
                             `/api/applying-club/${clubId}/${userId}`,
