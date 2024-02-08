@@ -40,6 +40,16 @@ function getMyApplication() {
                 status.className = "status";
                 status.innerHTML = `상태 : ${response.data.data.status}`;
                 clubApplication.appendChild(status);
+
+                const deleteApplicationBtn = document.createElement("button");
+                deleteApplicationBtn.className = "deleteApplicationBtn";
+                deleteApplicationBtn.innerHTML = "신청 취소";
+                clubApplication.appendChild(deleteApplicationBtn);
+
+                deleteApplicationBtn.addEventListener(
+                    "click",
+                    confirmDeleteApplcation,
+                );
             }
 
             // const modifyApplicationBtn = document.createElement("button");
@@ -47,21 +57,11 @@ function getMyApplication() {
             // clubApplication.appendChild(modifyApplicationBtn);
 
             // modifyApplicationBtn.addEventListener("click", openModifyModal);
-
-            const deleteApplicationBtn = document.createElement("button");
-            deleteApplicationBtn.innerHTML = "신청 취소";
-            clubApplication.appendChild(deleteApplicationBtn);
-
-            deleteApplicationBtn.addEventListener(
-                "click",
-                confirmDeleteApplcation,
-            );
         })
         .catch(function (error) {
             console.log(error);
         });
 }
-getMyApplication();
 
 function openModifyModal() {
     const modifyModal = document.querySelector("#modal");
