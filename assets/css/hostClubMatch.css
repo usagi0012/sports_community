@@ -42,21 +42,61 @@ h3 {
     min-height: 20rem;
 }
 
+#hostClub-match {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-content: space-between;
+}
+
+.host-match-item {
+    margin: 10px auto;
+    text-align: center;
+    width: 95%;
+}
+
+.host-match-item > button {
+    width: 100%;
+    font-family: "LINESeedKR-Bd";
+    text-align: center;
+    background-color: #fff;
+    border-radius: 15px;
+    border: 1px solid #ffb13d;
+    cursor: pointer;
+}
+
+.host-match-item > button:hover {
+    transform: scale(1.03);
+}
+
 /* 모달창 */
 
 #hostMatchModal {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    max-width: 600px;
-    /* Adjust as needed */
     width: 100%;
-    z-index: 1000;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 500px;
+    min-width: 400px;
+    margin: 0 auto;
+}
+
+.modal-body > div > h2 {
+    font-size: 1.5rem;
+    color: #3f3131;
+    margin: 0px;
+    padding: 10px 0px;
+    border-bottom: 1px solid #ddd;
 }
 
 #hostMatchModal h1 {
@@ -70,4 +110,35 @@ h3 {
 
 .host-match-item {
     margin-bottom: 20px;
+}
+
+.modal-footer {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hostClubButton > button,
+.modal-footer > button {
+    font-family: "LINESeedKR-Bd";
+    background-color: #ffb13d;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    width: fit-content;
+    height: 30px;
+    padding-top: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.hostClubButton > button:hover,
+.modal-footer > button:hover {
+    background-color: #fff;
+    color: black;
+    box-shadow: 2px 2px 2px gray;
+    border: 1px solid #ffb13d;
 }

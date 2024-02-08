@@ -1,4 +1,4 @@
-import { createModal } from "./otherUser-modal.js";
+// import { createModal } from "./otherUser-modal.js";
 
 window.onload = function () {
     loadHeader();
