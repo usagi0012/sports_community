@@ -31,20 +31,13 @@
         </div>
     </div>
 
-    <div class="footer" id="footer"></div>
-    <div id="hostMatchModal">
-        <div>
-            <div>
-                <h1>게스트 클럽</h1>
-                <button type="button" aria-label="Close" onclick="closeHostMatchModal()">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                <div id="deletebutton"></div>
-            </div>
-            <div class="modal-body" id="guestClub"></div>
-            <div class="modal-footer">
-                <div id="hostClubButton"></div>
-                <button type="button" onclick="closeHostMatchModal()">
+        <div class="footer" id="footer"></div>
+        <div class="modal" id="hostMatchModal">
+            <div class="modal-content">
+                <div class="modal-body" id="guestClub"></div>
+                <div class="modal-footer">
+                    <div id="hostClubButton"></div>
+                    <button type="button" onclick="closeHostMatchModal()">
                         Close
                     </button>
             </div>
@@ -58,7 +51,7 @@
                 </div>
                 <div>
                     <div>
-                        <div class="question">클럽의 이미지는 어떤가요?</div>
+                        <div class="question">태도</div>
                         <div class="rating_box1">
                             <div class="rating1">
                                 ★★★★★
@@ -69,7 +62,7 @@
                     </div>
 
                     <div>
-                        <div class="question">클럽의 실력은 어떤가요?</div>
+                        <div class="question">실력</div>
                         <div class="rating_box2">
                             <div class="rating2">
                                 ★★★★★
@@ -79,7 +72,7 @@
                         </div>
                     </div>
 
-                    <h3>#당신이 생각하는 이 사람의 캐릭터는?</h2>
+                    <h3>#태그</h2>
                         <div class="bt-wrap">
                             <a id="post-btn1" onclick="toggleButton(this)">북산</a>
                             <a id="post-btn2" onclick="toggleButton(this)">센안토니오</a>
@@ -97,7 +90,7 @@
 
                         <div class="submit-wrap">
                             <a id="submit-btn" class="on">제출</a>
-                            <a id="submit-cancel-btn">취소</a>
+                            <button id="submit-cancel-btn" onclick="closeclubAssessment()">취소</button>
                         </div>
                 </div>
             </div>

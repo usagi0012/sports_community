@@ -85,7 +85,7 @@ async function findHostClub(guestMatchId) {
 
 function openModal() {
     const modal = document.getElementById("guestMatchModal");
-    modal.style.display = "block";
+    modal.style.display = "flex";
 }
 
 function closeModal() {
@@ -97,18 +97,18 @@ function createMatchHTML(clubMatch) {
     return `
         <div> 
         <h2>경기 정보</h2>
-            <p><strong>Message:</strong> ${clubMatch.message}</p>
-            <p><strong>Information:</strong> ${clubMatch.information}</p>
-            <p><strong>End Time:</strong> ${clubMatch.endTime.slice(
+            <p><strong>메세지: </strong> ${clubMatch.message}</p>
+            <p><strong>설명: </strong> ${clubMatch.information}</p>
+            <p><strong>경기 시작 시간: </strong> ${clubMatch.gameDate.slice(
                 "T",
                 16,
             )}</p>
-            <p><strong>Game Date:</strong> ${clubMatch.gameDate.slice(
+            <p><strong>경기 종료 시간: </strong> ${clubMatch.endTime.slice(
                 "T",
                 16,
             )}</p>
-            <p><strong>Progress:</strong> ${clubMatch.progress}</p>
-            <p><strong>Status:</strong> ${clubMatch.status}</p>
+            <p><strong>과정: </strong> ${clubMatch.progress}</p>
+            <p><strong>상태: </strong> ${clubMatch.status}</p>
         </div>
     `;
 }
@@ -120,16 +120,11 @@ function createHostClubHTML(hostClub, clubMatch) {
     return `
     
         <div id="${hostClub.id}">
-            <p><strong>Name:</strong> ${hostClub.name}</p>
-            ${
-                hostClub.image
-                    ? `<img src="${hostClub.image}" alt="Club Image">`
-                    : ""
-            }
-            <p><strong>Region:</strong> ${hostClub.region}</p>
-            <p><strong>Score:</strong> ${hostClub.score}</p>
-            <p><strong>Description:</strong> ${hostClub.description}</p>
-            <p><strong>Members:</strong> ${hostClub.members}</p>
+            <p><strong>이름: </strong> ${hostClub.name}</p>
+            <p><strong>지역: </strong> ${hostClub.region}</p>
+            <p><strong>점수: </strong> ${hostClub.score}</p>
+            <p><strong>설명: </strong> ${hostClub.description}</p>
+            <p><strong>멤버 수: </strong> ${hostClub.members}</p>
         </div>
         <button onclick="displayClubAss('${clubMatchId}', '${myClubId}')"  >평가</button>
 
