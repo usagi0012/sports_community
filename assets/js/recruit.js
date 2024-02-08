@@ -60,7 +60,9 @@ function feed() {
                             recruits.id
                         }">${recruits.title}</a></div>
                         <div class="region">${region[recruits.region]}</div>
-                        <div class="writer">${recruits.hostName}</div>
+                        <div class="writer" onclick="openModal('${
+                            recruits.hostId
+                        }')">${recruits.hostName}</div>
                         <div class="gamedate">${recruits.gamedate.slice(
                             "T",
                             10,
@@ -84,4 +86,20 @@ function toRecruitPost() {
     } else {
         window.location.href = "recruit-post.html";
     }
+}
+
+function filterByRegion() {
+    const regionFilterElement = document.getElementById("regionFilter");
+    currentFilterRegion = regionFilterElement.value;
+    feed();
+}
+
+function filterByCategory() {
+    const regionFilterElement = document.getElementById("CategoryFilter");
+    currentFilterCategory = regionFilterElement.value;
+    feed();
+}
+
+function openModal(hostId) {
+    createModal(hostId);
 }

@@ -10,19 +10,36 @@
             type="text/css"
             rel="stylesheet"
         /> -->
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
         <link rel="stylesheet" href="/css/style.css" type="text/css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
         <script
             src="https://cdn.socket.io/3.1.3/socket.io.min.js"
             integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
             crossorigin="anonymous"
         ></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    </head> -->
+        <!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script> -->
+    </head>
 
     <body>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer">
         <div class="container">
-            <h3 class="text-center">Messaging</h3>
+            <h3 class="text-center">Onong
+                <div class="btn-container">
+                    <button type="button" id="invite-modal-btn" class="centered-text-button">초대</button>
+                    <button type="button" id="expel-modal-btn" class="centered-text-button">추방</button>
+                </div>
+            </h3>
             <div class="messaging">
                 <div class="inbox_msg">
                     <div class="inbox_people">
@@ -51,38 +68,34 @@
                         <div class="inbox_chat chatRoomList"></div>
                     </div>
                     <div class="mesgs">
-                        <div class="msg_history chat">fff</div>
+                        <div class="msg_history chat"></div>
                         <div class="type_msg">
+                            <form class="msg-form">
                             <div class="input_msg_write">
                                 <input
                                     type="text"
                                     class="write_msg"
-                                    placeholder="Type a message"
+                                    id="input-message"
+                                    placeholder="   메세지를 입력하세요"
                                 />
-                                <button type="button" id="invite-modal-btn">
-                                    초대
-                                </button>
-                                <button type="button" id="expel-modal-btn">
-                                    추방
-                                </button>
                                 <button
                                     class="msg_send_btn sendMessage"
-                                    type="button"
+                                    type="submit"
                                 >
-                                    <i
-                                        class="fa fa-paper-plane-o"
-                                        aria-hidden="true"
-                                    ></i>
+                                전송
                                 </button>
                             </div>
+                            </form>
                         </div>
                     </div>
                 </div>
 
-                <p class="text-center top_spac">
-                </p>
+                <p class="text-center2 top_spac"></p>
             </div>
         </div>
+    </div>
+</div>
+<div class="footer" id="footer"></div>
         <div id="invite-modal-overlay">
             <div id="modal">
                 <label for="nickname">초대할 유저 닉네임: </label>
@@ -109,36 +122,26 @@
                 <button id="expel-close-btn">닫기</button>
             </div>
         </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/dropmenu.js" defer></script>
     </body>
-    <!--
-    <body>
-        <div>
-            <h3>채팅방 목록</h3><br/>
-            <ul class="chatRoomList">
-            </ul>
-            <button class="createChatRoom">채팅방 만들기</button>
-        </div>
-        <div>
-            <h3>"<span class="roomName"></span>" 채팅내용</h3><br/>
-            <ul class="chat">
-            </ul>
-        </div>
-        <input type="text" class="text"/>
-        <button class="sendMessage">sned</button>
-        <br/>
-        <input type="text" class="nickname"/>
-        <button class="setNickname">setNickname</button>
-        <script>
-        </script>
-    </body>-->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
     <script>
-        // 내가 채팅방의 생성자인 경우에만 멤버 초대하기 가능
+        window.onload = function () {
+            loadHeader();
+            loadFooter();
+            $("#invite-modal-btn").css("display", "none");
+            $("#expel-modal-btn").css("display", "none");
+        };
+        // 내가 채팅방의 생성자인 경우에만 멤버 초대하기  가능
         function showButton() {
             const roomId = localStorage.getItem("thisRoomId");
             // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
             const accessToken = localStorage.getItem("accessToken");
-
+            console.log("====roomId====",roomId)
             axios
                 .get(`/api/chat-invitation/${roomId}`, {
                     headers: {
@@ -147,7 +150,7 @@
                 })
                 .then(function (response) {
                     console.log("****리스폰스****", response);
-                    if (response.data.data) {
+                    if (response.data.data && roomId) {
                         console.log("****");
                         console.log("response.data.data", response.data.data);
                         $("#invite-modal-btn").css("display", "flex");
@@ -187,8 +190,8 @@
                             html += '<div class="sent_msg">';
                             html += "<p>" + message.content + "</p>";
                             // html += timeDate;
-                            html += `${message.userId} | `;
-                            html += `${message.createdAt.slice(11, 16)} | `;
+                            html += `${message.userId}    | `;
+                            html += `${message.createdAt.slice(11, 16)}    | `;
                             html += message.createdAt.slice(0, 10);
                             html += "</div>";
                             html += "</div>";
@@ -198,8 +201,8 @@
                             html += '<div class="received_withd_msg">';
                             html += "<p>" + message.content + "</p>";
                             // html += timeDate;
-                            html += `${message.userId} | `;
-                            html += `${message.createdAt.slice(11, 16)} | `;
+                            html += `${message.userId}    | `;
+                            html += `${message.createdAt.slice(11, 16)}    | `;
                             html += message.createdAt.slice(0, 10);
                             html += "</div>";
                             html += "</div>";
@@ -391,7 +394,7 @@
         });
 
         // 채팅방 입장
-        $(document).on("click", ".enterChatRoom", function () {
+        $(document).on("click", ".enterChatRoom", function (event) {
             const thisRoomId = $(this).attr("data-roomId");
             const roomId = localStorage.getItem("thisRoomId");
             console.log("enter시 룸 아이디", roomId);
@@ -401,6 +404,13 @@
                 $(".roomName").text(myInfo.room.roomName);
                 $(".chat").html("");
             });
+
+            // 클릭된 요소의 텍스트 가져오기
+            const clickedText = $(this).text();
+
+            // 'title' 요소의 'innerHTML'로 설정
+            $(".recent_heading").children(":first").html(clickedText);
+
             //null 필요 x (API로 대체)
             socket.emit("getChatRoomList", null);
             showButton();
@@ -423,15 +433,16 @@
             $("#expel-modal-overlay").css("display", "none");
         });
 
-        // 모달 제출 버튼
-        $("#submit-btn").on("click", function () {
+        $(".msg-form").on("submit", function (e) {
+            e.preventDefault(); // 폼의 기본 동작 방지
+
             console.log("submit");
 
-            const nickName = $("#nickname").val();
+            const nickName = $("#input-message").val();
             const roomId = localStorage.getItem("thisRoomId");
             // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
             const accessToken = localStorage.getItem("accessToken");
-
+            console.log("====roomId====",roomId)
             axios
                 .post(
                     `/api/chat-invitation/${roomId}`,
@@ -446,13 +457,59 @@
                 )
                 .then(function (response) {
                     console.log(response);
+                    if(response.data.data == "존재하지 않는 유저입니다."){
+                        alert("채팅방에 존재하지 않는 멤버입니다.");
+                        return;
+                    }
+
                     alert("멤버 초대에 성공했습니다.");
                 })
                 .catch(function (error) {
                     console.log(error);
                     alert("멤버 초대에 실패했습니다.");
                 });
+            });
+
+        // 버튼 클릭 이벤트 (선택 사항)
+        $("#submit-btn").on("click", function () {
+            $("#myForm").submit(); // 폼 제출
         });
+
+        // 모달 제출 버튼
+        // $("#submit-btn").on("click", function () {
+        //     console.log("submit");
+
+        //     const nickName = $("#nickname").val();
+        //     const roomId = localStorage.getItem("thisRoomId");
+        //     // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
+        //     const accessToken = localStorage.getItem("accessToken");
+        //     console.log("====roomId====",roomId)
+        //     axios
+        //         .post(
+        //             `/api/chat-invitation/${roomId}`,
+        //             {
+        //                 nickName,
+        //             },
+        //             {
+        //                 headers: {
+        //                     Authorization: `Bearer ${accessToken}`,
+        //                 },
+        //             },
+        //         )
+        //         .then(function (response) {
+        //             console.log(response);
+        //             if(response.data.data == "존재하지 않는 유저입니다."){
+        //                 alert("채팅방에 존재하지 않는 멤버입니다.");
+        //                 return;
+        //             }
+
+        //             alert("멤버 초대에 성공했습니다.");
+        //         })
+        //         .catch(function (error) {
+        //             console.log(error);
+        //             alert("멤버 초대에 실패했습니다.");
+        //         });
+        // });
 
         $("#expel-submit-btn").on("click", function () {
             console.log("expel-submit");
@@ -472,7 +529,11 @@
                     },
                 })
                 .then(function (response) {
-                    console.log(response);
+                    console.log("==추방==",response);
+                    if(response.data.error) {
+                        alert(`${response.data.error}`)
+                        return;
+                    }
                     alert("멤버 추방이 완료되었습니다.");
                 })
                 .catch(function (error) {
