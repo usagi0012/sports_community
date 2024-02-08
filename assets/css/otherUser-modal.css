@@ -12,7 +12,7 @@
 }
 
 /* 모달 내용 스타일 */
-.modal-content {
+#userProfileModal > .modal-content {
     background-color: #fff;
     padding: 20px;
     border-radius: 5px;
@@ -22,7 +22,7 @@
 }
 
 /* 모달 닫기 버튼 스타일 */
-.modal-content > button {
+#userProfileModal > .modal-content > button {
     font-family: "LINESeedKR-Bd";
     margin: 10px 15px;
     height: 25px;
@@ -33,7 +33,7 @@
     cursor: pointer;
 }
 
-.modal-content > button:hover {
+#userProfileModal > .modal-content > button:hover {
     box-shadow: 2px 2px 2px gray;
 }
 

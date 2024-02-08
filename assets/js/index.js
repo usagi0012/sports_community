@@ -78,7 +78,7 @@ function getProfile(token) {
                     수정하기
                 </button>
                 <div class="calenderContainer">
-                    <button type="button" id="calenderBtn" onclick="toCalender()">캘린더 →</button>
+                    <button type="button" id="calenderBtn" onclick="needUpdateFunction()">캘린더 →</button>
 
                 </div>`;
                 profileContainer.innerHTML = profile;

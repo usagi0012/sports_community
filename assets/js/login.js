@@ -26,7 +26,8 @@ document.getElementById("Kakao").addEventListener("click", function () {
 });
 
 document.getElementById("Naver").addEventListener("click", function () {
-    naverLogin();
+    // naverLogin();
+    needUpdateFunction();
 });
 
 //준비중
