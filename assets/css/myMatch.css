@@ -142,6 +142,25 @@ h3 {
     border: 1px solid #ffb13d;
 }
 
+.userEvaluate {
+    width: 50%;
+    margin: 10px auto;
+    font-family: "LINESeedKR-Bd";
+    text-align: center;
+    background-color: #ff771c;
+    border-radius: 15px;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+}
+
+.userEvaluate:hover {
+    transform: scale(1.02);
+    background-color: #fff;
+    border: 1px dotted #ff771c;
+    color: black;
+}
+
 .modal-footer > button,
 #userButton > div > button {
     font-family: "LINESeedKR-Bd";
