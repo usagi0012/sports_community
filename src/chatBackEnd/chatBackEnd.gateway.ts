@@ -107,36 +107,25 @@ export class ChatBackEndGateway
     async sendMessage(client: Socket, data: any) {
         const { roomId, message } = data;
         // console.log("서버", await this.server.in(roomId).fetchSockets());
-        // roomId 받아지는 것 같은데?
         //client=>this.server
         // this.server.to(roomId) : 나를 포함한 방 전원에게 보내는 것
         // client.to(roomId) : 나를 제외한 방 전원에게 보내는 것
 
+        // 닉네임 뽑아오기
+        const userName = await this.ChatRoomService.getName(client);
+        console.log("==게이트userName==", userName);
         console.log(client.id, client.data.nickname, message, roomId);
         const roomName = "room:1";
         console.log(typeof roomId);
         this.server.to(roomId).emit("getMessage", {
             //실제 데이터로 바꾸기
             id: client.id,
-            nickname: client.data.nickname,
+            // nickname: client.data.nickname,
+            nickname: userName,
             message,
             roomId,
         });
         console.log("getMessage서버에서 보낸 뒤");
-        // client.rooms.forEach(
-        //     (roomId) =>
-        //         client.to(roomId).emit("getMessage", {
-        //             id: client.id,
-        //             nickname: client.data.nickname,
-        //             message,
-        //             roomId,
-        //         }),
-        // this.ChatRoomService.saveMessage(client,message,roomId)
-        // );
-        // 채팅 전송시 DB에 채팅 내역 저장
-        // client.rooms.forEach((roomId) => {
-        //     this.ChatRoomService.saveMessage(client, message, roomId);
-        // });
 
         // 채팅 전송시 DB에 채팅 내역 저장(변경된 저장방법)
         await this.ChatRoomService.saveMessage(client, message, roomId);

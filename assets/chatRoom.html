@@ -165,8 +165,18 @@
                 });
         }
 
+        // 한국시간으로 변환
+        function convertToKoreanTime(createdAt) {
+            // UTC 시간으로부터 한국 시간의 offset을 계산
+            const offset = 9 * 60; // 한국은 UTC+9
+            
+            // UTC 시간에서 offset을 더하여 한국 시간으로 변환
+            const koreanTime = new Date(createdAt.getTime() + offset * 60000);
+            
+            return koreanTime;
+        }
+
         function getRoomMessage(roomId) {
-            // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
             const accessToken = localStorage.getItem("accessToken");
 
             axios
@@ -180,7 +190,19 @@
                     let html = "";
                     const myId = response.data.data.userId;
                     response.data.data.message.forEach((message) => {
-                        console.log(message);
+
+                        const date = new Date(message.createdAt)
+                        const koreanDate = convertToKoreanTime(date)
+                        const hours = koreanDate.getHours();
+                        const minutes = koreanDate.getMinutes();
+                        const month = koreanDate.toLocaleString("ko-KR", { month: "long" }); // 한글로 월 표시
+                        const day = koreanDate.getDate();
+
+                        const formattedTime = `${hours >= 12 ? "오후" : "오전"} ${hours % 12 || 12}:${minutes < 10 ? "0" : ""}${minutes}`;
+
+                        const timeDate = `  | ${formattedTime}`;
+
+                        console.log(timeDate)
                         // 내 유저 Id가 message.userId와 같다면 오른쪽에 표시
                         // 다르다면 왼쪽에 표시
                         // 추후에 userId가 아니라 nickName으로 가져오기
@@ -190,9 +212,8 @@
                             html += '<div class="sent_msg">';
                             html += "<p>" + message.content + "</p>";
                             // html += timeDate;
-                            html += `${message.userId}    | `;
-                            html += `${message.createdAt.slice(11, 16)}    | `;
-                            html += message.createdAt.slice(0, 10);
+                            html += `${message.userName}`;
+                            html += `${timeDate}`
                             html += "</div>";
                             html += "</div>";
                         } else {
@@ -201,9 +222,8 @@
                             html += '<div class="received_withd_msg">';
                             html += "<p>" + message.content + "</p>";
                             // html += timeDate;
-                            html += `${message.userId}    | `;
-                            html += `${message.createdAt.slice(11, 16)}    | `;
-                            html += message.createdAt.slice(0, 10);
+                            html += `${message.userName}`;
+                            html += `${timeDate}`
                             html += "</div>";
                             html += "</div>";
                             html += "</div>";
@@ -275,24 +295,28 @@
                     );
                     console.log("서버 소켓 아이디", id);
                     console.log("클라아이디", socket.id);
+                    console.log("==이름==",nickname)
 
                     const now = new Date();
                     const hours = now.getHours();
                     const minutes = now.getMinutes();
-                    const month = now.toLocaleString("en-US", {
+                    const month = now.toLocaleString("ko-KR", {
                         month: "long",
                     });
                     const day = now.getDate();
+                    
+                    const formattedTime = `${hours >= 12 ? "오후" : "오전"} ${hours % 12 || 12}:${minutes < 10 ? "0" : ""}${minutes}`;
 
-                    const formattedTime = `${hours % 12 || 12}:${
-                        minutes < 10 ? "0" : ""
-                    }${minutes} ${hours >= 12 ? "PM" : "AM"}`;
-
+        //             const timeDate = `
+        //     <span class="time_date">
+        //         ${nickname} | ${month} ${day}일 | ${formattedTime}
+        //     </span>
+        // `;
                     const timeDate = `
-            <span class="time_date">
-                ${nickname} | ${formattedTime} | ${month} ${day}
-            </span>
-        `;
+                        <span class="time_date">
+                            ${nickname} | ${formattedTime}
+                        </span>
+                    `;
                     const thisRoomId = localStorage.getItem("thisRoomId");
                     console.log({ thisRoomId });
                     console.log("*********", roomId);
@@ -433,12 +457,11 @@
             $("#expel-modal-overlay").css("display", "none");
         });
 
-        $(".msg-form").on("submit", function (e) {
-            e.preventDefault(); // 폼의 기본 동작 방지
-
+        // 모달 제출 버튼
+        $("#submit-btn").on("click", function () {
             console.log("submit");
 
-            const nickName = $("#input-message").val();
+            const nickName = $("#nickname").val();
             const roomId = localStorage.getItem("thisRoomId");
             // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
             const accessToken = localStorage.getItem("accessToken");
@@ -468,48 +491,7 @@
                     console.log(error);
                     alert("멤버 초대에 실패했습니다.");
                 });
-            });
-
-        // 버튼 클릭 이벤트 (선택 사항)
-        $("#submit-btn").on("click", function () {
-            $("#myForm").submit(); // 폼 제출
         });
-
-        // 모달 제출 버튼
-        // $("#submit-btn").on("click", function () {
-        //     console.log("submit");
-
-        //     const nickName = $("#nickname").val();
-        //     const roomId = localStorage.getItem("thisRoomId");
-        //     // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
-        //     const accessToken = localStorage.getItem("accessToken");
-        //     console.log("====roomId====",roomId)
-        //     axios
-        //         .post(
-        //             `/api/chat-invitation/${roomId}`,
-        //             {
-        //                 nickName,
-        //             },
-        //             {
-        //                 headers: {
-        //                     Authorization: `Bearer ${accessToken}`,
-        //                 },
-        //             },
-        //         )
-        //         .then(function (response) {
-        //             console.log(response);
-        //             if(response.data.data == "존재하지 않는 유저입니다."){
-        //                 alert("채팅방에 존재하지 않는 멤버입니다.");
-        //                 return;
-        //             }
-
-        //             alert("멤버 초대에 성공했습니다.");
-        //         })
-        //         .catch(function (error) {
-        //             console.log(error);
-        //             alert("멤버 초대에 실패했습니다.");
-        //         });
-        // });
 
         $("#expel-submit-btn").on("click", function () {
             console.log("expel-submit");
@@ -542,24 +524,37 @@
                 });
         });
 
-        // 메시지 전송
-        $(".sendMessage").on("click", function () {
-            // 룸 아이디와 같이 넘겨주려 했으나, 다음과 같은 오류 발생
-            // Column count doesn't match value count at row 1
-            // 룸 아이디를 못넘겨주면 어떻게 하지?
-            // => messageData를 넘겨줘도 message만 넘어간다.
-            const roomId = localStorage.getItem("thisRoomId");
-            console.log("here");
-            console.log("roomId", roomId);
-            const messageData = {
-                roomId: roomId,
-                message: $(".write_msg").val(),
-            };
-
-            socket.emit("sendMessage", messageData);
-            $(".write_msg").val("");
-            console.log("보내짐?");
+        // 폼 제출 이벤트 핸들러
+        $(".msg-form").on("submit", function (e) {
+            e.preventDefault(); // 폼의 기본 동작 방지
+            console.log("submitted")
+            // 메시지 전송
+            sendMessage();
         });
+
+        // 버튼 클릭 이벤트 핸들러
+        $(".sendMessage").on("click", function (e) {
+            // 메시지 전송
+            e.preventDefault(); // 버튼 클릭에 대한 기본 동작 방지
+            console.log("clicked")
+            sendMessage();
+        });
+
+        // 메시지 전송 함수
+        function sendMessage() {
+            const roomId = localStorage.getItem("thisRoomId");
+            const message = $(".write_msg").val();
+            const token = localStorage.getItem("accessToken");
+            if (message.trim() !== '') { // 메시지가 비어있지 않은 경우에만 전송
+                const messageData = {
+                    roomId: roomId,
+                    message: message,
+                };
+                
+                socket.emit("sendMessage", messageData);
+                $(".write_msg").val("");
+            }
+        }
 
         // 닉네임 설정
         $(".setNickname").on("click", function () {
