@@ -18,8 +18,6 @@ async function bootstrap() {
     // app.useStaticAssets(join(__dirname, "..", "public")); //html,js,css (바닐라)
     app.useStaticAssets(join(__dirname, "..", "assets")); //html,js,css (바닐라)
     // app.setBaseViewsDir(join(__dirname, "..", "views"));
-    app.setBaseViewsDir(join(__dirname, "..", "assets"));
-    app.setViewEngine("ejs");
 
     app.setGlobalPrefix("api", { exclude: ["/view/chat"] });
     app.enableCors({

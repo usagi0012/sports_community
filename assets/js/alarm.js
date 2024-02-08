@@ -23,8 +23,6 @@ async function displayNotifications() {
                 },
             },
         );
-        console.log(response.data.data.getAlarms);
-
         const notifications = response.data.data.getAlarms;
         notificationContainer.innerHTML = "";
         notifications.forEach((notification) => {

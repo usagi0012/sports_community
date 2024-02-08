@@ -67,23 +67,28 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="footer" id="footer"></div>
-        <div id="expelMember-modal-overlay">
-            <div id="modal">
-                <label for="nickname">추방할 유저 닉네임: </label>
-                <input
-                    type="text"
-                    id="nickname"
-                    placeholder="닉네임을 입력하세요"
-                />
-                <br />
-                <button id="submit-btn" onclick="confirmExpel()">제출</button>
-                <button id="close-btn" onclick="closeExpelMemberModal()">
-                    닫기
-                </button>
-            </div>
-        </div>
+    <div class="footer" id="footer"></div>
+            <div class="modal" id="expelMember-modal-overlay">
+                <div class="modal-content" id="modal">
+                    <label for="nickname">추방할 유저 닉네임 </label>
+                    <input
+                        type="text"
+                        id="nickname"
+                        placeholder="닉네임을 입력하세요"
+                    />
+                    <div class="modalBtnContainer">
+                        <button id="submit-btn" onclick="confirmExpel()">제출</button>
+                        <button
+                            id="close-btn"
+                            onclick="closeExpelMemberModal()"
+                        >
+                            닫기
+                        </button>
+                    </div>
+                </div>
+
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="module" src="./js/myClub.js"></script>
@@ -218,7 +223,6 @@
                         }
                         alert(`동아리 탈퇴에 실패했습니다.`);
                         console.log("button failed");
-
                         return;
                     });
             }

@@ -192,8 +192,9 @@ function createMatchUserHtml(user) {
         <button type="button" class="userInMatch" onclick="handleUserButtonClick('${user.guestId}')">
             <p>${user.guestName}</p>
         </button>
-            <button onclick="displayPersonal('${matchId}', '${playOtherUserId}')">평가 <button>
+            <button class="userEvaluate" onclick="displayPersonal('${matchId}', '${playOtherUserId}')">평가 </button>
         `;
+}
 
 // 새로운 함수 추가
 function handleUserButtonClick(userId) {
@@ -208,7 +209,7 @@ function createMatchUserButtonHtml(matchId) {
  
             <button  data-matchId="${matchId}" onclick="deleteButton(${matchId})">삭제하기</button>
             <button  data-matchId="${matchId}" onclick="confirmButton(${matchId})">승인 확인</button>
-             </div>
+        </div>
     `;
 }
 
@@ -252,7 +253,7 @@ async function submit(matchId, playOtherUserId) {
     }
 }
 
-function endPersonal() {
-    var modal = document.getElementById("myPersonal");
+async function endPersonal() {
+    const modal = document.getElementById("myPersonal");
     modal.style.display = "none";
 }

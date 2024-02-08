@@ -14,7 +14,9 @@
 .applyingBtn,
 .myClubApplication,
 .matchManagement,
-.toMyClubBtn {
+.toMyClubBtn,
+.expelMemberBtn,
+.withdrawBtn {
     font-family: "LINESeedKR-Bd";
     width: 110px;
     height: 35px;
@@ -32,7 +34,9 @@
 .applyingBtn:hover,
 .myClubApplication:hover,
 .matchManagement:hover,
-.toMyClubBtn:hover {
+.toMyClubBtn:hover,
+.expelMemberBtn:hover,
+.withdrawBtn:hover {
     background-color: #ffb13d;
 }
 
@@ -281,4 +285,34 @@
 
 #nickname {
     width: 100%;
+}
+
+#expelMember-modal-overlay > .modal-content > label {
+    display: block;
+}
+
+#expelMember-modal-overlay > .modal-content > input {
+    background-color: #eeeeee;
+    border-radius: 15px;
+    border: none;
+    margin: 15px;
+    padding-left: 10px;
+}
+
+.memberList {
+    margin-top: 30px;
+}
+
+.memberList > label {
+    font-size: 1.3rem;
+    color: #3f3131;
+}
+
+.memberList > .nickName {
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.memberList > .nickName:hover {
+    text-decoration: underline;
 }
