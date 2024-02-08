@@ -18,6 +18,7 @@ function loadHeader() {
                  placeholder="최대 15글자 입력가능합니다."/><button
                     type="submit"
                     id="searchBtn"
+                    onclick="needUpdateFunction()"
                 >
                     <i class="fas fa-search"></i>
                 </button>
@@ -52,12 +53,12 @@ function loadHeader() {
                 <a href="#">경기장</a>
             </li>
             <li id="platform">
-                <a href="#">플랫폼 이용안내</a>
+                <a href="#" onclick="needUpdateFunction()">플랫폼 이용안내</a>
                 <ul class="detail" id="detailPlatform">
-                    <li><a href="#">이용 안내</a></li>
-                    <li><a href="#">공지 사항</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Q&A</a></li>
+                    <li><a href="#" onclick="needUpdateFunction()">이용 안내</a></li>
+                    <li><a href="#" onclick="needUpdateFunction()">공지 사항</a></li>
+                    <li><a href="#" onclick="needUpdateFunction()">FAQ</a></li>
+                    <li><a href="#" onclick="needUpdateFunction()">Q&A</a></li>
                 </ul>
             </li>
             <li id="talk" onclick="toChat()"><a href="#">Talk</a></li>
@@ -66,7 +67,7 @@ function loadHeader() {
 </div>
     `;
     getAuthBtn();
-    searchBtn();
+    // searchBtn();
 }
 
 //헤더 안에 로그아웃 상태면 로그인 버튼, 로그인 상태면 로그아웃 버튼
@@ -137,7 +138,7 @@ function loadUserMenu() {
     <ul>
         <li onclick="toUser()">사용자 정보</li>
         <li onclick="toUserProfile()">프로필</li>
-        <li onclick="toCalender()">캘린더</li>
+        <li onclick="needUpdateFunction()">캘린더</li>
         <li onclick="toAlarm()">알림</li>
     </ul>
     `;
@@ -166,43 +167,44 @@ async function getName(token) {
         });
 }
 
-function searchBtn() {
-    const searchBox = document.getElementById("searchBox");
-    const searchBtn = searchBox.querySelector("button");
+//검색 함수
+// function searchBtn() {
+//     const searchBox = document.getElementById("searchBox");
+//     const searchBtn = searchBox.querySelector("button");
 
-    searchBtn.addEventListener("click", function (event) {
-        event.preventDefault();
+//     searchBtn.addEventListener("click", function (event) {
+//         event.preventDefault();
 
-        // 여기에서 검색어를 입력하는 input 요소를 찾아옵니다.
-        const searchInput = searchBox.querySelector("input[type=search]");
-        const searchQuery = searchInput.value.trim(); // 검색어 값 가져오기
+//         // 여기에서 검색어를 입력하는 input 요소를 찾아옵니다.
+//         const searchInput = searchBox.querySelector("input[type=search]");
+//         const searchQuery = searchInput.value.trim(); // 검색어 값 가져오기
 
-        let from = "";
-        if (
-            window.location.pathname.includes("club.html") ||
-            window.location.pathname.includes("myClub.html")
-        ) {
-            from = "club";
-        } else if (window.location.pathname.includes("place.html")) {
-            from = "place";
-        } else if (
-            window.location.pathname.includes("recruit.html") ||
-            window.location.pathname.includes("myRecruit.html")
-        ) {
-            from = "recruit";
-        }
+//         let from = "";
+//         if (
+//             window.location.pathname.includes("club.html") ||
+//             window.location.pathname.includes("myClub.html")
+//         ) {
+//             from = "club";
+//         } else if (window.location.pathname.includes("place.html")) {
+//             from = "place";
+//         } else if (
+//             window.location.pathname.includes("recruit.html") ||
+//             window.location.pathname.includes("myRecruit.html")
+//         ) {
+//             from = "recruit";
+//         }
 
-        if (from) {
-            window.location.href = `search.html?from=${from}&q=${encodeURIComponent(
-                searchQuery,
-            )}`;
-        } else {
-            window.location.href = `search.html?q=${encodeURIComponent(
-                searchQuery,
-            )}`;
-        }
-    });
-}
+//         if (from) {
+//             window.location.href = `search.html?from=${from}&q=${encodeURIComponent(
+//                 searchQuery,
+//             )}`;
+//         } else {
+//             window.location.href = `search.html?q=${encodeURIComponent(
+//                 searchQuery,
+//             )}`;
+//         }
+//     });
+// }
 
 //메뉴바 클릭시 이동
 //홈으로 이동
