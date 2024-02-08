@@ -409,4 +409,26 @@ export class RecruitService {
             console.error(error);
         }
     }
+    //유저집어넣기
+    async evaluateUser(guestId: number, userId: number, recruitId: number) {
+        try {
+            const myRecruit = await this.recruitRepository.findOne({
+                where: {
+                    id: recruitId,
+                },
+            });
+            console.log("userId", userId);
+            myRecruit.evaluateUser = myRecruit.evaluateUser || [];
+
+            if (!myRecruit.evaluateUser.includes(guestId.toString())) {
+                myRecruit.evaluateUser.push(guestId.toString());
+
+                return await this.recruitRepository.save(myRecruit);
+            }
+
+            return myRecruit;
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+    }
 }

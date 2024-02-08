@@ -1,4 +1,4 @@
-window.onload = function () {
+window.onload = function() {
     loadHeader();
     displayMatchInfo();
     loadFooter();
@@ -185,19 +185,27 @@ function createMatchInfoHtml(myMatch) {
 }
 
 function createMatchUserHtml(user) {
-    console.log("createMatchUserHtml", user);
-    const matchId = user.id;
-    const playOtherUserId = user.guestId;
-    return `
-        <button type="button" class="userInMatch" onclick="handleUserButtonClick('${user.guestId}')">
-            <p>${user.guestName}</p>
-        </button>
-            <button onclick="displayPersonal('${matchId}', '${playOtherUserId}')">평가 <button>
-        `;
+    try {
+        console.log("createMatchUserHtml", user);
+        const matchId = user.id;
+        const playOtherUserId = user.guestId;
+        const isEvaluated =
+            user.evaluateUser &&
+            user.evaluateUser.includes(playOtherUserId.toString());
 
-// 새로운 함수 추가
-function handleUserButtonClick(userId) {
-    createModal(userId);
+        const buttonText = isEvaluated ? "평가완료" : "평가";
+
+        const buttonDisabled = isEvaluated ? "disabled" : "";
+
+        return `
+            <div type="button" class="userInMatch">
+             <p>${user.guestName}</p>
+            </div>
+            <button onclick="displayPersonal('${matchId}', '${playOtherUserId}')" ${buttonDisabled}>${buttonText}</button>
+        `;
+    } catch (error) {
+        alert(error);
+    }
 }
 
 function createMatchUserButtonHtml(matchId) {
@@ -244,9 +252,9 @@ async function submit(matchId, playOtherUserId) {
         console.log("submit", matchId, playOtherUserId);
         await getPersonalAssessment(matchId, playOtherUserId);
         await getPersonalTag(matchId, playOtherUserId);
+        await evaluateUser(matchId, playOtherUserId);
         alert("평가 완료");
-
-        endPersonal();
+        window.location.reload();
     } catch (error) {
         console.error(error);
     }
@@ -255,4 +263,27 @@ async function submit(matchId, playOtherUserId) {
 function endPersonal() {
     var modal = document.getElementById("myPersonal");
     modal.style.display = "none";
+}
+
+//유저집어넣기
+async function evaluateUser(matchId, playOtherUserId) {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+        console.log(matchId);
+
+        console.log(playOtherUserId);
+        axios.post(
+            `/api/match/evaluateUser/${playOtherUserId}/${matchId}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+
+        console.log("유저집어넣기 성공");
+    } catch (error) {
+        console.log(error.response.data);
+        alert(error.response.data.message);
+        window.location.reload();
+    }
 }

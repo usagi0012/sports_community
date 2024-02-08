@@ -345,4 +345,28 @@ export class MatchService {
             throw new Error(error);
         }
     }
+
+    //유저집어넣기
+    async evaluateUser(guestId: number, userId: number, matchId: number) {
+        try {
+            const myMatch = await this.matchRepository.findOne({
+                where: {
+                    id: matchId,
+                },
+            });
+
+            console.log("userId", userId);
+            myMatch.evaluateUser = myMatch.evaluateUser || [];
+
+            if (!myMatch.evaluateUser.includes(guestId.toString())) {
+                myMatch.evaluateUser.push(guestId.toString());
+
+                return await this.matchRepository.save(myMatch);
+            }
+
+            return myMatch;
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+    }
 }

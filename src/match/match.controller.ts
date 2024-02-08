@@ -115,4 +115,14 @@ export class MatchController {
     ) {
         return await this.matchService.deleteMatch(userId, matchId);
     }
+
+    //유저아이디 집어넣기
+    @Post("evaluateUser/:guestId/:matchId")
+    async evaluateUser(
+        @UserId() userId: number,
+        @Param("guestId") guestId: number,
+        @Param("matchId") matchId: number,
+    ) {
+        return await this.matchService.evaluateUser(guestId, userId, matchId);
+    }
 }

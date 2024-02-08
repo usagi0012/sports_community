@@ -1,4 +1,4 @@
-window.onload = function () {
+window.onload = function() {
     loadHeader();
     displayRecruitInfo();
     loadFooter();
@@ -59,18 +59,19 @@ async function findRecruit(recruitId) {
         const accessToken = localStorage.getItem("accessToken");
 
         const response = await axios.get(
-            `/api/recruit/my/post/${recruitId}/user`,
-            {
+            `/api/recruit/my/post/${recruitId}/user`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
             },
         );
 
-        console.log(response.data); // 확인용 로그
-
         const confirmUsers = response.data[1];
         const findRecruit = response.data[0];
+
+        console.log("findRecruit", findRecruit);
+
+        console.log("confirmUsers", confirmUsers);
 
         const myRecruitUser = document.getElementById("recruitMatch");
         myRecruitUser.innerHTML = "";
@@ -82,7 +83,10 @@ async function findRecruit(recruitId) {
 
         //경기에 참석하는 유저 정보
         confirmUsers.forEach((confirmUser) => {
-            const confirmUsersHTML = createConfirmUsersHTML(confirmUser);
+            const confirmUsersHTML = createConfirmUsersHTML(
+                findRecruit,
+                confirmUser,
+            );
             myRecruitUser.innerHTML += confirmUsersHTML;
         });
         //매치 상세정보
@@ -120,15 +124,25 @@ function createRecurtIdButtonHTML(findRecruit) {
 `;
 }
 
-function createConfirmUsersHTML(confirmUser) {
+function createConfirmUsersHTML(findRecruit, confirmUser) {
     const matchId = confirmUser.id;
     const playOtherUserId = confirmUser.guestId;
+    const recruitId = confirmUser.recruitId;
+
+    const isEvaluated =
+        findRecruit.evaluateUser &&
+        findRecruit.evaluateUser.includes(playOtherUserId.toString());
+
+    const buttonText = isEvaluated ? "평가완료" : "평가";
+
+    const buttonDisabled = isEvaluated ? "disabled" : "";
+
     return `
-        <div type="button"  class="userInMatch">
+        <div type="button" class="userInMatch">
             <p><strong>Name:</strong> ${confirmUser.guestName}</p>
             <p><strong>Status:</strong> ${confirmUser.status}</p>
         </div>
-        <button onclick="displayPersonal('${matchId}', '${playOtherUserId}')">평가</button> 
+        <button onclick="displayPersonal('${recruitId}','${matchId}', '${playOtherUserId}')" ${buttonDisabled}>${buttonText}</button> 
     `;
 }
 
@@ -179,9 +193,7 @@ async function evaluateGuest(recruitId) {
     try {
         const accessToken = localStorage.getItem("accessToken");
         const response = await axios.put(
-            `/api/recruit/my/post/${recruitId}/evaluate`,
-            {},
-            {
+            `/api/recruit/my/post/${recruitId}/evaluate`, {}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
@@ -238,7 +250,6 @@ function createGuestHTML(guest) {
     `;
 }
 
-
 function createButtonHTML(guest) {
     return `
         <div>
@@ -256,9 +267,7 @@ async function approvebutton(matchId) {
 
     try {
         await axios.put(
-            `/api/recruit/my/post/match/${matchId}`,
-            { status: "승인" },
-            {
+            `/api/recruit/my/post/match/${matchId}`, { status: "승인" }, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
@@ -280,9 +289,7 @@ async function rejectbutton(matchId) {
     const accessToken = localStorage.getItem("accessToken");
     try {
         await axios.put(
-            `/api/recruit/my/post/match/${matchId}`,
-            { status: "거절" },
-            {
+            `/api/recruit/my/post/match/${matchId}`, { status: "거절" }, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
@@ -328,12 +335,13 @@ function closeRecruitUserModal() {
 }
 
 //평가하기
-async function displayPersonal(matchId, playOtherUserId) {
+async function displayPersonal(recruitId, matchId, playOtherUserId) {
     try {
         console.log("displayPersonal", matchId, playOtherUserId);
         const personalEvaluation = document.getElementById("submit-btn");
         personalEvaluation.innerHTML = "";
         const personalEvaluationHTML = createpersonalEvaluationHTML(
+            recruitId,
             matchId,
             playOtherUserId,
         );
@@ -342,10 +350,10 @@ async function displayPersonal(matchId, playOtherUserId) {
     } catch (error) {}
 }
 
-function createpersonalEvaluationHTML(matchId, playOtherUserId) {
+function createpersonalEvaluationHTML(recruitId, matchId, playOtherUserId) {
     console.log("createpersonalEvaluationHTML", matchId, playOtherUserId);
     return `
-        <button onclick="submit('${matchId}', '${playOtherUserId}')" class="on">제출</button>
+        <button onclick="submit('${recruitId}','${matchId}', '${playOtherUserId}')" class="on">제출</button>
     `;
 }
 
@@ -355,14 +363,15 @@ function openPersonal(confirmUser) {
     modal.style.display = "block";
 }
 
-async function submit(matchId, playOtherUserId) {
+async function submit(recruitId, matchId, playOtherUserId) {
     try {
         console.log("submit", matchId, playOtherUserId);
         await getPersonalAssessment(matchId, playOtherUserId);
         await getPersonalTag(matchId, playOtherUserId);
+        await evaluateUser(playOtherUserId, recruitId);
 
         alert("평가완료");
-        endPersonal();
+        window.location.reload();
     } catch (error) {
         console.error(error);
     }
@@ -371,4 +380,27 @@ async function submit(matchId, playOtherUserId) {
 function endPersonal() {
     var modal = document.getElementById("myPersonal");
     modal.style.display = "none";
+}
+
+//유저집어넣기
+async function evaluateUser(playOtherUserId, recruitId) {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+        console.log(recruitId);
+
+        console.log(playOtherUserId);
+        axios.post(
+            `/api/recruit/post/evaluateUser/${playOtherUserId}/${recruitId}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+
+        console.log("유저집어넣기 성공");
+    } catch (error) {
+        console.log(error.response.data);
+        alert(error.response.data.message);
+        window.location.reload();
+    }
 }
