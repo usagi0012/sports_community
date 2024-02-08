@@ -36,9 +36,9 @@ function createHostMatchHTML(hostMatch) {
     <div class="host-match-item">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#hostMatchModal" id="hostMatch-${hostMatch}" hostMatchId="${hostMatch.id}" onclick="getGuestClub(${hostMatch.id})">
             <h4>${hostMatch.message}</h4>
-            <div><strong>게스트:</strong> ${hostMatch.guest_club_name} </div>
-            <p><strong>진행상황:</strong> ${hostMatch.progress}</p>    
-            <p><strong>상태:</strong> ${hostMatch.status}</p>
+            <div><strong>동아리: </strong> ${hostMatch.guest_club_name} </div>
+            <p><strong>진행상황: </strong> ${hostMatch.progress}</p>    
+            <p><strong>상태: </strong> ${hostMatch.status}</p>
         </button>  
     </div>
     `;
@@ -104,8 +104,6 @@ async function getGuestClub(hostMatchId) {
         const guestClubContainer = document.getElementById("guestClub");
         const hostClubButtonContainer =
             document.getElementById("hostClubButton");
-        const deleteButtonContainer = document.getElementById("deletebutton");
-
         const guestClub = response.data[1];
         const clubMatch = response.data[0];
         console.log("guest", guestClub);
@@ -115,7 +113,6 @@ async function getGuestClub(hostMatchId) {
         const clubMatchHTML = createClubMatchHTML(clubMatch);
         const deleteButtonHTML = createDeleteButtonHTML(hostMatchId);
 
-        deleteButtonContainer.innerHTML = deleteButtonHTML;
         guestClubContainer.innerHTML = guestClubHTML + clubMatchHTML;
         hostClubButtonContainer.innerHTML = hostClubButtonHTML;
         openHostMatchModal();
@@ -135,16 +132,10 @@ function createGuestClubHTML(guestClub, clubMatch) {
     const myClubId = clubMatch.guest_clubId;
     return `
         <div>
-            <h2>${guestClub.name}</h2>
-            ${
-                guestClub.image
-                    ? `<img src="${guestClub.image}" alt="Club Image">`
-                    : ""
-            }
-            <p><strong>Region:</strong> ${guestClub.region}</p>
-            <p><strong>Score:</strong> ${guestClub.score}</p>
-            <p><strong>Members:</strong> ${guestClub.members}</p>
-            <p><strong>Description:</strong> ${guestClub.description}</p>
+            <h2>FROM. ${guestClub.name}</h2>
+            <p><strong>지역: </strong> ${guestClub.region}</p>
+            <p><strong>점수: </strong> ${guestClub.score}</p>
+            <p><strong>멤버 수: </strong> ${guestClub.members}</p>
         </div>
         <button onclick="displayClubAss('${clubMatchId}', '${myClubId}')"  >평가</button>
 
@@ -163,15 +154,21 @@ function createHostClubButtonHTML(hostMatchId) {
 }
 function createClubMatchHTML(clubMatch) {
     return `
-        <div>
+        <div class="matchInfo">
             <h2>경기정보</h2>
-            <p><strong>Information:</strong> ${clubMatch.information}</p>
-            <p><strong>Message:</strong> ${clubMatch.message}</p>
-            <p><strong>End Time:</strong> ${clubMatch.endTime}</p>
-            <p><strong>Game Date:</strong> ${clubMatch.gameDate}</p>
-            <p><strong>Progress:</strong> ${clubMatch.progress}</p>
-            <p><strong>evaluation:</strong> ${clubMatch.host_evaluate}</p>
-            <p><strong>Status:</strong> ${clubMatch.status}</p>
+            <p><strong>메세지: </strong> ${clubMatch.message}</p>
+            <p><strong>설명: </strong> ${clubMatch.information}</p>
+            <p><strong>경기 시작 시간: </strong> ${clubMatch.gameDate.slice(
+                "T",
+                16,
+            )}</p>
+            <p><strong>경기 종료 시간: </strong> ${clubMatch.endTime.slice(
+                "T",
+                16,
+            )}</p>
+            <p><strong>과정: </strong> ${clubMatch.progress}</p>
+            <p><strong>상태: </strong> ${clubMatch.status}</p>
+            <p><strong>평가 완료 여부:</strong> ${clubMatch.host_evaluate}</p>
         </div>
         
     `;
@@ -222,7 +219,7 @@ async function rejectbutton(hostMatchId) {
 }
 
 function openHostMatchModal() {
-    document.getElementById("hostMatchModal").style.display = "block";
+    document.getElementById("hostMatchModal").style.display = "flex";
 }
 
 function closeHostMatchModal() {

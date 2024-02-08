@@ -58,11 +58,13 @@ function checkPasswordMatch() {
 }
 
 document.getElementById("Kakao").addEventListener("click", function () {
-    kakaoLogin();
+    // kakaoLogin();
+    needUpdateFunction();
 });
 
 document.getElementById("Naver").addEventListener("click", function () {
-    naverLogin();
+    needUpdateFunction();
+    // naverLogin();
 });
 
 // 네이버 로그인을 위한 api 진입

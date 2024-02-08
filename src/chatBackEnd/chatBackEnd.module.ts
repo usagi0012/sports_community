@@ -7,9 +7,10 @@ import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { Message } from "src/entity/message.entity";
 import { Participants } from "src/entity/participants.entity";
+import { User } from "src/entity/user.entity";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Chat, Message, Participants])],
+    imports: [TypeOrmModule.forFeature([Chat, Message, Participants, User])],
     providers: [ChatBackEndGateway, ChatRoomService, JwtService, ConfigService],
 })
 export class ChatBackEndModule {}

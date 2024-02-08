@@ -216,7 +216,7 @@ function createMatchUserButtonHtml(matchId) {
  
             <button  data-matchId="${matchId}" onclick="deleteButton(${matchId})">삭제하기</button>
             <button  data-matchId="${matchId}" onclick="confirmButton(${matchId})">승인 확인</button>
-             </div>
+        </div>
     `;
 }
 
@@ -260,8 +260,8 @@ async function submit(matchId, playOtherUserId) {
     }
 }
 
-function endPersonal() {
-    var modal = document.getElementById("myPersonal");
+async function endPersonal() {
+    const modal = document.getElementById("myPersonal");
     modal.style.display = "none";
 }
 

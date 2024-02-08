@@ -165,9 +165,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             if (club.data !== "") {
                 const clubName = club.data.name;
-                document.getElementById("club").innerText = clubName;
+                document.getElementById("userClub").innerText = clubName;
             } else {
-                document.getElementById("club").innerText = "없음";
+                document.getElementById("userClub").innerText = "없음";
             }
         } catch (error) {
             console.log(error);

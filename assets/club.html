@@ -21,27 +21,6 @@
         <div id="sameContainer"></div>
         <div class="bodyContainer">
             <div class="mainContainer" id="mainContainer">
-                <select id="regionDropdown" onchange="getClub('region')">
-                    <option value="">지역 선택</option>
-
-                    <option value="서울">서울</option>
-                    <option value="부산">부산</option>
-                    <option value="대구">대구</option>
-                    <option value="인천">인천</option>
-                    <option value="광주">광주</option>
-                    <option value="대전">대전</option>
-                    <option value="울산">울산</option>
-                    <option value="세종">세종</option>
-                    <option value="경기">경기</option>
-                    <option value="강원">강원</option>
-                    <option value="충청북도">충북</option>
-                    <option value="충청남도">충남</option>
-                    <option value="경상북도">경북</option>
-                    <option value="경상남도">경남</option>
-                    <option value="전라북도">전북</option>
-                    <option value="전라남도">전남</option>
-                    <option value="제주도">제주</option>
-                </select>
                 <div class="club">
                     <button class="createBtn" onclick="moveToCreateClub()">
                         동아리 생성
@@ -49,6 +28,27 @@
                     <!-- <button id="sortByLocation" onclick="getClub('region')">
                         지역별
                     </button> -->
+                    <select id="regionDropdown" onchange="getClub('region')">
+                        <option value="">지역 선택</option>
+
+                        <option value="서울">서울</option>
+                        <option value="부산">부산</option>
+                        <option value="대구">대구</option>
+                        <option value="인천">인천</option>
+                        <option value="광주">광주</option>
+                        <option value="대전">대전</option>
+                        <option value="울산">울산</option>
+                        <option value="세종">세종</option>
+                        <option value="경기">경기</option>
+                        <option value="강원">강원</option>
+                        <option value="충청북도">충북</option>
+                        <option value="충청남도">충남</option>
+                        <option value="경상북도">경북</option>
+                        <option value="경상남도">경남</option>
+                        <option value="전라북도">전북</option>
+                        <option value="전라남도">전남</option>
+                        <option value="제주도">제주</option>
+                    </select>
                     <button id="sortByLatest" onclick="getClub('latest')">
                         최신순
                     </button>

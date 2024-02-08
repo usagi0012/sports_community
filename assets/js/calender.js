@@ -473,7 +473,7 @@ async function deleteCalendar(calenderId) {
         console.log("삭제실패", error);
         if (error.response && error.response.status === 401) {
             alert("로그인 후 이용해주세요.");
-            window.location.href = "http://localhost:8001/login.html";
+            window.location.href = "login.html";
         }
         console.error(
             "Error updating calendar event:",
