@@ -194,6 +194,7 @@ function createMatchUserHtml(user) {
         </button>
             <button onclick="displayPersonal('${matchId}', '${playOtherUserId}')">평가 <button>
         `;
+}
 
 // 새로운 함수 추가
 function handleUserButtonClick(userId) {

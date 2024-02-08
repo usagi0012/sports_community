@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Onong signup</title>
+        <meta name="description" content="Onong Integrated Signup Platform" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link rel="stylesheet" href="css/signup.css" />
+    </head>
+    <body>
+        <div class="logo">
+            <img src="resources/logo.png" id="logo" onclick="toHome()" />
+        </div>
+        <div class="bodyContainer">
+            <form
+                id="signupForm"
+                action="/signup"
+                method="post"
+                onsubmit="submitForm(event)"
+            >
+                <h1>이메일 재인증</h1>
+
+                <label for="email">이메일:</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    maxlength="40"
+                    placeholder="이메일 형식으로 40글자 입력가능합니다."
+                />
+
+                <span id="emailError" class="error"></span>
+
+                <div class="submit_line">
+                    <div id="countdownTimer" style="display: none"></div>
+                    <button type="submit" id="signupBtn">인증링크 받기</button>
+                </div>
+            </form>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/signup.js"></script>
+        <script src="./js/resendEmail.js"></script>
+    </body>
+</html>

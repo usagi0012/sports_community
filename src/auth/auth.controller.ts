@@ -63,6 +63,12 @@ export class AuthController {
         return this.authService.resetPassword(resetPasswordDto.email);
     }
 
+    //재인증 이메일보내기
+    @Post("resendEmail")
+    async resendVerificationEmail(@Body("email") email: string) {
+        return this.authService.resendVerificationEmail(email);
+    }
+
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Post("logout")
