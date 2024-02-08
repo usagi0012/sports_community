@@ -232,7 +232,8 @@
             const accessToken = localStorage.getItem("accessToken");
 
             console.log("엑세스 토큰", accessToken);
-            const socket = io("http://localhost:5000", {
+            const socket = io("http://localhost:8001", {
+                transports: ['websocket'],
                 query: {
                     auth: accessToken,
                 },
