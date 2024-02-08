@@ -125,6 +125,15 @@ function createRecurtIdButtonHTML(findRecruit) {
 }
 
 function createConfirmUsersHTML(findRecruit, confirmUser) {
+    if (findRecruit.progress !== "평가해주세요") {
+        return `
+            <div type="button" class="userInMatch">
+                <p><strong>Name:</strong> ${confirmUser.guestName}</p>
+                <p><strong>Status:</strong> ${confirmUser.status}</p>
+            </div>
+        `;
+    }
+
     const matchId = confirmUser.id;
     const playOtherUserId = confirmUser.guestId;
     const recruitId = confirmUser.recruitId;

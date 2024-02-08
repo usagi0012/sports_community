@@ -13,7 +13,7 @@ async function displayMatchInfo() {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-        console.log(response.data);
+        console.log("myMatch", response.data);
         const myMatch = document.getElementById("myMatch");
         myMatch.innerHTML = "";
 
@@ -130,9 +130,11 @@ async function displayMatchUser(matchId) {
             },
         });
 
-        console.log(response.data);
+        // console.log(response.data);
         const myMatch = response.data[0];
         const confirmUser = response.data[1];
+
+        console.log("myMatch", myMatch);
 
         console.log("confirmUser", confirmUser);
 
@@ -145,7 +147,7 @@ async function displayMatchUser(matchId) {
         const matchInfoHtml = createMatchInfoHtml(myMatch);
 
         confirmUser.forEach((user) => {
-            const matchUserHtml = createMatchUserHtml(user);
+            const matchUserHtml = createMatchUserHtml(myMatch, user);
 
             matchUser.innerHTML += matchUserHtml;
         });
@@ -184,14 +186,22 @@ function createMatchInfoHtml(myMatch) {
     `;
 }
 
-function createMatchUserHtml(user) {
+function createMatchUserHtml(myMatch, user) {
     try {
-        console.log("createMatchUserHtml", user);
-        const matchId = user.id;
+        if (myMatch.progress !== "평가해주세요") {
+            return `
+            <div type="button" class="userInMatch">
+             <p>${user.guestName}</p>
+            </div>
+            `;
+        }
+
+        const matchId = myMatch.id;
+        console.log("matchId", matchId);
         const playOtherUserId = user.guestId;
         const isEvaluated =
-            user.evaluateUser &&
-            user.evaluateUser.includes(playOtherUserId.toString());
+            myMatch.evaluateUser &&
+            myMatch.evaluateUser.includes(playOtherUserId.toString());
 
         const buttonText = isEvaluated ? "평가완료" : "평가";
 
@@ -201,11 +211,16 @@ function createMatchUserHtml(user) {
             <div type="button" class="userInMatch">
              <p>${user.guestName}</p>
             </div>
-            <button onclick="displayPersonal('${matchId}', '${playOtherUserId}')" ${buttonDisabled}>${buttonText}</button>
+            <button class="userEvaluate"  onclick="displayPersonal('${matchId}', '${playOtherUserId}')" ${buttonDisabled}>${buttonText}</button>
         `;
     } catch (error) {
         alert(error);
     }
+}
+
+// 새로운 함수 추가
+function handleUserButtonClick(userId) {
+    createModal(userId);
 }
 
 function createMatchUserButtonHtml(matchId) {
@@ -222,7 +237,6 @@ function createMatchUserButtonHtml(matchId) {
 
 async function displayPersonal(matchId, playOtherUserId) {
     try {
-        console.log("displayPersonal", matchId, playOtherUserId);
         const personalEvaluation = document.getElementById("submit-btn");
         personalEvaluation.innerHTML = "";
         const personalEvaluationHTML = createpersonalEvaluationHTML(
@@ -243,7 +257,7 @@ function createpersonalEvaluationHTML(matchId, playOtherUserId) {
 
 function openPersonal(confirmUser) {
     var modal = document.getElementById("myPersonal");
-    console.log(confirmUser);
+
     modal.style.display = "block";
 }
 

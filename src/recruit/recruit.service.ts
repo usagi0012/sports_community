@@ -260,6 +260,33 @@ export class RecruitService {
         const hostId = userId;
         const recruit = await this.checkHost(hostId, recurtId);
 
+        const response = await this.getGameUser(userId, recurtId);
+
+        const matchesArray = response[1] as Match[];
+
+        const matchIds = matchesArray.map((match) => match.guestId);
+
+        const recruitUsers = recruit.evaluateUser;
+
+        function evaluateUsers(
+            recruitUsers: string[],
+            matchIds: number[],
+        ): void {
+            // 문자열 배열을 숫자 배열로 변환
+            const recruitUsersAsInt: number[] = recruitUsers.map(Number);
+
+            // 배열의 길이와 값이 일치하는지 확인
+            if (
+                recruitUsersAsInt.length !== matchIds.length ||
+                !recruitUsersAsInt.every((value) => matchIds.includes(value))
+            ) {
+                throw new NotFoundException("평가하지 않은 인원이 있습니다.");
+            }
+        }
+
+        evaluateUsers(recruitUsers, matchIds);
+
+        recruit.evaluateUser;
         if (recruit.progress === Progress.EVALUATION_COMPLETED) {
             throw new NotFoundException("이미평가를 완료하였습니다.");
         }
@@ -267,6 +294,7 @@ export class RecruitService {
         if (recruit.progress !== Progress.PLEASE_EVALUATE) {
             throw new NotFoundException("경기가 끝난 후에 평가 가능합니다.");
         }
+        recruit.evaluateUser;
 
         recruit.progress = Progress.EVALUATION_COMPLETED;
 
