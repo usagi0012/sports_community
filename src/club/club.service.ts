@@ -312,25 +312,31 @@ export class ClubService {
         console.log("유저스", users);
 
         // 비동기 작업을 기다리고 결과를 모두 수집하기 위해 Promise.all 사용
-        const nickNames = await Promise.all(
+        const userData = await Promise.all(
             users.map(async (userId) => {
                 console.log("userId", userId);
-                const userProfile = await this.userProfileRepository.findOne({
+                let userProfile = await this.userProfileRepository.findOne({
                     where: { userId },
                 });
 
-                if (!userProfile) {
-                    throw new NotFoundException(
-                        "유저 프로필이 존재하지 않습니다.",
-                    );
-                }
                 console.log("유저 프로필", userProfile);
-                console.log("유저프로필닉네임", userProfile.nickname);
-                return userProfile.nickname;
+                // console.log("유저프로필닉네임", userProfile.nickname);
+
+                const user = await this.userRepository.findOne({
+                    where: { id: userId },
+                });
+                const userName = user.name;
+
+                if (!userProfile) {
+                    return { nickname: null, userName: userName };
+                }
+                return { nickname: userProfile.nickname, userName: userName };
             }),
         );
 
-        console.log("닉", nickNames);
-        return nickNames;
+        console.log("유저 데이터", userData);
+
+        // 닉네임과 유저 이름을 포함한 배열을 반환
+        return userData;
     }
 }
