@@ -18,6 +18,13 @@ import { MatchStatus } from "src/entity/match.entity";
 import { Status } from "src/entity/recruit.entity";
 import { Alarmservice } from "src/alarm/alarm.service";
 import { ConfigService } from "@nestjs/config";
+import { Cron, CronExpression } from "@nestjs/schedule";
+
+const now = new Date();
+const utc = now.getTime();
+const koreaTimeDiff = 9 * 60 * 60 * 1000;
+const korNow = new Date(utc + koreaTimeDiff);
+const oneHoursAgo = new Date(korNow);
 
 @Injectable()
 export class ClubMatchService {
@@ -36,6 +43,7 @@ export class ClubMatchService {
         userId: number,
         clubMatchDTO: ClubMatchDTO,
     ) {
+        const { endTime, gameDate, ...restclubMatchDTO } = clubMatchDTO;
         const guestClub = await this.clubRepository.findOne({
             where: {
                 masterId: userId,
@@ -47,6 +55,13 @@ export class ClubMatchService {
                 "동아리가 없거나 동아리장만 신청할 수 있습니다.",
             );
         }
+
+        const endtimeDate = ClubMatch.setEndTimeFromNumber(
+            clubMatchDTO.gameDate,
+            clubMatchDTO.endTime,
+        );
+
+        const gamedate = ClubMatch.korGameDate(clubMatchDTO.gameDate);
 
         const hostClub = await this.clubRepository.findOne({
             where: {
@@ -63,8 +78,10 @@ export class ClubMatchService {
             guest_club_name: guestClub.name,
             guestClub: guestClub,
             hostClub: hostClub,
+            gameDate: gamedate,
+            endTime: endtimeDate,
 
-            ...clubMatchDTO,
+            ...restclubMatchDTO,
         });
         console.log(hostClub.masterId);
         console.log(guestClub.name);
@@ -97,8 +114,10 @@ export class ClubMatchService {
             },
         });
         for (const match of matches) {
-            match.updateProgress();
+            this.updateProgress(match);
         }
+
+        console.log("now", now);
 
         return await this.clubMatchRepository.save(matches);
     }
@@ -115,10 +134,12 @@ export class ClubMatchService {
             },
         });
 
+        console.log("matchTime", match.endTime, match.gameDate);
+
         if (!match) {
             throw new NotFoundException(`Match ${id}을 찾을 수 없습니다.`);
         }
-
+        this.updateProgress(match);
         return match;
     }
 
@@ -242,10 +263,13 @@ export class ClubMatchService {
                 message: true,
                 information: true,
                 status: true,
+                endTime: true,
+                gameDate: true,
             },
         });
+
         for (const match of matches) {
-            match.updateProgress();
+            this.updateProgress(match);
         }
 
         return await this.clubMatchRepository.save(matches);
@@ -264,7 +288,7 @@ export class ClubMatchService {
             throw new NotFoundException(`Match ${id}을 찾을 수 없습니다.`);
         }
 
-        guestMatch.updateProgress();
+        this.updateProgress(guestMatch);
 
         return await this.clubMatchRepository.save(guestMatch);
     }
@@ -284,8 +308,6 @@ export class ClubMatchService {
         if (!guestMatch) {
             throw new NotFoundException(`Match ${id}을 찾을 수 없습니다.`);
         }
-
-        guestMatch.updateProgress();
 
         await this.clubMatchRepository.save(guestMatch);
 
@@ -348,16 +370,16 @@ export class ClubMatchService {
         ) {
             throw new NotFoundException("권한이 없습니다.");
         }
-        if (match.guest_evaluate == true && match.host_evaluate == true) {
-            return await this.clubMatchRepository.remove(match);
-        } else if (
-            match.host_evaluate == true &&
-            match.guest_evaluate == false
-        ) {
-            throw new NotFoundException(
-                "어웨이 클럽이 평가를 완료해야 삭제가능합니다.",
-            );
+        if (match.progress === Progress.PLEASE_EVALUATE) {
+            if (match.guest_evaluate == true && match.host_evaluate == true) {
+                return await this.clubMatchRepository.remove(match);
+            } else {
+                throw new NotFoundException(
+                    "두클럽 모두 평가 후에 삭제 가능합니다. 상대 클럽의 평가를 기다려주세요",
+                );
+            }
         }
+
         if (match.status !== ClubMatchStatus.CANCEL) {
             throw new NotFoundException("취소되지 않은 경기입니다.");
         }
@@ -395,5 +417,53 @@ export class ClubMatchService {
         }
 
         return await this.clubMatchRepository.save(clubMatch);
+    }
+    // 클럽평가 변경하기
+    async putEvaluate(id: number, userId: number) {
+        const clubMatch = await this.clubMatchRepository.findOne({
+            where: {
+                id: id,
+            },
+        });
+
+        if (!clubMatch) {
+            throw new NotFoundException("클럽 매치를 찾을 수 없습니다.");
+        }
+
+        if (clubMatch.guest_clubId_master === userId) {
+            clubMatch.guest_evaluate = true;
+        } else if (clubMatch.host_clubId_master === userId) {
+            clubMatch.host_evaluate = true;
+        }
+        return await this.clubMatchRepository.save(clubMatch);
+    }
+
+    // @Cron(CronExpression.EVERY_10_SECONDS)
+    // async handleCron() {
+    //     const guestMatches = await this.clubMatchRepository.find();
+
+    //     for (const guestMatch of guestMatches) {
+    //         this.updateProgress(guestMatch);
+    //     }
+
+    //     await this.clubMatchRepository.save(guestMatches);
+    // }
+
+    private updateProgress(clubMatch: ClubMatch) {
+        if (clubMatch.gameDate.getTime() > now.getTime()) {
+            clubMatch.progress = Progress.DURING;
+
+            // if (clubMatch.status !== ClubMatchStatus.MATCHSUCCESS) {
+            //     clubMatch.status = ClubMatchStatus.CANCEL;
+            // }
+        }
+
+        if (clubMatch.endTime.getTime() < now.getTime()) {
+            clubMatch.progress = Progress.PLEASE_EVALUATE;
+
+            // if (clubMatch.status !== ClubMatchStatus.MATCHSUCCESS) {
+            //     clubMatch.status = ClubMatchStatus.CANCEL;
+            // }
+        }
     }
 }

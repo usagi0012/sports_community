@@ -164,17 +164,17 @@ export class ClubassessmenttagService {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
 
-        if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
-            throw new BadRequestException(
-                "시합 신청완료 상태에서는 평가지를 작성할 수 없습니다.",
-            );
-        }
+        // if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
+        //     throw new BadRequestException(
+        //         "시합 신청완료 상태에서는 평가지를 작성할 수 없습니다.",
+        //     );
+        // }
 
-        if (clubMatch.status === ClubMatchStatus.CANCEL) {
-            throw new BadRequestException(
-                "시합 취소 상태에서는 평가지를 작성할 수 없습니다.",
-            );
-        }
+        // if (clubMatch.status === ClubMatchStatus.CANCEL) {
+        //     throw new BadRequestException(
+        //         "시합 취소 상태에서는 평가지를 작성할 수 없습니다.",
+        //     );
+        // }
 
         if (clubMatch.status === ClubMatchStatus.REJECTED) {
             throw new BadRequestException(
@@ -271,23 +271,23 @@ export class ClubassessmenttagService {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
 
-        if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
-            throw new BadRequestException(
-                "시합 신청완료 상태에서는 태그를 작성할 수 없습니다.",
-            );
-        }
+        // if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
+        //     throw new BadRequestException(
+        //         "시합 신청완료 상태에서는 태그를 작성할 수 없습니다.",
+        //     );
+        // }
 
-        if (clubMatch.status === ClubMatchStatus.CANCEL) {
-            throw new BadRequestException(
-                "시합 취소 상태에서는 태그를 작성할 수 없습니다.",
-            );
-        }
+        // if (clubMatch.status === ClubMatchStatus.CANCEL) {
+        //     throw new BadRequestException(
+        //         "시합 취소 상태에서는 태그를 작성할 수 없습니다.",
+        //     );
+        // }
 
-        if (clubMatch.status === ClubMatchStatus.REJECTED) {
-            throw new BadRequestException(
-                "시합 거절 상태에서는 태그를 작성할 수 없습니다.",
-            );
-        }
+        // if (clubMatch.status === ClubMatchStatus.REJECTED) {
+        //     throw new BadRequestException(
+        //         "시합 거절 상태에서는 태그를 작성할 수 없습니다.",
+        //     );
+        // }
 
         if (!clubMatch.guest_clubId && !clubMatch.host_clubId) {
             throw new NotFoundException(

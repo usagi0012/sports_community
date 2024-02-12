@@ -377,7 +377,7 @@ export class RecruitService {
         return checkrecruit;
     }
 
-    @Cron(CronExpression.EVERY_HOUR)
+    @Cron(CronExpression.EVERY_10_MINUTES)
     async handleCron() {
         const recruits = await this.recruitRepository.find();
 

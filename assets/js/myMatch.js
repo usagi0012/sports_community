@@ -1,4 +1,4 @@
-window.onload = function() {
+window.onload = function () {
     loadHeader();
     displayMatchInfo();
     loadFooter();
@@ -30,11 +30,14 @@ async function displayMatchInfo() {
 function createMatchHTML(match) {
     return `
     <button type="button" >
-        <div id="match-${match.id}" matchId="${match.id}" onclick="displayMatchUser(${match.id})">
+        <div id="match-${match.id}" matchId="${
+            match.id
+        }" onclick="displayMatchUser(${match.id})">
             <h1>${match.recruitTitle}</h1>
             <div><strong>모집장: </strong> ${match.hostName} </div>
-            <p><strong>경기 날자: </strong> ${match.gamedate}</p>
+            <p><strong>경기 날자: </strong> ${match.gameDate.slice(0, 10)}</p>
             <p><strong>상태: </strong> ${match.status}</p>
+            <p><strong>진행상황: </strong> ${match.progress}</p>
         </div>
     </button>
     `;
@@ -287,7 +290,9 @@ async function evaluateUser(matchId, playOtherUserId) {
 
         console.log(playOtherUserId);
         axios.post(
-            `/api/match/evaluateUser/${playOtherUserId}/${matchId}`, {}, {
+            `/api/match/evaluateUser/${playOtherUserId}/${matchId}`,
+            {},
+            {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
