@@ -16,6 +16,7 @@ import {
     ClubApplicationStatus,
 } from "src/entity/club-application.entity";
 import { User } from "src/entity/user.entity";
+import { ClubRank } from "src/entity/clubRank.entity";
 
 @Injectable()
 export class ClubassessmenttagService {
@@ -28,6 +29,8 @@ export class ClubassessmenttagService {
         private readonly clubMatchRepository: Repository<ClubMatch>,
         @InjectRepository(Club)
         private readonly clubRepository: Repository<Club>,
+        @InjectRepository(ClubRank)
+        private readonly clubRankRepository: Repository<ClubRank>,
     ) {}
 
     async findTopThreeClub(): Promise<number[]> {
@@ -42,6 +45,14 @@ export class ClubassessmenttagService {
             .orderBy("totalScore", "DESC")
             .take(3)
             .getRawMany();
+
+        // 상위 3개 동아리 점수 저장
+        topThreeClubs.forEach(async (club) => {
+            await this.clubRankRepository.save({
+                clubId: club.clubId,
+                totalScore: club.totalScore,
+            });
+        });
 
         const topThreeClubIds = topThreeClubs.map((club) => club.clubId);
 

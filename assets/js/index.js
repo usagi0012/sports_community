@@ -19,6 +19,8 @@ window.onload = function () {
     } else {
         getProfile("login");
     }
+    getPersonalRank();
+    getClubRank();
     loadHeader();
     loadFooter();
 };
@@ -96,4 +98,109 @@ function getProfile(token) {
                 }
             });
     }
+}
+
+function getPersonalRank() {
+    axios
+        .get("/api/updated-rank/personal")
+        .then(function (response) {
+            console.log("===개인 랭크===", response);
+            const personalityRankInnerContainner = document.querySelector(
+                ".personalityRankInnerContainer",
+            );
+            const abilityRankInnerContainner = document.querySelector(
+                ".abilityRankInnerContainer",
+            );
+
+            // 인성 div 만들기
+            const personality = response.data.filter(
+                (score) => score.isPersonality,
+            );
+            console.log("===인성값만 뽑은 결과===", personality);
+
+            const orderedPersonality = personality.sort(
+                (a, b) => b.personalityScore - a.personalityScore,
+            );
+            console.log("===인성 정렬===", orderedPersonality);
+
+            orderedPersonality.forEach((personalityRank) => {
+                const rankCard = document.createElement("div");
+                rankCard.className = "rankCard";
+                const rankNickName = document.createElement("div");
+                rankNickName.className = "rankNickName";
+                rankNickName.innerHTML = `${personalityRank.nickname}`;
+                rankCard.appendChild(rankNickName);
+
+                const rankScore = document.createElement("div");
+                rankScore.className = "rankScore";
+                rankScore.innerHTML = `<i class="fas fa-solid fa-star"></i>${personalityRank.personalityScore}`;
+                rankCard.appendChild(rankScore);
+
+                personalityRankInnerContainner.appendChild(rankCard);
+            });
+
+            // 실력 div 만들기
+            const ability = response.data.filter((score) => score.isAbility);
+            console.log("===실력값만 뽑은 결과===", personality);
+
+            const orderedAbility = ability.sort(
+                (a, b) => b.abilityScore - a.abilityScore,
+            );
+            console.log("===실력 정렬===", orderedAbility);
+
+            orderedAbility.forEach((abilityRank) => {
+                const rankCard = document.createElement("div");
+                rankCard.className = "rankCard";
+                const rankNickName = document.createElement("div");
+                rankNickName.className = "rankNickName";
+                rankNickName.innerHTML = `${abilityRank.nickname}`;
+                rankCard.appendChild(rankNickName);
+
+                const rankScore = document.createElement("div");
+                rankScore.className = "rankScore";
+                rankScore.innerHTML = `<i class="fas fa-solid fa-star"></i>${abilityRank.abilityScore}`;
+                rankCard.appendChild(rankScore);
+
+                abilityRankInnerContainner.appendChild(rankCard);
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function getClubRank() {
+    axios
+        .get("/api/updated-rank/club")
+        .then(function (response) {
+            console.log("===클럽 랭크===", response);
+            const clubRankInnerContainner = document.querySelector(
+                ".clubRankInnerContainer",
+            );
+
+            // 클럽 div 만들기
+            const orderedClubRank = response.data.sort(
+                (a, b) => b.totalScore - a.totalScore,
+            );
+            console.log("===클럽 정렬===", orderedClubRank);
+
+            orderedClubRank.forEach((clubRank) => {
+                const rankCard = document.createElement("div");
+                rankCard.className = "rankCard";
+                const rankNickName = document.createElement("div");
+                rankNickName.className = "rankNickName";
+                rankNickName.innerHTML = `${clubRank.clubId}`;
+                rankCard.appendChild(rankNickName);
+
+                const rankScore = document.createElement("div");
+                rankScore.className = "rankScore";
+                rankScore.innerHTML = `<i class="fas fa-solid fa-star"></i>${clubRank.personalityScore}`;
+                rankCard.appendChild(rankScore);
+
+                clubRankInnerContainner.appendChild(rankCard);
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }

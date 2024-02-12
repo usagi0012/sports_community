@@ -16,18 +16,36 @@ import { User } from "./user.entity";
 @Entity({
     name: "memberRank",
 })
-export class UpdatedRank {
+export class MemberRank {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ nullable: false })
     userId: number;
 
-    @Column({ nullable: false })
+    @Column()
+    isPersonality: boolean;
+
+    @Column()
+    isAbility: boolean;
+
+    @Column({
+        type: "decimal",
+        precision: 10,
+        scale: 3,
+        nullable: true,
+        default: 0,
+    })
     personalityScore: number;
 
-    @Column({ nullable: false })
-    ablilityScore: number;
+    @Column({
+        type: "decimal",
+        precision: 10,
+        scale: 3,
+        nullable: true,
+        default: 0,
+    })
+    abilityScore: number;
 
     @CreateDateColumn({ type: "datetime", nullable: false })
     createdAt: Date;
