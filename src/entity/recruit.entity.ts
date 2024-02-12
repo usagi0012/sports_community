@@ -86,6 +86,9 @@ export class Recruit {
     })
     progress: Progress;
 
+    @Column("simple-array", { nullable: true })
+    evaluateUser: string[];
+
     @ManyToOne(() => User, (user) => user.recruits)
     @JoinColumn({ name: "hostId" })
     host: User;
@@ -124,4 +127,12 @@ export class Recruit {
         );
         return adjustedGameDate;
     }
+
+    // setEvaluateUserId(userId: number): void {
+    //     this.evaluateUser = userId.toString();
+    // }
+
+    // getEvaluateUserId(): number {
+    //     return parseInt(this.evaluateUser, 10);
+    // }
 }

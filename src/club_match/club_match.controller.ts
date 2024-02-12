@@ -178,6 +178,15 @@ export class ClubMatchController {
         return await this.clubMatchService.deleteClubMatch(id, userId);
     }
 
+    //평가 완료로 변경
+    @Put("put/evaluate/:clubmatchid")
+    async putEvaluate(
+        @Param("clubmatchid") id: number,
+        @UserId() userId: number,
+    ) {
+        console.log("clubid", id);
+        return await this.clubMatchService.putEvaluate(id, userId);
+    }
     // //평가 완료된 경기 삭제하기
     // @Delete("delete/comfirm/:clubmatchid")
     // async confirmClubMatch(

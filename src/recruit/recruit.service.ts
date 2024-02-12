@@ -260,6 +260,33 @@ export class RecruitService {
         const hostId = userId;
         const recruit = await this.checkHost(hostId, recurtId);
 
+        const response = await this.getGameUser(userId, recurtId);
+
+        const matchesArray = response[1] as Match[];
+
+        const matchIds = matchesArray.map((match) => match.guestId);
+
+        const recruitUsers = recruit.evaluateUser;
+
+        function evaluateUsers(
+            recruitUsers: string[],
+            matchIds: number[],
+        ): void {
+            // 문자열 배열을 숫자 배열로 변환
+            const recruitUsersAsInt: number[] = recruitUsers.map(Number);
+
+            // 배열의 길이와 값이 일치하는지 확인
+            if (
+                recruitUsersAsInt.length !== matchIds.length ||
+                !recruitUsersAsInt.every((value) => matchIds.includes(value))
+            ) {
+                throw new NotFoundException("평가하지 않은 인원이 있습니다.");
+            }
+        }
+
+        evaluateUsers(recruitUsers, matchIds);
+
+        recruit.evaluateUser;
         if (recruit.progress === Progress.EVALUATION_COMPLETED) {
             throw new NotFoundException("이미평가를 완료하였습니다.");
         }
@@ -267,6 +294,7 @@ export class RecruitService {
         if (recruit.progress !== Progress.PLEASE_EVALUATE) {
             throw new NotFoundException("경기가 끝난 후에 평가 가능합니다.");
         }
+        recruit.evaluateUser;
 
         recruit.progress = Progress.EVALUATION_COMPLETED;
 
@@ -349,7 +377,7 @@ export class RecruitService {
         return checkrecruit;
     }
 
-    @Cron(CronExpression.EVERY_HOUR)
+    @Cron(CronExpression.EVERY_10_MINUTES)
     async handleCron() {
         const recruits = await this.recruitRepository.find();
 
@@ -407,6 +435,28 @@ export class RecruitService {
             }
         } catch (error) {
             console.error(error);
+        }
+    }
+    //유저집어넣기
+    async evaluateUser(guestId: number, userId: number, recruitId: number) {
+        try {
+            const myRecruit = await this.recruitRepository.findOne({
+                where: {
+                    id: recruitId,
+                },
+            });
+            console.log("userId", userId);
+            myRecruit.evaluateUser = myRecruit.evaluateUser || [];
+
+            if (!myRecruit.evaluateUser.includes(guestId.toString())) {
+                myRecruit.evaluateUser.push(guestId.toString());
+
+                return await this.recruitRepository.save(myRecruit);
+            }
+
+            return myRecruit;
+        } catch (error) {
+            throw new NotFoundException(error);
         }
     }
 }

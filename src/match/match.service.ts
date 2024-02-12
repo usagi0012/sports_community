@@ -231,6 +231,8 @@ export class MatchService {
     async doneGame(userId: number, matchId: number) {
         const findMatch = await this.findMyMatch(matchId, userId);
 
+        const response = await this.findGameUser(userId, matchId);
+
         if (findMatch.progress === Progress.EVALUATION_COMPLETED) {
             throw new NotFoundException("이미 평가완료하였습니다. ");
         }
@@ -238,6 +240,31 @@ export class MatchService {
         if (findMatch.endTime >= new Date()) {
             throw new NotFoundException("경기가 끝난 후 평가 가능합니다.");
         }
+
+        const matchesArray = response[1] as Match[];
+
+        const matchIds = matchesArray.map((match) => match.guestId);
+        console.log("matchId", matchIds);
+
+        const matchUsers = findMatch.evaluateUser;
+        console.log("matchUser", matchUsers);
+
+        function evaluateUsers(matchUsers: string[], matchIds: number[]): void {
+            if (!matchUsers) {
+                throw new NotFoundException("평가하지 않은 인원이 있습니다.");
+            }
+
+            const matchUsersAsInt: number[] = matchUsers.map(Number);
+
+            if (
+                matchUsersAsInt.length !== matchIds.length ||
+                !matchUsersAsInt.every((value) => matchIds.includes(value))
+            ) {
+                throw new NotFoundException("평가하지 않은 인원이 있습니다.");
+            }
+        }
+
+        evaluateUsers(matchUsers, matchIds);
 
         findMatch.evaluate = true;
         findMatch.progress = Progress.EVALUATION_COMPLETED;
@@ -342,6 +369,30 @@ export class MatchService {
         } catch (error) {
             console.error(error.message);
             throw new Error(error);
+        }
+    }
+
+    //유저집어넣기
+    async evaluateUser(guestId: number, userId: number, matchId: number) {
+        try {
+            const myMatch = await this.matchRepository.findOne({
+                where: {
+                    id: matchId,
+                },
+            });
+
+            console.log("userId", userId);
+            myMatch.evaluateUser = myMatch.evaluateUser || [];
+
+            if (!myMatch.evaluateUser.includes(guestId.toString())) {
+                myMatch.evaluateUser.push(guestId.toString());
+
+                return await this.matchRepository.save(myMatch);
+            }
+
+            return myMatch;
+        } catch (error) {
+            throw new NotFoundException(error);
         }
     }
 }
