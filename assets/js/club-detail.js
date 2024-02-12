@@ -206,16 +206,29 @@ async function getMember(clubId) {
         });
 
         console.log("멤버", membersResponse);
-        membersResponse.data.forEach((nickName, index) => {
-            const memberListDiv = document.querySelector(".memberList");
-            const nickNameDiv = document.createElement("div");
-            nickNameDiv.addEventListener("click", () => {
-                // 클릭된 닉네임의 ID만을 전달하되, 배열로 전달
-                createModal([userIds[index]]);
-            });
-            nickNameDiv.className = "nickName";
-            nickNameDiv.innerHTML = `${nickName}`;
-            memberListDiv.appendChild(nickNameDiv);
+        membersResponse.data.forEach((info, index) => {
+            console.log("==info==", info);
+            if (info.nickname) {
+                const memberListDiv = document.querySelector(".memberList");
+                const nickNameDiv = document.createElement("div");
+                nickNameDiv.addEventListener("click", () => {
+                    // 클릭된 닉네임의 ID만을 전달하되, 배열로 전달
+                    createModal([userIds[index]]);
+                });
+                nickNameDiv.className = "nickName";
+                nickNameDiv.innerHTML = `${info.nickname}`;
+                memberListDiv.appendChild(nickNameDiv);
+            } else {
+                const memberListDiv = document.querySelector(".memberList");
+                const nickNameDiv = document.createElement("div");
+                nickNameDiv.addEventListener("click", () => {
+                    // 클릭된 닉네임의 ID만을 전달하되, 배열로 전달
+                    createModal([userIds[index]]);
+                });
+                nickNameDiv.className = "name";
+                nickNameDiv.innerHTML = `${info.userName}`;
+                memberListDiv.appendChild(nickNameDiv);
+            }
         });
     } catch (error) {
         console.log(error);
