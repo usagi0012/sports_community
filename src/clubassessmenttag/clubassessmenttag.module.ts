@@ -9,6 +9,7 @@ import { ClubMatch } from "src/entity/club_match.entity";
 import { Club } from "src/entity/club.entity";
 import { User } from "src/entity/user.entity";
 import { ClubApplication } from "src/entity/club-application.entity";
+import { ClubRank } from "src/entity/clubRank.entity";
 
 @Module({
     imports: [
@@ -19,10 +20,12 @@ import { ClubApplication } from "src/entity/club-application.entity";
             Club,
             User,
             ClubApplication,
+            ClubRank,
         ]),
         AuthModule,
     ],
     controllers: [ClubassessmenttagController],
     providers: [ClubassessmenttagService],
+    exports: [ClubassessmenttagService],
 })
 export class ClubassessmenttagModule {}

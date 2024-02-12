@@ -13,6 +13,7 @@ import { Recruit, Status } from "src/entity/recruit.entity";
 import { Match, MatchStatus } from "src/entity/match.entity";
 import { UserProfile } from "src/entity/user-profile.entity";
 import { User } from "src/entity/user.entity";
+import { MemberRank } from "src/entity/memberRank.entity";
 
 @Injectable()
 export class PersonalassessmenttagService {
@@ -27,42 +28,65 @@ export class PersonalassessmenttagService {
         private readonly userProfileRepository: Repository<UserProfile>,
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        @InjectRepository(MemberRank)
+        private readonly memberRankRepository: Repository<MemberRank>,
     ) {}
 
+    // 테스트중
     async findTopThreePersonalityAmountUser() {
         const topThreeUsersPersonalityAmount =
             await this.userscoreRepository.find({
-                select: { personalityAmount: true },
+                select: {
+                    personalityAmount: true,
+                    userId: true,
+                    personality: true,
+                },
                 order: { personalityAmount: "DESC" },
                 take: 3,
             });
 
-        await this.userscoreRepository.find({
-            where: { count: MoreThanOrEqual(10) },
-        });
+        for (const userScore of topThreeUsersPersonalityAmount) {
+            console.log("===유저 스코어===", userScore);
+            console.log("===인성 점수===", userScore.personality);
+            const savedRank = await this.memberRankRepository
+                .save({
+                    userId: userScore.userId,
+                    isPersonality: true,
+                    isAbility: false,
+                    personalityScore: userScore.personality,
+                })
+                .catch((error) => {
+                    console.error("Error saving rank:", error);
+                });
+            console.log("==저장?==", savedRank);
+        }
 
         return topThreeUsersPersonalityAmount;
     }
 
     async findTopThreeAbilityAmountUser() {
         const topThreeAbilityAmountUser = await this.userscoreRepository.find({
-            select: { abilityAmount: true },
+            select: { abilityAmount: true, userId: true, ability: true },
             order: { abilityAmount: "DESC" },
             take: 3,
         });
 
-        if (
-            !topThreeAbilityAmountUser ||
-            topThreeAbilityAmountUser.length === 0
-        ) {
-            throw new NotFoundException(
-                "상위 3명의 실력점수인 유저를 찾을 수 없습니다.",
-            );
+        for (const userScore of topThreeAbilityAmountUser) {
+            console.log("===유저 실력 스코어===", userScore);
+            console.log("===실력 점수===", userScore.ability);
+            console.log("===실력 id===", userScore.userId);
+            const savedRank2 = await this.memberRankRepository
+                .save({
+                    userId: userScore.userId,
+                    isPersonality: false,
+                    isAbility: true,
+                    abilityScore: userScore.ability,
+                })
+                .catch((error) => {
+                    console.error("Error saving rank:", error);
+                });
+            console.log("===저장된 실력 점수===", savedRank2);
         }
-
-        await this.userscoreRepository.find({
-            where: { count: MoreThanOrEqual(10) },
-        });
 
         return topThreeAbilityAmountUser;
     }
