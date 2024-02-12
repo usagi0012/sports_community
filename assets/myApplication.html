@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onong Club Application List</title>
-        <meta name="description" content="Onong ClubApplicationListPage" />
+        <title>Onog My Application</title>
+        <meta name="description" content="Onog ClubDetailPage" />
         <link rel="icon" href="./resources/favicon.ico" />
         <link
             rel="stylesheet"
@@ -13,23 +13,35 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
         />
-        <link rel="stylesheet" href="css/myClubApplication.css" />
+        <link rel="stylesheet" href="css/myApplication.css" />
         <link rel="stylesheet" href="css/dropBar.css" />
     </head>
     <body>
         <div id="sameContainer"></div>
         <div class="bodyContainer">
             <div class="mainContainer" id="mainContainer">
-                <label id="listLabel">내 동아리 신청서 목록</label>
-                <div class="my-club-application"></div>
+                <label id="listLabel">동아리 신청 내역</label>
             </div>
         </div>
-
         <div class="footer" id="footer"></div>
 
-        <script src="./js/dropmenu.js"></script>
+        <!-- <div id="modify-modal-overlay">
+            <div id="modal">
+                <label for="message">변경할 신청 메세지: </label>
+                <input
+                    type="text"
+                    id="message"
+                    placeholder="메세지를 입력하세요"
+                />
+                <br />
+                <button id="submit-btn">제출</button>
+                <button id="close-btn">닫기</button>
+            </div>
+        </div> -->
+
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script type="module" src="./js/my-club-application.js"></script>
+        <script type="module" src="./js/myApplication.js"></script>
+        <script src="./js/dropmenu.js"></script>
         <script src="./js/notification.js"></script>
     </body>
 </html>

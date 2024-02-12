@@ -14,6 +14,7 @@ import { PermissionApplicationDto } from "./dto/permission-application.dto";
 import { ApplicationReviewDto } from "./dto/applicationReview.dto";
 import { ClubApplicationStatus } from "../entity/club-application.entity";
 import { Alarmservice } from "../alarm/alarm.service";
+import { UserProfile } from "src/entity/user-profile.entity";
 
 @Injectable()
 export class ApplyingClubService {
@@ -24,6 +25,8 @@ export class ApplyingClubService {
         private readonly ClubRepository: Repository<Club>,
         @InjectRepository(User)
         private readonly UserRepository: Repository<User>,
+        @InjectRepository(UserProfile)
+        private readonly userProfileRepository: Repository<UserProfile>,
         private readonly alramService: Alarmservice,
     ) {}
 
@@ -82,7 +85,14 @@ export class ApplyingClubService {
     async getApplyingClub(userId) {
         const application = await this.findApplicationByUserId(userId);
 
-        return application;
+        const club = await this.ClubRepository.findOne({
+            where: { id: application.clubId },
+        });
+        const clubName = club.name;
+
+        const result = { ...application, clubName };
+
+        return result;
     }
 
     // 내 신청서 수정
@@ -130,7 +140,7 @@ export class ApplyingClubService {
         });
 
         if (!application) {
-            throw new NotFoundException("존재하지 않는 지원서입니다.");
+            throw new NotFoundException("지원서가 존재하지 않습니다.");
         }
 
         return application;
@@ -138,7 +148,6 @@ export class ApplyingClubService {
 
     async getApplicationOfMyClub(userId: number) {
         // 동호회 장이 아니면 열람 불가
-
         const user = await this.UserRepository.findOne({
             where: { id: userId },
         });
@@ -151,11 +160,28 @@ export class ApplyingClubService {
             throw new ForbiddenException("동호회 장만 조회할 수 있습니다.");
         }
 
-        const application = await this.clubApplicationRepository.find({
+        const applications = await this.clubApplicationRepository.find({
             where: { clubId },
         });
+        console.log("지원자들", applications);
 
-        return application;
+        const nicknames = await Promise.all(
+            applications.map(async (app) => {
+                const userProfile = await this.userProfileRepository.findOne({
+                    where: { userId: app.userId },
+                });
+                console.log("앱 유저아이디", app.userId);
+                console.log("유저 프로필", userProfile);
+                if (!userProfile) {
+                    const userName = user.name;
+                    return userName;
+                }
+                const userName = userProfile.nickname;
+                return userName;
+            }),
+        );
+
+        return { applications, nicknames };
     }
 
     async reviewApplication(
@@ -187,6 +213,13 @@ export class ApplyingClubService {
             // 승인을 거부했을 때의 로직.
             // 동호회 신청서 삭제(해야하나? status를 만든 의미가 없는 것 같은데 그럼) - 한 번 물어보기.
             // 동호회 신청 거절 알림
+            const deletedApplication =
+                await this.clubApplicationRepository.delete({
+                    userId: memberId,
+                    clubId,
+                });
+            console.log(deletedApplication);
+
             const message = `${club.name}동호회 가입 신청이 거부되었습니다.`;
             // await this.alramService.sendAlarm(memberId, message);
 
@@ -206,6 +239,12 @@ export class ApplyingClubService {
             await this.clubApplicationRepository.update(applicationId, {
                 status: ClubApplicationStatus.REJECTED,
             });
+            const deletedApplication =
+                await this.clubApplicationRepository.delete({
+                    userId: memberId,
+                    clubId,
+                });
+            console.log(deletedApplication);
             throw new Error(
                 "신청자가 가입된 동호회가 있어 승인할 수 없습니다.",
             );
@@ -227,12 +266,17 @@ export class ApplyingClubService {
         });
 
         // 요청 승인시 club의 member를 1 늘리기
-        const addMember = club.members +1;
+        const addMember = club.members + 1;
 
         await this.ClubRepository.update(clubId, {
-            members: addMember
-        })
-
+            members: addMember,
+        });
+        // 요청 승인시 지원서 삭제
+        const deletedApplication = await this.clubApplicationRepository.delete({
+            userId: memberId,
+            clubId,
+        });
+        console.log(deletedApplication);
         // 요청 승인시 지원서를 작성한 user에게 알림 보내기
         // 알림 보내기 로직
 

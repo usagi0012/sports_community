@@ -32,8 +32,18 @@
                         동아리 정보 수정
                     </button>
 
-                    <button class="deleteBtn" onclick="deleteCheck()">
+                    <button class="deleteBtn" onclick="confirmDelete()">
                         동아리 삭제
+                    </button>
+
+                    <button class="withdrawBtn" onclick="confirmWithdraw()">
+                        동아리 탈퇴
+                    </button>
+                    <button
+                        class="expelMemberBtn"
+                        onclick="openExpelMemberModal()"
+                    >
+                        멤버 추방
                     </button>
 
                     <button class="matchManagement" onclick="toMyClubMatch()">
@@ -57,8 +67,28 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="footer" id="footer"></div>
+    <div class="footer" id="footer"></div>
+            <div class="modal" id="expelMember-modal-overlay">
+                <div class="modal-content" id="modal">
+                    <label for="nickname">추방할 유저 닉네임 </label>
+                    <input
+                        type="text"
+                        id="nickname"
+                        placeholder="닉네임을 입력하세요"
+                    />
+                    <div class="modalBtnContainer">
+                        <button id="submit-btn" onclick="confirmExpel()">제출</button>
+                        <button
+                            id="close-btn"
+                            onclick="closeExpelMemberModal()"
+                        >
+                            닫기
+                        </button>
+                    </div>
+                </div>
+
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="module" src="./js/myClub.js"></script>
@@ -68,8 +98,40 @@
                 window.location.href = "hostClubMatch.html";
             }
 
+            function confirmDelete() {
+                let result = confirm("동아리를 정말로 삭제하시겠습니까?");
+                if (result) {
+                    console.log("확인 누름");
+                    deleteCheck();
+                } else {
+                    console.log("취소 누름");
+                    alert("동아리 삭제를 취소했습니다.");
+                }
+            }
+
+            function confirmWithdraw() {
+                let result = confirm("동아리를 정말로 탈퇴하시겠습니까?");
+                if (result) {
+                    console.log("확인 누름");
+                    withdrawClub();
+                } else {
+                    console.log("취소 누름");
+                    alert("탈퇴를 취소했습니다.");
+                }
+            }
+
+            function confirmExpel() {
+                let result = confirm("정말로 추방하시겠습니까?");
+                if (result) {
+                    console.log("확인 누름");
+                    expelMember();
+                } else {
+                    console.log("취소 누름");
+                    alert("추방을 취소했습니다.");
+                }
+            }
+
             function deleteCheck() {
-                // alert(`${clubNameDiv} 동아리를 정말로 삭제하시겠습니까?`);
                 const token = localStorage.getItem("accessToken");
                 axios
                     .get("api/club/myClubId", {
@@ -92,6 +154,7 @@
                             })
                             .catch(function (error) {
                                 console.log(error);
+                                alert("동아리 삭제에 실패했습니다.");
 
                                 // if (error.response.data.message === "Unauthorized") {
                                 //     alert("동아리 생성자만 삭제할 수 있습니다.");
@@ -130,7 +193,94 @@
                         return;
                     });
             }
+
+            function withdrawClub() {
+                const token = localStorage.getItem("accessToken");
+                axios
+                    .put(
+                        "/api/club/withdraw",
+                        {},
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        },
+                    )
+                    .then(function (response) {
+                        console.log(response);
+                        console.log("button clicked");
+
+                        alert("동아리 탈퇴가 완료되었습니다.");
+                        window.location.href = "club.html";
+                    })
+                    .catch(function (error) {
+                        console.log("3", error);
+                        if (
+                            error.message ==
+                            "Request failed with status code 403"
+                        ) {
+                            alert("동아리장은 탈퇴할 수 없습니다.");
+                        }
+                        alert(`동아리 탈퇴에 실패했습니다.`);
+                        console.log("button failed");
+                        return;
+                    });
+            }
+
+            function expelMember() {
+                const token = localStorage.getItem("accessToken");
+                const nickNameInput = document.querySelector("#nickname");
+                console.log("?", nickNameInput);
+                const nickName = nickNameInput.value;
+                console.log("닉네임", nickName);
+                axios
+                    .put(
+                        "/api/club/expelMember",
+                        { nickName },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        },
+                    )
+                    .then(function (response) {
+                        console.log(response);
+                        console.log("button clicked");
+
+                        alert("멤버 추방에 성공했습니다.");
+
+                        closeExpelMemberModal();
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        if (
+                            error.message ==
+                            "Request failed with status code 404"
+                        ) {
+                            alert("존재하지 않는 멤버입니다.");
+                        }
+                        console.log("button failed");
+
+                        return;
+                    });
+            }
+
+            function openExpelMemberModal() {
+                console.log("클릭됨");
+                const expelMemberModal = document.querySelector(
+                    "#expelMember-modal-overlay",
+                );
+                expelMemberModal.style.display = "flex";
+            }
+
+            function closeExpelMemberModal() {
+                const expelMemberModal = document.querySelector(
+                    "#expelMember-modal-overlay",
+                );
+                expelMemberModal.style.display = "none";
+            }
         </script>
         <script src="./js/notification.js"></script>
+        <script src="./js/otherUser-modal.js"></script>
     </body>
 </html>

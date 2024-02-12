@@ -1,22 +1,71 @@
+/* 메인 컨테이너*/
+
+.titleContainer {
+    margin-top: 80px;
+    width: 100%;
+    min-height: 50px;
+    margin-bottom: 0px;
+}
+
+.titleFlex {
+    width: 100%;
+    display: flex;
+    float: left;
+    height: 50px;
+}
+
+h3 {
+    padding: 10px 0px 7px;
+    margin: 0px;
+}
+
+#myClubHostMatch,
+#myClubGuestMatch {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid #ff771c;
+    background-color: #fff;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    cursor: pointer;
+}
+
+#myClubGuestMatch {
+    background-color: #ff771c;
+    color: #fff;
+}
+
+.mainContainer {
+    margin: 0px auto 10px;
+    border: 1px solid #ff771c;
+    min-height: 20rem;
+}
+
 .guest-match-item {
     margin-bottom: 20px;
 }
 
 #guestMatchModal {
-    display: none;
+    width: 100%;
+    height: 100%;
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    max-width: 600px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+    top: 0;
+    left: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
 }
 
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 500px;
+    min-width: 400px;
+    margin: 0 auto;
+}
 .modal-header {
     border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
@@ -24,8 +73,34 @@
 }
 
 .modal-title {
-    font-size: 1.25rem;
-    font-weight: bold;
+    font-size: 1.5rem;
+    color: #3f3131;
+    margin: 0px;
+}
+
+#hostClub > div > h2 {
+    font-size: 1.5rem;
+    color: #3f3131;
+    margin: 0px;
+    margin-top: 15px;
+    padding: 10px 0px;
+    border-bottom: 1px solid #ddd;
+}
+
+#hostClub > button {
+    font-family: "LINESeedKR-Bd";
+    margin: 10px;
+    width: 50px;
+    height: 25px;
+    padding-top: 5px;
+    border-radius: 7px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#hostClub > button:hover {
+    box-shadow: 2px 2px 2px gray;
 }
 
 .modal-body {
@@ -36,4 +111,55 @@
     border-top: 1px solid #ddd;
     padding-top: 10px;
     margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.GuestClubButton > button,
+.modal-footer > button {
+    font-family: "LINESeedKR-Bd";
+    background-color: #ffb13d;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    width: fit-content;
+    height: 30px;
+    padding-top: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.GuestClubButton > button:hover,
+.modal-footer > button:hover {
+    background-color: #fff;
+    color: black;
+    box-shadow: 2px 2px 2px gray;
+    border: 1px solid #ffb13d;
+}
+
+#guestClubMatch {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-content: space-between;
+}
+
+.guest-match-item {
+    margin: 10px auto;
+    text-align: center;
+    width: 95%;
+}
+
+.guest-match-item > button {
+    width: 100%;
+    font-family: "LINESeedKR-Bd";
+    text-align: center;
+    background-color: #fff;
+    border-radius: 15px;
+    border: 1px solid #ffb13d;
+    cursor: pointer;
+}
+
+.guest-match-item > button:hover {
+    transform: scale(1.03);
 }

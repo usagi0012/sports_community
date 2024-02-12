@@ -15,6 +15,7 @@
         />
         <link rel="stylesheet" href="css/dropBar.css" />
         <link rel="stylesheet" href="./css/recruit-detail.css" />
+        <link rel="stylesheet" href="./css/otherUser-modal.css" />
         <script
             async
             src="https://code.jquery.com/jquery-3.6.4.min.js"
@@ -41,7 +42,11 @@
                     <div class="modal-content">
                         <!--  <span class="close" onclick="closeModal()">&times;</span> -->
                         <label class="applyLabel">매치 신청하기</label>
-                        <label for="description" class="applyMessage"
+                        <label
+                            for="description"
+                            class="applyMessage"
+                            maxlength="50"
+                            placeholder="최대 50글자 입력가능합니다."
                             >신청 메세지</label
                         >
                         <textarea id="description1"></textarea>
@@ -85,6 +90,7 @@
         <script src="./js/recruit-detail.js"></script>
         <script src="./js/dropmenu.js"></script>
         <script src="./js/notification.js"></script>
+        <script src="./js/otherUser-modal.js"></script>
         <script>
             "js/showWhere.js";
         </script>

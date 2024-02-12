@@ -1,7 +1,13 @@
+window.onload = function () {
+    loadHeader();
+    getGuestMatch();
+    loadFooter();
+};
+
 //guest매치 조회하기
 async function getGuestMatch() {
-    const accessToken = localStorage.getItem("accessToken");
     try {
+        const accessToken = localStorage.getItem("accessToken");
         const response = await axios.get(`/api/clubmatch/guest`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -24,19 +30,18 @@ async function getGuestMatch() {
     }
 }
 
-//게스트클럽 html
+// 게스트클럽 HTML 생성 함수
 function createGuestClubMatchHTML(guestClubMatch) {
     return `
         <div class="guest-match-item">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#guestMatchModal" id="guestMatch-${guestClubMatch.id}" guestMatchId="${guestClubMatch.id}" onclick="findHostClub(${guestClubMatch.id})">
-            <h4>${guestClubMatch.message}</h4>    
-            <p><strong>away Club Name:</strong> ${guestClubMatch.host_club_name}</p> 
-            <p><strong>Status:</strong> ${guestClubMatch.status}</p>
+            <button type="button" id="guestMatch-${guestClubMatch.id}" guestMatchId="${guestClubMatch.id}" onclick="findHostClub(${guestClubMatch.id})">
+                <h4>${guestClubMatch.message}</h4>    
+                <p><strong>away Club Name:</strong> ${guestClubMatch.host_club_name}</p> 
+                <p><strong>Status:</strong> ${guestClubMatch.status}</p>
             </button>
         </div>
     `;
 }
-
 // guest 매치 상세 조회
 async function findHostClub(guestMatchId) {
     const accessToken = localStorage.getItem("accessToken");
@@ -51,10 +56,11 @@ async function findHostClub(guestMatchId) {
             },
         );
 
-        console.log(response.data);
-
         const clubMatch = response.data[0];
         const hostClub = response.data[1];
+
+        console.log("club", clubMatch);
+        console.log("host", hostClub);
 
         const hostClubContainer = document.getElementById("hostClub");
         const guestModalButtonContainer =
@@ -64,7 +70,7 @@ async function findHostClub(guestMatchId) {
         guestModalButtonContainer.innerHTML = "";
 
         const guestModalButtonHTML = createGuestModalButtonHTML(clubMatch);
-        const hostClubHTML = createHostClubHTML(hostClub);
+        const hostClubHTML = createHostClubHTML(hostClub, clubMatch);
         const matchHtml = createMatchHTML(clubMatch);
 
         guestModalButtonContainer.innerHTML += guestModalButtonHTML;
@@ -79,7 +85,7 @@ async function findHostClub(guestMatchId) {
 
 function openModal() {
     const modal = document.getElementById("guestMatchModal");
-    modal.style.display = "block";
+    modal.style.display = "flex";
 }
 
 function closeModal() {
@@ -91,37 +97,37 @@ function createMatchHTML(clubMatch) {
     return `
         <div> 
         <h2>경기 정보</h2>
-            <p><strong>Message:</strong> ${clubMatch.message}</p>
-            <p><strong>Information:</strong> ${clubMatch.information}</p>
-            <p><strong>End Time:</strong> ${clubMatch.endTime.slice(
+            <p><strong>메세지: </strong> ${clubMatch.message}</p>
+            <p><strong>설명: </strong> ${clubMatch.information}</p>
+            <p><strong>경기 시작 시간: </strong> ${clubMatch.gameDate.slice(
                 "T",
                 16,
             )}</p>
-            <p><strong>Game Date:</strong> ${clubMatch.gameDate.slice(
+            <p><strong>경기 종료 시간: </strong> ${clubMatch.endTime.slice(
                 "T",
                 16,
             )}</p>
-            <p><strong>Progress:</strong> ${clubMatch.progress}</p>
-            <p><strong>Status:</strong> ${clubMatch.status}</p>
+            <p><strong>과정: </strong> ${clubMatch.progress}</p>
+            <p><strong>상태: </strong> ${clubMatch.status}</p>
         </div>
     `;
 }
 
-function createHostClubHTML(hostClub) {
+function createHostClubHTML(hostClub, clubMatch) {
+    const clubMatchId = clubMatch.id;
+    const myClubId = clubMatch.guest_clubId;
+
     return `
     
         <div id="${hostClub.id}">
-            <p><strong>Name:</strong> ${hostClub.name}</p>
-            ${
-                hostClub.image
-                    ? `<img src="${hostClub.image}" alt="Club Image">`
-                    : ""
-            }
-            <p><strong>Region:</strong> ${hostClub.region}</p>
-            <p><strong>Score:</strong> ${hostClub.score}</p>
-            <p><strong>Description:</strong> ${hostClub.description}</p>
-            <p><strong>Members:</strong> ${hostClub.members}</p>
+            <p><strong>이름: </strong> ${hostClub.name}</p>
+            <p><strong>지역: </strong> ${hostClub.region}</p>
+            <p><strong>점수: </strong> ${hostClub.score}</p>
+            <p><strong>설명: </strong> ${hostClub.description}</p>
+            <p><strong>멤버 수: </strong> ${hostClub.members}</p>
         </div>
+        <button onclick="displayClubAss('${clubMatchId}', '${myClubId}')"  >평가</button>
+
     `;
 }
 
@@ -222,5 +228,44 @@ async function deleteGuestMatch(clubMatchId) {
         console.error(error);
         alert(error.response.data.message);
         window.location.reload();
+    }
+}
+
+//평가하기
+async function displayClubAss(clubMatchId, myClubId) {
+    try {
+        console.log("displayPersonal", clubMatchId, myClubId);
+        const personalEvaluation = document.getElementById("submit-btn");
+        personalEvaluation.innerHTML = "";
+        const personalEvaluationHTML = createpersonalEvaluationHTML(
+            clubMatchId,
+            myClubId,
+        );
+        personalEvaluation.innerHTML = personalEvaluationHTML;
+        openclubAssessment();
+    } catch (error) {}
+}
+
+function createpersonalEvaluationHTML(clubMatchId, myClubId) {
+    console.log("createpersonalEvaluationHTML", clubMatchId, myClubId);
+    return `
+        <button onclick="submit('${clubMatchId}', '${myClubId}')" class="on">제출</button>
+    `;
+}
+
+function openclubAssessment() {
+    var clubAssessmentModal = document.getElementById("clubAssessment");
+    clubAssessmentModal.style.display = "block";
+}
+async function submit(clubMatchId, myClubId) {
+    try {
+        console.log("submit", clubMatchId, myClubId);
+        await getClubAssessment(clubMatchId, myClubId);
+        await getClubTag(clubMatchId, myClubId);
+
+        alert("평가완료");
+        window.location.reload();
+    } catch (error) {
+        console.error(error);
     }
 }

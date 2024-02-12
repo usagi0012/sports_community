@@ -1,9 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config();
 function initNotification() {
     const accessToken = localStorage.getItem("accessToken");
     const tokenPayload = JSON.parse(atob(accessToken.split(".")[1]));
     const userId = tokenPayload.userId;
     const eventSource = new EventSource(
-        `http://localhost:8001/api/sse/${userId}`,
+        `${process.env.LOCAL}:8001/api/sse/${userId}`,
     );
 
     eventSource.onmessage = (event) => {
@@ -12,6 +14,7 @@ function initNotification() {
     };
 
     eventSource.onerror = (error) => {
+        eventSource.close();
         console.error("SSE Error:", error);
     };
 
@@ -27,6 +30,12 @@ function initNotification() {
             }
         };
     }
+
+    window.onbeforeunload = () => {
+        if (eventSource) {
+            eventSource.close();
+        }
+    };
 }
 
 // 해당 스크립트 파일의 기능을 초기화하는 함수를 추가

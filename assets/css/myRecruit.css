@@ -4,12 +4,14 @@
     margin-top: 80px;
     width: 100%;
     min-height: 50px;
+    margin-bottom: 0px;
 }
 
 .titleFlex {
     width: 100%;
     display: flex;
     float: left;
+    height: 50px;
 }
 
 h3 {
@@ -22,7 +24,7 @@ h3 {
     width: 50%;
     display: inline-block;
     text-align: center;
-    border: 1px solid #ffb13d;
+    border: 1px solid #ff771c;
     background-color: #fff;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
@@ -36,10 +38,56 @@ h3 {
 
 .mainContainer {
     margin: 0px auto 10px;
-    border: 1px solid #ffb13d;
+    border: 1px solid #ff771c;
+    min-height: 20rem;
 }
 
 /* 카드 부분*/
+
+#myRecruit-info {
+    display: grid;
+    grid-template-columns: 1.7fr 0.8fr 1.7fr 0.8fr 1.7fr 0.8fr;
+    justify-content: space-between;
+}
+
+.recruitBtn {
+    font-family: "LINESeedKR-Bd";
+    width: 90%;
+    text-align: center;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 15px;
+    border: 1px solid #ffb13d;
+    cursor: pointer;
+}
+
+.recruitBtn:hover {
+    box-shadow: 2px 2px 2px gray;
+}
+
+.recruitListBtn {
+    text-align: center;
+    margin: auto;
+}
+
+.recruitListBtn > button {
+    font-family: "LINESeedKR-Bd";
+    background-color: #ffb13d;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    width: 80px;
+    height: 30px;
+    padding-top: 4px;
+    cursor: pointer;
+}
+
+.recruitListBtn > button:hover {
+    background-color: #fff;
+    color: black;
+    box-shadow: 2px 2px 2px gray;
+    border: 1px solid #ffb13d;
+}
 
 #myRecruitModal {
     display: none;
@@ -60,6 +108,7 @@ h3 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    min-width: 400px;
 }
 
 #closeModalButton {
@@ -74,27 +123,65 @@ h3 {
 /* 신청목록 css */
 
 #recruitUserModal {
-    display: none;
+    width: 100%;
+    height: 100%;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-#recruitUserModalDialog {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
     background-color: #fff;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+#recruitUser {
+    display: grid;
+    grid-template-columns: 1.7fr 0.8fr 1.7fr 0.8fr 1.7fr 0.8fr;
+    justify-content: space-between;
+}
+
+#recruitUser > button {
+    font-family: "LINESeedKR-Bd";
+    width: 90%;
+    text-align: center;
+    margin: 10px auto;
+    padding-top: 10px;
+    background-color: #fff;
+    border-radius: 15px;
+    border: 1px solid #ffb13d;
+}
+
+#recruitUser > div {
+    text-align: center;
+    margin: auto;
+}
+
+#recruitUser > div > button {
+    font-family: "LINESeedKR-Bd";
+    background-color: #ffb13d;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    width: 40px;
+    height: 30px;
+    padding-top: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#recruitUser > div > button:hover {
+    background-color: #fff;
+    color: black;
+    box-shadow: 2px 2px 2px gray;
+    border: 1px solid #ffb13d;
 }
 
 .modal-header {
@@ -117,15 +204,56 @@ h3 {
     justify-content: flex-end;
 }
 
-.btn-secondary {
-    background-color: #6c757d;
-    color: #fff;
+.modal-footer > div > button {
+    font-family: "LINESeedKR-Bd";
+    background-color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
     cursor: pointer;
 }
 
-.btn-secondary:hover {
-    background-color: #5a6268;
+/* 매치 상세 정보 목록 css */
+
+.modal-body > h2 {
+    border-top: 1px dotted #ff771c;
+    padding-top: 20px;
+    margin-bottom: 5px;
+}
+
+#recruitMatch {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: space-between;
+}
+
+.userInMatch {
+    width: 90%;
+    margin: 10px auto;
+    font-family: "LINESeedKR-Bd";
+    text-align: center;
+    background-color: #fff;
+    border-radius: 15px;
+    border: 1px solid #ffb13d;
+}
+
+#RecruitButton > div > button,
+.modal-footer > button {
+    font-family: "LINESeedKR-Bd";
+    background-color: #ffb13d;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    width: fit-content;
+    height: 30px;
+    padding-top: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+#RecruitButton > div > button:hover,
+.modal-footer > button:hover {
+    background-color: #fff;
+    color: black;
+    box-shadow: 2px 2px 2px gray;
+    border: 1px solid #ffb13d;
 }

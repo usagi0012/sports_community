@@ -52,6 +52,8 @@ function createReportHtml(reporterUser, reportedUser, banUserId) {
     name="title"
     rows="1"
     required
+    maxlength="20"
+    placeholder="최대 20글자 입력가능합니다."
 ></textarea><br />
 
 <label for="reportContent">신고 내용:</label>
@@ -60,6 +62,8 @@ function createReportHtml(reporterUser, reportedUser, banUserId) {
     name="reportContent"
     rows="4"
     required
+    maxlength="100"
+    placeholder="최대 100글자 입력가능합니다."
 ></textarea><br />
 
 <button type="button" onclick="submitReport(${reportedUser.id})">

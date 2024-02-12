@@ -79,14 +79,15 @@
                         <div class="review"></div>
                     </div>
                 </div>
-                <!-- html 작성 끝 -->
-                <!-- 모달 HTML -->
-                <div id="createCalendarModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close" onclick="closeModal()"
-                            >&times;</span
-                        >
-                        <h2>캘린더 일정 생성</h2>
+            </div>
+        </div>
+        <div class="footer" id="footer"></div>
+        <!-- html 작성 끝 -->
+        <!-- 모달 HTML -->
+        <div id="createCalendarModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>캘린더 일정 생성</h2>
                         <form id="calendarForm">
                             <label for="title">제목:</label>
                             <input
@@ -94,33 +95,35 @@
                                 id="title"
                                 name="title"
                                 required
+                                maxlength="10"
+                                placeholder="최대 10글자 입력가능합니다."
                             />
 
-                            <label for="date">날짜:</label>
-                            <input type="date" id="date" name="date" required />
+                    <label for="date">날짜:</label>
+                    <input type="date" id="date" name="date" required />
 
                             <label for="description">내용:</label>
                             <textarea
                                 id="description"
                                 name="description"
+                                maxlength="30"
+                                placeholder="최대 30글자 입력가능합니다."
                             ></textarea>
 
-                            <label for="color">색상:</label>
-                            <input
-                                type="color"
-                                id="color"
-                                name="color"
-                                value="#ff0000"
-                                required
-                            />
+                    <label for="color">색상:</label>
+                    <input
+                        type="color"
+                        id="color"
+                        name="color"
+                        value="#ff0000"
+                        required
+                    />
 
-                            <button type="submit">일정 생성</button>
-                            <button type="button" id="closeCreateModalBtn">
-                                닫기
-                            </button>
-                        </form>
-                    </div>
-                </div>
+                    <button type="submit">일정 생성</button>
+                    <button type="button" id="closeCreateModalBtn">닫기</button>
+                </form>
+            </div>
+        </div>
 
                 <div id="updateCalendarModal" class="modal">
                     <div class="modal-content">
@@ -137,49 +140,36 @@
                                 id="updateTitle"
                                 name="updateTitle"
                                 required
+                                maxlength="10"
+                                placeholder="최대 10글자 입력가능합니다."
                             />
 
                             <label for="updateDescription">설명</label>
                             <textarea
                                 id="updateDescription"
                                 name="updateDescription"
+                                maxlength="30"
+                                placeholder="최대 30글자 입력가능합니다."
                             ></textarea>
 
-                            <label for="updateColor">색상</label>
-                            <input
-                                type="color"
-                                id="updateColor"
-                                name="updateColor"
-                            />
+                    <label for="updateColor">색상</label>
+                    <input type="color" id="updateColor" name="updateColor" />
 
-                            <button type="submit">수정</button>
-                            <button type="button" id="deleteButtonId">
-                                삭제
-                            </button>
-                            <button type="button" id="closeUpdateModalBtn">
-                                닫기
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                <div id="titleModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close" onclick="closeTitleModal()"
-                            >&times;</span
-                        >
-                        <h2 id="titleModalTitle"></h2>
-                        <ul id="titleModalList"></ul>
-                        <button type="button" id="createCalendarBtn">
-                            일정 생성
-                        </button>
-                        <button type="button" id="closeTitleModalBtn">
-                            닫기
-                        </button>
-                    </div>
-                </div>
+                    <button type="submit">수정</button>
+                    <button type="button" id="deleteButtonId">삭제</button>
+                    <button type="button" id="closeUpdateModalBtn">닫기</button>
+                </form>
             </div>
         </div>
-        <div class="footer" id="footer"></div>
+        <div id="titleModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeTitleModal()">&times;</span>
+                <h2 id="titleModalTitle"></h2>
+                <ul id="titleModalList"></ul>
+                <button type="button" id="createCalendarBtn">일정 생성</button>
+                <button type="button" id="closeTitleModalBtn">닫기</button>
+            </div>
+        </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="module" src="./js/calender.js"></script>

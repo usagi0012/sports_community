@@ -95,3 +95,31 @@
 .createBtn:hover {
     box-shadow: 2px 2px 2px gray;
 }
+
+#regionDropdown {
+    font-family: "LINESeedKR-Bd";
+    border: 1px solid #ffb13d;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    padding: 5px;
+    cursor: pointer;
+    height: 25px;
+    margin: 10px 3px;
+}
+
+#sortByScore,
+#sortByLatest {
+    font-family: "LINESeedKR-Bd";
+    margin: 10px 3px;
+    height: 25px;
+    padding-top: 5px;
+    border-radius: 7px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#sortByScore:hover,
+#sortByLatest:hover {
+    box-shadow: 2px 2px 2px gray;
+}

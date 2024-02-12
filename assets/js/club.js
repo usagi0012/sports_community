@@ -1,6 +1,3 @@
-// import axios from "axios";
-import getClubDetail from "./club-detail.js";
-import { createModal } from "./otherUser-modal.js";
 const region = [
     "서울",
     "부산",
@@ -37,14 +34,12 @@ window.onload = function () {
     loadFooter();
 };
 
-function getClub(event) {
+function getClub(sortBy) {
     axios
-        .get("/api/club")
+        .get(`/api/club?sortBy=${sortBy}`)
         .then(function (response) {
             console.log("*******", response);
             response.data.data.forEach((club) => {
-                console.log("club", club);
-                console.log("clubId입니다", club.id);
                 const clubListDiv = document.querySelector(".club-list");
 
                 const clubInfoDiv = document.createElement("div");
@@ -108,28 +103,26 @@ function getClub(event) {
                 clubRegion.innerHTML = `${region[club.region]}`;
                 clubInfoDiv.appendChild(clubRegion);
 
-                // 백엔드에서 클럽id에 해당하는 이름 보내줘야 할 듯.
-                const clubMaster = document.createElement("div");
-                clubMaster.className = "clubMaster";
-                clubMaster.innerHTML = `${club.masterName}`;
-                clubMaster.addEventListener(
-                    "click",
-                    (function (masterId) {
-                        return function () {
-                            createModal(masterId);
-                        };
-                    })(club.masterId),
-                );
-                clubInfoDiv.appendChild(clubMaster);
+                // // 백엔드에서 클럽id에 해당하는 이름 보내줘야 할 듯.
+                // const clubMaster = document.createElement("div");
+                // clubMaster.className = "clubMaster";
 
-                console.log(club);
+                // // 클릭 이벤트를 추가하기 위해 div 엘리먼트 안에 p 엘리먼트를 생성
+                // const clubNameP2 = document.createElement("p");
+                // clubNameP2.textContent = club.masterName;
 
-                const clubScore = document.createElement("div");
-                clubScore.className = "clubScore";
-                clubScore.innerHTML = `${club.score}`;
-                clubInfoDiv.appendChild(clubScore);
+                // // 클릭 이벤트 추가
+                // clubNameP2.addEventListener("click", function (event) {
+                //     event.stopPropagation(); // 부모 엘리먼트로의 이벤트 전파 방지
+                //     console.log("clubNameP2 clicked");
+                //     createModal(club.masterId);
+                // });
 
-                clubListDiv.appendChild(clubInfoDiv);
+                // // p 엘리먼트를 div 엘리먼트에 추가
+                // clubMaster.appendChild(clubNameP2);
+
+                // 최종적으로 clubInfoDiv에 div 엘리먼트 추가
+                // clubInfoDiv.appendChild(clubMaster);
             });
         })
         .catch(function (error) {

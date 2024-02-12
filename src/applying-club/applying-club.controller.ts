@@ -21,6 +21,29 @@ import { ApplicationReviewDto } from "./dto/applicationReview.dto";
 export class ApplyingClubController {
     constructor(private readonly applyingClubService: ApplyingClubService) {}
 
+    // git commit test
+    // 내 신청서 조회
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("me")
+    async getApplyingClub(@UserId() userId: number) {
+        try {
+            const application =
+                await this.applyingClubService.getApplyingClub(userId);
+            console.log(userId);
+            return {
+                statusCode: 200,
+                message: "동호회 지원서 조회에 성공했습니다.",
+                data: application,
+            };
+        } catch (error) {
+            return {
+                statusCode: 400,
+                message: "동호회 지원서 조회에 실패했습니다.",
+                error: error.message,
+            };
+        }
+    }
     // 동호회 신청
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
@@ -101,30 +124,6 @@ export class ApplyingClubController {
             return {
                 statusCode: 400,
                 message: "동호회 신청 승인/거절에 실패했습니다.",
-                error: error.message,
-            };
-        }
-    }
-
-    // git commit test
-    // 내 신청서 조회
-    @ApiBearerAuth("accessToken")
-    @UseGuards(accessTokenGuard)
-    @Get("me")
-    async getApplyingClub(@UserId() userId: number) {
-        try {
-            const application =
-                await this.applyingClubService.getApplyingClub(userId);
-            console.log(userId);
-            return {
-                statusCode: 200,
-                message: "동호회 지원서 조회에 성공했습니다.",
-                data: application,
-            };
-        } catch (error) {
-            return {
-                statusCode: 400,
-                message: "동호회 지원서 조회에 실패했습니다.",
                 error: error.message,
             };
         }

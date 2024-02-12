@@ -1,4 +1,4 @@
-import { createModal } from "./otherUser-modal.js";
+// import { createModal } from "./otherUser-modal.js";
 
 window.onload = function () {
     loadHeader();
@@ -60,7 +60,9 @@ function feed() {
                             recruits.id
                         }">${recruits.title}</a></div>
                         <div class="region">${region[recruits.region]}</div>
-                        <div class="writer">${recruits.hostName}</div>
+                        <div class="writer" onclick="openModal('${
+                            recruits.hostId
+                        }')">${recruits.hostName}</div>
                         <div class="gamedate">${recruits.gamedate.slice(
                             "T",
                             10,
@@ -73,11 +75,9 @@ function feed() {
         })
         .catch(function (error) {
             console.log(error.response.data);
-            alert("로그인 후 이용 가능합니다.");
             window.location.href = "index.html";
         });
 }
-
 
 function toRecruitPost() {
     const accessToken = localStorage.getItem("accessToken");
@@ -100,3 +100,6 @@ function filterByCategory() {
     feed();
 }
 
+function openModal(hostId) {
+    createModal(hostId);
+}
