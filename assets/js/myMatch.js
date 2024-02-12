@@ -35,7 +35,8 @@ function createMatchHTML(match) {
         }" onclick="displayMatchUser(${match.id})">
             <h1>${match.recruitTitle}</h1>
             <div><strong>모집장: </strong> ${match.hostName} </div>
-            <p><strong>경기 날자: </strong> ${match.gameDate.slice(0, 10)}</p>
+            <p><strong>경기 날짜: </strong> ${match.gameDate.slice(0, 10)}</p>
+
             <p><strong>상태: </strong> ${match.status}</p>
             <p><strong>진행상황: </strong> ${match.progress}</p>
         </div>
