@@ -63,14 +63,25 @@ function getMyClubApplication() {
                 approveBtn.className = "approval";
                 approveBtn.innerHTML = "승인";
                 approveBtn.addEventListener("click", () => {
+                    console.log(
+                        "클릭한 것의 첫번째 닉네임 값",
+                        approveBtn.parentElement.children[0].textContent.slice(
+                            5,
+                        ),
+                    );
+                    const nickName =
+                        approveBtn.parentElement.children[0].textContent.slice(
+                            5,
+                        );
                     console.log("clicked!!");
                     console.log("==userId==", userId);
                     console.log("==clubId==", clubId);
                     axios
                         .put(
-                            `/api/applying-club/${clubId}/${userId}`,
+                            `/api/applying-club/review`,
                             {
                                 permission: true,
+                                nickName,
                             },
                             {
                                 headers: {
@@ -99,7 +110,7 @@ function getMyClubApplication() {
                 rejectionBtn.addEventListener("click", () => {
                     axios
                         .put(
-                            `/api/applying-club/${clubId}/${userId}`,
+                            `/api/applying-club/review`,
                             {
                                 permission: false,
                             },
