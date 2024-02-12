@@ -163,15 +163,12 @@ export class ApplyingClubService {
         const applications = await this.clubApplicationRepository.find({
             where: { clubId },
         });
-        console.log("지원자들", applications);
 
         const nicknames = await Promise.all(
             applications.map(async (app) => {
                 const userProfile = await this.userProfileRepository.findOne({
                     where: { userId: app.userId },
                 });
-                console.log("앱 유저아이디", app.userId);
-                console.log("유저 프로필", userProfile);
                 if (!userProfile) {
                     const userName = user.name;
                     return userName;
@@ -187,39 +184,54 @@ export class ApplyingClubService {
     async reviewApplication(
         applicationReviewDto: ApplicationReviewDto,
         userId: number,
-        clubId: number,
-        memberId: number,
     ) {
-        const { permission } = applicationReviewDto;
-        console.log("permission", typeof permission);
-
+        const { permission, nickName } = applicationReviewDto;
+        console.log("허락", permission);
+        console.log("닉네임", nickName);
         const club = await this.ClubRepository.findOne({
-            where: { id: clubId },
+            where: { masterId: userId },
         });
 
-        if (club.masterId !== userId) {
+        // 동아리 장의 클럽id = 신청한 clubId
+        const clubId = club.id;
+
+        if (!club) {
             throw new ForbiddenException(
                 "동아리 장만 승인/거절할 수 있습니다.",
             );
         }
-        // 요청한 신청서 찾기
+
+        // 요청한 사람 닉네임으로 userId 뽑아내기
+        const userProfile = await this.userProfileRepository.findOne({
+            where: { nickname: nickName },
+            select: ["id", "nickname", "userId"],
+        });
+        console.log("요청한 사람의 정보", userProfile);
+        if (!userProfile) {
+            throw new NotFoundException("신청한 유저를 찾을 수 없습니다.");
+        }
+
+        // 요청한 사람의 id
+        const memberId = userProfile.userId;
+        console.log("요청한 멤버의 아이디", memberId);
+
+        // 요청한 신청서 찾기 ( 신청서는 한 명당 한 개만 가질 수 있기 때문에 memberId면 충분)
         const userApplication = await this.clubApplicationRepository.findOne({
-            where: { userId: memberId, clubId },
+            where: { userId: memberId },
         });
         const applicationId = userApplication.id;
+        console.log("신청서 아이디", applicationId);
 
-        console.log("permission", permission);
         if (!permission) {
             // 승인을 거부했을 때의 로직.
-            // 동호회 신청서 삭제(해야하나? status를 만든 의미가 없는 것 같은데 그럼) - 한 번 물어보기.
-            // 동호회 신청 거절 알림
+
             const deletedApplication =
                 await this.clubApplicationRepository.delete({
                     userId: memberId,
-                    clubId,
                 });
             console.log(deletedApplication);
 
+            // 동호회 신청 거절 알림
             const message = `${club.name}동호회 가입 신청이 거부되었습니다.`;
             // await this.alramService.sendAlarm(memberId, message);
 
@@ -229,26 +241,30 @@ export class ApplyingClubService {
             throw new Error("신청이 거절되었습니다.");
         }
 
-        // 멤버가 이미 가입된 동아리가 있을 경우 에러처리
-        // (신청서에서는 못보내지만 동아리 생성시 clubId 생기기 때문)
         const isJoinedMember = await this.UserRepository.findOne({
             where: { id: memberId },
         });
-        console.log("조인 멤버 클럽아이디", isJoinedMember.clubId);
+        console.log("합류하기로 한 멤버", isJoinedMember);
+
+        // 멤버가 이미 가입된 동아리가 있을 경우 에러처리
+        // (신청서에서는 못보내지만 동아리 생성시 clubId 생기기 때문)
         if (isJoinedMember.clubId) {
             await this.clubApplicationRepository.update(applicationId, {
                 status: ClubApplicationStatus.REJECTED,
             });
+
             const deletedApplication =
                 await this.clubApplicationRepository.delete({
                     userId: memberId,
-                    clubId,
                 });
             console.log(deletedApplication);
             throw new Error(
                 "신청자가 가입된 동호회가 있어 승인할 수 없습니다.",
             );
         }
+        console.log("신천한 멤버의 클럽아이디", isJoinedMember.clubId);
+
+        // === 2024.02.08 수정 중 ===
 
         // 요청 승인시 신청서의 상태 -> "요청 승인"
         const updatedApplication = await this.clubApplicationRepository.update(
