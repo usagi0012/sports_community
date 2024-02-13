@@ -63,7 +63,7 @@ function feed() {
                                     profileName.data &&
                                     profileName.data.userProfile &&
                                     profileName.data.userProfile.nickname) ||
-                                "";
+                                recruits.hostName;
 
                             newContent.innerHTML = `
                                 <div class="num">${recruits.id}</div>
