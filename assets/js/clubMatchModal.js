@@ -43,6 +43,7 @@ async function clubMatchApplication(event) {
             },
         );
 
+        console.log("gamedate", gameDate);
         console.log(response.data);
         alert("매치를 신청하셨습니다.");
         window.location.reload();

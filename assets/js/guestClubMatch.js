@@ -37,6 +37,7 @@ function createGuestClubMatchHTML(guestClubMatch) {
             <button type="button" id="guestMatch-${guestClubMatch.id}" guestMatchId="${guestClubMatch.id}" onclick="findHostClub(${guestClubMatch.id})">
                 <h4>${guestClubMatch.message}</h4>    
                 <p><strong>away Club Name:</strong> ${guestClubMatch.host_club_name}</p> 
+                <p><strong>Progress:</strong> ${guestClubMatch.progress}</p>
                 <p><strong>Status:</strong> ${guestClubMatch.status}</p>
             </button>
         </div>
@@ -160,6 +161,10 @@ function createHostClubHTML(hostClub, clubMatch) {
 }
 
 function createGuestModalButtonHTML(clubMatch) {
+    if (clubMatch.progress === "경기중") {
+        return `
+        `;
+    }
     if (clubMatch.guest_evaluate === true) {
         return `
         <div class="GuestClubButton">
