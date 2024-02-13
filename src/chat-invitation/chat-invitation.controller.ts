@@ -20,7 +20,25 @@ export class ChatInvitationController {
         private readonly chatInvitationService: ChatInvitationService,
     ) {}
 
-    // 방의 주인인지 확인해야 함.
+    // 채팅방 나가기
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Delete("/exit/:roomId")
+    async exitRoom(@Param("roomId") roomId: number, @UserId() userId: number) {
+        return await this.chatInvitationService.exitRoom(roomId, userId);
+    }
+
+    // 채팅방 삭제
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Delete("/delete/:roomId")
+    async deleteRoom(
+        @Param("roomId") roomId: number,
+        @UserId() userId: number,
+    ) {
+        return await this.chatInvitationService.deleteRoom(roomId, userId);
+    }
+
     // 채팅방 초대
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)

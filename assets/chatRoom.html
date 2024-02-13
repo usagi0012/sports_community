@@ -38,6 +38,8 @@
                 <div class="btn-container">
                     <button type="button" id="invite-modal-btn" class="centered-text-button">초대</button>
                     <button type="button" id="expel-modal-btn" class="centered-text-button">추방</button>
+                    <button type="button" id="delete-chat-btn" class="centered-text-button">채팅방 삭제</button>
+                    <button type="button" id="exit-btn" class="centered-text-button">나가기</button>
                 </div>
             </h3>
             <div class="messaging">
@@ -48,12 +50,7 @@
                                 <h4>Chat Room</h4>
                             </div>
                             <div class="chatroom_btn_place">
-                                <button
-                                    type="button"
-                                    class="chatroom_btn setNickname"
-                                >
-                                    <i class="fa fa-cog" aria-hidden="true"></i>
-                                </button>
+                                
                                 <button
                                     type="button"
                                     class="chatroom_btn createChatRoom"
@@ -135,13 +132,14 @@
             loadFooter();
             $("#invite-modal-btn").css("display", "none");
             $("#expel-modal-btn").css("display", "none");
+            $("#delete-chat-btn").css("display", "none");
+            $("#exit-btn").css("display", "none");
         };
         // 내가 채팅방의 생성자인 경우에만 멤버 초대하기  가능
         function showButton() {
             const roomId = localStorage.getItem("thisRoomId");
             // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
             const accessToken = localStorage.getItem("accessToken");
-            console.log("====roomId====",roomId)
             axios
                 .get(`/api/chat-invitation/${roomId}`, {
                     headers: {
@@ -149,15 +147,16 @@
                     },
                 })
                 .then(function (response) {
-                    console.log("****리스폰스****", response);
                     if (response.data.data && roomId) {
-                        console.log("****");
-                        console.log("response.data.data", response.data.data);
                         $("#invite-modal-btn").css("display", "flex");
                         $("#expel-modal-btn").css("display", "flex");
+                        $("#delete-chat-btn").css("display", "flex");
+                        $("#exit-btn").css("display", "none");
                     } else {
                         $("#invite-modal-btn").css("display", "none");
                         $("#expel-modal-btn").css("display", "none");
+                        $("#delete-chat-btn").css("display", "none");
+                        $("#exit-btn").css("display", "flex");
                     }
                 })
                 .catch(function (error) {
@@ -176,6 +175,25 @@
             return koreanTime;
         }
 
+        function handleInput(message) {
+            // var textInput = document.getElementById('textInput');
+            var text = message.trim(); 
+  
+            var isEnglish = /^[\x00-\x7F]*$/.test(text);
+  
+            var maxCharacters = isEnglish ? 40 : 10;
+  
+            if (text.length > maxCharacters) {
+                var newText = '';
+                for (var i = 0; i < text.length; i += maxCharacters) {
+                newText += text.substr(i, maxCharacters) + (isEnglish ? ' ' : '\n');
+                }
+                return newText;
+            }
+
+            return text;
+        }
+
         function getRoomMessage(roomId) {
             const accessToken = localStorage.getItem("accessToken");
 
@@ -186,7 +204,6 @@
                     },
                 })
                 .then(function (response) {
-                    console.log("여기서 확인해야함", response);
                     let html = "";
                     const myId = response.data.data.userId;
                     response.data.data.message.forEach((message) => {
@@ -198,19 +215,19 @@
                         const month = koreanDate.toLocaleString("ko-KR", { month: "long" }); // 한글로 월 표시
                         const day = koreanDate.getDate();
 
+                        // 영어 일정 길이 이상이면 자르기
+                        const newMessage = handleInput(message.content)
                         const formattedTime = `${hours >= 12 ? "오후" : "오전"} ${hours % 12 || 12}:${minutes < 10 ? "0" : ""}${minutes}`;
 
                         const timeDate = `  | ${formattedTime}`;
 
-                        console.log(timeDate)
                         // 내 유저 Id가 message.userId와 같다면 오른쪽에 표시
                         // 다르다면 왼쪽에 표시
                         // 추후에 userId가 아니라 nickName으로 가져오기
                         if (myId === message.userId) {
-                            console.log(message.content);
                             html += '<div class="outgoing_msg">';
                             html += '<div class="sent_msg">';
-                            html += "<p>" + message.content + "</p>";
+                            html += "<p>" + newMessage + "</p>";
                             // html += timeDate;
                             html += `${message.userName}`;
                             html += `${timeDate}`
@@ -220,7 +237,7 @@
                             html += '<div class="incoming_msg">';
                             html += '<div class="received_msg">';
                             html += '<div class="received_withd_msg">';
-                            html += "<p>" + message.content + "</p>";
+                            html += "<p>" + newMessage + "</p>";
                             // html += timeDate;
                             html += `${message.userName}`;
                             html += `${timeDate}`
@@ -250,7 +267,6 @@
         // 채팅방 연결
         function connectSocket() {
             const accessToken = localStorage.getItem("accessToken");
-            console.log("엑세스 토큰", accessToken);
             const socket = io({
                 transports: ['websocket'],
                 query: {
@@ -268,7 +284,6 @@
                 // 연결시 기존에 저장되어 있던 룸 아이디 제거
                 const deletedRoomId = localStorage.removeItem("thisRoomId");
                 socket.emit("setInit", { nickname }, (response) => {
-                    console.log("연결시 리스폰스", response);
                     myInfo.nickname = response.nickname;
                     myInfo.id = socket.id;
                     myInfo.room = response.room;
@@ -293,9 +308,6 @@
                         message,
                         roomId,
                     );
-                    console.log("서버 소켓 아이디", id);
-                    console.log("클라아이디", socket.id);
-                    console.log("==이름==",nickname)
 
                     const now = new Date();
                     const hours = now.getHours();
@@ -317,14 +329,9 @@
                             ${nickname} | ${formattedTime}
                         </span>
                     `;
+                    const newMessage = handleInput(message)
                     const thisRoomId = localStorage.getItem("thisRoomId");
-                    console.log({ thisRoomId });
-                    console.log("*********", roomId);
 
-                    console.log("소켓 아이디", socket.id);
-                    console.log("마이 인포 아이디", myInfo.id);
-                    console.log("디스 룸 아이디", thisRoomId);
-                    console.log(roomId == thisRoomId);
                     let html = "";
                     // ****중요(여기까지 함)****
                     // 채팅 내역 잘 들어감 - 확인했음, 다시 켰을 때 안되면 말도 안되는거임
@@ -334,7 +341,7 @@
                         console.log($(".chat"));
                         html += '<div class="outgoing_msg">';
                         html += '<div class="sent_msg">';
-                        html += "<p>" + message + "</p>";
+                        html += "<p>" + newMessage + "</p>";
                         html += timeDate;
                         html += "</div>";
                         html += "</div>";
@@ -342,7 +349,7 @@
                         html += '<div class="incoming_msg">';
                         html += '<div class="received_msg">';
                         html += '<div class="received_withd_msg">';
-                        html += "<p>" + message + "</p>";
+                        html += "<p>" + newMessage + "</p>";
                         html += timeDate;
                         html += "</div>";
                         html += "</div>";
@@ -354,7 +361,6 @@
             );
 
             socket.on("getChatRoomList", function (response) {
-                console.log("얍얍얍", response);
                 let html = "";
 
                 console.log({ myInfo });
@@ -406,22 +412,22 @@
             // 콜백 함수 만들기 (enterChatRoom에 있는거도 쓰고 싶음) - 재사용
             // 바로 enterchatROom 해버리는거임. 만듬과 동시에 입장.
             socket.emit("createChatRoom", roomName, (res) => {
-                console.log("야호야호야호", res);
+               
                 if (!res) return;
                 myInfo.room = res;
-                console.log("마이 인포룸", myInfo.room);
+                
                 $(".roomName").text(myInfo.room.roomName);
                 $(".chat").html("");
             });
 
             socket.emit("getChatRoomList", null);
+            window.location.reload()
         });
 
         // 채팅방 입장
         $(document).on("click", ".enterChatRoom", function (event) {
             const thisRoomId = $(this).attr("data-roomId");
             const roomId = localStorage.getItem("thisRoomId");
-            console.log("enter시 룸 아이디", roomId);
             socket.emit("enterChatRoom", roomId, (res) => {
                 if (!res) return;
                 myInfo.room = res;
@@ -449,6 +455,46 @@
             $("#expel-modal-overlay").css("display", "flex");
         });
 
+        // 나가기 버튼
+        $("#exit-btn").on("click", function() {
+            const accessToken = localStorage.getItem("accessToken")
+            const roomId = localStorage.getItem("thisRoomId")
+
+            axios.delete(`/api/chat-invitation/exit/${roomId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        }).then(function(response) {
+            alert("채팅방을 나갔습니다.")
+            window.location.reload();
+        }).catch(function(error){
+            console.log(error);
+            if(error.response.data.error ==='Unauthorized') {
+                alert("방의 생성자는 나갈 수 없습니다.")
+            }
+        })
+        });
+
+        // 채팅방 삭제 버튼
+        $("#delete-chat-btn").on("click", function() {
+            const accessToken = localStorage.getItem("accessToken")
+            const roomId = localStorage.getItem("thisRoomId")
+
+            axios.delete(`/api/chat-invitation/delete/${roomId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        }).then(function(response) {
+            alert("채팅방을 삭제했습니다.")
+            window.location.reload();
+        }).catch(function(error){
+            console.log(error);
+            if(error.response.data.error ==='Unauthorized') {
+                alert("방의 생성자만 삭제할 수 있습니다.")
+            }
+        })
+        });
+
         // 모달 닫기 버튼들
         $("#close-btn").on("click", function () {
             $("#invite-modal-overlay").css("display", "none");
@@ -465,7 +511,6 @@
             const roomId = localStorage.getItem("thisRoomId");
             // 스웨거에서 따온 엑세스 토큰, 나중에 바꿔주기
             const accessToken = localStorage.getItem("accessToken");
-            console.log("====roomId====",roomId)
             axios
                 .post(
                     `/api/chat-invitation/${roomId}`,
@@ -573,6 +618,7 @@
                 const thisRoomId = $(this).attr("data-roomId");
                 console.log({ thisRoomId });
                 localStorage.setItem("thisRoomId", thisRoomId);
+                $("#exit-btn").css("display", "flex");
             });
         });
     </script>

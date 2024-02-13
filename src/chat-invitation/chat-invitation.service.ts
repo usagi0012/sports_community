@@ -112,8 +112,7 @@ export class ChatInvitationService {
             throw new NotFoundException("룸이 존재하지 않습니다.");
         }
         const creator = room.creator;
-        console.log("creator", creator);
-        console.log("userId", userId);
+
         if (creator !== userId) {
             throw new UnauthorizedException(
                 "방의 생성자만 멤버를 초대할 수 있습니다.",
@@ -121,5 +120,43 @@ export class ChatInvitationService {
         }
 
         return "성공";
+    }
+
+    async exitRoom(roomId, userId) {
+        const room = await this.chatRepository.findOne({
+            where: { id: roomId },
+        });
+        if (!room) {
+            throw new NotFoundException("룸이 존재하지 않습니다.");
+        }
+        const creator = room.creator;
+
+        if (creator == userId) {
+            throw new UnauthorizedException("방의 생성자는 나갈 수 없습니다.");
+        }
+
+        return await this.participantsRepository.delete({
+            userId,
+            chatId: roomId,
+        });
+    }
+
+    async deleteRoom(roomId: number, userId: number) {
+        const room = await this.chatRepository.findOne({
+            where: { id: roomId },
+        });
+        if (!room) {
+            throw new NotFoundException("룸이 존재하지 않습니다.");
+        }
+
+        const creator = room.creator;
+
+        if (creator !== userId) {
+            throw new UnauthorizedException(
+                "방의 생성자만 채팅방을 삭제할 수 있습니다.",
+            );
+        }
+
+        return await this.chatRepository.delete({ id: roomId });
     }
 }
