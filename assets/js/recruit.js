@@ -8,6 +8,7 @@ window.onload = function () {
 
 let currentFilterRegion = "all"; // 지역 필터
 let currentFilterCategory = "all"; // 카테고리 필터
+let currentFilterStatus = "모집중";
 
 const region = [
     "서울",
@@ -49,7 +50,12 @@ function feed() {
                     (currentFilterRegion === "all" ||
                         recruits.region.toString() === currentFilterRegion) &&
                     (currentFilterCategory === "all" ||
-                        recruits.rule === currentFilterCategory)
+                        recruits.rule === currentFilterCategory) &&
+                    (currentFilterStatus === "all" || // 모든 상태를 표시할 때
+                        (currentFilterStatus === "모집중" &&
+                            recruits.status === currentFilterStatus) ||
+                        (currentFilterStatus === "모집완료" &&
+                            recruits.status === currentFilterStatus))
                 ) {
                     const newContent = document.createElement("div");
                     newContent.classList.add("item");
@@ -119,6 +125,12 @@ function filterByRegion() {
 function filterByCategory() {
     const regionFilterElement = document.getElementById("CategoryFilter");
     currentFilterCategory = regionFilterElement.value;
+    feed();
+}
+
+function filterByStatus() {
+    const statusFilterElement = document.getElementById("StatusFilter");
+    currentFilterStatus = statusFilterElement.value;
     feed();
 }
 
