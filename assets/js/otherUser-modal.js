@@ -22,6 +22,24 @@ async function createModal(userId) {
     const userName = user.name;
     console.log("이름", userName);
 
+    // 프로필 정보 확인
+    let userProfile;
+    try {
+        const profileResponse = await axios.get(
+            `/api/user/${currentUserId}/profile`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+        userProfile = profileResponse.data.data.userProfile;
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+        alert("프로필을 등록하지 않은 사용자입니다.");
+        return;
+    }
+
     // 이미 열려 있는 모달 찾기
     const existingModal = document.getElementById("userProfileModal");
     if (existingModal) {
@@ -31,7 +49,8 @@ async function createModal(userId) {
     }
 
     // 모달이 없는 경우에만 아래 코드 실행
-
+    try {
+    } catch {}
     // 모달 창 생성
     const modal = document.createElement("div");
     modal.id = "userProfileModal";
@@ -79,6 +98,10 @@ async function createModal(userId) {
 
     modalContent.appendChild(userProfileSection);
 
+    const userClub = document.createElement("p");
+    userClub.innerHTML = `동아리: <span id="userClub"></span>`;
+    userProfileSection.appendChild(userClub);
+
     // 클로즈 버튼 추가
     const closeButton = document.createElement("button");
     closeButton.textContent = "모달 닫기";
@@ -118,6 +141,7 @@ function openUserModal(userId) {
 window.closeUserModal = function () {
     const modal = document.getElementById("userProfileModal");
     modal.style.display = "none";
+    modal.remove();
 };
 
 // 유저 프로필을 불러오고 업데이트하는 함수
@@ -135,7 +159,6 @@ async function loadUserProfile(userId) {
             });
         } catch (error) {
             console.error("Error fetching user profile:", error);
-            return;
         }
 
         //userId를 이용하여 태그정보 가져오기
@@ -182,6 +205,30 @@ async function loadUserProfile(userId) {
             }
         }
 
+        //userId로 동아리가져오기
+        try {
+            responseClub = await axios.get(`/api/club/getClub/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+            clubId = responseClub.data;
+            responseUserClub = await axios.get(`/api/club/${clubId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+        } catch (error) {
+            console.log(error);
+            if (error) {
+                // "없음"을 표시할 요소의 innerText 설정
+                document.getElementById("userClub").innerText = "없음";
+            } else {
+                // 다른 에러 처리 로직
+                console.log("Error fetching user clubs:", error);
+            }
+        }
+
         console.log("불러온 데이터", response.data.data.userProfile);
         const userProfile = response.data.data.userProfile;
         const userTag = responseTag?.data?.data || {};
@@ -189,19 +236,25 @@ async function loadUserProfile(userId) {
         const userAbility = responseScore?.data?.data?.ability;
         const userPersonality = responseScore?.data?.data?.personality;
         const imageContainer = document.getElementById("image");
+        const userClub = responseUserClub.data.name;
         imageContainer.innerHTML = ""; // 기존 내용 초기화
 
         const imageElement = document.createElement("img");
-        imageElement.src = userProfile.image;
+        // userProfile.image가 비어있을 경우 기본 이미지 경로 설정
+        imageElement.src = userProfile.image || "./resources/profile.jpeg";
         imageElement.alt = "User Image";
         imageContainer.appendChild(imageElement);
+
+        if (userProfile.gender === "male") {
+            document.getElementById("gender").textContent = "남성";
+        } else if (userProfile.gender === "female") {
+            document.getElementById("gender").textContent = "여성";
+        }
 
         console.log(userProfile.nickname);
         // 가져온 정보로 모달창 내의 프로필 부분을 업데이트
         document.getElementById("modalNickname").textContent =
             userProfile.nickname;
-        document.getElementById("gender").textContent =
-            userProfile?.gender || "없음";
         document.getElementById("description").textContent =
             userProfile?.description || "없음";
         document.getElementById("height").textContent =
@@ -213,6 +266,8 @@ async function loadUserProfile(userId) {
 
         document.getElementById("tag").textContent =
             top3Tag.length > 0 ? top3Tag.join(", ") : "없음";
+
+        document.getElementById("userClub").textContent = userClub || "없음";
     } catch (error) {
         console.log(error.response.data);
         console.error("Error loading user profile:", error);

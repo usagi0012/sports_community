@@ -41,6 +41,12 @@ function getMyClubApplication() {
                 const nickNameDiv = document.createElement("div");
                 nickNameDiv.className = "nickNameDiv";
                 nickNameDiv.innerHTML = `닉네임: ${nickName}`;
+
+                // 클릭 이벤트를 추가하여 모달을 열도록 수정
+                nickNameDiv.addEventListener("click", () => {
+                    createModal(application.userId);
+                });
+
                 clubApplication.appendChild(nickNameDiv);
 
                 const message = document.createElement("div");
@@ -128,7 +134,6 @@ function getMyClubApplication() {
                         })
                         .catch(function (error) {
                             console.log(error);
-
                             // 이 부분 세분화해서 에러 메세지별 에러메세지 띄우기
                             alert("동아리 신청서 처리 중 에러가 발생했습니다.");
                         });

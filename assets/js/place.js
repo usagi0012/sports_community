@@ -9,9 +9,9 @@ window.onload = function () {
     loadFooter();
 };
 
-function getPlace(page, size = 28) {
+function getPlace(page) {
     axios
-        .get(`/api/place?page=${page}&size=${size}`)
+        .get(`/api/place?page=${page}`)
         .then(function (response) {
             console.log(response);
             mainContainer.innerHTML = "";
