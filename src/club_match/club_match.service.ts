@@ -19,11 +19,15 @@ import { Status } from "src/entity/recruit.entity";
 import { Alarmservice } from "src/alarm/alarm.service";
 import { ConfigService } from "@nestjs/config";
 import { Cron, CronExpression } from "@nestjs/schedule";
+import { NestApplication } from "@nestjs/core";
 
 const now = new Date();
 const utc = now.getTime();
 const koreaTimeDiff = 9 * 60 * 60 * 1000;
 const korNow = new Date(utc + koreaTimeDiff);
+
+const updateNow = new Date(korNow.getTime() + 9 * 60 * 60 * 1000);
+
 const oneHoursAgo = new Date(korNow);
 
 @Injectable()
@@ -68,6 +72,17 @@ export class ClubMatchService {
                 id: id,
             },
         });
+
+        const oneHourBeforeNow = new Date(
+            korNow.getTime() + 1 * 60 * 60 * 1000,
+        );
+
+        console.log("gamedate", gamedate);
+        console.log("oneHourBeforeNow", oneHourBeforeNow);
+
+        if (gamedate.getTime() < oneHourBeforeNow.getTime()) {
+            throw new NotFoundException("최소 한 시간 전에 입력 가능합니다.");
+        }
 
         const newMatch = this.clubMatchRepository.create({
             host_clubId: id,
@@ -263,6 +278,7 @@ export class ClubMatchService {
                 message: true,
                 information: true,
                 status: true,
+                progress: true,
                 endTime: true,
                 gameDate: true,
             },
@@ -271,6 +287,11 @@ export class ClubMatchService {
         for (const match of matches) {
             this.updateProgress(match);
         }
+
+        console.log("now", now);
+        console.log("korNOw", korNow);
+
+        console.log("updateNow", updateNow);
 
         return await this.clubMatchRepository.save(matches);
     }
@@ -450,20 +471,19 @@ export class ClubMatchService {
     // }
 
     private updateProgress(clubMatch: ClubMatch) {
-        if (clubMatch.gameDate.getTime() > now.getTime()) {
+        if (clubMatch.gameDate.getTime() < korNow.getTime()) {
             clubMatch.progress = Progress.DURING;
-
-            // if (clubMatch.status !== ClubMatchStatus.MATCHSUCCESS) {
-            //     clubMatch.status = ClubMatchStatus.CANCEL;
-            // }
         }
 
-        if (clubMatch.endTime.getTime() < now.getTime()) {
+        if (clubMatch.endTime.getTime() < korNow.getTime()) {
             clubMatch.progress = Progress.PLEASE_EVALUATE;
+        }
 
-            // if (clubMatch.status !== ClubMatchStatus.MATCHSUCCESS) {
-            //     clubMatch.status = ClubMatchStatus.CANCEL;
-            // }
+        if (clubMatch.gameDate.getTime() < korNow.getTime()) {
+            if (clubMatch.status !== ClubMatchStatus.MATCHSUCCESS) {
+                clubMatch.progress = Progress.BEFORE;
+                clubMatch.status = ClubMatchStatus.CANCEL;
+            }
         }
     }
 }

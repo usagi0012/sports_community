@@ -170,6 +170,11 @@ function createGuestClubHTML(guestClub, clubMatch) {
 }
 
 function createHostClubButtonHTML(clubMatch, hostMatchId) {
+    if (clubMatch.status === "경기중") {
+        return `
+
+    `;
+    }
     if (clubMatch.status === "취소") {
         return `
         <div class="hostClubButton">\
