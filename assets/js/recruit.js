@@ -53,23 +53,45 @@ function feed() {
                 ) {
                     const newContent = document.createElement("div");
                     newContent.classList.add("item");
-                    newContent.innerHTML = `
-                        <div class="num">${recruits.id}</div>
-                        <div class="category">${recruits.rule}</div>
-                        <div class="title" ><a href="recruit-detail.html?id=${
-                            recruits.id
-                        }">${recruits.title}</a></div>
-                        <div class="region">${region[recruits.region]}</div>
-                        <div class="writer" onclick="openModal('${
-                            recruits.hostId
-                        }')">${recruits.hostName}</div>
-                        <div class="gamedate">${recruits.gamedate.slice(
-                            "T",
-                            10,
-                        )}</div>
-                        <div class="status">${recruits.status}</div>
-                    `;
-                    boardList.appendChild(newContent);
+
+                    // 프로필 이름을 가져와서 바로 HTML에 삽입
+
+                    profilName(recruits.hostId)
+                        .then((profileName) => {
+                            const writeName =
+                                (profileName &&
+                                    profileName.data &&
+                                    profileName.data.userProfile &&
+                                    profileName.data.userProfile.nickname) ||
+                                "";
+
+                            newContent.innerHTML = `
+                                <div class="num">${recruits.id}</div>
+                                <div class="category">${recruits.rule}</div>
+                                <div class="title"><a href="recruit-detail.html?id=${
+                                    recruits.id
+                                }">${recruits.title}</a></div>
+                                <div class="region">${
+                                    region[recruits.region]
+                                }</div>
+                                <div class="writer" onclick="openModal('${
+                                    recruits.hostId
+                                }')">${writeName}</div>
+                                <div class="gamedate">${recruits.gamedate.slice(
+                                    0,
+                                    10,
+                                )}</div>
+                                <div class="status">${recruits.status}</div>
+                            `;
+                            boardList.appendChild(newContent);
+                        })
+                        .catch((error) => {
+                            console.error(
+                                "프로필 이름을 가져오는 중 오류 발생:",
+                                error,
+                            );
+                            return "";
+                        });
                 }
             });
         })
@@ -102,4 +124,26 @@ function filterByCategory() {
 
 function openModal(hostId) {
     createModal(hostId);
+}
+
+function profilName(hostId) {
+    const accessToken = localStorage.getItem("accessToken");
+
+    return axios
+        .get(`api/user/${hostId}/profile`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+        .then(function (response) {
+            return response.data;
+        })
+        .catch(function (error) {
+            if (error.response && error.response.status === 404) {
+                return ""; // 프로필이 없는 경우 빈 문자열 반환
+            } else {
+                console.error("프로필 이름을 가져오는 중 오류 발생:", error);
+                return ""; // 기타 에러 발생 시에도 빈 문자열 반환
+            }
+        });
 }
