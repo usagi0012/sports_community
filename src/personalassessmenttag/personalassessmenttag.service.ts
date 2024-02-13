@@ -9,8 +9,7 @@ import { PersonalTagCounterDto } from "./dto/personaltagcounter.dto";
 import { Personaltagcounter } from "src/entity/personaltagcounter.entity";
 import { Userscore } from "src/entity/userscore.entity";
 import { CreatePersonalAssessmentDto } from "./dto/create-personal-assessment.dto";
-import { Recruit, Status } from "src/entity/recruit.entity";
-import { Match, MatchStatus } from "src/entity/match.entity";
+import { Match } from "src/entity/match.entity";
 import { UserProfile } from "src/entity/user-profile.entity";
 import { User } from "src/entity/user.entity";
 import { MemberRank } from "src/entity/memberRank.entity";
@@ -41,6 +40,9 @@ export class PersonalassessmenttagService {
                     userId: true,
                     personality: true,
                 },
+                where: {
+                    count: MoreThanOrEqual(10), // count가 10 이상인 경우만 필터링
+                },
                 order: { personalityAmount: "DESC" },
                 take: 3,
             });
@@ -67,6 +69,9 @@ export class PersonalassessmenttagService {
     async findTopThreeAbilityAmountUser() {
         const topThreeAbilityAmountUser = await this.userscoreRepository.find({
             select: { abilityAmount: true, userId: true, ability: true },
+            where: {
+                count: MoreThanOrEqual(10), // count가 10 이상인 경우만 필터링
+            },
             order: { abilityAmount: "DESC" },
             take: 3,
         });
@@ -264,19 +269,6 @@ export class PersonalassessmenttagService {
             );
         }
 
-        if (
-            personalMatch.guestId === matchOtherUser.id &&
-            personalMatch.hostId === matchOtherUser.id
-        ) {
-            throw new BadRequestException(
-                "당사자 본인은 자기 평가서를 작성할 수 없습니다.",
-            );
-        }
-
-        if (personalMatch.status === MatchStatus.REJECTED) {
-            throw new BadRequestException("해당 경기는 거절되었습니다.");
-        }
-
         if (!personalMatch.hostId && !personalMatch.guestId) {
             throw new NotFoundException(
                 "해당 모집경기에 참여하지 않은 유저는 평가지를 작성할 수 없습니다.",
@@ -366,10 +358,6 @@ export class PersonalassessmenttagService {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
 
-        if (personalMatch.status === MatchStatus.REJECTED) {
-            throw new BadRequestException("해당 경기는 거절되었습니다.");
-        }
-
         const matchOtherUser = await this.userRepository.findOne({
             where: { id: playOtherUserId },
         });
@@ -377,21 +365,6 @@ export class PersonalassessmenttagService {
         if (!matchOtherUser) {
             throw new NotFoundException(
                 "같은 경기에 참석하지 않은 유저는 설문지를 작성할 수 없습니다.",
-            );
-        }
-
-        if (
-            personalMatch.guestId === matchOtherUser.id &&
-            personalMatch.hostId === matchOtherUser.id
-        ) {
-            throw new BadRequestException(
-                "당사자 본인은 자기 평가서를 작성할 수 없습니다.",
-            );
-        }
-
-        if (!personalMatch.hostId && !personalMatch.guestId) {
-            throw new NotFoundException(
-                "해당 모집경기에 참여하지 않은 유저는 태그를 작성할 수 없습니다.",
             );
         }
 
@@ -434,7 +407,6 @@ export class PersonalassessmenttagService {
                 "같은 경기에 참석하지 않은 유저는 설문지를 작성할 수 없습니다.",
             );
         }
-
         if (
             personalMatch.guestId === matchOtherUser.id &&
             personalMatch.hostId === matchOtherUser.id
@@ -446,10 +418,6 @@ export class PersonalassessmenttagService {
 
         if (!personalMatch.guestId && !personalMatch.hostId) {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
-        }
-
-        if (personalMatch.status === MatchStatus.REJECTED) {
-            throw new BadRequestException("해당 경기는 거절되었습니다.");
         }
 
         if (!personalMatch.hostId && !personalMatch.guestId) {
@@ -526,12 +494,6 @@ export class PersonalassessmenttagService {
             );
         }
 
-        if (matchOtherUser.id === userId) {
-            throw new BadRequestException(
-                "당사자 본인의 설문지를 작성할 수 없습니다.",
-            );
-        }
-
         if (
             personalMatch.guestId === matchOtherUser.id &&
             personalMatch.hostId === matchOtherUser.id
@@ -539,18 +501,6 @@ export class PersonalassessmenttagService {
             throw new BadRequestException(
                 "당사자 본인은 자기 평가서를 작성할 수 없습니다.",
             );
-        }
-
-        const userScore = await this.userscoreRepository.findOne({
-            where: { userId },
-        });
-
-        if (userScore) {
-            throw new BadRequestException("이미 태그를 가지고 있습니다.");
-        }
-
-        if (personalMatch.status === MatchStatus.REJECTED) {
-            throw new BadRequestException("해당 경기는 거절되었습니다.");
         }
 
         const findUserTag = await this.personaltagcounterRepository.findOne({
