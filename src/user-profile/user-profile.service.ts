@@ -237,6 +237,31 @@ export class UserProfileService {
             throw new NotFoundException(error);
         }
     }
+    // 친구 삭제하기
+    async deleteFriend(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+
+            me.friendUser = me.friendUser || [];
+
+            const index = me.friendUser.indexOf(otherUserId.toString());
+
+            if (index !== -1) {
+                me.friendUser.splice(index, 1);
+
+                return await this.userRepository.save(me);
+            }
+
+            return me;
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+    }
+
     //block fried
     async blockUser(userId: number, otherUserId: number) {
         try {
@@ -249,6 +274,31 @@ export class UserProfileService {
 
             if (!me.blockUser.includes(otherUserId.toString())) {
                 me.blockUser.push(otherUserId.toString());
+
+                return await this.userRepository.save(me);
+            }
+
+            return me;
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+    }
+
+    //dlelteblock fried
+    async deleteBlock(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+
+            me.blockUser = me.blockUser || [];
+
+            const index = me.blockUser.indexOf(otherUserId.toString());
+
+            if (index !== -1) {
+                me.blockUser.splice(index, 1);
 
                 return await this.userRepository.save(me);
             }
