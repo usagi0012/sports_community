@@ -12,7 +12,7 @@ import { UpdateUserProfileDto } from "./dto/update-user-profile.dto";
 import { UserProfile } from "src/entity/user-profile.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/entity/user.entity";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { NotFoundError } from "rxjs";
 import { AwsService } from "../aws/aws.service";
 import { Alarmservice } from "src/alarm/alarm.service";
@@ -214,5 +214,130 @@ export class UserProfileService {
             message: "프로필을 수정했습니다.",
             data: { updatedProfile },
         };
+    }
+
+    //친구 추가하기
+    async friednUser(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            me.friendUser = me.friendUser || [];
+
+            if (!me.friendUser.includes(otherUserId.toString())) {
+                me.friendUser.push(otherUserId.toString());
+
+                return await this.userRepository.save(me);
+            }
+
+            return me;
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+    }
+    //block fried
+    async blockUser(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            me.blockUser = me.blockUser || [];
+
+            if (!me.blockUser.includes(otherUserId.toString())) {
+                me.blockUser.push(otherUserId.toString());
+
+                return await this.userRepository.save(me);
+            }
+
+            return me;
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+    }
+
+    // const recruitUsersAsInt: number[] = recruitUsers.map(Number);
+
+    //친구 목록 불러오기
+    async getFriend(userId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            const friendIds: number[] = me.friendUser.map(Number);
+
+            const friends = await this.userRepository.find({
+                where: { id: In(friendIds) },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                },
+            });
+
+            return friends;
+        } catch (error) {}
+    }
+
+    //친구인지 아닌지
+
+    async findFriend(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            const friendIds: number[] = me.friendUser.map(Number);
+
+            const isOtherUserFriend = friendIds.includes(otherUserId);
+
+            return isOtherUserFriend;
+        } catch (error) {}
+    }
+
+    //블락유저 목록 불러오기
+    async getBlock(userId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            const bolckIds: number[] = me.blockUser.map(Number);
+
+            const friends = await this.userRepository.find({
+                where: { id: In(bolckIds) },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                },
+            });
+
+            return friends;
+        } catch (error) {}
+    }
+
+    //블락 인지 아닌지
+
+    async findBlock(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            const blockIds: number[] = me.blockUser.map(Number);
+
+            const isOtherBlockIds = blockIds.includes(otherUserId);
+
+            return isOtherBlockIds;
+        } catch (error) {}
     }
 }
