@@ -285,9 +285,11 @@ img {
 #submit-btn,
 #expel-submit-btn,
 #close-btn,
-#expel-close-btn {
+#expel-close-btn,
+#exit-btn,
+#delete-chat-btn {
     font-family: "LINESeedKR-Bd";
-    width: 70px;
+    width: 78px;
     height: 30px;
     margin: 20px 5px;
     padding: 8px;
@@ -302,7 +304,9 @@ img {
 #close-btn:hover,
 #expel-close-btn:hover,
 #invite-modal-btn:hover,
-#expel-modal-btn:hover {
+#expel-modal-btn:hover,
+#exit-btn,
+#delete-chat-btn {
     background-color: #ffb13d;
 }
 
@@ -324,7 +328,7 @@ img {
     position: absolute;
     right: 10px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     text-align: center;
 }
 

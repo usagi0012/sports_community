@@ -101,7 +101,12 @@
                         console.log("클럽 생성 리스폰스", response);
                         //폼 제출 후 원래 페이지로 이동
                         alert(`성공적으로 생성되었습니다.`);
-                        returnPage();
+                        let checkToCreateChat = confirm("동아리 채팅방 생성을 위해 채팅 페이지로 이동하시겠습니까?")
+                        if(checkToCreateChat) {
+                            window.location.href = "chatRoom.html"
+                        } else {
+                            returnPage();
+                        }
                     })
                     .catch(function (error) {
                         console.log(error.response);

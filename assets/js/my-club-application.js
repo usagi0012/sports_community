@@ -69,12 +69,6 @@ function getMyClubApplication() {
                 approveBtn.className = "approval";
                 approveBtn.innerHTML = "승인";
                 approveBtn.addEventListener("click", () => {
-                    console.log(
-                        "클릭한 것의 첫번째 닉네임 값",
-                        approveBtn.parentElement.children[0].textContent.slice(
-                            5,
-                        ),
-                    );
                     const nickName =
                         approveBtn.parentElement.children[0].textContent.slice(
                             5,
@@ -99,7 +93,14 @@ function getMyClubApplication() {
                             console.log("신청서 리뷰 리스폰스", response);
                             //폼 제출 후 원래 페이지로 이동
                             alert(`동호회 가입을 승인했습니다.`);
-                            location.reload();
+                            let checkToCreateChat = confirm(
+                                "채팅방에 멤버를 초대하기 위해 채팅방으로 이동하시겠습니까?",
+                            );
+                            if (checkToCreateChat) {
+                                window.location.href = "chatRoom.html";
+                            } else {
+                                location.reload();
+                            }
                         })
                         .catch(function (error) {
                             console.log(error);

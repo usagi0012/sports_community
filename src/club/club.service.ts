@@ -57,21 +57,41 @@ export class ClubService {
         [clubs, total] = await this.clubRepository.findAndCount(findOption);
         console.log("clubs", clubs);
 
-        const clubsWithMasterNames = await Promise.all(
-            clubs.map(async (club) => {
-                const master = club.users.find(
-                    (user) => user.id === club.masterId,
-                );
+        // const clubsWithMasterNames = await Promise.all(
+        //     clubs.map(async (club) => {
+        //         const master = club.users.find(
+        //             (user) => user.id === club.masterId,
+        //         );
+        //         console.log("===master===", master);
+        //         return {
+        //             ...club,
+        //             masterName: master ? master.name : null,
+        //         };
+        //     }),
+        // );
 
-                return {
-                    ...club,
-                    masterName: master ? master.name : null,
-                };
+        const clubsWithNickName = await Promise.all(
+            clubs.map(async (club) => {
+                const userInfo = await this.userProfileRepository.findOne({
+                    where: { userId: club.masterId },
+                });
+                // 유저 이름 가져오기(마스터이름)
+                const user = await this.userRepository.findOne({
+                    where: { id: club.masterId },
+                });
+                const userName = user.name;
+                if (!userInfo) {
+                    return { ...club, userName };
+                }
+                const nickName = userInfo.nickname;
+                const result = { ...club, nickName, userName };
+
+                return result;
             }),
         );
 
         return {
-            data: clubsWithMasterNames,
+            data: clubsWithNickName,
             meta: {
                 total,
                 page,

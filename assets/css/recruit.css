@@ -79,7 +79,8 @@
 }
 
 #regionFilter,
-#CategoryFilter {
+#CategoryFilter,
+#StatusFilter {
     font-family: "LINESeedKR-Bd";
     border: 1px solid #ffb13d;
     border-radius: 10px;
