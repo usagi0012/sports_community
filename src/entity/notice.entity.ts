@@ -16,7 +16,11 @@ export class Notice {
 
     @IsNumber()
     @Column()
-    userId: number;
+    masterId: number;
+
+    @IsString()
+    @Column()
+    masterName: string;
 
     @IsNotEmpty({ message: "공지사항에 대한 제목을 입력해주세요." })
     @IsString()
@@ -35,6 +39,9 @@ export class Notice {
         example: "저희 오농 커뮤니티 공지사항을 이용해주셔서 감사합니다.",
     })
     description: string;
+
+    @Column({ nullable: true })
+    image: string;
 
     @CreateDateColumn()
     createAt: Date;
