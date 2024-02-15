@@ -49,8 +49,6 @@ async function createModal(userId) {
     }
 
     // 모달이 없는 경우에만 아래 코드 실행
-    try {
-    } catch {}
     // 모달 창 생성
     const modal = document.createElement("div");
     modal.id = "userProfileModal";
@@ -108,6 +106,18 @@ async function createModal(userId) {
     closeButton.onclick = closeUserModal;
     modalContent.appendChild(closeButton);
 
+    // 신고 모달 열기 버튼 추가
+    const openReportModalButton = document.createElement("button");
+    openReportModalButton.textContent = "신고하기";
+    openReportModalButton.onclick = () => {
+        openReportModal(userId); // report.js의 모달 열기 함수 호출
+    };
+    modalContent.appendChild(openReportModalButton);
+
+    const banApplicationContainer = document.createElement("div");
+    banApplicationContainer.id = "banApplicationContainer";
+    document.body.appendChild(banApplicationContainer);
+
     // 모달 내용을 모달 창에 추가
     modal.appendChild(modalContent);
 
@@ -116,6 +126,190 @@ async function createModal(userId) {
 
     // 모달 열기
     openUserModal(userId);
+}
+
+async function openReportModal(userId) {
+    try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.get(`/api/report/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        const { me, banUser } = response.data;
+        console.log("정보확인", response.data);
+
+        const reporterUser = me;
+        const reportedUser = banUser;
+        const banUserId = banUser.id;
+
+        // const reportContainer = document.getElementById(
+        //     "banApplicationContainer",
+        // );
+
+        // 모달 창을 화면에 표시하는 코드 추가
+        // reportContainer.style.display = "flex";
+
+        // reportHTML 초기화
+        const reportHTML = createReportHtml(
+            reporterUser,
+            reportedUser,
+            banUserId,
+        );
+
+        console.log(reportHTML);
+
+        // 모달 내용 추가
+        // reportContainer.innerHTML = reportHTML;
+    } catch (error) {
+        console.error(error);
+        alert(error.response?.data?.message || "An error occurred");
+    }
+}
+
+function createReportHtml(reporterUser, reportedUser, banUserId) {
+    const reportModal = document.createElement("div");
+    reportModal.className = "reportModal"; // 모달 클래스 추가
+
+    const reportContent = document.createElement("div");
+    reportContent.className = "reportModal-content"; // 모달 내용 클래스 추가
+
+    const reportTitle = document.createElement("h2");
+    reportTitle.innerText = "신고 양식";
+    reportContent.appendChild(reportTitle);
+
+    const form = document.createElement("form");
+
+    const reporterLabel = document.createElement("label");
+    reporterLabel.setAttribute("for", "reporterLabel");
+    reporterLabel.innerText = "신고하는 사람:";
+    form.appendChild(reporterLabel);
+
+    const reporterUserSpan = document.createElement("span");
+    reporterUserSpan.id = "reporterUser";
+    reporterUserSpan.innerText = reporterUser.name;
+    form.appendChild(reporterUserSpan);
+    form.appendChild(document.createElement("br"));
+
+    const reportedLabel = document.createElement("label");
+    reportedLabel.setAttribute("for", "reportedLabel");
+    reportedLabel.innerText = "신고받는 사람:";
+    form.appendChild(reportedLabel);
+
+    const reportedUserSpan = document.createElement("span");
+    reportedUserSpan.id = "reportedUser";
+    reportedUserSpan.innerText = reportedUser.name;
+    form.appendChild(reportedUserSpan);
+    form.appendChild(document.createElement("br"));
+
+    const titleLabel = document.createElement("label");
+    titleLabel.setAttribute("for", "title");
+    titleLabel.innerText = "제목:";
+    form.appendChild(titleLabel);
+
+    const titleTextarea = document.createElement("textarea");
+    titleTextarea.id = "title";
+    titleTextarea.name = "title";
+    titleTextarea.rows = "1";
+    titleTextarea.required = true;
+    titleTextarea.maxLength = "20";
+    titleTextarea.placeholder = "최대 20글자 입력가능합니다.";
+    form.appendChild(titleTextarea);
+    form.appendChild(document.createElement("br"));
+
+    const reportContentLabel = document.createElement("label");
+    reportContentLabel.setAttribute("for", "reportContent");
+    reportContentLabel.innerText = "신고 내용:";
+    form.appendChild(reportContentLabel);
+
+    const reportContentTextarea = document.createElement("textarea");
+    reportContentTextarea.id = "reportContent";
+    reportContentTextarea.name = "reportContent";
+    reportContentTextarea.rows = "4";
+    reportContentTextarea.required = true;
+    reportContentTextarea.maxLength = "100";
+    reportContentTextarea.placeholder = "최대 100글자 입력가능합니다.";
+    form.appendChild(reportContentTextarea);
+    form.appendChild(document.createElement("br"));
+    // 신고 제출 버튼 추가
+    const submitButton = document.createElement("button");
+    submitButton.className = "submit-button";
+    submitButton.textContent = "신고 제출";
+    form.appendChild(submitButton);
+
+    console.log("Title textarea ID:", titleTextarea.id);
+    console.log("ReportContent textarea ID:", reportContentTextarea.id);
+
+    // 신고 모달 닫기 버튼 추가
+    const closeReportModal = document.createElement("button");
+    closeReportModal.className = "reportModalClose-button";
+    closeReportModal.textContent = "닫기";
+    form.appendChild(closeReportModal);
+    reportContent.appendChild(form);
+
+    reportModal.appendChild(reportContent);
+
+    document.body.appendChild(reportModal);
+
+    // 여기서 이벤트 핸들러 등록
+    console.log("닫기버튼", closeReportModal);
+    closeReportModal.addEventListener("click", () => {
+        console.log("Close button manually clicked");
+        closeReportModalclick();
+    });
+
+    console.log("밴유저아이디1", banUserId);
+    submitButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        console.log("Submit button clicked");
+        const titleValue = document.getElementById("title").value;
+        const reportContentValue =
+            document.getElementById("reportContent").value;
+
+        console.log("내용에 입력한 값", reportContentValue);
+        console.log("제목에입력한값", titleValue);
+        submitReport(banUserId, titleValue, reportContentValue);
+    });
+
+    return reportModal.outerHTML; // 완성된 HTML 반환
+}
+
+async function closeReportModalclick(e) {
+    e.preventDefault();
+    console.log("닫기버튼 클릭");
+    document.getElementById("banApplicationContainer").style.display = "none";
+}
+
+async function submitReport(banUserId, titleValue, reportContentValue) {
+    console.log("제출함수시작");
+    try {
+        const accessToken = localStorage.getItem("accessToken");
+
+        console.log("밴유저아이디", banUserId);
+        console.log("리폿내용", reportContentValue);
+        console.log("리폿제목", titleValue);
+
+        await axios.post(
+            `/api/report/${banUserId}`,
+            {
+                title: titleValue,
+                reportContent: reportContentValue,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+
+        alert("신고가 완료되었습니다.");
+        // closeReportModal(); // 신고가 완료되면 모달을 닫기
+    } catch (error) {
+        console.log(error);
+        alert(error.response?.data.message || "An error occurred");
+        // closeReportModal(); // 에러 발생 시에도 모달을 닫기
+    }
 }
 
 // 모달 업데이트 함수
