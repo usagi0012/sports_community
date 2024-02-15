@@ -9,7 +9,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Faq } from "src/entity/faq.entity";
 import { Repository } from "typeorm";
 import { User } from "src/entity/user.entity";
-import { AwsService } from "src/aws/aws.service";
 
 @Injectable()
 export class FaqService {
@@ -18,29 +17,15 @@ export class FaqService {
         private readonly userReporitory: Repository<User>,
         @InjectRepository(Faq)
         private readonly faqReporitory: Repository<Faq>,
-        private readonly awsService: AwsService,
     ) {}
-    async createFaq(
-        userId: number,
-        createFaqDto: CreateFaqDto,
-        file: Express.Multer.File,
-    ) {
-        const { ...restOfFaq } = createFaqDto;
+    async createFaq(userId: number, createFaqDto: CreateFaqDto) {
+        const { ...restOfNotice } = createFaqDto;
         const admin = await this.veryfiyAdmin(userId);
 
-        if (admin.userType === "admin" && file) {
+        if (admin.userType === "admin") {
             const faq = await this.faqReporitory.save({
-                masterId: admin.id,
-                masterName: admin.name,
-                image: await this.awsService.fileupload(file),
-                ...restOfFaq,
-            });
-            return faq;
-        } else if (admin.userType === "admin" && !file) {
-            const faq = await this.faqReporitory.save({
-                masterId: admin.id,
-                masterName: admin.name,
-                ...restOfFaq,
+                userId: admin.id,
+                ...restOfNotice,
             });
             return faq;
         } else {
@@ -49,9 +34,7 @@ export class FaqService {
     }
 
     async findAllFaq() {
-        const faqAll = await this.faqReporitory.find({
-            order: { updatedAt: "DESC" },
-        });
+        const faqAll = await this.faqReporitory.find();
         return faqAll;
     }
 
@@ -61,31 +44,19 @@ export class FaqService {
         return faqFindOne;
     }
 
-    async updateFaq(
-        userId: number,
-        faqId: number,
-        file: Express.Multer.File,
-        updateFaqDto: UpdateFaqDto,
-    ) {
-        await this.veryfiyFaq(faqId);
+    async updateFaq(userId: number, faqId: number, updateFaqDto: UpdateFaqDto) {
+        const faq = await this.veryfiyFaq(faqId);
 
         const admin = await this.veryfiyAdmin(userId);
-        const { ...restOfFaq } = updateFaqDto;
 
-        if (admin.userType === "admin" && file) {
+        if (admin.userType === "admin") {
+            const { ...restOfFaq } = updateFaqDto;
             const faqUpdate = await this.faqReporitory.save({
-                id: faqId,
-                image: await this.awsService.fileupload(file),
+                id: faq.id,
                 ...restOfFaq,
             });
 
             return faqUpdate;
-        } else if (admin.userType === "admin" && !file) {
-            const faq = await this.faqReporitory.save({
-                id: faqId,
-                ...restOfFaq,
-            });
-            return faq;
         } else {
             throw new BadRequestException("FAQ는 관리자만 수정할 수 있습니다.");
         }

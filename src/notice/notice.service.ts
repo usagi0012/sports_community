@@ -9,7 +9,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Notice } from "src/entity/notice.entity";
 import { Repository } from "typeorm";
 import { User } from "src/entity/user.entity";
-import { AwsService } from "src/aws/aws.service";
 
 @Injectable()
 export class NoticeService {
@@ -18,44 +17,25 @@ export class NoticeService {
         private readonly userReporitory: Repository<User>,
         @InjectRepository(Notice)
         private readonly noticeReporitory: Repository<Notice>,
-        private readonly awsService: AwsService,
     ) {}
-    async createNotice(
-        userId: number,
-        createNoticeDto: CreateNoticeDto,
-        file: Express.Multer.File,
-    ) {
+    async createNotice(userId: number, createNoticeDto: CreateNoticeDto) {
         const { ...restOfNotice } = createNoticeDto;
         const adminUser = await this.veryfiyAdmin(userId);
 
-        if (adminUser.userType === "admin" && file) {
+        if (adminUser.userType === "admin") {
             const notice = await this.noticeReporitory.save({
-                masterId: adminUser.id,
-                masterName: adminUser.name,
-                image: await this.awsService.fileupload(file),
-                ...restOfNotice,
-            });
-
-            return notice;
-        } else if (adminUser.userType === "admin" && !file) {
-            const notice = await this.noticeReporitory.save({
-                masterId: adminUser.id,
-                masterName: adminUser.name,
+                userId: adminUser.id,
                 ...restOfNotice,
             });
 
             return notice;
         } else {
-            throw new BadRequestException(
-                "공지사항은 관리자만 작성할 수 있습니다.",
-            );
+            throw new BadRequestException("관리자만 작성할 수 있습니다.");
         }
     }
 
     async findAllNotice() {
-        const noticeAll = await this.noticeReporitory.find({
-            order: { updatedAt: "DESC" },
-        });
+        const noticeAll = await this.noticeReporitory.find();
         return noticeAll;
     }
 
@@ -67,28 +47,19 @@ export class NoticeService {
     async updateNotice(
         userId: number,
         noticeId: number,
-        file: Express.Multer.File,
         updateNoticeDto: UpdateNoticeDto,
     ) {
-        await this.veryfiyNotice(noticeId);
+        const notice = await this.veryfiyNotice(noticeId);
 
         const admin = await this.veryfiyAdmin(userId);
-        const { ...restOfNotice } = updateNoticeDto;
 
-        if (admin.userType === "admin" && file) {
+        if (admin.userType === "admin") {
+            const { ...restOfNotice } = updateNoticeDto;
             const noticeUpdate = await this.noticeReporitory.save({
-                id: noticeId,
-                image: await this.awsService.fileupload(file),
+                id: notice.id,
                 ...restOfNotice,
             });
             return noticeUpdate;
-        } else if (admin.userType === "admin" && !file) {
-            const notice = await this.noticeReporitory.save({
-                id: noticeId,
-                ...restOfNotice,
-            });
-
-            return notice;
         } else {
             throw new BadRequestException(
                 "공지사항은 관리자만 수정할 수 있습니다.",
