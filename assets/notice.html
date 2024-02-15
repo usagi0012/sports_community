@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Onong 공지사항</title>
+        <meta name="description" content="Onong NoticePage" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link rel="stylesheet" href="css/dropBar.css" />
+        <link rel="stylesheet" href="css/notice.css" />
+    </head>
+    <body>
+        <div id="sameContainer"></div>
+        <div class="mainContainer" id="mainContainer">
+            <button class="createBtn" onclick="toNoticePost()">글 작성</button>
+            <div class="boardContainer">
+                <div class="boardTitleContainer">
+                    <div class="num" id="numTitle">번호</div>
+                    <div class="title" id="titleTitle">제목</div>
+                    <div class="writer" id="writerTitle">작성자</div>
+                    <div class="createDate" id="createDateId">작성날짜</div>
+                    <div class="updateDate" id="updateDateId">수정날짜</div>
+                </div>
+                <div class="noticeBoardListContainer"></div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/notice.js"></script>
+    </body>
+</html>
