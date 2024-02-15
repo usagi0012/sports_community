@@ -51,6 +51,25 @@ export class RecruitService {
             );
 
             const gameDate = Recruit.korGameDate(recruitDTO.gamedate);
+            const oneHourBeforeNow = new Date(
+                korNow.getTime() + 1 * 60 * 60 * 1000,
+            );
+
+            if (gamedate.getTime() < oneHourBeforeNow.getTime()) {
+                throw new NotFoundException(
+                    "최소 한 시간 전에 입력 가능합니다.",
+                );
+            }
+
+            if (recruitDTO.totalmember > 20) {
+                throw new NotFoundException("최대인원 20명을 초과하셨습니다.");
+            }
+
+            if (recruitDTO.endtime > 8) {
+                throw new NotFoundException(
+                    "최대인원 런닝탐임 8시간을 초과하셨습니다.",
+                );
+            }
 
             const totalMember = recruitDTO.totalmember - 1;
             const newRecruit = this.recruitRepository.create({
