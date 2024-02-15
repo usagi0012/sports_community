@@ -8,8 +8,6 @@ import {
     HttpStatus,
     Put,
     UseGuards,
-    UseInterceptors,
-    UploadedFile,
 } from "@nestjs/common";
 import { NoticeService } from "./notice.service";
 import { CreateNoticeDto } from "./dto/create-notice.dto";
@@ -17,7 +15,6 @@ import { UpdateNoticeDto } from "./dto/update-notice.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";
-import { FileInterceptor } from "@nestjs/platform-express";
 
 @ApiTags("공지사항")
 @Controller("notice")
@@ -26,17 +23,14 @@ import { FileInterceptor } from "@nestjs/platform-express";
 export class NoticeController {
     constructor(private readonly noticeService: NoticeService) {}
 
-    @UseInterceptors(FileInterceptor("file"))
     @Post()
     async createNotice(
         @UserId() userId: number,
         @Body() createNoticeDto: CreateNoticeDto,
-        @UploadedFile() file: Express.Multer.File,
     ) {
         const data = await this.noticeService.createNotice(
             userId,
             createNoticeDto,
-            file,
         );
 
         return {
@@ -66,18 +60,15 @@ export class NoticeController {
         };
     }
 
-    @UseInterceptors(FileInterceptor("file"))
     @Put(":noticeId")
     async updateNotice(
         @UserId() userId: number,
         @Param("noticeId") noticeId: number,
-        @UploadedFile() file: Express.Multer.File,
         @Body() updateNoticeDto: UpdateNoticeDto,
     ) {
         const data = await this.noticeService.updateNotice(
             userId,
             noticeId,
-            file,
             updateNoticeDto,
         );
         return {
