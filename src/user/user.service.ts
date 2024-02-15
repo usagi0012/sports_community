@@ -88,7 +88,6 @@ export class UserService {
     async findUserByIdAll(id: number) {
         return await this.userRepository.findOne({
             where: { id },
-            select: ["name"],
         });
     }
 

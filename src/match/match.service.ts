@@ -74,11 +74,11 @@ export class MatchService {
             throw new NotFoundException("모집이 완료되었습니다.");
         }
 
-        // if (findRecruit.hostId === userId) {
-        //     throw new NotFoundException(
-        //         "본인의 모집 공고에는 신청이 불가합니다.",
-        //     );
-        // }
+        if (findRecruit.hostId === userId) {
+            throw new NotFoundException(
+                "본인의 모집 공고에는 신청이 불가합니다.",
+            );
+        }
 
         await this.checkMatch(recruitId, userId);
         const user = await this.userRepository.findOne({

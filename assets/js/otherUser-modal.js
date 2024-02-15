@@ -14,10 +14,12 @@ async function createModal(userId) {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-        user = response.data; // 응답에서 데이터만 가져오도록 수정
+        user = response.data;
     } catch (error) {
         console.log("Error fetching user information:", error);
     }
+
+    console.log("user전체", user);
 
     const userName = user.name;
     console.log("이름", userName);
@@ -54,6 +56,8 @@ async function createModal(userId) {
     modal.id = "userProfileModal";
     modal.className = "modal";
 
+    const likeOrHateHtml = createLikeOrHateHtml(userId);
+
     // 모달 내용 생성
     const modalContent = document.createElement("div");
     modalContent.className = "modal-content";
@@ -65,6 +69,10 @@ async function createModal(userId) {
     const profileTitle = document.createElement("h2");
     profileTitle.innerText = `${userName}의 프로필`;
     userProfileSection.appendChild(profileTitle);
+
+    const likeOrHate = document.createElement("button");
+    likeOrHate.innerText = `좋아요 싫어요`;
+    userProfileSection.appendChild(likeOrHate);
 
     const nickname = document.createElement("p");
     nickname.innerHTML = `닉네임: <span id="modalNickname"></span>`;
@@ -127,6 +135,8 @@ async function createModal(userId) {
     // 모달 열기
     openUserModal(userId);
 }
+
+function createLikeOrHateHtml(userId) {}
 
 async function openReportModal(userId) {
     try {
