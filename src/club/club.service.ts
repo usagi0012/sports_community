@@ -359,4 +359,15 @@ export class ClubService {
         // 닉네임과 유저 이름을 포함한 배열을 반환
         return userData;
     }
+
+    async getClubByUserId(userId) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        const userClub = user.clubId;
+        if (!userClub) {
+            console.log("가입한 동아리가 없습니다.");
+        }
+        return userClub;
+    }
 }

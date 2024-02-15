@@ -23,11 +23,23 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         // 이미지를 나타내는 img 태그를 동적으로 생성
         const imageElement = document.createElement("img");
-        imageElement.src = profile.image;
+
+        // profile.image가 비어있을 경우 기본 이미지 설정
+        if (profile.image) {
+            imageElement.src = profile.image;
+        } else {
+            imageElement.src = "./resources/profile.jpeg"; // 기본 이미지 경로 설정
+        }
+
         imageElement.alt = "프로필 이미지";
+
         // 생성한 img 태그를 span에 추가
         document.getElementById("image").appendChild(imageElement);
-        document.getElementById("gender").innerText = profile.gender;
+        if (profile.gender === "male") {
+            document.getElementById("gender").textContent = "남성";
+        } else if (profile.gender === "female") {
+            document.getElementById("gender").textContent = "여성";
+        }
         document.getElementById("description").innerText = profile.description;
         document.getElementById("height").innerText = profile.height;
 
@@ -209,6 +221,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             window.location.href = "/login.html";
         }
         console.error("프로필 정보 및 업데이트 중 에러 발생:", error);
-        console.log(error);
+        if (error.response.data.message === "프로필 정보가 없습니다.") {
+            alert("프로필을 먼저 등록해주세요.");
+            window.location.href = "userProfile-post.html";
+        }
     }
 });
