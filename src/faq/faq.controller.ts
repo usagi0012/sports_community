@@ -8,6 +8,8 @@ import {
     HttpStatus,
     Put,
     UseGuards,
+    UploadedFile,
+    UseInterceptors,
 } from "@nestjs/common";
 import { FaqService } from "./faq.service";
 import { CreateFaqDto } from "./dto/create-faq.dto";
@@ -15,6 +17,7 @@ import { UpdateFaqDto } from "./dto/update-faq.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @ApiTags("FAQ")
 @ApiBearerAuth("accessToken")
@@ -23,12 +26,18 @@ import { UserId } from "src/auth/decorators/userId.decorator";
 export class FaqController {
     constructor(private readonly faqService: FaqService) {}
 
+    @UseInterceptors(FileInterceptor("file"))
     @Post()
     async createFaq(
         @UserId() userId: number,
         @Body() createFaqDto: CreateFaqDto,
+        @UploadedFile() file: Express.Multer.File,
     ) {
-        const data = await this.faqService.createFaq(userId, createFaqDto);
+        const data = await this.faqService.createFaq(
+            userId,
+            createFaqDto,
+            file,
+        );
 
         return {
             statusCode: HttpStatus.CREATED,
@@ -57,15 +66,18 @@ export class FaqController {
         };
     }
 
+    @UseInterceptors(FileInterceptor("file"))
     @Put(":faqid")
     async updateFaq(
         @UserId() userId: number,
         @Param("faqid") faqid: number,
         @Body() updateFaqDto: UpdateFaqDto,
+        @UploadedFile() file: Express.Multer.File,
     ) {
         const data = await this.faqService.updateFaq(
             userId,
             faqid,
+            file,
             updateFaqDto,
         );
         return {
