@@ -137,6 +137,7 @@ function createGuestClubHTML(guestClub, clubMatch) {
         <h2>FROM. ${guestClub.name}</h2>
         <p><strong>지역: </strong> ${guestClub.region}</p>
         <p><strong>점수: </strong> ${guestClub.score}</p>
+        <p><strong>설명: </strong> ${guestClub.information}</p>
         <p><strong>멤버 수: </strong> ${guestClub.members}</p>
         </div>
         <button>완료</button>
@@ -149,7 +150,8 @@ function createGuestClubHTML(guestClub, clubMatch) {
         <div>
         <h2>FROM. ${guestClub.name}</h2>
         <p><strong>지역: </strong> ${guestClub.region}</p>
-        <p><strong>점수: </strong> ${guestClub.score}</p>
+        <p><strong>점수: </strong> ${guestClub.score}</p>     
+        <p><strong>설명: </strong> ${guestClub.information}</p>
         <p><strong>멤버 수: </strong> ${guestClub.members}</p>
         </div>
         `;
@@ -161,7 +163,8 @@ function createGuestClubHTML(guestClub, clubMatch) {
         <div>
             <h2>FROM. ${guestClub.name}</h2>
             <p><strong>지역: </strong> ${guestClub.region}</p>
-            <p><strong>점수: </strong> ${guestClub.score}</p>
+            <p><strong>점수: </strong> ${guestClub.score}</p>       
+            <p><strong>설명: </strong> ${guestClub.information}</p>
             <p><strong>멤버 수: </strong> ${guestClub.members}</p>
         </div>
         <button onclick="displayClubAss('${clubMatchId}', '${myClubId}')"  >평가</button>
