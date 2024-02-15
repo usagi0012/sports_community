@@ -67,6 +67,12 @@ export class User {
     @UpdateDateColumn()
     updatedAt: Date;
 
+    @Column("simple-array", { nullable: true })
+    friendUser: string[];
+
+    @Column("simple-array", { nullable: true })
+    blockUser: string[];
+
     @ManyToOne(() => Club, (club) => club.users, { onDelete: "SET NULL" })
     @JoinTable()
     club: Club;

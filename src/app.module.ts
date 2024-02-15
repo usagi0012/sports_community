@@ -32,6 +32,8 @@ import { MessageModule } from "./message/message.module";
 import { ReportModule } from "./report/report.module";
 import { BanlistModule } from "./banlist/banlist.module";
 import { UpdatedRankModule } from './updated-rank/updated-rank.module';
+import { FaqModule } from './faq/faq.module';
+import { NoticeModule } from './notice/notice.module';
 
 @Module({
     imports: [
@@ -64,6 +66,8 @@ import { UpdatedRankModule } from './updated-rank/updated-rank.module';
         ReportModule,
         BanlistModule,
         UpdatedRankModule,
+        FaqModule,
+        NoticeModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],
