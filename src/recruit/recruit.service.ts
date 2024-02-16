@@ -1,3 +1,4 @@
+import { UserId } from "src/auth/decorators/userId.decorator";
 import { Recruit } from "./../entity/recruit.entity";
 import { error } from "console";
 import { User } from "./../entity/user.entity";
@@ -17,6 +18,7 @@ import { Cron, CronExpression } from "@nestjs/schedule";
 import { not } from "cheerio/lib/api/traversing";
 import { match } from "assert";
 import { Alarmservice } from "src/alarm/alarm.service";
+import { UserType } from "./../entity/user.entity";
 
 const now = new Date();
 const utc = now.getTime();
@@ -38,6 +40,22 @@ export class RecruitService {
         private alarmService: Alarmservice,
     ) {}
 
+    private async userType(UserId: number) {
+        const me = await this.userRepository.findOne({
+            where: { id: UserId },
+        });
+
+        if (!me) {
+            throw new NotFoundException("유저를 찾을 수 없습니다.");
+        }
+
+        if (me.userType === UserType.USER || me.userType !== UserType.ADMIN) {
+            throw new NotFoundException("밴유저는 이용 불가능합니다.");
+        }
+
+        // await this.userType(userId);
+    }
+
     //모집 글 등록
     async postRecruit(userId: number, recruitDTO: RecruitDTO) {
         try {
@@ -48,6 +66,8 @@ export class RecruitService {
                     id: userId,
                 },
             });
+
+            await this.userType(userId);
 
             const endtimeDate = Recruit.setEndTimeFromNumber(
                 recruitDTO.gamedate,
