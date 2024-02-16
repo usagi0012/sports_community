@@ -53,11 +53,11 @@ function loadHeader() {
                 <a href="#">경기장</a>
             </li>
             <li id="platform">
-                <a href="#" onclick="needUpdateFunction()">플랫폼 이용안내</a>
+                <a href="#">플랫폼 이용안내</a>
                 <ul class="detail" id="detailPlatform">
                     <li><a href="#" onclick="needUpdateFunction()">이용 안내</a></li>
-                    <li><a href="#" onclick="needUpdateFunction()">공지 사항</a></li>
-                    <li><a href="#" onclick="needUpdateFunction()">FAQ</a></li>
+                    <li><a href="#" onclick="toNotice()">공지 사항</a></li>
+                    <li><a href="#" onclick="toFAQ()">FAQ</a></li>
                     <li><a href="#" onclick="needUpdateFunction()">Q&A</a></li>
                 </ul>
             </li>
@@ -144,7 +144,7 @@ function loadUserMenu() {
     <ul>
         <li onclick="toUser()">사용자 정보</li>
         <li onclick="toUserProfile()">프로필</li>
-        <li onclick="needUpdateFunction()">캘린더</li>
+        <li onclick="toCalender()">캘린더</li>
         <li onclick="toAlarm()">알림</li>
     </ul>
     `;
@@ -305,6 +305,14 @@ async function toMyClub() {
 //경기장 페이지로 이동
 async function toPlace() {
     window.location.href = "place.html";
+}
+//공지사항 페이지로 이동
+async function toNotice() {
+    window.location.href = "notice.html";
+}
+//FAQ 페이지로 이동
+async function toFAQ() {
+    window.location.href = "faq.html";
 }
 
 //준비중

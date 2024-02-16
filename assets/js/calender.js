@@ -328,7 +328,8 @@ function openTitleModal(existDate) {
     existDate.forEach((event) => {
         const listItem = document.createElement("li");
         listItem.textContent = event.title;
-
+        listItem.style.paddingLeft = "10px";
+        listItem.style.borderLeft = `8px solid ${event.color}`;
         // 각각의 일정에 대해 클릭 이벤트 추가
         listItem.addEventListener("click", () => {
             console.log("openUpdateModal로 들어가기");

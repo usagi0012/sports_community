@@ -165,7 +165,7 @@
 #submit-btn > button,
 #submit-cancel-btn {
     font-family: "LINESeedKR-Bd";
-    margin: 10px;
+    margin: 10px auto 0px;
     width: 50px;
     height: 25px;
     padding-top: 5px;

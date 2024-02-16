@@ -183,10 +183,10 @@ img {
     border: 1px solid grey;
     height: 75px;
     border-radius: 10px;
+    padding-left: 10px;
 }
 
 .type_msg {
-    border-top: 1px solid #c4c4c4;
     position: relative;
 }
 .msg_send_btn {
