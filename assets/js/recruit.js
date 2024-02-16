@@ -45,6 +45,9 @@ function feed() {
         .then(function (response) {
             const recruitList = response.data;
 
+            // id를 기준으로 내림차순 정렬
+            recruitList.sort((a, b) => b.id - a.id);
+
             recruitList.forEach((recruits) => {
                 if (
                     (currentFilterRegion === "all" ||

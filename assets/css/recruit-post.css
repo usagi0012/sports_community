@@ -263,6 +263,12 @@ dt {
     background-color: #ffb13d;
 }
 
+.mapLabel {
+    margin-top: 10px;
+    margin-left: 10px;
+    display: inline-block;
+}
+
 #confirmDORO,
 #confirmJUSO {
     font-family: "LINESeedKR-Bd";
@@ -274,6 +280,13 @@ dt {
     border-radius: 10px;
     margin-top: 10px;
     border: none;
+    cursor: pointer;
+}
+
+#confirmDORO:hover,
+#confirmJUSO:hover {
+    box-shadow: 0px 0px 10px #ffb13d;
+    background-color: #fff;
 }
 
 .modal-footer {

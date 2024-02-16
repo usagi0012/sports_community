@@ -12,11 +12,11 @@
     height: 240px;
     display: grid;
     grid-template-areas:
-        "image nickname gender tag alarm calender"
-        "image height position position position calender"
-        "image description description description description calender"
-        "score score score score updateBtn calender";
-    grid-template-columns: 1fr 1fr 0.3fr 1fr 0.7fr 2fr;
+        "image nickname gender tag alarm"
+        "image height position position position"
+        "image description description description calender"
+        ". score score score updateBtn";
+    grid-template-columns: 1fr 1fr 0.3fr 1fr 0.5fr;
     grid-template-rows: 1fr 0.5fr 1.5fr 1fr;
 }
 
@@ -66,6 +66,7 @@
     grid-area: gender;
     font-size: 1.9rem;
     padding-top: 18px;
+    margin-left: 10px;
 }
 
 .tag {
@@ -96,7 +97,7 @@
     grid-area: score;
     display: flex;
     float: left;
-    margin: 15px 30px 15px 70px;
+    margin: 15px 10px 15px 70px;
     justify-content: space-between;
 }
 
@@ -121,15 +122,16 @@
 
 .calenderContainer {
     grid-area: calender;
-    border-left: 1px dashed #666;
 }
 
 #calenderBtn {
-    background-color: #fff;
-    font-family: "LINESeedKR-Bd";
+    height: 30px;
+    width: 100px;
     border: none;
-    font-size: 1.2rem;
-    margin: 10px;
+    border-radius: 30px;
+    margin-top: 60px;
+    margin-right: 5px;
+    font-family: "LINESeedKR-Bd";
     cursor: pointer;
 }
 
@@ -164,6 +166,7 @@
     margin-top: 5px;
     border: 1px solid #ff771c;
     border-radius: 20px;
+    height: 200px;
 }
 
 .rankOuterContainer > .rankName {
@@ -199,7 +202,13 @@
     grid-area: nickname;
 }
 .rankScore {
-    grid-area: score;
+    text-align: center;
+    width: 80px;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px;
 }
 .rankAnnouncement {
     margin-top: 5px;
@@ -260,6 +269,59 @@
 }
 
 .rankCard {
+    /* display: grid;
+    grid-template-columns: 1fr 1fr; */
+    display: flex;
+    width: 140px;
+}
+
+.personalityRankInnerContainer {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
+}
+
+.abilityRankInnerContainer {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+.personalityLeft,
+.abilityLeft,
+.clubLeft {
+    display: flex;
+    flex-direction: column;
+    height: 150px;
+}
+
+.personalityLeft > img,
+.abilityLeft > img,
+.clubLeft > img {
+    width: 50px;
+    height: 28px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding-left: 30px;
+}
+
+.personalityRight,
+.abilityRight,
+.clubRight {
+    margin-top: 2px;
+}
+
+.rankScore {
+    text-align: center;
+    width: 80px;
+    margin: 10px;
+    font-size: 20px;
+    margin-left: 50px;
+}
+
+.rankScore > i {
+    display: inline;
+}
+
+.rankNickName {
+    margin: 10px;
+    font-size: 20px;
 }

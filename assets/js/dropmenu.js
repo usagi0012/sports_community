@@ -31,11 +31,11 @@ function loadHeader() {
     <div class="menuBar">
         <ul class="menu">
             <li id="recruit">
-                <a href="#">모집</a>
+                <a href="#">개인 경기</a>
                 <ul class="detail" id="detailRecruit">
-                    <li onclick="toRecruit()"><a href="#">모집글 목록</a></li>
+                    <li onclick="toRecruit()"><a href="#">경기 목록</a></li>
                     <li onclick="toMyRecruit()">
-                        <a href="#">내 모집글</a>
+                        <a href="#">내 경기</a>
                     </li>
                 </ul>
             </li>
@@ -102,9 +102,15 @@ function getAuthBtn() {
                     if (error.response.data.message == "accessToken expired") {
                         authBtn.innerHTML = `
                         <div onclick="logout()">Log Out</div>`;
+                    } else {
+                        localStorage.removeItem("accessToken");
+                        localStorage.removeItem("refreshToken");
+                        authBtn.innerHTML = `<div onclick="toLogin()">Log In</div>`;
                     }
                 });
         } else {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
             authBtn.innerHTML = `<div onclick="toLogin()">Log In</div>`;
         }
     } catch (error) {

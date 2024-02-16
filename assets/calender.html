@@ -88,27 +88,27 @@
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
                 <h2>캘린더 일정 생성</h2>
-                        <form id="calendarForm">
-                            <label for="title">제목:</label>
-                            <input
-                                type="text"
-                                id="title"
-                                name="title"
-                                required
-                                maxlength="10"
-                                placeholder="최대 10글자 입력가능합니다."
-                            />
+                <form id="calendarForm">
+                    <label for="title">제목:</label>
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        required
+                        maxlength="10"
+                        placeholder="최대 10글자 입력가능합니다."
+                    />
 
                     <label for="date">날짜:</label>
                     <input type="date" id="date" name="date" required />
 
-                            <label for="description">내용:</label>
-                            <textarea
-                                id="description"
-                                name="description"
-                                maxlength="30"
-                                placeholder="최대 30글자 입력가능합니다."
-                            ></textarea>
+                    <label for="description">내용:</label>
+                    <textarea
+                        id="description"
+                        name="description"
+                        maxlength="30"
+                        placeholder="최대 30글자 입력가능합니다."
+                    ></textarea>
 
                     <label for="color">색상:</label>
                     <input
@@ -125,32 +125,30 @@
             </div>
         </div>
 
-                <div id="updateCalendarModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close" onclick="closeUpdateModal()"
-                            >&times;</span
-                        >
-                        <h2>내 일정</h2>
-                        <form id="updateCalendarForm">
-                            <!-- 수정 폼 내용 추가 -->
-                            <!-- 예: 제목, 설명, 색상 등을 수정할 수 있는 입력 필드들 -->
-                            <label for="updateTitle">제목</label>
-                            <input
-                                type="text"
-                                id="updateTitle"
-                                name="updateTitle"
-                                required
-                                maxlength="10"
-                                placeholder="최대 10글자 입력가능합니다."
-                            />
+        <div id="updateCalendarModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeUpdateModal()">&times;</span>
+                <h2>내 일정</h2>
+                <form id="updateCalendarForm">
+                    <!-- 수정 폼 내용 추가 -->
+                    <!-- 예: 제목, 설명, 색상 등을 수정할 수 있는 입력 필드들 -->
+                    <label for="updateTitle">제목</label>
+                    <input
+                        type="text"
+                        id="updateTitle"
+                        name="updateTitle"
+                        required
+                        maxlength="10"
+                        placeholder="최대 10글자 입력가능합니다."
+                    />
 
-                            <label for="updateDescription">설명</label>
-                            <textarea
-                                id="updateDescription"
-                                name="updateDescription"
-                                maxlength="30"
-                                placeholder="최대 30글자 입력가능합니다."
-                            ></textarea>
+                    <label for="updateDescription">설명</label>
+                    <textarea
+                        id="updateDescription"
+                        name="updateDescription"
+                        maxlength="30"
+                        placeholder="최대 30글자 입력가능합니다."
+                    ></textarea>
 
                     <label for="updateColor">색상</label>
                     <input type="color" id="updateColor" name="updateColor" />
@@ -172,7 +170,7 @@
         </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script type="module" src="./js/calender.js"></script>
+        <script src="./js/calender.js"></script>
         <script src="./js/dropmenu.js"></script>
     </body>
 </html>

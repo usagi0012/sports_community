@@ -20,7 +20,7 @@ function getMyClubApplication() {
         })
         .then(function (response) {
             console.log(response);
-            alert(`${response.data.message}`);
+            // alert(`${response.data.message}`);
 
             //userId , message, status
             response.data.data.applications.forEach((application, idx) => {
