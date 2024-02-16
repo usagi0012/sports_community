@@ -284,14 +284,16 @@
 }
 
 .personalityLeft,
-.abilityLeft {
+.abilityLeft,
+.clubLeft {
     display: flex;
     flex-direction: column;
     height: 150px;
 }
 
 .personalityLeft > img,
-.abilityLeft > img {
+.abilityLeft > img,
+.clubLeft > img {
     width: 50px;
     height: 28px;
     margin-bottom: 10px;
@@ -299,7 +301,9 @@
     padding-left: 30px;
 }
 
-.personalityRight {
+.personalityRight,
+.abilityRight,
+.clubRight {
     margin-top: 2px;
 }
 
