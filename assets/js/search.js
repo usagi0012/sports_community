@@ -1,3 +1,11 @@
+// 더보기 버튼 클릭 시 이벤트 핸들러 등록
+document
+    .getElementById("loadMoreButton")
+    .addEventListener("click", async function () {
+        currentPage++; // 다음 페이지로 이동
+        await loadSearchResults(currentPage, resultsPerPage);
+    });
+
 window.onload = async function () {
     loadHeader();
     loadFooter();
@@ -126,7 +134,9 @@ function displayResults(container, results, category) {
         return;
     }
 
-    container.innerHTML = `<h2>${category} 검색 결과</h2>`;
+    const h2Element = document.createElement("h2");
+    h2Element.textContent = `${category} 검색 결과`;
+    container.parentNode.insertBefore(h2Element, container);
 
     if (results.length === 0) {
         container.innerHTML += "<p>검색 결과가 없습니다.</p>";
@@ -146,7 +156,10 @@ function displayResults(container, results, category) {
         });
 
         if (result.address) {
-            resultItem.innerHTML = `<div>${result.name} - ${result.address}</div>`;
+            resultItem.innerHTML = `<div>
+            <img src="${result.image}" alt="${result.name} 이미지">
+            ${result.name} - ${result.address}
+        </div>`;
         } else if (result.title && result.content) {
             resultItem.innerHTML = `<div>${result.title} - ${result.content}</div>`;
         } else {

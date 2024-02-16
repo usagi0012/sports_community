@@ -177,6 +177,7 @@ function searchBtn() {
         const searchInput = searchBox.querySelector("input[type=search]");
         const searchQuery = searchInput.value.trim(); // 검색어 값 가져오기
 
+        // 기존에 어느 HTML 페이지에서 검색했는지 알아내는 부분
         let from = "";
         if (
             window.location.pathname.includes("club.html") ||
@@ -190,6 +191,15 @@ function searchBtn() {
             window.location.pathname.includes("myRecruit.html")
         ) {
             from = "recruit";
+        }
+
+        // 여기에서 from 값을 추출합니다.
+        const urlParams = new URLSearchParams(window.location.search);
+        const existingFrom = urlParams.get("from");
+
+        // 기존에 추출한 from 값이 있다면 사용하고, 없다면 위에서 추출한 값을 사용합니다.
+        if (existingFrom) {
+            from = existingFrom;
         }
 
         if (from) {
