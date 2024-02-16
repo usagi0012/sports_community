@@ -1,5 +1,6 @@
 window.onload = function () {
     faq();
+    showCreateBtn();
 };
 
 const faqBoardList = document.querySelector(".faqBoardListContainer");
@@ -44,4 +45,25 @@ function toFaqPost() {
     } else {
         window.location.href = "faqPost.html";
     }
+}
+
+function showCreateBtn() {
+    const createBtn = document.querySelector(".createBtn");
+
+    const accessToken = localStorage.getItem("accessToken");
+    axios
+        .get("/api/notice/isAdmin", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+        .then(function (response) {
+            console.log("notice response", response);
+
+            createBtn.style.display = "flex";
+        })
+        .catch(function (error) {
+            console.log(error);
+            createBtn.style.display = "none";
+        });
 }
