@@ -56,12 +56,12 @@ function getProfile(token) {
                     <img src="${user.image}" id="profileImage" />
                 </div>
                 <div class="nickname">${user.nickname}</div>
-                <div class="gender">
+                <div class="gender" id="gender">
                 </div>
                 <div class="tag">
-                    <span id="tag1"> #커리 </span>
-                    <span id="tag2"> #조던 </span>
-                    <span id="tag3"> #지각 </span>
+                    <span id="tag1"></span>
+                    <span id="tag2"></span>
+                    <span id="tag3"></span>
                 </div>
                 <div class="height">키: ${user.height}</div>
                 <div class="position" id="position"></div>
@@ -80,12 +80,13 @@ function getProfile(token) {
                     수정하기
                 </button>
                 <div class="calenderContainer">
-                    <button type="button" id="calenderBtn" onclick="needUpdateFunction()">캘린더 →</button>
-
+                    <button type="button" id="calenderBtn" onclick="toCalender()">캘린더 →</button>
                 </div>`;
                 profileContainer.innerHTML = profile;
+                getGender(user.gender);
                 getPosition(accessToken);
                 getScore(accessToken);
+                getTag(accessToken);
             })
             .catch(function (error) {
                 console.log(error);
@@ -99,6 +100,20 @@ function getProfile(token) {
                     profileContainer.innerHTML = profile;
                 }
             });
+    }
+}
+
+async function getGender(gender) {
+    const genderContainer = document.getElementById("gender");
+    if (gender == "male") {
+        genderContainer.innerHTML = `
+        <i
+        class="fas fa-solid fa-mars"
+        style="color: #0860a8"
+        ></i>
+        `;
+    } else if (gender == "female") {
+        genderContainer.innerHTML = `<i class="fas fa-solid fa-venus" style="color: #cc679f"></i>`;
     }
 }
 
@@ -173,6 +188,42 @@ async function getScore(accessToken) {
             // 기타 에러 처리
             document.getElementById("score").innerHTML =
                 "점수를 가져오는데 에러가 발생하였습니다.";
+        }
+    }
+}
+
+async function getTag(accessToken) {
+    try {
+        // 유저 태그 가져오기
+        const tagResponse = await axios.get("/api/assessment/personal/tag", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        console.log(tagResponse.data);
+
+        if (tagResponse.data.message === "개인 태그가 조회되었습니다.") {
+            // 유저 태그가 있는 경우
+            const tag = tagResponse.data.data;
+            console.log("태그태그태그" + tag);
+            document.getElementById("tag1").innerText = tag[0];
+            document.getElementById("tag2").innerText = tag[1];
+            document.getElementById("tag3").innerText = tag[2];
+        } else {
+            // 유저 태그가 없는 경우
+            document.getElementById("tag1").innerText = "태그: 없음";
+        }
+    } catch (error) {
+        // 에러 핸들링
+        document.getElementById("tag1").innerText = "태그: 없음";
+
+        // 서버 응답이 404일 때
+        if (error.response && error.response.status === 404) {
+            document.getElementById("tag1").innerText = "태그: 없음";
+        } else {
+            // 기타 에러 처리
+            document.getElementById("tag").innerText = "에러 발생";
         }
     }
 }

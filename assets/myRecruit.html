@@ -25,7 +25,7 @@
                     내 모집글
                 </h3>
                 <h3 id="myApplyRecruit" onclick="toMyMatch()">
-                    내가 신청한 매치
+                    내가 신청한 경기
                 </h3>
             </div>
         </div>
@@ -34,6 +34,11 @@
                 <div id="myRecruit-info"></div>
                 <div id="recruitUserButton" class="recruitUserButton" data-toggle="modal" data-target="#recruitUserModal"></div>
             </div>
+        </div>
+        <div class="BtnContainer">
+            <button class="createBtn" onclick="toRecruitPost()">
+                글 작성
+            </button>
         </div>
     </div>
 
@@ -144,6 +149,16 @@
     <script src="./js/notification.js"></script>
     <script src="./js/personal-assessment.js"></script>
     <script src="./js/otherUser-modal.js"></script>
+    <script>
+        function toRecruitPost() {
+            const accessToken = localStorage.getItem("accessToken");
+            if (!accessToken) {
+                alert("로그인 후 이용 가능합니다.");
+            } else {
+                window.location.href = "recruit-post.html";
+            }
+        }
+    </script>
 </body>
 
 </html>
