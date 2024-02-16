@@ -200,9 +200,15 @@ function getPersonalRank() {
             );
             console.log("===인성 정렬===", orderedPersonality);
 
-            orderedPersonality.forEach((personalityRank) => {
+            orderedPersonality.forEach((personalityRank, index) => {
                 const rankCard = document.createElement("div");
                 rankCard.className = "rankCard";
+
+                const rankNumber = document.createElement("div");
+                rankNumber.className = `rankNumber${index + 1}`;
+                rankNumber.innerHTML = ``;
+                rankCard.appendChild(rankNumber);
+
                 const rankNickName = document.createElement("div");
                 rankNickName.className = "rankNickName";
                 rankNickName.innerHTML = `${personalityRank.nickname}`;
@@ -213,6 +219,7 @@ function getPersonalRank() {
                 rankScore.innerHTML = `<i class="fas fa-solid fa-star"></i>${personalityRank.personalityScore}`;
                 rankCard.appendChild(rankScore);
 
+                const rankDiv = document.querySelector(".rank");
                 personalityRankInnerContainner.appendChild(rankCard);
             });
 
