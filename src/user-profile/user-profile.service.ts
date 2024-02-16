@@ -237,30 +237,6 @@ export class UserProfileService {
             throw new NotFoundException(error);
         }
     }
-    // 친구 삭제하기
-    async deleteFriend(userId: number, otherUserId: number) {
-        try {
-            const me = await this.userRepository.findOne({
-                where: {
-                    id: userId,
-                },
-            });
-
-            me.friendUser = me.friendUser || [];
-
-            const index = me.friendUser.indexOf(otherUserId.toString());
-
-            if (index !== -1) {
-                me.friendUser.splice(index, 1);
-
-                return await this.userRepository.save(me);
-            }
-
-            return me;
-        } catch (error) {
-            throw new NotFoundException(error);
-        }
-    }
 
     //block fried
     async blockUser(userId: number, otherUserId: number) {
@@ -284,6 +260,31 @@ export class UserProfileService {
         }
     }
 
+    // 친구 삭제하기
+    async deleteFriend(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+
+            me.friendUser = me.friendUser || [];
+
+            const index = me.friendUser.indexOf(otherUserId.toString());
+
+            if (index !== -1) {
+                me.friendUser.splice(index, 1);
+
+                await this.userRepository.save(me);
+            }
+
+            return me;
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+    }
+
     //dlelteblock fried
     async deleteBlock(userId: number, otherUserId: number) {
         try {
@@ -295,12 +296,14 @@ export class UserProfileService {
 
             me.blockUser = me.blockUser || [];
 
+            console.log("otherUserId", otherUserId);
+
             const index = me.blockUser.indexOf(otherUserId.toString());
 
             if (index !== -1) {
                 me.blockUser.splice(index, 1);
 
-                return await this.userRepository.save(me);
+                await this.userRepository.save(me);
             }
 
             return me;
@@ -347,8 +350,15 @@ export class UserProfileService {
 
             const isOtherUserFriend = friendIds.includes(otherUserId);
 
-            return isOtherUserFriend;
-        } catch (error) {}
+            if (isOtherUserFriend) {
+                return true;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.log("Error:", error);
+            return null;
+        }
     }
 
     //블락유저 목록 불러오기
@@ -387,7 +397,14 @@ export class UserProfileService {
 
             const isOtherBlockIds = blockIds.includes(otherUserId);
 
-            return isOtherBlockIds;
-        } catch (error) {}
+            if (isOtherBlockIds) {
+                return { message: "블락유저" };
+            } else {
+                return { message: "블락유저아님" };
+            }
+        } catch (error) {
+            console.error("에러 발생:", error);
+            throw error;
+        }
     }
 }

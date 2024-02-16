@@ -95,6 +95,16 @@ export class UserController {
         return this.userService.findUserByIdAll(+id);
     }
 
+    //다른사람 정보조회(프로필 전용)
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("profile/:otherUserId")
+    findUser(
+        @UserId() userId: number,
+        @Param("otherUserId") otherUserId: number,
+    ) {
+        return this.userService.findUser(+otherUserId, userId);
+    }
     // //수정시 이메일 인증코드 확인
     // @ApiBearerAuth("accessToken")
     // @UseGuards(accessTokenGuard)

@@ -91,6 +91,34 @@ export class UserService {
         });
     }
 
+    async findUser(otherUserId: number, userId: number) {
+        try {
+            const otherUser = await this.userRepository.findOne({
+                where: { id: otherUserId },
+            });
+
+            const me = await this.userRepository.findOne({
+                where: { id: userId },
+            });
+
+            // Ensure me.friendUser and me.blockUser are not null, and then map them
+            const friendIds: number[] = me.friendUser?.map(Number) || [];
+            const blockIds: number[] = me.blockUser?.map(Number) || [];
+
+            const isOtherUserFriend = friendIds.includes(otherUserId);
+            const isOtherUserBlocked = blockIds.includes(otherUserId);
+
+            return {
+                user: otherUser,
+                isFriend: isOtherUserFriend,
+                isBlocked: isOtherUserBlocked,
+            };
+        } catch (error) {
+            console.error("Error in findUser function:", error);
+            throw new NotFoundException(error);
+        }
+    }
+
     //정보 수정시 현재 비밀번호 확인
     async checkPassword(id: number, checkPasswordDto: CheckPasswordDto) {
         const user = await this.findUserByIdAll(id);

@@ -84,15 +84,6 @@ export class UserProfileController {
         return await this.userProfileService.friednUser(userId, otherUserId);
     }
 
-    // 친구 삭제하기
-    @Delete("delete/friend/:otherUserId")
-    async deleteFriend(
-        @UserId() userId: number,
-        @Param("otherUserId") otherUserId: number,
-    ) {
-        return await this.userProfileService.deleteFriend(userId, otherUserId);
-    }
-
     //block fried
     @Post("post/block/:otherUserId")
     async blockUser(
@@ -102,13 +93,22 @@ export class UserProfileController {
         return await this.userProfileService.blockUser(userId, otherUserId);
     }
 
+    // 친구 삭제하기
+    @Delete("delete/friend/:otherUserId")
+    async deleteFriend(
+        @UserId() userId: number,
+        @Param("otherUserId") otherUserId: number,
+    ) {
+        return await this.userProfileService.deleteFriend(userId, otherUserId);
+    }
+
     //dlelteblock fried
     @Delete("delete/block/:otherUserId")
     async deleteBlock(
         @UserId() userId: number,
         @Param("otherUserId") otherUserId: number,
     ) {
-        return await this.userProfileService.deleteFriend(userId, otherUserId);
+        return await this.userProfileService.deleteBlock(userId, otherUserId);
     }
 
     //친구 목록 불러오기
