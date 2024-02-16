@@ -12,8 +12,8 @@ import {
     UploadedFile,
 } from "@nestjs/common";
 import { NoticeService } from "./notice.service";
-import { CreateNoticeDto } from "./dto/create-notice.dto";
-import { UpdateNoticeDto } from "./dto/update-notice.dto";
+import { CreateNoticeDto } from "./dto/createNotice.dto";
+import { UpdateNoticeDto } from "./dto/updateNotice.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";

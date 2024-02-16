@@ -3,8 +3,8 @@ import {
     Injectable,
     NotFoundException,
 } from "@nestjs/common";
-import { CreateNoticeDto } from "./dto/create-notice.dto";
-import { UpdateNoticeDto } from "./dto/update-notice.dto";
+import { CreateNoticeDto } from "./dto/createNotice.dto";
+import { UpdateNoticeDto } from "./dto/updateNotice.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Notice } from "src/entity/notice.entity";
 import { Repository } from "typeorm";
@@ -15,7 +15,7 @@ import { AwsService } from "src/aws/aws.service";
 export class NoticeService {
     constructor(
         @InjectRepository(User)
-        private readonly userReporitory: Repository<User>,
+        private readonly userRepository: Repository<User>,
         @InjectRepository(Notice)
         private readonly noticeReporitory: Repository<Notice>,
         private readonly awsService: AwsService,
@@ -120,7 +120,7 @@ export class NoticeService {
     }
 
     private async veryfiyAdmin(userId: number) {
-        const admin = await this.userReporitory.findOne({
+        const admin = await this.userRepository.findOne({
             where: { id: userId },
         });
 
