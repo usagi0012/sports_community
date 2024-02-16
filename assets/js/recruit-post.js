@@ -22,12 +22,12 @@ document
         returnCencel();
     });
 
-function submitForm() {
+async function submitForm() {
     const title = titleInput.value;
-    const region = regionSelect.value; // 수정된 부분
+    const region = regionSelect.value;
     const gamedate = gamedateInput.value;
     const endtime = endtimeInput.value;
-    const rule = ruleSelect.value; // 수정된 부분
+    const rule = ruleSelect.value;
     const totalmember = totalmemberInput.value;
     const content = contentTextarea.value;
     const gps = gpsInput.value;
@@ -35,8 +35,6 @@ function submitForm() {
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("accessToken");
 
-    // 값이 Enum에 속하는지 확인하고 Enum 값으로 변환
-    // const validatedRegion = validateRegion(region);
     const validatedRule = validateRule(rule);
 
     if (!validatedRule) {
@@ -44,8 +42,8 @@ function submitForm() {
         return;
     }
 
-    axios
-        .post(
+    try {
+        const response = await axios.post(
             `/api/recruit`,
             {
                 userId: userId,
@@ -63,15 +61,14 @@ function submitForm() {
                     Authorization: `Bearer ${token}`,
                 },
             },
-        )
-        .then(function (response) {
-            alert(response.data.message);
-            returnPage();
-        })
-        .catch(function (error) {
-            console.log(error.response.data);
-            alert(error.response.data.message);
-        });
+        );
+        console.log(response);
+        alert("모집글이 등록되었습니다.");
+        returnPage();
+    } catch (error) {
+        console.log(error.response.data);
+        alert(error.response.data.message);
+    }
 }
 
 function returnPage() {
