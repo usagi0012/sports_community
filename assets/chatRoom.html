@@ -251,6 +251,10 @@
                 })
                 .catch(function (error) {
                     console.log(error);
+                    if(error.message === "Request failed with status code 401") {
+                        alert("토큰이 만료되었습니다. 다시 로그인해주세요")
+                        window.location.href="index.html"
+                    }
                 });
         }
 
@@ -273,6 +277,7 @@
                     auth: accessToken,
                 },
             });
+            console.log("채팅방 연결")
             return socket;
         }
 
@@ -292,6 +297,7 @@
                 });
                 socket.emit("getChatRoomList", null);
                 localStorage.setItem("socketId", socket.id);
+                console.log("채팅방 연결2")
             });
 
             // 받아온 메세지가 roomId가 클릭되어 있지 않은 상태에서는 채팅방에 나오지 않도록 구현해보자.
@@ -364,6 +370,7 @@
                 let html = "";
 
                 console.log({ myInfo });
+                console.log("리스폰스",response)
                 console.log("response", Object.values(response));
                 const myRoomInfo = Object.values(response);
 
@@ -393,6 +400,8 @@
             socket.on("disconnect", function () {
                 $(".chatRoomList").html("");
                 console.log("Disconnected");
+                alert("채팅방 연결이 끊어졌습니다. 다시 로그인해 주세요")
+                window.location.href= "index.html"
             });
         }
 
@@ -535,6 +544,10 @@
                 .catch(function (error) {
                     console.log(error);
                     alert("멤버 초대에 실패했습니다.");
+                    if(error.message === "Request failed with status code 401") {
+                        alert("토큰이 만료되었습니다. 다시 로그인해주세요")
+                        window.location.href="index.html"
+                    }
                 });
         });
 

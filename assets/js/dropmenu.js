@@ -364,5 +364,21 @@ function toChat() {
         alert("로그인 후 이용가능합니다.");
         return;
     }
-    window.location.href = "chatRoom.html";
+
+    axios
+        .get("/api/user/me", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+        .then(function (response) {
+            console.log("채팅 리스폰스", response);
+            window.location.href = "chatRoom.html";
+        })
+        .catch(function (error) {
+            console.log("채팅 이동 에러", error);
+            if (error.message == "Request failed with status code 401") {
+                alert("토큰이 만료되었습니다. 다시 로그인 해주세요");
+            }
+        });
 }
