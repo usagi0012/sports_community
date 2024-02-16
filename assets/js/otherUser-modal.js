@@ -7,21 +7,26 @@ async function createModal(userId) {
     const currentUserId = userId;
 
     // 유저 정보 가져오기
-    let user;
+    let result;
+
     try {
-        const response = await axios.get(`/api/user/${currentUserId}`, {
+        const response = await axios.get(`/api/user/profile/${userId}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-        user = response.data;
+        result = response.data;
     } catch (error) {
-        console.log("Error fetching user information:", error);
+        console.error(error.response.data.error);
+        throw error; // Rethrow the error for the calling code to handle
     }
 
-    console.log("user전체", user);
-
+    console.log("user전체", result);
+    const user = result.user;
     const userName = user.name;
+    const friend = result.isFriend;
+    const block = result.isBlocked;
+
     console.log("이름", userName);
 
     // 프로필 정보 확인
@@ -56,7 +61,7 @@ async function createModal(userId) {
     modal.id = "userProfileModal";
     modal.className = "modal";
 
-    const likeOrHateHtml = createLikeOrHateHtml(userId);
+    const likeOrHateHTML = createLikeOrHateHtml(userId, friend, block);
 
     // 모달 내용 생성
     const modalContent = document.createElement("div");
@@ -70,8 +75,8 @@ async function createModal(userId) {
     profileTitle.innerText = `${userName}의 프로필`;
     userProfileSection.appendChild(profileTitle);
 
-    const likeOrHate = document.createElement("button");
-    likeOrHate.innerText = `좋아요 싫어요`;
+    const likeOrHate = document.createElement("div");
+    likeOrHate.innerHTML = likeOrHateHTML;
     userProfileSection.appendChild(likeOrHate);
 
     const nickname = document.createElement("p");
@@ -122,10 +127,6 @@ async function createModal(userId) {
     };
     modalContent.appendChild(openReportModalButton);
 
-    // const banApplicationContainer = document.createElement("div");
-    // banApplicationContainer.id = "banApplicationContainer";
-    // document.body.appendChild(banApplicationContainer);
-
     // 모달 내용을 모달 창에 추가
     modal.appendChild(modalContent);
 
@@ -136,8 +137,122 @@ async function createModal(userId) {
     openUserModal(userId);
 }
 
-function createLikeOrHateHtml(userId) {}
+function createLikeOrHateHtml(userId, friend, block) {
+    if (friend === true) {
+        return `
+        <div>
+        <button type="button" onclick="cancelLike(${userId})">Like 유저</button>
+         </div>
+         `;
+    } else if (block === true) {
+        return `
+        <div>
+        <button type="button"  onclick="cancelHate(${userId})">Hate 유저</button>
+         </div>
+        `;
+    } else {
+        return `
+        <div>
+        <button type="button" onclick="Like(${userId})">좋아요</button>
+        <button type="button" onclick="Hate(${userId})">싫어요</button>
+         </div>
+        `;
+    }
+}
+// post/friend/:otherUserId
+async function Like(userId) {
+    try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.post(
+            `/api/user/post/friend/${userId}`,
+            null,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
 
+        location.reload();
+    } catch (error) {
+        alert(error.response.data.message);
+    }
+}
+// delete/friend/:otherUserId
+async function Hate(userId) {
+    try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.post(
+            `/api/user/post/block/${userId}`,
+            null,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+        console.log("userId", userId);
+        console.log(response);
+        window.location.reload();
+
+        // Assuming openUserModal is a synchronous function, call it after the page is reloaded
+        openUserModal(userId);
+    } catch (error) {
+        alert(error.response.data.message);
+    }
+}
+
+//Post("post/block/:otherUserId"
+async function cancelLike(userId) {
+    try {
+        const confirmed = window.confirm("정말로 취소하시나요?");
+        if (!confirmed) {
+            return; // Do nothing if the user cancels
+        }
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.delete(
+            `/api/user/delete/friend/${userId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+
+        console.log(response);
+        window.location.reload();
+
+        // Assuming openUserModal is a synchronous function, call it after the page is reloaded
+        openUserModal(userId);
+    } catch (error) {
+        alert(error.response.data.message);
+    }
+}
+// @Delete("delete/block/:otherUserId")
+async function cancelHate(userId) {
+    try {
+        const confirmed = window.confirm("정말로 취소하시나요?");
+        if (!confirmed) {
+            return; // Do nothing if the user cancels
+        }
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.delete(
+            `/api/user/delete/block/${userId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+        console.log(response);
+        window.location.reload();
+
+        // Assuming openUserModal is a synchronous function, call it after the page is reloaded
+        openUserModal(userId);
+    } catch (error) {
+        alert(error.response.data.message);
+    }
+}
 async function openReportModal(userId) {
     try {
         const accessToken = localStorage.getItem("accessToken");
