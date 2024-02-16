@@ -1,7 +1,11 @@
 import { Recruit } from "./../entity/recruit.entity";
 import { error } from "console";
 import { User } from "./../entity/user.entity";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from "@nestjs/common";
 import { Progress, Status } from "../entity/recruit.entity";
 import { RecruitDTO, UpdateDto, PutDTO } from "./dto/recruit.dto";
 import { In, Not, Repository } from "typeorm";
@@ -52,10 +56,10 @@ export class RecruitService {
 
             const gameDate = Recruit.korGameDate(recruitDTO.gamedate);
             const oneHourBeforeNow = new Date(
-                korNow.getTime() + 1 * 60 * 60 * 1000,
+                now.getTime() + 1 * 60 * 60 * 1000,
             );
 
-            if (gamedate.getTime() < oneHourBeforeNow.getTime()) {
+            if (recruitDTO.gamedate.getTime() < oneHourBeforeNow.getTime()) {
                 throw new NotFoundException(
                     "최소 한 시간 전에 입력 가능합니다.",
                 );
@@ -70,7 +74,6 @@ export class RecruitService {
                     "최대인원 런닝탐임 8시간을 초과하셨습니다.",
                 );
             }
-
             const totalMember = recruitDTO.totalmember - 1;
             const newRecruit = this.recruitRepository.create({
                 basictotalmember: recruitDTO.totalmember,
@@ -84,13 +87,10 @@ export class RecruitService {
 
             await this.recruitRepository.save(newRecruit);
 
-            return {
-                message: "모집글이 등록되었습니다.",
-                newRecruit,
-            };
+            return newRecruit;
         } catch (error) {
             console.error(error);
-            throw new Error("모집글 등록 중 오류가 발생했습니다.");
+            throw new NotFoundException(error);
         }
     }
 
