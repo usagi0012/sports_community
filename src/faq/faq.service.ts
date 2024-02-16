@@ -3,13 +3,13 @@ import {
     Injectable,
     NotFoundException,
 } from "@nestjs/common";
-import { CreateFaqDto } from "./dto/create-faq.dto";
-import { UpdateFaqDto } from "./dto/update-faq.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Faq } from "src/entity/faq.entity";
 import { Repository } from "typeorm";
 import { User } from "src/entity/user.entity";
 import { AwsService } from "src/aws/aws.service";
+import { CreateFaqDto } from "./dto/createFaq.dto";
+import { UpdateFaqDto } from "./dto/updateFaq.dto";
 
 @Injectable()
 export class FaqService {

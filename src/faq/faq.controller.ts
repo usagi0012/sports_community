@@ -12,12 +12,12 @@ import {
     UploadedFile,
 } from "@nestjs/common";
 import { FaqService } from "./faq.service";
-import { CreateFaqDto } from "./dto/create-faq.dto";
-import { UpdateFaqDto } from "./dto/update-faq.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { CreateFaqDto } from "./dto/createFaq.dto";
+import { UpdateFaqDto } from "./dto/updateFaq.dto";
 
 @ApiTags("FAQ")
 @ApiBearerAuth("accessToken")
