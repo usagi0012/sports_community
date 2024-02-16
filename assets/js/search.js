@@ -1,11 +1,3 @@
-// 더보기 버튼 클릭 시 이벤트 핸들러 등록
-document
-    .getElementById("loadMoreButton")
-    .addEventListener("click", async function () {
-        currentPage++; // 다음 페이지로 이동
-        await loadSearchResults(currentPage, resultsPerPage);
-    });
-
 window.onload = async function () {
     loadHeader();
     loadFooter();
@@ -20,22 +12,33 @@ window.onload = async function () {
                 `/api/search/club?query=${query}`,
             );
             const clubDiv = document.getElementById("clubResults");
-            displayResults(clubDiv, clubResults.data.club.clubs, "동아리");
+            // 결과가 20개 이상인 경우에는 20개까지만 표시
+            displayResults(
+                clubDiv,
+                clubResults.data.club.clubs.slice(0, resultsPerPage),
+                "동아리",
+            );
         } else if (from === "place") {
             // place.html에서 검색한 경우
             const placeResults = await axios.get(
                 `/api/search/place?query=${query}`,
             );
             const placeDiv = document.getElementById("placeResults");
-            displayResults(placeDiv, placeResults.data.place.places, "장소");
+            // 결과가 20개 이상인 경우에는 20개까지만 표시
+            displayResults(
+                placeDiv,
+                placeResults.data.place.places.slice(0, resultsPerPage),
+                "장소",
+            );
         } else if (from === "recruit") {
             // recruit.html 또는 myRecruit.html에서 검색한 경우
             const recruitResults = await axios.get(
                 `/api/search/recruitment?query=${query}`,
             );
+            // 결과가 20개 이상인 경우에는 20개까지만 표시
             displayResults(
                 document.getElementById("recruitResults"),
-                recruitResults.data.recruit.recruits,
+                recruitResults.data.recruit.recruits.slice(0, resultsPerPage),
                 "모집글",
             );
         } else {
@@ -54,13 +57,22 @@ window.onload = async function () {
             const recruitDiv = document.getElementById("recruitResults");
             const placeDiv = document.getElementById("placeResults");
 
-            displayResults(clubDiv, clubResults.data.club.clubs, "동아리");
+            // 각 결과가 20개 이상인 경우에는 20개까지만 표시
+            displayResults(
+                clubDiv,
+                clubResults.data.club.clubs.slice(0, resultsPerPage),
+                "동아리",
+            );
             displayResults(
                 recruitDiv,
-                recruitResults.data.recruit.recruits,
+                recruitResults.data.recruit.recruits.slice(0, resultsPerPage),
                 "모집글",
             );
-            displayResults(placeDiv, placeResults.data.place.places, "장소");
+            displayResults(
+                placeDiv,
+                placeResults.data.place.places.slice(0, resultsPerPage),
+                "장소",
+            );
         }
     } catch (error) {
         console.error("Error during page load:", error);
@@ -187,6 +199,195 @@ function getDetailPageURL(result, category) {
 
     // 기본적으로는 빈 문자열 반환
     return "";
+}
+
+// 더보기 버튼 클릭 시 이벤트 핸들러 등록
+let currentResults = []; // 현재까지 표시된 모든 결과를 저장하는 배열
+let totalResults = 0; // 전체 검색 결과 수를 저장하는 변수
+let resultsPerPage = 20; // 페이지 당 결과 수
+
+// loadSearchResults 함수 수정
+async function loadSearchResults(page) {
+    currentResults = [];
+    const { query, from } = getSearchParams();
+    try {
+        // 각 페이지에서 검색한 경우 해당 페이지에 맞는 API를 호출
+        let results;
+        if (from === "club") {
+            // 동아리 페이지에서 검색한 경우
+            results = await axios.get(
+                `/api/search/club?query=${query}&page=${page}&resultsPerPage=${resultsPerPage}`,
+            );
+        } else if (from === "recruit") {
+            // 모집글 페이지에서 검색한 경우
+            results = await axios.get(
+                `/api/search/recruitment?query=${query}&page=${page}&resultsPerPage=${resultsPerPage}`,
+            );
+        } else if (from === "place") {
+            // 장소 페이지에서 검색한 경우
+            results = await axios.get(
+                `/api/search/place?query=${query}&page=${page}&resultsPerPage=${resultsPerPage}`,
+            );
+        } else {
+            // from이 null일 경우 전체 검색
+            const clubResults = await axios.get(
+                `/api/search/club?query=${query}&page=${page}&resultsPerPage=${resultsPerPage}`,
+            );
+            const recruitResults = await axios.get(
+                `/api/search/recruitment?query=${query}&page=${page}&resultsPerPage=${resultsPerPage}`,
+            );
+            const placeResults = await axios.get(
+                `/api/search/place?query=${query}&page=${page}&resultsPerPage=${resultsPerPage}`,
+            );
+
+            results = {
+                data: {
+                    club: { clubs: clubResults.data.club.clubs },
+                    recruit: { recruits: recruitResults.data.recruit.recruits },
+                    place: { places: placeResults.data.place.places },
+                },
+                total: Math.max(
+                    clubResults.data.total,
+                    recruitResults.data.total,
+                    placeResults.data.total,
+                ),
+            };
+        }
+
+        // 총 검색 결과 수 업데이트
+        totalResults = results.total;
+
+        // 불러올 결과가 없으면 더보기 버튼 숨김
+        if (currentResults.length >= totalResults) {
+            const loadMoreButton = document.getElementById("loadMoreButton");
+            if (loadMoreButton) {
+                loadMoreButton.style.display = "none";
+            }
+            return;
+        }
+
+        // 현재 페이지에 결과를 추가
+        if (from === "club") {
+            currentResults = currentResults.concat(results.data.club.clubs);
+        } else if (from === "recruit") {
+            currentResults = currentResults.concat(
+                results.data.recruit.recruits,
+            );
+        } else if (from === "place") {
+            currentResults = currentResults.concat(results.data.place.places);
+        } else {
+            currentResults = currentResults.concat(
+                results.data.club.clubs,
+                results.data.recruit.recruits,
+                results.data.place.places,
+            );
+        }
+
+        // 현재까지 표시된 결과 배열에서 해당 페이지의 결과만 가져오기
+        const startIndex = (page - 1) * resultsPerPage;
+        const endIndex = startIndex + resultsPerPage;
+        const pageResults = currentResults.slice(startIndex, endIndex);
+
+        // 현재 페이지에 결과를 추가
+        const clubDiv = document.getElementById("clubResults");
+        const recruitDiv = document.getElementById("recruitResults");
+        const placeDiv = document.getElementById("placeResults");
+
+        if (from === "club") {
+            appendResults(
+                clubDiv,
+                results.data.club.clubs.slice(startIndex, endIndex),
+                "동아리",
+            );
+        } else if (from === "recruit") {
+            appendResults(
+                recruitDiv,
+                results.data.recruit.recruits.slice(startIndex, endIndex),
+                "모집글",
+            );
+        } else if (from === "place") {
+            appendResults(
+                placeDiv,
+                results.data.place.places.slice(startIndex, endIndex),
+                "장소",
+            );
+        } else {
+            appendResults(
+                clubDiv,
+                results.data.club.clubs.slice(startIndex, endIndex),
+                "동아리",
+            );
+            appendResults(
+                recruitDiv,
+                results.data.recruit.recruits.slice(startIndex, endIndex),
+                "모집글",
+            );
+            appendResults(
+                placeDiv,
+                results.data.place.places.slice(startIndex, endIndex),
+                "장소",
+            );
+        }
+
+        // 불러올 결과가 더 이상 없으면 더보기 버튼 숨김
+        console.log(currentResults.length);
+        console.log(totalResults);
+        if (currentResults.length >= totalResults) {
+            const loadMoreButton = document.getElementById("loadMoreButton");
+            if (loadMoreButton) {
+                loadMoreButton.style.display = "none";
+            }
+        } else {
+            const loadMoreButton = document.getElementById("loadMoreButton");
+            if (loadMoreButton) {
+                loadMoreButton.style.display = "block"; // 더보기 버튼 활성화
+            }
+        }
+    } catch (error) {
+        console.error("Error fetching search results:", error);
+    }
+}
+
+// 더보기 버튼 클릭 시 이벤트 핸들러 등록
+let currentPage = 1;
+
+document
+    .getElementById("loadMoreButton")
+    .addEventListener("click", async function () {
+        currentPage++; // 다음 페이지로 이동
+        await loadSearchResults(currentPage);
+    });
+
+// 검색 결과를 추가하는 함수
+function appendResults(container, results, category) {
+    if (!container) {
+        console.error("Container is null or undefined.");
+        return;
+    }
+
+    results.forEach((result) => {
+        const resultItem = document.createElement("div");
+
+        resultItem.addEventListener("click", function () {
+            const detailPageURL = getDetailPageURL(result, category);
+            if (detailPageURL) {
+                window.location.href = detailPageURL;
+            }
+        });
+
+        if (result.address) {
+            resultItem.innerHTML = `<div>
+            <img src="${result.image}" alt="${result.name} 이미지">
+            ${result.name} - ${result.address}
+        </div>`;
+        } else if (result.title && result.content) {
+            resultItem.innerHTML = `<div>${result.title} - ${result.content}</div>`;
+        } else {
+            resultItem.innerHTML = `<div>${result.name} - ${result.description}</div>`;
+        }
+
+        container.appendChild(resultItem);
+    });
 }
 
 // URL에서 query와 from 값을 추출하는 함수
