@@ -17,20 +17,20 @@ export class accessTokenStrategy extends PassportStrategy(
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
-            ignoreExpiration: true,
+            ignoreExpiration: false,
             passReqToCallback: true,
         });
     }
 
     async validate(req: Request, payload: any) {
         try {
-            const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+            // const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
 
-            await this.jwtService.verify(token, {
-                secret: this.configService.get<string>(
-                    "JWT_ACCESS_TOKEN_SECRET",
-                ),
-            });
+            // await this.jwtService.verify(token, {
+            //     secret: this.configService.get<string>(
+            //         "JWT_ACCESS_TOKEN_SECRET",
+            //     ),
+            // });
 
             const user = payload;
 

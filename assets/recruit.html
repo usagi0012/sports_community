@@ -21,7 +21,11 @@
         <div id="sameContainer"></div>
         <div class="bodyContainer">
             <div class="mainContainer" id="mainContainer">
-                <button class="createBtn" onclick="toRecruitPost()">
+                <button
+                    class="createBtn"
+                    id="upCreateBtn"
+                    onclick="toRecruitPost()"
+                >
                     글 작성
                 </button>
                 <select id="regionFilter" onchange="filterByRegion()">
@@ -68,6 +72,11 @@
                     </div>
                     <div class="boardListContainer"></div>
                 </div>
+                <div class="BtnContainer">
+                    <button class="createBtn" onclick="toRecruitPost()">
+                        글 작성
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -77,7 +86,7 @@
         <script src="./js/recruit.js"></script>
         <script src="./js/dropmenu.js"></script>
         <!-- <script src="./js/notification.js"></script> -->
-        <!--     <script src="./js/otherUser-modal.js"></script> -->
+        <script src="./js/otherUser-modal.js"></script>
         <script>
             function toRecruitPost() {
                 const accessToken = localStorage.getItem("accessToken");
