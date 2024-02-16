@@ -46,7 +46,6 @@ export class ChatRoomService {
         // handleConnection에서 verifyToken()사용후 client["userId"]에 userId 넣어놓음
         // const userId = this.verifyToken(client);
         const userId = client["userId"];
-        console.log("createRoom userId", userId);
 
         // const roomId = `room:${uuidv4()}`;
         const nickname: string = client.data.nickname;
@@ -67,7 +66,6 @@ export class ChatRoomService {
         // client.join(roomId);
 
         // 존재하는 채팅방 이름일 경우     에러
-        console.log({ roomName });
         const chatName = await this.chatRepository.findOne({
             where: { title: roomName },
         });
@@ -106,9 +104,6 @@ export class ChatRoomService {
             nickname: "안내",
             message: `"${nickname}"님이 "${roomName}"방에 접속하셨습니다.`,
         });
-        console.log({ roomName });
-        console.log({ nickname });
-        console.log({ roomId });
     }
 
     exitChatRoom(client: Socket, roomId: string) {
@@ -135,13 +130,12 @@ export class ChatRoomService {
         const myInfo = await this.participantsRepository.find({
             where: { userId: +userId },
         });
-        console.log("client.data", client.data);
-        console.log("myInfo", myInfo);
 
         const roomInfo = { title: [], id: [] };
 
         const creatorRoom = await this.chatRepository.find({
             where: { creator: +userId },
+            order: { createdAt: "DESC" },
         });
 
         // 내가 참가해 있는 방 보내기 (생성했거나 참가되어 있는 방)
