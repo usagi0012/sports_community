@@ -188,6 +188,10 @@ function getPersonalRank() {
             const abilityRankInnerContainner = document.querySelector(
                 ".abilityRankInnerContainer",
             );
+            const personalityRightDiv =
+                document.querySelector(".personalityRight");
+
+            const abilityRightDiv = document.querySelector(".abilityRight");
 
             // 인성 div 만들기
             const personality = response.data.filter(
@@ -216,11 +220,11 @@ function getPersonalRank() {
 
                 const rankScore = document.createElement("div");
                 rankScore.className = "rankScore";
-                rankScore.innerHTML = `<i class="fas fa-solid fa-star"></i>${personalityRank.personalityScore}`;
+                rankScore.innerHTML = `<i class="fas fa-solid fa-star"></i> ${personalityRank.personalityScore}`;
                 rankCard.appendChild(rankScore);
 
                 const rankDiv = document.querySelector(".rank");
-                personalityRankInnerContainner.appendChild(rankCard);
+                personalityRightDiv.appendChild(rankCard);
             });
 
             // 실력 div 만들기
@@ -245,7 +249,7 @@ function getPersonalRank() {
                 rankScore.innerHTML = `<i class="fas fa-solid fa-star"></i>${abilityRank.abilityScore}`;
                 rankCard.appendChild(rankScore);
 
-                abilityRankInnerContainner.appendChild(rankCard);
+                abilityRightDiv.appendChild(rankCard);
             });
         })
         .catch(function (error) {
