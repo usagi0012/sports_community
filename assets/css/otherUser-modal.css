@@ -1,4 +1,5 @@
 /* 전체 모달 스타일 */
+
 #userProfileModal {
     width: 100%;
     height: 100%;
@@ -12,6 +13,7 @@
 }
 
 /* 모달 내용 스타일 */
+
 #userProfileModal > .modal-content {
     background-color: #fff;
     padding: 20px;
@@ -23,6 +25,7 @@
 }
 
 /* 모달 닫기 버튼 스타일 */
+
 #userProfileModal > .modal-content > button {
     font-family: "LINESeedKR-Bd";
     margin: 10px 15px;
@@ -39,6 +42,7 @@
 }
 
 /* 프로필 이미지 스타일 */
+
 #profileImage {
     width: 100px;
     height: 100px;
@@ -47,6 +51,7 @@
 }
 
 /* 다른 프로필 정보 스타일 */
+
 #profileInfo {
     font-size: 16px;
     margin-bottom: 15px;
@@ -57,28 +62,25 @@
     height: 100px;
 }
 
-/* .reportModal {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    max-width: 500px;
-    min-width: 400px;
-    height: 500px;
-    margin: 0 auto;
-    z-index: 100;
-} */
+#reportModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
 
-.reportModal-content {
+#reportModal > .reportModal-content {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
 }
 
-/* .reportModalClose-button {
-    cursor: pointer;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 20px;
-} */
+#reportModal > .reportModal-content > button hover {
+    box-shadow: 2px 2px 2px gray;
+}
