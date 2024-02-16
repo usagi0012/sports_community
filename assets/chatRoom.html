@@ -245,7 +245,7 @@
                             html += "</div>";
                             html += "</div>";
                         }
-                        $(".chat").append(html);
+                        $(".chat").html(html);
                         $(".chat").scrollTop($(".chat")[0].scrollHeight);
                     });
                 })
@@ -307,13 +307,6 @@
             socket.on(
                 "getMessage",
                 function ({ id, nickname, message, roomId }) {
-                    console.log(
-                        "메세지 받아오는 부분",
-                        id,
-                        nickname,
-                        message,
-                        roomId,
-                    );
 
                     const now = new Date();
                     const hours = now.getHours();
@@ -369,8 +362,6 @@
             socket.on("getChatRoomList", function (response) {
                 let html = "";
 
-                console.log({ myInfo });
-                console.log("리스폰스",response)
                 console.log("response", Object.values(response));
                 const myRoomInfo = Object.values(response);
 
