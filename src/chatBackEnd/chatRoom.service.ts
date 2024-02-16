@@ -43,7 +43,10 @@ export class ChatRoomService {
         // };
     }
     async createChatRoom(client: Socket, roomName: string) {
-        const userId = this.verifyToken(client);
+        // handleConnection에서 verifyToken()사용후 client["userId"]에 userId 넣어놓음
+        // const userId = this.verifyToken(client);
+        const userId = client["userId"];
+        console.log("createRoom userId", userId);
 
         // const roomId = `room:${uuidv4()}`;
         const nickname: string = client.data.nickname;
@@ -63,7 +66,7 @@ export class ChatRoomService {
         // client.rooms.clear();
         // client.join(roomId);
 
-        // 존재하는 채팅방 이름일 경우 에러
+        // 존재하는 채팅방 이름일 경우     에러
         console.log({ roomName });
         const chatName = await this.chatRepository.findOne({
             where: { title: roomName },
@@ -126,10 +129,8 @@ export class ChatRoomService {
 
     // 내가 있는 채팅방만 가져오도록 변경하기
     async getChatRoomList(client) /* : Record<string, chatRoomListDTO> */ {
-        const userId = this.verifyToken(client);
-        // 여기서 계속 access Token이 만료되면 에러가 발생하는 것 같음.
-        // 해결해야하는데 일단은, verifyToken 함수 주석키고, /view/chat 경로 들어가지 않은 상태에서
-        // /api#으로 access Token 발급 받은 뒤에 다시 주석 없애고 실행시키면 됨.
+        // const userId = this.verifyToken(client);
+        const userId = client["userId"];
 
         const myInfo = await this.participantsRepository.find({
             where: { userId: +userId },
@@ -174,7 +175,8 @@ export class ChatRoomService {
     }
 
     isRoomMember(client: Socket, roomId: string) {
-        const userId = this.verifyToken(client);
+        // const userId = this.verifyToken(client);
+        const userId = client["userId"];
 
         const roomMember = this.participantsRepository.findOne({
             where: { userId: +userId, chatId: +roomId },
@@ -186,28 +188,29 @@ export class ChatRoomService {
     }
 
     // 로그인된 유저인지  체크
-    verifyToken(client: Socket) /* : string  */ {
-        const token = client.handshake.query;
-        const accessToken = token.auth;
-        console.log("accessToken", accessToken);
-        console.log(typeof accessToken);
-        console.log("토큰형식2", typeof accessToken);
-        if (typeof accessToken !== "string") {
-            throw new WsException("토큰의 형식이 잘못 되었습니다.");
-        }
-        const payload = this.jwtService.verify(accessToken, {
-            secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
-        });
-        if (!payload) {
-            throw new WsException("로그인이 필요합니다.");
-        }
-        const userId = payload.userId;
-        console.log({ payload });
-        return userId;
-    }
+    // verifyToken(client: Socket) /* : string  */ {
+    //     const token = client.handshake.query;
+    //     const accessToken = token.auth;
+    //     console.log("accessToken", accessToken);
+    //     console.log(typeof accessToken);
+    //     console.log("토큰형식2", typeof accessToken);
+    //     if (typeof accessToken !== "string") {
+    //         throw new WsException("토큰의 형식이 잘못 되었습니다.");
+    //     }
+    //     const payload = this.jwtService.verify(accessToken, {
+    //         secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
+    //     });
+    //     if (!payload) {
+    //         throw new WsException("로그인이 필요합니다.");
+    //     }
+    //     const userId = payload.userId;
+    //     console.log({ payload });
+    //     return userId;
+    // }
 
     async saveMessage(client: Socket, message: string, roomId: string) {
-        const userId = this.verifyToken(client);
+        // const userId = this.verifyToken(client);
+        const userId = client["userId"];
 
         const userInfo = await this.userRepository.findOne({
             where: { id: userId },
@@ -224,7 +227,8 @@ export class ChatRoomService {
     }
 
     async getName(client: Socket) {
-        const userId = this.verifyToken(client);
+        // const userId = this.verifyToken(client);
+        const userId = client["userId"];
         console.log("==소켓userId==", userId);
         const userInfo = await this.userRepository.findOne({
             where: { id: userId },
