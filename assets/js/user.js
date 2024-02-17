@@ -66,14 +66,40 @@ document.addEventListener("DOMContentLoaded", async () => {
 //         });
 //     }
 // }
-function promptForCurrentPassword() {
-    // 현재 비밀번호를 입력받는 얼럿창을 띄우기
-    const currentPassword = prompt("현재 비밀번호를 입력하세요:");
+async function promptForCurrentPassword() {
+    // 비밀번호를 안전하게 입력받기 위해 사용자에게 입력 요청하는 모달 창 생성
+    const passwordInput = await getPasswordInput();
 
-    if (currentPassword !== null) {
-        // 사용자가 취소하지 않았을 경우, 입력받은 비밀번호를 확인하고 수정 페이지로 이동
-        redirectToUserUpdatePage(currentPassword);
+    // 사용자가 비밀번호를 입력하고 확인 버튼을 눌렀을 때의 로직 수행
+    if (passwordInput !== null) {
+        // 여기에서 입력받은 비밀번호를 확인하고 수정 페이지로 이동하는 로직 수행
+        redirectToUserUpdatePage(passwordInput);
     }
+}
+
+async function getPasswordInput() {
+    return new Promise((resolve) => {
+        // 모달 창 생성
+        const modal = document.createElement("div");
+        modal.id = "passwordModal";
+        modal.innerHTML = `
+                <label for="password">현재 비밀번호: </label>
+                <input type="password" id="password" />
+                <button onclick="submitPassword()">확인</button>
+            </div>
+        `;
+
+        // 모달 창을 body에 추가
+        document.body.appendChild(modal);
+
+        // 확인 버튼 클릭 시 비밀번호 입력값을 resolve하는 함수 연결
+        window.submitPassword = function () {
+            const passwordInput = document.getElementById("password").value;
+            // 모달 창 제거
+            modal.remove();
+            resolve(passwordInput);
+        };
+    });
 }
 
 async function redirectToUserUpdatePage(currentPassword) {
