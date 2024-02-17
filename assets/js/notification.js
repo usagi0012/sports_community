@@ -1,9 +1,13 @@
 import dotenv from "dotenv";
 dotenv.config();
-function initNotification() {
+async function initNotification() {
     const accessToken = localStorage.getItem("accessToken");
-    const tokenPayload = JSON.parse(atob(accessToken.split(".")[1]));
-    const userId = tokenPayload.userId;
+    const user = await axios.get("/api/user/me", {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    const userId = user.id;
     const eventSource = new EventSource(
         `${process.env.LOCAL}:8001/api/sse/${userId}`,
     );

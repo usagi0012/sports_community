@@ -157,7 +157,7 @@ export class AuthService {
 
     //임시 비밀번호 생성하기
     private generateTemporaryPassword(): string {
-        const temporaryPassword = Math.random().toString(36).substring(7);
+        const temporaryPassword = Math.random().toString(36).substring(2, 10);
         return temporaryPassword;
     }
 

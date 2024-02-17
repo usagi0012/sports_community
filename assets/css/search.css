@@ -1,5 +1,36 @@
-/* 메인 컨테이너*/
+.mainContainer > #placeResults {
+    margin-top: 70px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(250px, 300px));
+    gap: 20px; /* 이미지 사이의 간격 조절 */
+    justify-content: space-between;
+}
+
 .mainContainer {
-    margin-top: 80px;
-    margin-bottom: 50px;
+    margin-top: 70px;
+}
+.placeContainer {
+    height: 20rem;
+    width: 100%;
+    cursor: pointer;
+}
+
+.image {
+    overflow: hidden;
+    object-fit: cover;
+}
+
+img {
+    width: 100%;
+}
+
+.name {
+    font-size: 1.2rem;
+    margin: 5px 3px 3px 5px;
+    text-decoration: underline;
+}
+
+.address {
+    font-size: 0.9rem;
+    margin: 0px 5px 3px 7px;
 }
