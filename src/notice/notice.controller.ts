@@ -19,10 +19,10 @@ import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";
 import { FileInterceptor } from "@nestjs/platform-express";
 
+// @ApiBearerAuth("accessToken")
+// @UseGuards(accessTokenGuard)
 @ApiTags("공지사항")
 @Controller("notice")
-@ApiBearerAuth("accessToken")
-@UseGuards(accessTokenGuard)
 export class NoticeController {
     constructor(private readonly noticeService: NoticeService) {}
 
@@ -44,6 +44,14 @@ export class NoticeController {
             message: "공지사항이 생성되었습니다.",
             data,
         };
+    }
+
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("/isAdmin")
+    async isAdmin(@UserId() userId: number) {
+        console.log("here");
+        return await this.noticeService.verifyAdmin(userId);
     }
 
     @Get()

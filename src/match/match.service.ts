@@ -6,7 +6,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { Not, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Recruit, Status } from "../entity/recruit.entity";
-import { User } from "./../entity/user.entity";
+import { User, UserType } from "./../entity/user.entity";
 import { userInfo } from "os";
 import { find } from "lodash";
 import { Cron, CronExpression } from "@nestjs/schedule";
@@ -30,7 +30,21 @@ export class MatchService {
         private userRepository: Repository<User>,
         private alarmService: Alarmservice,
     ) {}
+    private async userType(UserId: number) {
+        const me = await this.userRepository.findOne({
+            where: { id: UserId },
+        });
 
+        if (!me) {
+            throw new NotFoundException("유저를 찾을 수 없습니다.");
+        }
+
+        if (me.userType === UserType.USER || me.userType !== UserType.ADMIN) {
+            throw new NotFoundException("밴유저는 이용 불가능합니다.");
+        }
+
+        // await this.userType(userId);
+    }
     //나의 매치 조회
     async getMyMatch(userId: number) {
         const matches = await this.matchRepository.find({
@@ -60,6 +74,8 @@ export class MatchService {
 
     //매치 신청하기
     async postMatch(recruitId: number, userId: number, matchDTO: MatchDTO) {
+        await this.userType(userId);
+
         const findRecruit = await this.recruitRepository.findOne({
             where: {
                 id: recruitId,

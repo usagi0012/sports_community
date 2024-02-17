@@ -20,6 +20,7 @@ import { Alarmservice } from "src/alarm/alarm.service";
 import { ConfigService } from "@nestjs/config";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { NestApplication } from "@nestjs/core";
+import { User, UserType } from "../entity/user.entity";
 
 const now = new Date();
 const utc = now.getTime();
@@ -39,7 +40,25 @@ export class ClubMatchService {
         private clubRepository: Repository<Club>,
         private readonly alarmService: Alarmservice,
         private readonly configService: ConfigService,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
     ) {}
+
+    private async userType(UserId: number) {
+        const me = await this.userRepository.findOne({
+            where: { id: UserId },
+        });
+
+        if (!me) {
+            throw new NotFoundException("유저를 찾을 수 없습니다.");
+        }
+
+        if (me.userType === UserType.USER || me.userType !== UserType.ADMIN) {
+            throw new NotFoundException("밴유저는 이용 불가능합니다.");
+        }
+
+        // await this.userType(userId);
+    }
     //매치 신청하기
 
     async postClubMatch(
@@ -47,6 +66,8 @@ export class ClubMatchService {
         userId: number,
         clubMatchDTO: ClubMatchDTO,
     ) {
+        await this.userType(userId);
+
         const { endTime, gameDate, ...restclubMatchDTO } = clubMatchDTO;
         const guestClub = await this.clubRepository.findOne({
             where: {

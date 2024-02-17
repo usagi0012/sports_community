@@ -2,6 +2,7 @@ import {
     BadRequestException,
     Injectable,
     NotFoundException,
+    UnauthorizedException,
 } from "@nestjs/common";
 import { CreateNoticeDto } from "./dto/createNotice.dto";
 import { UpdateNoticeDto } from "./dto/updateNotice.dto";
@@ -129,5 +130,21 @@ export class NoticeService {
         }
 
         return admin;
+    }
+
+    async verifyAdmin(userId: number) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        console.log("===user===", user);
+        if (!user) {
+            throw new NotFoundException("해당하는 유저가 없습니다.");
+        }
+        console.log("===userType===", user.userType);
+        if (user.userType !== "admin") {
+            throw new UnauthorizedException("관리 권한이 없는 유저입니다.");
+        }
+
+        return user;
     }
 }
