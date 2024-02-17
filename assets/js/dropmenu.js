@@ -98,7 +98,7 @@ function getAuthBtn() {
                     if (
                         error.response.data.message == "프로필 정보가 없습니다."
                     ) {
-                        return getName(token);
+                        getName(token);
                     } else if (
                         error.response.data.message == "accessToken expired"
                     ) {
