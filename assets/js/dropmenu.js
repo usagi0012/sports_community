@@ -94,13 +94,14 @@ function getAuthBtn() {
                     `;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log("이거왔나?", error);
                     if (
                         error.response.data.message == "프로필 정보가 없습니다."
                     ) {
-                        getName(token);
-                    }
-                    if (error.response.data.message == "accessToken expired") {
+                        return getName(token);
+                    } else if (
+                        error.response.data.message == "accessToken expired"
+                    ) {
                         authBtn.innerHTML = `
                         <div onclick="logout()">Log Out</div>`;
                     } else {

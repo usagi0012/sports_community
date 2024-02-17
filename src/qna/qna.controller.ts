@@ -46,6 +46,11 @@ export class QnaController {
         };
     }
 
+    @Get("/isUser")
+    async isAdmin(@UserId() userId: number) {
+        return await this.qnaService.verifyUser(userId);
+    }
+
     @Get()
     async findAllQna() {
         const data = await this.qnaService.findAllQna();

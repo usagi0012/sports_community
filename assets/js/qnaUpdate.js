@@ -19,7 +19,7 @@ document
 function submitForm() {
     const urlParams = new URLSearchParams(window.location.search);
     console.log("urlParams", urlParams);
-    let noticeId = urlParams.get("id");
+    let qnaId = urlParams.get("id");
 
     const title = titleInput.value;
     const content = contentTextarea.value;
@@ -29,10 +29,10 @@ function submitForm() {
 
     axios
         .put(
-            `/api/notice/${noticeId}`,
+            `/api/qna/${qnaId}`,
             {
-                id: noticeId,
-                masterId: userId,
+                id: qnaId,
+                userId: userId,
                 title: title,
                 file: file,
                 description: content,
@@ -46,7 +46,7 @@ function submitForm() {
         )
         .then(function (response) {
             alert(response.data.message);
-            window.location.href = `/noticeDetail.html?id=${noticeId}`;
+            window.location.href = `/qnaDetail.html?id=${qnaId}`;
         })
         .catch(function (error) {
             console.log(error.response.data);
@@ -56,6 +56,6 @@ function submitForm() {
 
 function returnCencel() {
     const urlParams = new URLSearchParams(window.location.search);
-    let noticeId = urlParams.get("id");
-    window.location.href = `/noticeDetail.html?id=${noticeId}`;
+    let qnaId = urlParams.get("id");
+    window.location.href = `/qnaDetail.html?id=${qnaId}`;
 }
