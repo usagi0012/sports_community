@@ -44,63 +44,61 @@ function feed() {
         })
         .then(function (response) {
             const recruitList = response.data;
-
-            // id를 기준으로 내림차순 정렬
-            recruitList.sort((a, b) => b.id - a.id);
-
-            recruitList.forEach((recruits) => {
-                if (
+            const filteredRecruitList = recruitList.filter((recruits) => {
+                return (
                     (currentFilterRegion === "all" ||
                         recruits.region.toString() === currentFilterRegion) &&
                     (currentFilterCategory === "all" ||
                         recruits.rule === currentFilterCategory) &&
-                    (currentFilterStatus === "all" || // 모든 상태를 표시할 때
+                    (currentFilterStatus === "all" ||
                         (currentFilterStatus === "모집중" &&
                             recruits.status === currentFilterStatus) ||
                         (currentFilterStatus === "모집완료" &&
                             recruits.status === currentFilterStatus))
-                ) {
-                    const newContent = document.createElement("div");
-                    newContent.classList.add("item");
+                );
+            });
 
-                    // 프로필 이름을 가져와서 바로 HTML에 삽입
+            // "모집중" 상태에서만 내림차순으로 정렬
+            if (currentFilterStatus === "모집중") {
+                filteredRecruitList.sort((a, b) => b.id - a.id);
+            }
 
-                    profilName(recruits.hostId)
-                        .then((profileName) => {
-                            const writeName =
-                                (profileName &&
-                                    profileName.data &&
-                                    profileName.data.userProfile &&
-                                    profileName.data.userProfile.nickname) ||
-                                recruits.hostName;
+            filteredRecruitList.forEach(async (recruits) => {
+                const newContent = document.createElement("div");
+                newContent.classList.add("item");
 
-                            newContent.innerHTML = `
-                                <div class="num">${recruits.id}</div>
-                                <div class="category">${recruits.rule}</div>
-                                <div class="title"><a href="recruit-detail.html?id=${
-                                    recruits.id
-                                }">${recruits.title}</a></div>
-                                <div class="region">${
-                                    region[recruits.region]
-                                }</div>
-                                <div class="writer" onclick="openModal('${
-                                    recruits.hostId
-                                }')">${writeName}</div>
-                                <div class="gamedate">${recruits.gamedate.slice(
-                                    0,
-                                    10,
-                                )}</div>
-                                <div class="status">${recruits.status}</div>
-                            `;
-                            boardList.appendChild(newContent);
-                        })
-                        .catch((error) => {
-                            console.error(
-                                "프로필 이름을 가져오는 중 오류 발생:",
-                                error,
-                            );
-                            return "";
-                        });
+                // 프로필 이름을 가져와서 바로 HTML에 삽입
+                try {
+                    const profileName = await profilName(recruits.hostId);
+                    const writeName =
+                        (profileName &&
+                            profileName.data &&
+                            profileName.data.userProfile &&
+                            profileName.data.userProfile.nickname) ||
+                        recruits.hostName;
+
+                    newContent.innerHTML = `
+                        <div class="num">${recruits.id}</div>
+                        <div class="category">${recruits.rule}</div>
+                        <div class="title"><a href="recruit-detail.html?id=${
+                            recruits.id
+                        }">${recruits.title}</a></div>
+                        <div class="region">${region[recruits.region]}</div>
+                        <div class="writer" onclick="openModal('${
+                            recruits.hostId
+                        }')">${writeName}</div>
+                        <div class="gamedate">${recruits.gamedate.slice(
+                            0,
+                            10,
+                        )}</div>
+                        <div class="status">${recruits.status}</div>
+                    `;
+                    boardList.appendChild(newContent);
+                } catch (error) {
+                    console.error(
+                        "프로필 이름을 가져오는 중 오류 발생:",
+                        error,
+                    );
                 }
             });
         })

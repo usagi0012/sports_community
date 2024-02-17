@@ -2,6 +2,7 @@ import {
     BadRequestException,
     Injectable,
     NotFoundException,
+    UnauthorizedException,
 } from "@nestjs/common";
 import { CreateQnaCommentDto } from "./dto/createQnaComment.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -54,7 +55,7 @@ export class QnaCommentService {
 
         const qnaComments = await this.qnaCommentRepository.find({
             where: { qnaId: qnaId },
-            order: { createAt: "ASC" },
+            order: { createAt: "DESC" },
         });
 
         return qnaComments;
@@ -75,7 +76,6 @@ export class QnaCommentService {
         if (admin.userType === "admin") {
             const updateQnaComment = await this.qnaCommentRepository.save({
                 id: qnaCommentId,
-                qnaId: qnaId,
                 ...restOfQnaComment,
             });
             return updateQnaComment;
@@ -142,5 +142,19 @@ export class QnaCommentService {
             throw new NotFoundException("해당 QNA 게시물지 존재하지 않습니다.");
         }
         return qna;
+    }
+
+    async verifyAdmin(userId: number) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        if (!user) {
+            throw new NotFoundException("해당하는 유저가 없습니다.");
+        }
+        if (user.userType !== "admin") {
+            throw new UnauthorizedException("권한이 없는 유저입니다.");
+        }
+
+        return user;
     }
 }

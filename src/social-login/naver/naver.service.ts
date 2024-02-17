@@ -41,19 +41,20 @@ export class NaverService {
         const accessToken = this.generateAccessToken(user.id);
         res.cookie("access_token", accessToken, { httpOnly: true });
 
-        if (user)
+        if (user) {
             res.redirect(
                 `${this.configService.get<string>(
                     "LOCAL",
                 )}/api/auth/naver/success?accessToken=${accessToken}&refreshToken=${refreshToken}`, //받아주는 페이지 만들어야함
             );
-        else
+        } else {
             res.redirect(
                 `${this.configService.get<string>(
                     "LOCAL",
                 )}/api/auth/login/failure`,
             );
-        // 로그인에 실폐했을 경우 프론트 페이지를 개설해 줘야함(카카오와 네이버로그인 실패 page를 하나로 묶어서 제작)
+            // 로그인에 실폐했을 경우 프론트 페이지를 개설해 줘야함(카카오와 네이버로그인 실패 page를 하나로 묶어서 제작)
+        }
     }
 
     private generateRefreshToken(id: number) {

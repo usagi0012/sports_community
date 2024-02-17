@@ -17,10 +17,6 @@ document
     });
 
 function submitForm() {
-    const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams", urlParams);
-    let noticeId = urlParams.get("id");
-
     const title = titleInput.value;
     const content = contentTextarea.value;
     const file = document.getElementById("inputFile").files[0];
@@ -28,11 +24,10 @@ function submitForm() {
     const token = localStorage.getItem("accessToken");
 
     axios
-        .put(
-            `/api/notice/${noticeId}`,
+        .post(
+            `/api/qna`,
             {
-                id: noticeId,
-                masterId: userId,
+                userId: userId,
                 title: title,
                 file: file,
                 description: content,
@@ -46,7 +41,7 @@ function submitForm() {
         )
         .then(function (response) {
             alert(response.data.message);
-            window.location.href = `/noticeDetail.html?id=${noticeId}`;
+            returnPage();
         })
         .catch(function (error) {
             console.log(error.response.data);
@@ -54,8 +49,10 @@ function submitForm() {
         });
 }
 
+function returnPage() {
+    window.location.href = `/qna.html`;
+}
+
 function returnCencel() {
-    const urlParams = new URLSearchParams(window.location.search);
-    let noticeId = urlParams.get("id");
-    window.location.href = `/noticeDetail.html?id=${noticeId}`;
+    window.location.href = `/qna.html`;
 }
