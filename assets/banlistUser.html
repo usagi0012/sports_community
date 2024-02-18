@@ -3,24 +3,28 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Modal Example</title>
-
+        <title>Onong BanList</title>
+        <meta name="description" content="Onong BanListPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link rel="stylesheet" href="css/banlsitUser.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
+        <link rel="stylesheet" href="css/userMenu.css" />
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     </head>
 
-    <body onload="displayList()">
-        <listgroup style="margin-top: 10px">
-            <list id="list"> </list>
-        </listgroup>
-
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <p>모달 내용이 여기에 들어갑니다.</p>
+    <body>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer">
+                <div class="userMenuContianer" id="userMenuContianer"></div>
+                <listgroup id="listGroup">
+                    <list id="list"> </list>
+                </listgroup>
             </div>
         </div>
+        <div class="footer" id="footer"></div>
     </body>
 
     <script src="./js/banlistUser.js"></script>
-    <link rel="stylesheet" href="css/banlsitUser.css" />
+    <script src="./js/dropmenu.js" defer></script>
 </html>

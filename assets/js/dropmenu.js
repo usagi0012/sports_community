@@ -57,7 +57,7 @@ function loadHeader() {
                     <li><a href="#" onclick="needUpdateFunction()">이용 안내</a></li>
                     <li><a href="#" onclick="toNotice()">공지 사항</a></li>
                     <li><a href="#" onclick="toFAQ()">FAQ</a></li>
-                    <li><a href="#" onclick="needUpdateFunction()">Q&A</a></li>
+                    <li><a href="#" onclick="toQNA()">Q&A</a></li>
                 </ul>
             </li>
             <li id="talk" onclick="toChat()"><a href="#">Talk</a></li>
@@ -139,15 +139,41 @@ function loadFooter() {
 
 //유저 메뉴바 불러오기
 function loadUserMenu() {
+    const token = localStorage.getItem("accessToken");
     const userMenuContianer = document.getElementById("userMenuContianer");
-    userMenuContianer.innerHTML = `
-    <ul>
-        <li onclick="toUser()">사용자 정보</li>
-        <li onclick="toUserProfile()">프로필</li>
-        <li onclick="toCalender()">캘린더</li>
-        <li onclick="toAlarm()">알림</li>
-    </ul>
-    `;
+    axios
+        .get("/api/user/me", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            const user = response.data;
+            if (user.userType == "admin") {
+                userMenuContianer.innerHTML = `
+            <ul>
+                <li onclick="toUser()">사용자 정보</li>
+                <li onclick="toUserProfile()">프로필</li>
+                <li onclick="toCalender()">캘린더</li>
+                <li onclick="toAlarm()">알림</li>
+                <li onclick="toBanList()">신고 관리</li>
+            </ul>
+            `;
+            } else {
+                userMenuContianer.innerHTML = `
+                <ul>
+                    <li onclick="toUser()">사용자 정보</li>
+                    <li onclick="toUserProfile()">프로필</li>
+                    <li onclick="toCalender()">캘린더</li>
+                    <li onclick="toAlarm()">알림</li>
+                    <li onclick="toMyBanList()">신고 내역</li>
+                </ul>
+                `;
+            }
+        })
+        .catch(function (error) {
+            console.error("Error fetching profile:", error);
+        });
 }
 
 //이름 불러오기
@@ -250,6 +276,14 @@ async function toAlarm() {
 async function toCalender() {
     window.location.href = "calender.html";
 }
+//신고 관리 페이지 이동
+async function toBanList() {
+    window.location.href = "banlistAdmin.html";
+}
+//신고 내역 페이지 이동
+async function toMyBanList() {
+    window.location.href = "banlistUser.html";
+}
 //모집글 페이지로 이동
 async function toRecruit() {
     window.location.href = "recruit.html";
@@ -322,6 +356,10 @@ async function toNotice() {
 //FAQ 페이지로 이동
 async function toFAQ() {
     window.location.href = "faq.html";
+}
+//Q&A 페이지로 이동
+async function toQNA() {
+    window.location.href = "qna.html";
 }
 
 //로그아웃 하기

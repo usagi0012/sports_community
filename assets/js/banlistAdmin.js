@@ -1,3 +1,10 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadUserMenu();
+    displayList();
+};
+
 //본인이 신청한 벤 조회하기
 async function displayList() {
     try {
@@ -26,7 +33,7 @@ async function displayList() {
 
 function createAdminListHTML(item) {
     return `
-        <div id="${item.id}" onclick="openModal(${item.id})">
+        <div class="banDiv" id="${item.id}" onclick="openModal(${item.id})">
             <div id="${item.reportUserId}">신고 유저 이름: <span>${item.reportUserName}</span></div>
             <div id="${item.banUserId}">밴 유저 이름: <span>${item.banUserName}</span></div>
             <div>제목: <span>${item.title}</span></div>

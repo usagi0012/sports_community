@@ -1,3 +1,10 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadUserMenu();
+    displayList();
+};
+
 //본인이 신청한 벤 조회하기
 async function displayList() {
     try {
@@ -25,7 +32,7 @@ async function displayList() {
 
 function createListHTML(item) {
     return `
-        <div id="${item.id}"  style="margin-top: 10px">
+        <div class="banDiv" id="${item.id}">
             <div>유저 이름: <span>${item.banUserName}</span></div>
             <div>상태: <span>${item.progress}</span></div>
             <div>내용: <span>${item.reportContent}</span></div>
