@@ -3,11 +3,11 @@ import {
     Get,
     Post,
     Body,
-    Patch,
     Param,
     Delete,
     UseGuards,
     HttpStatus,
+    Put,
 } from "@nestjs/common";
 import { CreateQnaCommentDto } from "./dto/createQnaComment.dto";
 import { QnaCommentService } from "./qnaComment.service";
@@ -43,6 +43,11 @@ export class QnaCommentController {
         };
     }
 
+    @Get("comment/isAdmin")
+    async isAdmin(@UserId() userId: number) {
+        return await this.qnaCommentService.verifyAdmin(userId);
+    }
+
     @Get("/:qnaId/comment")
     async findAllQnaComment(@Param("qnaId") qnaId: number) {
         const data = await this.qnaCommentService.findAllQnaComment(qnaId);
@@ -54,7 +59,7 @@ export class QnaCommentController {
         };
     }
 
-    @Patch("/:qnaId/comment/:qnaCommentId")
+    @Put("/:qnaId/comment/:qnaCommentId")
     async updateQnaComment(
         @UserId() userId: number,
         @Param("qnaId") qnaId: number,

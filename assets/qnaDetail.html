@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="./css/qnaDetail.css" />
+    </head>
+    <body>
+        <button class="updateBtn" onclick="moveToUpdatePage() ">수정</button>
+        <button class="deleteBtn" onclick="deletePage() ">삭제</button>
+        <div>
+            <div class="detailContainer"></div>
+        </div>
+
+        <!-- 댓글 기능 -->
+        <div id="comments-container">
+            <div class="comment" id="comment-form">
+                <textarea
+                    id="comment-input"
+                    placeholder="댓글을 작성하세요..."
+                ></textarea>
+                <button onclick="addComment()">작성하기</button>
+            </div>
+            <div id="comments-list"></div>
+        </div>
+
+        <!-- 모달을 위한 HTML 추가 -->
+        <div id="modal-container">
+            <div id="modal">
+                <textarea
+                    id="edit-comment-input"
+                    placeholder="댓글 수정"
+                ></textarea>
+                <button onclick="updateComment()">확인</button>
+                <button onclick="closeModal()">취소</button>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/qnaDetail.js"></script>
+    </body>
+</html>

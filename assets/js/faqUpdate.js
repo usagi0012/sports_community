@@ -31,6 +31,7 @@ function submitForm() {
         .put(
             `/api/faq/${faqId}`,
             {
+                id: faqId,
                 masterId: userId,
                 title: title,
                 file: file,

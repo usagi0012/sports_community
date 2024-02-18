@@ -106,6 +106,11 @@ document.addEventListener("DOMContentLoaded", async function () {
                     // 닉네임, 성별, 자기소개, 키 등의 입력 값을 읽어와서 객체에 추가
                     updatedProfile.nickname =
                         document.getElementById("nickname").value;
+                    console.log("닉네임값", updatedProfile.nickname);
+                    if (updatedProfile.nickname === "") {
+                        alert("닉네임을 입력해주세요.");
+                        return;
+                    }
                     updatedProfile.description =
                         document.getElementById("description").value;
                     updatedProfile.height =

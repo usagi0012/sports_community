@@ -1,7 +1,12 @@
+import { UserId } from "src/auth/decorators/userId.decorator";
 import { Recruit } from "./../entity/recruit.entity";
 import { error } from "console";
 import { User } from "./../entity/user.entity";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from "@nestjs/common";
 import { Progress, Status } from "../entity/recruit.entity";
 import { RecruitDTO, UpdateDto, PutDTO } from "./dto/recruit.dto";
 import { In, Not, Repository } from "typeorm";
@@ -13,6 +18,7 @@ import { Cron, CronExpression } from "@nestjs/schedule";
 import { not } from "cheerio/lib/api/traversing";
 import { match } from "assert";
 import { Alarmservice } from "src/alarm/alarm.service";
+import { UserType } from "./../entity/user.entity";
 
 const now = new Date();
 const utc = now.getTime();
@@ -34,6 +40,22 @@ export class RecruitService {
         private alarmService: Alarmservice,
     ) {}
 
+    private async userType(UserId: number) {
+        const me = await this.userRepository.findOne({
+            where: { id: UserId },
+        });
+
+        if (!me) {
+            throw new NotFoundException("유저를 찾을 수 없습니다.");
+        }
+
+        if (me.userType === UserType.USER || me.userType !== UserType.ADMIN) {
+            throw new NotFoundException("밴유저는 이용 불가능합니다.");
+        }
+
+        // await this.userType(userId);
+    }
+
     //모집 글 등록
     async postRecruit(userId: number, recruitDTO: RecruitDTO) {
         try {
@@ -45,6 +67,8 @@ export class RecruitService {
                 },
             });
 
+            await this.userType(userId);
+
             const endtimeDate = Recruit.setEndTimeFromNumber(
                 recruitDTO.gamedate,
                 recruitDTO.endtime,
@@ -52,10 +76,10 @@ export class RecruitService {
 
             const gameDate = Recruit.korGameDate(recruitDTO.gamedate);
             const oneHourBeforeNow = new Date(
-                korNow.getTime() + 1 * 60 * 60 * 1000,
+                now.getTime() + 1 * 60 * 60 * 1000,
             );
 
-            if (gamedate.getTime() < oneHourBeforeNow.getTime()) {
+            if (recruitDTO.gamedate.getTime() < oneHourBeforeNow.getTime()) {
                 throw new NotFoundException(
                     "최소 한 시간 전에 입력 가능합니다.",
                 );
@@ -70,7 +94,6 @@ export class RecruitService {
                     "최대인원 런닝탐임 8시간을 초과하셨습니다.",
                 );
             }
-
             const totalMember = recruitDTO.totalmember - 1;
             const newRecruit = this.recruitRepository.create({
                 basictotalmember: recruitDTO.totalmember,
@@ -84,13 +107,10 @@ export class RecruitService {
 
             await this.recruitRepository.save(newRecruit);
 
-            return {
-                message: "모집글이 등록되었습니다.",
-                newRecruit,
-            };
+            return newRecruit;
         } catch (error) {
             console.error(error);
-            throw new Error("모집글 등록 중 오류가 발생했습니다.");
+            throw new NotFoundException(error);
         }
     }
 

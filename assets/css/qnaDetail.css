@@ -1,0 +1,71 @@
+.updateBtn,
+.deleteBtn {
+    font-family: "LINESeedKR-Bd";
+    margin: 10px 15px;
+    height: 25px;
+    padding-top: 5px;
+    border-radius: 7px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.updateBtn:hover,
+.deleteBtn:hover {
+    box-shadow: 2px 2px 2px gray;
+}
+
+#comments-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+#comments-list {
+    margin-bottom: 10px;
+}
+
+.comment {
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+}
+
+#comment-form {
+    display: flex;
+    align-items: center;
+}
+
+#comment-input {
+    flex: 1;
+    margin-right: 10px;
+}
+
+/* 모달 스타일 */
+#modal-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modal {
+    width: 300px;
+    background-color: white;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#edit-comment-input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+button {
+    cursor: pointer;
+}

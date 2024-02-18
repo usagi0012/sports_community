@@ -2,6 +2,7 @@ import {
     BadRequestException,
     Injectable,
     NotFoundException,
+    UnauthorizedException,
 } from "@nestjs/common";
 import { CreateQnaDto } from "./dto/createQna.dto";
 import { UpdateQnaDto } from "./dto/updateQna.dto";
@@ -15,7 +16,7 @@ import { AwsService } from "src/aws/aws.service";
 export class QnaService {
     constructor(
         @InjectRepository(User)
-        private readonly userReporitory: Repository<User>,
+        private readonly userRepository: Repository<User>,
         @InjectRepository(Qna)
         private readonly qnaReporitory: Repository<Qna>,
         private readonly awsService: AwsService,
@@ -103,7 +104,7 @@ export class QnaService {
     }
 
     private async veryfiyUser(userId: number) {
-        const masterUser = await this.userReporitory.findOne({
+        const masterUser = await this.userRepository.findOne({
             where: { id: userId },
         });
 
@@ -124,5 +125,19 @@ export class QnaService {
             throw new NotFoundException("QNA가 존재하지 않습니다.");
         }
         return qna;
+    }
+
+    async verifyUser(userId: number) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        if (!user) {
+            throw new NotFoundException("해당하는 유저가 없습니다.");
+        }
+        if (user.userType !== "user") {
+            throw new UnauthorizedException("권한이 없는 유저입니다.");
+        }
+
+        return user;
     }
 }

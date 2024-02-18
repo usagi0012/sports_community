@@ -1,49 +1,49 @@
 window.onload = function () {
-    faq();
+    qna();
     showCreateBtn();
 };
 
-const faqBoardList = document.querySelector(".faqBoardListContainer");
+const qnaBoardList = document.querySelector(".qnaBoardListContainer");
 
-function faq() {
-    faqBoardList.innerHTML = "";
+function qna() {
+    qnaBoardList.innerHTML = "";
     const accessToken = localStorage.getItem("accessToken");
-
+    console.log("여기 왔니?", accessToken);
     axios
-        .get("/api/faq", {
+        .get("/api/qna", {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         })
         .then(function (response) {
-            const faqList = response.data.data;
-            console.log(faqList);
-            faqList.forEach((faqs) => {
+            console.log(response);
+            const qnaList = response.data.data;
+            qnaList.forEach((qnas) => {
                 const newContent = document.createElement("div");
                 newContent.classList.add("item");
                 newContent.innerHTML = `
-                                <div class="num">${faqs.id}</div>
-                                <div class="title"><a href="faqDetail.html?id=${
-                                    faqs.id
-                                }">${faqs.title}</a></div>
-                                <div class="writer">${faqs.masterName}</div>
-								<div class="createDate">${faqs.createAt.slice(0, 10)}</div>
-                                <div class="updateDate">${faqs.updatedAt.slice(
+                                <div class="num">${qnas.id}</div>
+                                <div class="title"><a href="qnaDetail.html?id=${
+                                    qnas.id
+                                }&token=${accessToken}">${qnas.title}</a></div>
+                                <div class="writer">${qnas.userName}</div>
+								<div class="createDate">${qnas.createAt.slice(0, 10)}</div>
+                                <div class="updateDate">${qnas.updatedAt.slice(
                                     0,
                                     10,
                                 )}</div>
                             `;
-                faqBoardList.appendChild(newContent);
+                qnaBoardList.appendChild(newContent);
             });
         });
 }
 
-function toFaqPost() {
+function toQnaPost() {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
         alert("로그인 후 이용 가능합니다.");
     } else {
-        window.location.href = "faqPost.html";
+        window.location.href = "qnaPost.html";
     }
 }
 
@@ -52,18 +52,15 @@ function showCreateBtn() {
 
     const accessToken = localStorage.getItem("accessToken");
     axios
-        .get("/api/notice/isAdmin", {
+        .get("/api/qna/isUser", {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         })
         .then(function (response) {
-            console.log("notice response", response);
-
             createBtn.style.display = "flex";
         })
         .catch(function (error) {
-            console.log(error);
             createBtn.style.display = "none";
         });
 }
