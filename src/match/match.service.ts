@@ -35,7 +35,10 @@ export class MatchService {
             throw new NotFoundException("유저를 찾을 수 없습니다.");
         }
 
-        if (me.userType === UserType.USER || me.userType !== UserType.ADMIN) {
+        if (
+            me.userType === UserType.BANNED_USER ||
+            me.userType === UserType.PERMANENT_BAN
+        ) {
             throw new NotFoundException("밴유저는 이용 불가능합니다.");
         }
 
