@@ -4,7 +4,7 @@
 
 ### ⛹️‍♂️ TEAM Onong
 
-팀 페이지 보러가기 👉 [TEAM. Onong](https://www.notion.so/f5428763894c4a9c87f781375cdc12b2)
+팀 페이지 보러가기 👉 [TEAM. Onong](https://teamsparta.notion.site/d0c20ac3aa5d4801b522eba6618551d9)
 
 | 이름   | 담당 업무                   |
 | ------ | --------------------------- |
@@ -70,7 +70,7 @@
 
 ### 2) 정확한 모임 위치 정보 제공 기능
 
-<img src='https://drive.google.com/uc?id=15uFoX9H2cdp7KvISc65gY56q82RFEdRy' width=700px>
+<img src='https://drive.google.com/uc?id=1gFZJsEkfJa94-YB_VTaOf7PUK4JLxO9U' width=700px>
 
 
 - Naver GPS Open API를 통한 경기 모임 장소 위치 정보 제공
@@ -78,7 +78,7 @@
 
 ### 3) 경기 매칭 성사/평가 알림 기능
 
-<img src='https://drive.google.com/uc?id=15uFoX9H2cdp7KvISc65gY56q82RFEdRy' width=700px>
+<img src='https://drive.google.com/uc?id=1PxNULz6qp_2DLy5mRn1uXnrv8aXPXFrL' width=700px>
 
 - 내가 올린 경기 모집 글/ 동아리 모집 글에 신청이 올 경우 사이트에 접속해 있지 않더라도 알림 발송, 알림 탭에 표시
 - 그 외 농구 대결이 성사된 경우, 농구 대결이 끝난 후 평가를 해달라는 알림 등 필요한 부분들에 대해 알림 발송
@@ -90,7 +90,7 @@
 
 ### 5) 소셜 로그인 기능
 
-<img src='https://drive.google.com/uc?id=15uFoX9H2cdp7KvISc65gY56q82RFEdRy' width=700px>
+<img src='https://drive.google.com/uc?id=13V19t54uo787CpT3lvuB-OdeW_K9ye37' width=700px>
 
 - 간편한 회원가입을 위한 소셜 로그인 기능 도입
 
