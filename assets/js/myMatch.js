@@ -133,6 +133,7 @@ async function displayMatchUser(matchId) {
             },
         });
 
+        console.log(response);
         const myMatch = response.data[0];
         const confirmUser = response.data[1];
 
@@ -141,7 +142,7 @@ async function displayMatchUser(matchId) {
         const userButton = document.getElementById("userButton");
         const matchInfo = document.getElementById("matchInfo");
 
-        const matchUserButtonHtml = createMatchUserButtonHtml(matchId);
+        const matchUserButtonHtml = createMatchUserButtonHtml(myMatch, matchId);
         const matchInfoHtml = createMatchInfoHtml(myMatch);
 
         confirmUser.forEach((user) => {
@@ -156,7 +157,7 @@ async function displayMatchUser(matchId) {
         document.getElementById("exampleModal").style.display = "block";
     } catch (error) {
         console.log(error);
-        // alert(error.response.data.message);
+        alert(error.response.data.message);
         window.location.reload();
     }
 }
@@ -220,7 +221,37 @@ function handleUserButtonClick(userId) {
     createModal(userId);
 }
 
-function createMatchUserButtonHtml(matchId) {
+function createMatchUserButtonHtml(myMatch, matchId) {
+    if (myMatch.progress === "평가해주세요") {
+        return `
+        <div>
+        <button  data-matchId="${matchId}" onclick="evaluateButton(${matchId})">평가완료</button>       
+        <div>
+        `;
+    }
+    if (myMatch.status === "취소한 매치") {
+        return `
+        <div>
+        <button  data-matchId="${matchId}" onclick="deleteButton(${matchId})">삭제하기</button>
+        <div>
+        `;
+    }
+
+    if (myMatch.progress === "평가 완료") {
+        return `
+        <div>
+        <button  data-matchId="${matchId}" onclick="deleteButton(${matchId})">삭제하기</button>
+        <div>
+        `;
+    }
+    if (myMatch.progress === "경기전") {
+        return `
+        <div>
+        <button  data-matchId="${matchId}" onclick="cancelButton(${matchId})">취소하기</button>
+        <button  data-matchId="${matchId}" onclick="confirmButton(${matchId})">승인 확인</button>
+        <div>
+        `;
+    }
     return `
         <div>
             <button  data-matchId="${matchId}" onclick="cancelButton(${matchId})">취소하기</button>

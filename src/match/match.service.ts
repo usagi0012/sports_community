@@ -82,15 +82,20 @@ export class MatchService {
                 `Recruit with id ${recruitId} 을 찾을 수 없습니다.`,
             );
         }
+
+        if (findRecruit.progress !== Progress.BEFORE) {
+            throw new NotFoundException("이미 시작한 경기입니다.");
+        }
+
         if (findRecruit.status === Status.Complete) {
             throw new NotFoundException("모집이 완료되었습니다.");
         }
 
-        if (findRecruit.hostId === userId) {
-            throw new NotFoundException(
-                "본인의 모집 공고에는 신청이 불가합니다.",
-            );
-        }
+        // if (findRecruit.hostId === userId) {
+        //     throw new NotFoundException(
+        //         "본인의 모집 공고에는 신청이 불가합니다.",
+        //     );
+        // }
 
         await this.checkMatch(recruitId, userId);
         const user = await this.userRepository.findOne({
@@ -252,23 +257,30 @@ export class MatchService {
         const matchIds = matchesArray.map((match) => match.guestId);
 
         const matchUsers = findMatch.evaluateUser;
+        if (matchUsers) {
+            function evaluateUsers(
+                matchUsers: string[],
+                matchIds: number[],
+            ): void {
+                if (!matchUsers) {
+                    throw new NotFoundException(
+                        "평가하지 않은 인원이 있습니다.",
+                    );
+                }
 
-        function evaluateUsers(matchUsers: string[], matchIds: number[]): void {
-            if (!matchUsers) {
-                throw new NotFoundException("평가하지 않은 인원이 있습니다.");
+                const matchUsersAsInt: number[] = matchUsers.map(Number);
+
+                if (
+                    matchUsersAsInt.length !== matchIds.length ||
+                    !matchUsersAsInt.every((value) => matchIds.includes(value))
+                ) {
+                    throw new NotFoundException(
+                        "평가하지 않은 인원이 있습니다.",
+                    );
+                }
             }
-
-            const matchUsersAsInt: number[] = matchUsers.map(Number);
-
-            if (
-                matchUsersAsInt.length !== matchIds.length ||
-                !matchUsersAsInt.every((value) => matchIds.includes(value))
-            ) {
-                throw new NotFoundException("평가하지 않은 인원이 있습니다.");
-            }
+            evaluateUsers(matchUsers, matchIds);
         }
-
-        evaluateUsers(matchUsers, matchIds);
 
         findMatch.evaluate = true;
         findMatch.progress = Progress.EVALUATION_COMPLETED;
@@ -330,6 +342,13 @@ export class MatchService {
 
         if (match.endTime.getTime() < korNow.getTime()) {
             match.progress = Progress.PLEASE_EVALUATE;
+        }
+
+        if (match.gameDate.getTime() < korNow.getTime()) {
+            if (match.status !== MatchStatus.CONFIRM) {
+                match.progress = Progress.BEFORE;
+                match.status = MatchStatus.CANCELCONFIRM;
+            }
         }
     }
 
