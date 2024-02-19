@@ -59,7 +59,7 @@
 
 ### 1) 실시간 채팅 기능
 
-<img src='https://drive.google.com/file/d/15uFoX9H2cdp7KvISc65gY56q82RFEdRy/view?usp=drive_link' width=700px>
+<img src='https://drive.google.com/uc?id=15uFoX9H2cdp7KvISc65gY56q82RFEdRy' width=700px>
 
 - 로그인 된 회원이라면 누구든 이용 가능
 - 한 명의 유저가 여러 개의 채팅방을 생성/관리할 수 있음
@@ -70,7 +70,7 @@
 
 ### 2) 정확한 모임 위치 정보 제공 기능
 
-<img src='https://drive.google.com/file/d/15uFoX9H2cdp7KvISc65gY56q82RFEdRy/view?usp=sharing' width=700px>
+<img src='https://drive.google.com/uc?id=15uFoX9H2cdp7KvISc65gY56q82RFEdRy' width=700px>
 
 
 - Naver GPS Open API를 통한 경기 모임 장소 위치 정보 제공
@@ -78,7 +78,7 @@
 
 ### 3) 경기 매칭 성사/평가 알림 기능
 
-<img src='https://drive.google.com/file/d/15uFoX9H2cdp7KvISc65gY56q82RFEdRy/view?usp=sharing' width=700px>
+<img src='https://drive.google.com/uc?id=15uFoX9H2cdp7KvISc65gY56q82RFEdRy' width=700px>
 
 - 내가 올린 경기 모집 글/ 동아리 모집 글에 신청이 올 경우 사이트에 접속해 있지 않더라도 알림 발송, 알림 탭에 표시
 - 그 외 농구 대결이 성사된 경우, 농구 대결이 끝난 후 평가를 해달라는 알림 등 필요한 부분들에 대해 알림 발송
@@ -90,7 +90,7 @@
 
 ### 5) 소셜 로그인 기능
 
-<img src='https://drive.google.com/file/d/15uFoX9H2cdp7KvISc65gY56q82RFEdRy/view?usp=sharing' width=700px>
+<img src='https://drive.google.com/uc?id=15uFoX9H2cdp7KvISc65gY56q82RFEdRy' width=700px>
 
 - 간편한 회원가입을 위한 소셜 로그인 기능 도입
 
@@ -210,7 +210,7 @@
 
 ### 📌 프로젝트 구조도
 
-<img src='https://user-images.githubusercontent.com/97580782/167986507-cdddae5f-5f5c-435c-9b68-59b50abac2a9.png' width=600px>
+<img src='https://drive.google.com/uc?id=1sA65jo4NfhSOSxeFKQ_Fodmeh_HRB4IO' width=700px>
 
 <br>
 
