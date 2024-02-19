@@ -96,7 +96,8 @@ export class ClubMatchService {
             korNow.getTime() + 1 * 60 * 60 * 1000,
         );
 
-        console.log("gamedate", gamedate);
+        console.log("gamedate", clubMatchDTO.gameDate);
+        console.log("korgam", gamedate);
         console.log("oneHourBeforeNow", oneHourBeforeNow);
 
         if (gamedate.getTime() < oneHourBeforeNow.getTime()) {

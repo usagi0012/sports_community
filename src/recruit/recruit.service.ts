@@ -52,8 +52,6 @@ export class RecruitService {
         if (me.userType === UserType.USER || me.userType !== UserType.ADMIN) {
             throw new NotFoundException("밴유저는 이용 불가능합니다.");
         }
-
-        // await this.userType(userId);
     }
 
     //모집 글 등록
@@ -78,6 +76,10 @@ export class RecruitService {
             const oneHourBeforeNow = new Date(
                 now.getTime() + 1 * 60 * 60 * 1000,
             );
+
+            console.log("gamedate", recruitDTO.gamedate);
+            console.log("korgam", gamedate);
+            console.log("oneHourBeforeNow", oneHourBeforeNow);
 
             if (recruitDTO.gamedate.getTime() < oneHourBeforeNow.getTime()) {
                 throw new NotFoundException(
