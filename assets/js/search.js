@@ -4,12 +4,14 @@ window.onload = async function () {
     try {
         // 현재 페이지 URL에서 query와 from 추출
         const { query, from } = getSearchParams();
+        let totalResults;
 
         if (from === "club") {
             // club.html에서 검색한 경우
             const clubResults = await axios.get(
                 `/api/search/club?query=${query}`,
             );
+            totalResults = clubResults.data.club.total;
             const clubDiv = document.getElementById("clubResults");
             // 결과가 20개 이상인 경우에는 20개까지만 표시
             displayResults(
@@ -22,6 +24,7 @@ window.onload = async function () {
             const placeResults = await axios.get(
                 `/api/search/place?query=${query}`,
             );
+            totalResults = placeResults.data.place.total;
             const placeDiv = document.getElementById("placeResults");
             // 결과가 20개 이상인 경우에는 20개까지만 표시
             displayResults(
@@ -34,6 +37,7 @@ window.onload = async function () {
             const recruitResults = await axios.get(
                 `/api/search/recruitment?query=${query}`,
             );
+            totalResults = recruitResults.data.recruit.total;
             // 결과가 20개 이상인 경우에는 20개까지만 표시
             displayResults(
                 document.getElementById("recruitResults"),
@@ -51,6 +55,8 @@ window.onload = async function () {
             const placeResults = await axios.get(
                 `/api/search/place?query=${query}`,
             );
+
+            totalResults = placeResults.data.place.places.length;
 
             const clubDiv = document.getElementById("clubResults");
             const recruitDiv = document.getElementById("recruitResults");
@@ -73,11 +79,17 @@ window.onload = async function () {
                 "장소",
             );
         }
+
+        // 불러올 결과가 20개 이상이면 더보기 버튼 활성화
+        const loadMoreButton = document.getElementById("loadMoreButton");
+        if (loadMoreButton) {
+            loadMoreButton.style.display =
+                totalResults > resultsPerPage ? "block" : "none";
+        }
     } catch (error) {
         console.error("Error during page load:", error);
     }
 };
-
 // 검색 결과를 가져와서 화면에 표시하는 함수
 async function displaySearchResults(query, from) {
     try {
@@ -200,10 +212,10 @@ function getDetailPageURL(result, category) {
 let currentResults = []; // 현재까지 표시된 모든 결과를 저장하는 배열
 let totalResults = 0; // 전체 검색 결과 수를 저장하는 변수
 let resultsPerPage = 20; // 페이지 당 결과 수
-
+let displayedResults = 0;
 // loadSearchResults 함수 수정
 async function loadSearchResults(page) {
-    currentResults = [];
+    currentResults = []; // 현재까지 표시된 모든 결과를 저장하는 배열 초기화
     const { query, from } = getSearchParams();
     try {
         // 각 페이지에서 검색한 경우 해당 페이지에 맞는 API를 호출
@@ -241,25 +253,11 @@ async function loadSearchResults(page) {
                     recruit: { recruits: recruitResults.data.recruit.recruits },
                     place: { places: placeResults.data.place.places },
                 },
-                total: Math.max(
-                    clubResults.data.total,
-                    recruitResults.data.total,
-                    placeResults.data.total,
-                ),
             };
         }
 
         // 총 검색 결과 수 업데이트
-        totalResults = results.total;
-
-        // 불러올 결과가 없으면 더보기 버튼 숨김
-        if (currentResults.length >= totalResults) {
-            const loadMoreButton = document.getElementById("loadMoreButton");
-            if (loadMoreButton) {
-                loadMoreButton.style.display = "none";
-            }
-            return;
-        }
+        totalResults = results.data.place.places.length;
 
         // 현재 페이지에 결과를 추가
         if (from === "club") {
@@ -278,10 +276,12 @@ async function loadSearchResults(page) {
             );
         }
 
-        // 현재까지 표시된 결과 배열에서 해당 페이지의 결과만 가져오기
+        // 현재 페이지에 결과를 추가
         const startIndex = (page - 1) * resultsPerPage;
         const endIndex = startIndex + resultsPerPage;
         const pageResults = currentResults.slice(startIndex, endIndex);
+
+        displayedResults += pageResults.length;
 
         // 현재 페이지에 결과를 추가
         const clubDiv = document.getElementById("clubResults");
@@ -294,17 +294,26 @@ async function loadSearchResults(page) {
                 results.data.club.clubs.slice(startIndex, endIndex),
                 "동아리",
             );
+            currentResults = currentResults.concat(
+                results.data.club.clubs.slice(startIndex, endIndex),
+            );
         } else if (from === "recruit") {
             appendResults(
                 recruitDiv,
                 results.data.recruit.recruits.slice(startIndex, endIndex),
                 "모집글",
             );
+            currentResults = currentResults.concat(
+                results.data.recruit.recruits.slice(startIndex, endIndex),
+            );
         } else if (from === "place") {
             appendResults(
                 placeDiv,
                 results.data.place.places.slice(startIndex, endIndex),
                 "장소",
+            );
+            currentResults = currentResults.concat(
+                results.data.place.places.slice(startIndex, endIndex),
             );
         } else {
             appendResults(
@@ -322,10 +331,16 @@ async function loadSearchResults(page) {
                 results.data.place.places.slice(startIndex, endIndex),
                 "장소",
             );
+            currentResults = currentResults.concat(
+                results.data.club.clubs.slice(startIndex, endIndex),
+                results.data.recruit.recruits.slice(startIndex, endIndex),
+                results.data.place.places.slice(startIndex, endIndex),
+            );
         }
 
         // 불러올 결과가 더 이상 없으면 더보기 버튼 숨김
-        if (currentResults.length >= totalResults) {
+
+        if (displayedResults + 20 >= totalResults) {
             const loadMoreButton = document.getElementById("loadMoreButton");
             if (loadMoreButton) {
                 loadMoreButton.style.display = "none";

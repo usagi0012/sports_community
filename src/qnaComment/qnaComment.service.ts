@@ -151,7 +151,7 @@ export class QnaCommentService {
         if (!user) {
             throw new NotFoundException("해당하는 유저가 없습니다.");
         }
-        if (user.userType !== "admin") {
+        if (user.userType === "user") {
             throw new UnauthorizedException("권한이 없는 유저입니다.");
         }
 
