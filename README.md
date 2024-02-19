@@ -32,17 +32,9 @@
 
 ### 🚩 프로젝트 목표
 
-당장 농구 경기가 하고 싶은데 같이 할 친구가 없을 때! 
-
-<br>
-
-당장 농구장 대여할 돈은 없고 길거리 농구가 하고 싶을 때! 
-
-<br>
-
-동아리에 가입해서 마음 맞는 사람들과 쭈욱 함께 하고 싶을 때! 
-
-<br>
+- 당장 농구 경기가 하고 싶은데 같이 할 친구가 없을 때! 
+- 당장 농구장 대여할 돈은 없고 길거리 농구가 하고 싶을 때! 
+- 동아리에 가입해서 마음 맞는 사람들과 쭈욱 함께 하고 싶을 때! 
 
 **간편한 경기 모집을 통해 언제든 사용하기 편한 농구 매칭 플랫폼을 목표로 하고 있습니다**
 
@@ -218,7 +210,7 @@
 
 ### 📌 프로젝트 구조도
 
-<img src='https://user-images.githubusercontent.com/97580782/167986507-cdddae5f-5f5c-435c-9b68-59b50abac2a9.png' width=600px>
+<img src='[https://user-images.githubusercontent.com/97580782/167986507-cdddae5f-5f5c-435c-9b68-59b50abac2a9.png](https://drive.google.com/file/d/1sA65jo4NfhSOSxeFKQ_Fodmeh_HRB4IO/view?usp=sharing)' width=600px>
 
 <br>
 
