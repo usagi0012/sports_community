@@ -99,7 +99,7 @@ function showAndHideBtn() {
 
     const accessToken = localStorage.getItem("accessToken");
     axios
-        .get("/api/notice/isAdmin", {
+        .get("/api/notices/isAdmin", {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
