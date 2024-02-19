@@ -32,7 +32,6 @@ export class NaverController {
         res.redirect(`${this.configService.get<string>("LOCAL")}/index.html`);
     }
 
-    // 네이버 로그인할 event(button, 이미지 생성후 api를 통해 진행)
     @UseGuards(AuthGuard("naver"))
     @Get("naver")
     async naverLogin(): Promise<void> {}

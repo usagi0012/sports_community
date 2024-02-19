@@ -5,8 +5,6 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
     OneToOne,
-    Relation,
-    JoinTable,
     ManyToOne,
     JoinColumn,
 } from "typeorm";

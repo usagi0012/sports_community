@@ -18,16 +18,6 @@ import { FileInterceptor } from "@nestjs/platform-express";
 export class AwsController {
     constructor(private readonly awsService: AwsService) {}
 
-    // async create(@Req() request, @Res() response) {
-    //     try {
-    //         await this.awsService.fileupload(request, response);
-    //     } catch (error) {
-    //         return response
-    //             .status(500)
-    //             .json(`Failed to upload image file: ${error.message}`);
-    //     }
-    // }
-
     @Post()
     @UseInterceptors(FileInterceptor("file"))
     uploadFile(@UploadedFile() file: Express.Multer.File) {

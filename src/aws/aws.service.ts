@@ -28,7 +28,6 @@ export class AwsService {
                 ContentType: file.mimetype,
             }),
         );
-        console.log(upload);
         const objectUrl = `https://${this.configService.get<string>(
             "S3BUCKET",
         )}.s3.amazonaws.com/${objectKey}`;

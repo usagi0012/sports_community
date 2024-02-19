@@ -25,7 +25,7 @@ function getQnaDetail() {
             topContent.classList.add("top");
             topContent.innerHTML = `
                 <div class="info">
-                <label class="title">${qnaDetail.title}</label>
+                    <label class="title">${qnaDetail.title}</label>
                     <div class="hostName">
                         ${qnaDetail.userName}
                     </div>
@@ -34,15 +34,17 @@ function getQnaDetail() {
                     </div>
                 </div>
                 <div class="cont">${qnaDetail.description}</div>
-                <img src="${qnaDetail.image}" alt="Uploaded Image">
-				
             `;
-            qnaBoardDetail.appendChild(topContent);
-        })
 
-        .catch(function (error) {
-            console.log(error.response.data);
-            alert(error.response.data.message);
+            // Check if image is available before appending it
+            if (qnaDetail.image) {
+                const imageElement = document.createElement("img");
+                imageElement.src = qnaDetail.image;
+                imageElement.alt = "Uploaded Image";
+                topContent.appendChild(imageElement);
+            }
+
+            qnaBoardDetail.appendChild(topContent);
         });
 }
 

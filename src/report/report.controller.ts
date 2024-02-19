@@ -13,11 +13,7 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { ReportService } from "./report.service";
 import { UserId } from "../auth/decorators/userId.decorator";
-import { userInfo } from "os";
 import { ReportDTO } from "./dto/report.dto";
-import { BanGuard } from "../auth/guard/ban.guard";
-import { BanUsers } from "./../auth/decorators/banUser.decorator";
-import { UserType } from "src/entity/user.entity";
 
 @ApiTags("신고 시스템")
 @Controller("report")
@@ -63,8 +59,6 @@ export class ReportController {
         @UserId() userId: number,
         @Param("reportId") reportId: number,
     ) {
-        console.log(userId);
-        console.log(reportId);
         return await this.reportService.confirmBan(userId, reportId);
     }
 
@@ -87,8 +81,6 @@ export class ReportController {
         @UserId() userId: number,
         @Param("reportId") reportId: number,
     ) {
-        console.log(userId);
-        console.log(reportId);
         return await this.reportService.findBan(userId, reportId);
     }
     //어드민 벤 승인 거절
@@ -98,9 +90,6 @@ export class ReportController {
         @Param("reportId") reportId: number,
         @Body() reportProcessDTO: ReportProcessDTO,
     ) {
-        console.log(userId);
-        console.log(reportId);
-        console.log(reportProcessDTO);
         return await this.reportService.processBan(
             userId,
             reportId,

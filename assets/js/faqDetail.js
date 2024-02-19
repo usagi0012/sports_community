@@ -2,6 +2,7 @@ window.onload = function () {
     loadHeader();
     loadFooter();
     loadNoticeMenu();
+    showAndHideBtn();
     const urlParams = new URLSearchParams(window.location.search);
     let faqId = urlParams.get("id");
     console.log("야 너 왜 안나와?dddddddddd", userId);
@@ -21,11 +22,12 @@ function getFaqDetail(faqId) {
         .then(function (response) {
             const faqDetail = response.data.data;
             faqBoardDetail.innerHTML = "";
+
             const topContent = document.createElement("div");
             topContent.classList.add("top");
             topContent.innerHTML = `
                 <div class="info">
-                <label class="title">${faqDetail.title}</label>
+                    <label class="title">${faqDetail.title}</label>
                     <div class="hostName">
                         ${faqDetail.masterName}
                     </div>
@@ -34,14 +36,46 @@ function getFaqDetail(faqId) {
                     </div>
                 </div>
                 <div class="cont">${faqDetail.description}</div>
-                <img src="${faqDetail.image}" alt="Uploaded Image">
             `;
+
+            // Check if image is available before appending it
+            if (faqDetail.image) {
+                const imageElement = document.createElement("img");
+                imageElement.src = faqDetail.image;
+                imageElement.alt = "Uploaded Image";
+                topContent.appendChild(imageElement);
+            }
+
             faqBoardDetail.appendChild(topContent);
         })
 
         .catch(function (error) {
             console.log(error.response.data);
             alert(error.response.data.message);
+        });
+}
+
+function showAndHideBtn() {
+    const updateBtn = document.querySelector(".updateBtn");
+    const deleteBtn = document.querySelector(".deleteBtn");
+
+    const accessToken = localStorage.getItem("accessToken");
+    axios
+        .get("/api/notice/isAdmin", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+        .then(function (response) {
+            console.log("isAdmin response", response);
+
+            updateBtn.style.display = "flex";
+            deleteBtn.style.display = "flex";
+        })
+        .catch(function (error) {
+            console.log(error);
+            updateBtn.style.display = "none";
+            deleteBtn.style.display = "none";
         });
 }
 

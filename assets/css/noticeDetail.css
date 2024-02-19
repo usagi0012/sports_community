@@ -35,3 +35,11 @@ body {
     border-radius: 3px;
     cursor: pointer;
 }
+
+.updateBtn {
+    display: none;
+}
+
+.deleteBtn {
+    display: none;
+}

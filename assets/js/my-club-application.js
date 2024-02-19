@@ -5,10 +5,6 @@ window.onload = function () {
 };
 
 function getMyClubApplication() {
-    // const urlParams = new URLSearchParams(window.location.search);
-    // console.log("urlParams", urlParams);
-    // let clubId = urlParams.get("id");
-    // console.log("clubId", clubId);
     console.log("here");
     const token = localStorage.getItem("accessToken");
 
@@ -20,9 +16,7 @@ function getMyClubApplication() {
         })
         .then(function (response) {
             console.log(response);
-            // alert(`${response.data.message}`);
 
-            //userId , message, status
             response.data.data.applications.forEach((application, idx) => {
                 console.log("어플", application);
                 const myClubAppplicationList = document.querySelector(
@@ -31,11 +25,6 @@ function getMyClubApplication() {
                 // 신청서 내용들을 하나로 감싸주는 div = clubApplication
                 const clubApplication = document.createElement("div");
                 clubApplication.className = "clubApplicationCard";
-
-                // const user = document.createElement("div");
-                // user.className = "user";
-                // user.innerHTML = `${application.userId}`;
-                // clubApplication.appendChild(user);
 
                 const nickName = response.data.data.nicknames[idx];
                 const nickNameDiv = document.createElement("div");
@@ -141,16 +130,6 @@ function getMyClubApplication() {
                 });
                 clubApplication.appendChild(rejectionBtn);
             });
-
-            // response.data.data.nicknames.forEach((nickname) => {
-            //     const myClubAppplicationList = document.querySelector(
-            //         ".my-club-application",
-            //     );
-            //     const nickNameDiv = document.createElement("div");
-            //     nickNameDiv.className = "nickNameDiv";
-            //     nickNameDiv.innerHTML = `${nickname}`;
-            //     myClubAppplicationList.appendChild(nickNameDiv);
-            // });
         })
         .catch(function (error) {
             console.log(error);
