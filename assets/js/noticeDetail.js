@@ -1,4 +1,7 @@
 window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadNoticeMenu();
     const urlParams = new URLSearchParams(window.location.search);
     let noticeId = urlParams.get("id");
     getNoticeDetail(noticeId);
@@ -9,7 +12,7 @@ const noticeBoardDetail = document.querySelector(".detailContainer");
 function getNoticeDetail(noticeId) {
     const accessToken = localStorage.getItem("accessToken");
     axios
-        .get(`/api/notice/${noticeId}`, {
+        .get(`/api/notices/${noticeId}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
@@ -22,24 +25,14 @@ function getNoticeDetail(noticeId) {
             const topContent = document.createElement("div");
             topContent.classList.add("top");
             topContent.innerHTML = `
-                <label class="title">${noticeDetail.title}</label>
                 <div class="info">
-                <div class="firstRow">
-                    <dl class="hostName">
-                        <dt>작성자</dt>
+                <label class="title">${noticeDetail.title}</label>
+                    <div class="hostName">
                         <dd>${noticeDetail.masterName}</dd>
-                    </dl>
-                </div>
-                <div class="secondRow">
-                    <dl class="createDate">
-                        <dt>작성일</dt>
+                    </div>
+                    <div class="createDate">
                         <dd>${noticeDetail.createAt.slice(0, 10)}</dd>
-                    </dl>
-					<dl class="createDate">
-                        <dt>작성일</dt>
-                        <dd>${noticeDetail.updatedAt.slice(0, 10)}</dd>
-                    </dl>
-                </div>
+                    </div>
                 </div>
                 <div class="cont">${noticeDetail.description}</div>
                 <img src="${noticeDetail.image}" alt="Uploaded Image">
@@ -77,7 +70,7 @@ function deleteCheck() {
     const token = localStorage.getItem("accessToken");
 
     axios
-        .delete(`api/notice/${noticeId}`, {
+        .delete(`api/notices/${noticeId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
