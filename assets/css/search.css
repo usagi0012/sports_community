@@ -53,3 +53,20 @@ img {
 #placeResults > div {
     cursor: pointer;
 }
+
+#loadMoreButton {
+    margin-top: 30px;
+    display: inline;
+    font-family: "LINESeedKR-Bd";
+    width: 85px;
+    margin-left: 15px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    border-radius: 10px;
+    height: 30px;
+    cursor: pointer;
+}
+
+#loadMoreButton:hover {
+    background-color: #ffb13d;
+}

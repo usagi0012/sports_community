@@ -5,7 +5,6 @@ window.onload = function () {
     showAndHideBtn();
     const urlParams = new URLSearchParams(window.location.search);
     let faqId = urlParams.get("id");
-    console.log("야 너 왜 안나와?dddddddddd", userId);
     getFaqDetail(faqId);
 };
 

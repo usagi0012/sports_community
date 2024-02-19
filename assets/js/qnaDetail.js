@@ -99,9 +99,9 @@ function displayComments(comments) {
         btnDiv.classList.add("commentBtn");
 
         commentDiv.innerHTML = `
-            <span class="user-name">${comment.masterName} </span>
+            <span class="user-name">답변</span>
             <p class="content">${comment.comment}</p>
-            <div class="adminCommentBtnShow">
+            <div class="adminCommentBtnShow" style="display: none;">
                     <button class="commentUpdateBtn" onclick="commentUpdate(${comment.id})">수정</button>
                     <button class="commentDeleteBtn" onclick="commentDelete(${comment.id})">삭제</button>
              </div>
@@ -109,6 +109,7 @@ function displayComments(comments) {
         comment.userName;
         commentsList.appendChild(commentDiv);
     });
+    showCreateBtn();
 }
 
 function addComment() {
@@ -153,7 +154,6 @@ function commentShow() {
         .then((response) => {
             const comments = response.data.data;
             displayComments(comments);
-            showCreateBtn();
         })
         .catch((error) => console.error("댓글 조회 실패:", error));
 }
@@ -230,8 +230,8 @@ function updateComment() {
 }
 
 function showCreateBtn() {
-    const commentShow = document.querySelector(".commentShow");
-    let adminCommentBtnShow = document.querySelector(".adminCommentBtnShow");
+    const commentShow = document.getElementById("comment-form");
+    const adminCommentBtnShow = document.querySelector(".adminCommentBtnShow");
     const accessToken = localStorage.getItem("accessToken");
     axios
         .get("/api/qna/comment/isAdmin", {
@@ -244,6 +244,7 @@ function showCreateBtn() {
             adminCommentBtnShow.style.display = "flex";
         })
         .catch(function (error) {
+            console.error(error);
             commentShow.style.display = "none";
             adminCommentBtnShow.style.display = "none";
         });

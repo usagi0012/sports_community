@@ -22,13 +22,11 @@ async function submitForm(event) {
 }
 
 document.getElementById("Kakao").addEventListener("click", function () {
-    // kakaoLogin();
-    needUpdateFunction();
+    kakaoLogin();
 });
 
 document.getElementById("Naver").addEventListener("click", function () {
-    // naverLogin();
-    needUpdateFunction();
+    naverLogin();
 });
 
 //준비중
