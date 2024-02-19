@@ -44,6 +44,27 @@ function getFaqDetail(faqId) {
         });
 }
 
+function showUpdateBtn() {
+    const updateBtn = document.querySelector(".updateBtn");
+
+    const accessToken = localStorage.getItem("accessToken");
+    axios
+        .get("/api/notice/isAdmin", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+        .then(function (response) {
+            console.log("isAdmin response", response);
+
+            updateBtn.style.display = "flex";
+        })
+        .catch(function (error) {
+            console.log(error);
+            updateBtn.style.display = "none";
+        });
+}
+
 function moveToUpdatePage() {
     const urlParams = new URLSearchParams(window.location.search);
     console.log("urlParams", urlParams);
