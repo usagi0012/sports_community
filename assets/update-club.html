@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="css/createClub.css" />
         <link rel="stylesheet" href="css/dropBar.css" />
     </head>
+
     <body>
         <div id="sameContainer"></div>
         <div class="bodyContainer">
@@ -93,8 +94,6 @@
                 console.log("urlParams", urlParams);
                 let clubId = urlParams.get("id");
 
-                // const authorized = localStorage.getItem("authorized");
-                // const token = JSON.parse(authorized).accessToken.value;
                 const token = localStorage.getItem("accessToken");
                 axios
                     .put(
