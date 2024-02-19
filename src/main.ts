@@ -45,7 +45,7 @@ async function bootstrap() {
         .setTitle("Webtoon Recommend")
         .setDescription("Webtoon Recommend API description")
         .setVersion("1.0")
-        .addTag("webtoon")
+        .addTag("onong")
         .addBearerAuth(
             { type: "http", scheme: "bearer", bearerFormat: "Token" },
             "accessToken",
