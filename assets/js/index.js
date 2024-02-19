@@ -23,6 +23,7 @@ window.onload = function () {
     loadHeader();
     loadFooter();
     getFAQ();
+    getNotice();
 };
 
 // 각 cookie에 대한 토큰값
@@ -340,9 +341,35 @@ function getClubRank() {
         });
 }
 
-// function getNotice() {
-//     axios.get;
-// }
+function getNotice() {
+    const accessToken = localStorage.getItem("accessToken");
+    axios
+        .get("/api/notices", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+        .then(function (response) {
+            const noticeList = response.data.data;
+            noticeList.slice(0, 3);
+            console.log(noticeList);
+            noticeList
+                .forEach((notices, index) => {
+                    let noticeData = document.getElementById(
+                        `noticeData${index + 1}`,
+                    );
+                    noticeData.innerHTML = `
+                            ${notices.title}
+                        `;
+                    noticeData.addEventListener("click", function () {
+                        toNoticeData(notices.id);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        });
+}
 
 function getFAQ() {
     const token = localStorage.getItem("accessToken");
@@ -354,18 +381,30 @@ function getFAQ() {
         })
         .then(function (response) {
             const faqList = response.data.data;
-            const FAQContainer = document.getElementById("FAQInnerContainer");
-            faqList.slice(0, 4);
-
+            faqList.slice(0, 3);
+            console.log(faqList);
             faqList
-                .forEach((faqs) => {
-                    newContent.classList.add("item");
-                    newContent.innerHTML = `
-                            <div class="title"><a href="faqDetail.html?id=${faqs.id}">${faqs.title}</a></div>
+                .forEach((faqs, index) => {
+                    let faqData = document.getElementById(
+                        `faqData${index + 1}`,
+                    );
+                    faqData.innerHTML = `
+                            ${faqs.title}
                         `;
+                    faqData.addEventListener("click", function () {
+                        toFAQData(faqs.id);
+                    });
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
         });
+}
+
+function toNoticeData(num) {
+    window.location.href = `noticeDetail.html?id=${num}`;
+}
+
+function toFAQData(num) {
+    window.location.href = `faqDetail.html?id=${num}`;
 }
