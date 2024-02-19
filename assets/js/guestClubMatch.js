@@ -13,7 +13,6 @@ async function getGuestMatch() {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-        console.log(response.data);
 
         const guestClubMatchContainer =
             document.getElementById("guestClubMatch");
@@ -59,9 +58,6 @@ async function findHostClub(guestMatchId) {
 
         const clubMatch = response.data[0];
         const hostClub = response.data[1];
-
-        console.log("club", clubMatch);
-        console.log("host", hostClub);
 
         const hostClubContainer = document.getElementById("hostClub");
         const guestModalButtonContainer =
@@ -304,7 +300,6 @@ async function deleteGuestMatch(clubMatchId) {
 //평가하기
 async function displayClubAss(clubMatchId, myClubId) {
     try {
-        console.log("displayPersonal", clubMatchId, myClubId);
         const personalEvaluation = document.getElementById("submit-btn");
         personalEvaluation.innerHTML = "";
         const personalEvaluationHTML = createpersonalEvaluationHTML(
@@ -317,7 +312,6 @@ async function displayClubAss(clubMatchId, myClubId) {
 }
 
 function createpersonalEvaluationHTML(clubMatchId, myClubId) {
-    console.log("createpersonalEvaluationHTML", clubMatchId, myClubId);
     return `
         <button onclick="submit('${clubMatchId}', '${myClubId}')" class="on">제출</button>
     `;
@@ -329,7 +323,6 @@ function openclubAssessment() {
 }
 async function submit(clubMatchId, myClubId) {
     try {
-        console.log("submit", clubMatchId, myClubId);
         await getClubAssessment(clubMatchId, myClubId);
         await getClubTag(clubMatchId, myClubId);
         putEvaluate(clubMatchId);
@@ -356,10 +349,6 @@ async function putEvaluate(clubMatchId) {
                 },
             },
         );
-
-        console.log(clubMatchId);
-        console.log(response);
-        console.log("평가 수정을 완료하였습니다.");
     } catch (error) {
         console.error(error.response.data);
         alert(error.response.data.message);

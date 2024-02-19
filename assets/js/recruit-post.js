@@ -62,7 +62,6 @@ async function submitForm() {
                 },
             },
         );
-        console.log(response);
         alert("모집글이 등록되었습니다.");
         returnPage();
     } catch (error) {

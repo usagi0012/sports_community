@@ -50,6 +50,7 @@ function getQnaDetail() {
 
 function moveToUpdatePage() {
     const urlParams = new URLSearchParams(window.location.search);
+
     let qnaId = urlParams.get("id");
 
     window.location.href = `qnaUpdate.html?id=${qnaId}`;

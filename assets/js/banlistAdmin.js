@@ -10,15 +10,11 @@ async function displayList() {
     try {
         const accessToken = localStorage.getItem("accessToken");
 
-        console.log(accessToken);
         const response = await axios.get("/api/report/admin/banlist", {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-
-        console.log(response.data);
-        console.log(response.data);
         const adminList = document.getElementById("adminList");
         adminList.innerHTML = "";
 
@@ -47,7 +43,6 @@ async function openModal(reportId) {
     try {
         const accessToken = localStorage.getItem("accessToken");
 
-        console.log(accessToken);
         const response = await axios.get(`/api/report/admin/find/${reportId}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -59,8 +54,6 @@ async function openModal(reportId) {
         const adminBanModal = document.getElementById("adminBanModal");
         adminBanModal.innerHTML = "";
 
-        console.log(report);
-        console.log(report.id);
         const adminBanHTML = createAdminBan(report);
         adminBanModal.innerHTML = adminBanHTML;
         const banOptions = document.getElementById("banOptions");
@@ -186,8 +179,6 @@ async function handleAction(actionType, banUserId, reportId) {
             };
         }
 
-        console.log(requestData);
-
         // 첫 번째 요청: 밴 처리
         const response = await axios.post(
             `/api/banlist/${actionType}/${banUserId}`,
@@ -211,8 +202,6 @@ async function handleAction(actionType, banUserId, reportId) {
                 },
             },
         );
-
-        console.log(approve);
 
         return response.data;
     } catch (error) {

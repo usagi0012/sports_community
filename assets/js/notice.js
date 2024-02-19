@@ -17,7 +17,6 @@ function notice() {
             },
         })
         .then(function (response) {
-            console.log(response);
             const noticeList = response.data.data;
 
             noticeList
@@ -64,8 +63,6 @@ function showCreateBtn() {
             },
         })
         .then(function (response) {
-            console.log("notice response", response);
-
             createBtn.style.display = "flex";
         })
         .catch(function (error) {

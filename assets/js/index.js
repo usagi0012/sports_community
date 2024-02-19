@@ -7,7 +7,6 @@ window.onload = function () {
         localStorage.setItem("accessToken", cookieaccess);
         localStorage.setItem("refreshToken", cookierefresh);
 
-        // localStorage.setItem("accessToken");
         document.cookie =
             "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         document.cookie =
@@ -36,6 +35,7 @@ function getCookie(name) {
 
 //프로필 불러오기
 const profileContainer = document.getElementById("profileContainer");
+
 function getProfile(token) {
     let profile = "";
     if (token === "home") {
@@ -49,7 +49,6 @@ function getProfile(token) {
                 },
             })
             .then(function (response) {
-                console.log(response.data.data.userProfile);
                 const user = response.data.data.userProfile;
                 //프로필 이미지
                 //성별
@@ -160,8 +159,6 @@ async function getScore(accessToken) {
             },
         });
 
-        console.log(scoreResponse);
-
         if (scoreResponse.data.message === "개인 점수가 조회되었습니다.") {
             // 평가 점수가 있는 경우
             const score = scoreResponse.data.data;
@@ -203,12 +200,10 @@ async function getTag(accessToken) {
             },
         });
 
-        console.log(tagResponse.data);
-
         if (tagResponse.data.message === "개인 태그가 조회되었습니다.") {
             // 유저 태그가 있는 경우
             const tag = tagResponse.data.data;
-            console.log("태그태그태그" + tag);
+
             document.getElementById("tag1").innerText = tag[0];
             document.getElementById("tag2").innerText = tag[1];
             document.getElementById("tag3").innerText = tag[2];
@@ -234,7 +229,6 @@ function getPersonalRank() {
     axios
         .get("/api/updated-rank/personal")
         .then(function (response) {
-            console.log("===개인 랭크===", response);
             const personalityRankInnerContainner = document.querySelector(
                 ".personalityRankInnerContainer",
             );
@@ -250,12 +244,10 @@ function getPersonalRank() {
             const personality = response.data.filter(
                 (score) => score.isPersonality,
             );
-            console.log("===인성값만 뽑은 결과===", personality);
 
             const orderedPersonality = personality.sort(
                 (a, b) => b.personalityScore - a.personalityScore,
             );
-            console.log("===인성 정렬===", orderedPersonality);
 
             orderedPersonality.forEach((personalityRank, index) => {
                 const rankCard = document.createElement("div");
@@ -285,12 +277,10 @@ function getPersonalRank() {
 
             // 실력 div 만들기
             const ability = response.data.filter((score) => score.isAbility);
-            console.log("===실력값만 뽑은 결과===", personality);
 
             const orderedAbility = ability.sort(
                 (a, b) => b.abilityScore - a.abilityScore,
             );
-            console.log("===실력 정렬===", orderedAbility);
 
             orderedAbility.forEach((abilityRank) => {
                 const rankCard = document.createElement("div");
@@ -320,7 +310,6 @@ function getClubRank() {
     axios
         .get("/api/updated-rank/club")
         .then(function (response) {
-            console.log("===클럽 랭크===", response);
             const clubRankInnerContainner = document.querySelector(
                 ".clubRankInnerContainer",
             );
@@ -330,7 +319,6 @@ function getClubRank() {
             const orderedClubRank = response.data.sort(
                 (a, b) => b.totalScore - a.totalScore,
             );
-            console.log("===클럽 정렬===", orderedClubRank);
 
             orderedClubRank.forEach((clubRank) => {
                 const rankCard = document.createElement("div");
