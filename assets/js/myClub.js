@@ -32,8 +32,6 @@ export default function getClubDetail(clubId) {
             },
         })
         .then(function (response) {
-            console.log("response", response);
-
             const clubNameDiv = document.querySelector(".name");
             const clubNameDetail = document.createElement("div");
             clubNameDetail.className = "clubNameDetail";
@@ -109,10 +107,8 @@ function getMyClubId() {
             },
         })
         .then(function (response) {
-            console.log("clubId 뽑아오는 response", response);
-
             getClubDetail(response.data);
-            console.log("****");
+
             hasClub();
             axios
                 .get(`/api/club/myClub/${response.data}`, {
@@ -121,8 +117,6 @@ function getMyClubId() {
                     },
                 })
                 .then(function (response) {
-                    console.log("dsfdf", response);
-                    console.log(response.data.statusCode);
                     if (response.data.statusCode === 200) {
                         const updateBtn = document.querySelector(".updateBtn");
                         updateBtn.style.display = "block";
@@ -145,7 +139,6 @@ function getMyClubId() {
                 });
         })
         .catch(function (error) {
-            console.log("??");
             console.log(error);
         });
 }
@@ -164,8 +157,6 @@ function isMyClub() {
             },
         })
         .then(function (response) {
-            console.log("dsfdf", response);
-            console.log(response.data.statusCode);
             if (response.data.statusCode === 200) {
                 const updateBtn = document.querySelector(".updateBtn");
                 updateBtn.style.display = "block";
@@ -184,7 +175,7 @@ function isMyClub() {
 
 function hasClub() {
     const token = localStorage.getItem("accessToken");
-    console.log("token", token);
+
     axios
         .get("/api/club/myClub", {
             headers: {

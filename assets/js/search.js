@@ -4,7 +4,6 @@ window.onload = async function () {
     try {
         // 현재 페이지 URL에서 query와 from 추출
         const { query, from } = getSearchParams();
-        console.log("검색어떤거, 어디서", query, from);
 
         if (from === "club") {
             // club.html에서 검색한 경우
@@ -82,8 +81,6 @@ window.onload = async function () {
 // 검색 결과를 가져와서 화면에 표시하는 함수
 async function displaySearchResults(query, from) {
     try {
-        console.log(query);
-
         // 각 페이지에서 검색한 경우 해당 페이지에 맞는 API를 호출
         let results;
         if (from === "club") {
@@ -139,8 +136,6 @@ async function displaySearchResults(query, from) {
 
 // 검색 결과를 화면에 표시하는 함수
 function displayResults(container, results, category) {
-    console.log(container, results, category);
-
     if (!container) {
         console.error("Container is null or undefined.");
         return;
@@ -330,8 +325,6 @@ async function loadSearchResults(page) {
         }
 
         // 불러올 결과가 더 이상 없으면 더보기 버튼 숨김
-        console.log(currentResults.length);
-        console.log(totalResults);
         if (currentResults.length >= totalResults) {
             const loadMoreButton = document.getElementById("loadMoreButton");
             if (loadMoreButton) {

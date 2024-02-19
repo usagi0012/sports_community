@@ -11,6 +11,7 @@ window.onload = async function () {
 };
 
 const qnaBoardDetail = document.querySelector(".detailContainer");
+
 function getQnaDetail(qnaId) {
     const accessToken = localStorage.getItem("accessToken");
     axios
@@ -50,7 +51,7 @@ function getQnaDetail(qnaId) {
 
 function moveToUpdatePage() {
     const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams", urlParams);
+
     let qnaId = urlParams.get("id");
 
     window.location.href = `qnaUpdate.html?id=${qnaId}`;
@@ -78,7 +79,6 @@ function deleteCheck() {
             },
         })
         .then(function (response) {
-            console.log(response);
             alert(`${response.data.message}`);
             window.location.href = "qna.html";
         })
@@ -100,7 +100,6 @@ function showCreateBtn() {
             },
         })
         .then(function (response) {
-            console.log("여기왔니?", response);
             updateBtn.style.display = "flex";
             deleteBtn.style.display = "flex";
         })
@@ -197,7 +196,6 @@ function commentShow() {
             },
         })
         .then((response) => {
-            console.log(response);
             const comments = response.data.data;
             displayComments(comments);
         })

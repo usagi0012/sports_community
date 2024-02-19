@@ -60,8 +60,6 @@ async function getClubAssessment(clubMatchId, myClubId) {
                 },
             },
         );
-
-        console.log("클럽평가 완료");
     } catch (error) {
         alert(error.response.data.message);
     }
@@ -138,7 +136,6 @@ async function getClubTag(clubMatchId, myClubId) {
                 },
             },
         );
-        console.log("클럽태그평가완료");
     } catch (error) {
         alert(error.response.data.message);
     }

@@ -14,8 +14,6 @@ async function displayHostClubMatchInfo() {
             },
         });
 
-        console.log(response.data);
-
         const hostMatchContainer = document.getElementById("hostClub-match");
         hostMatchContainer.innerHTML = "";
 
@@ -106,8 +104,7 @@ async function getGuestClub(hostMatchId) {
             document.getElementById("hostClubButton");
         const guestClub = response.data[1];
         const clubMatch = response.data[0];
-        console.log("guest", guestClub);
-        console.log("match", clubMatch);
+
         const guestClubHTML = createGuestClubHTML(guestClub, clubMatch);
         const hostClubButtonHTML = createHostClubButtonHTML(
             clubMatch,
@@ -307,7 +304,6 @@ function closeHostMatchModal() {
 //평가하기
 async function displayClubAss(clubMatchId, myClubId) {
     try {
-        console.log("displayPersonal", clubMatchId, myClubId);
         const personalEvaluation = document.getElementById("submit-btn");
         personalEvaluation.innerHTML = "";
         const personalEvaluationHTML = createpersonalEvaluationHTML(
@@ -320,7 +316,6 @@ async function displayClubAss(clubMatchId, myClubId) {
 }
 
 function createpersonalEvaluationHTML(clubMatchId, myClubId) {
-    console.log("createpersonalEvaluationHTML", clubMatchId, myClubId);
     return `
         <button onclick="submit('${clubMatchId}', '${myClubId}')" class="on">제출</button>
     `;
@@ -332,7 +327,6 @@ function openclubAssessment() {
 }
 async function submit(clubMatchId, myClubId) {
     try {
-        console.log("submit", clubMatchId, myClubId);
         await getClubAssessment(clubMatchId, myClubId);
         await getClubTag(clubMatchId, myClubId);
         putEvaluate(clubMatchId);
@@ -359,11 +353,6 @@ function putEvaluate(clubMatchId) {
                 },
             },
         );
-        console.log(clubMatchId);
-
-        console.log(response);
-
-        console.log("평가 수정을 완료하였습니다.");
     } catch (error) {
         console.error(error.response.data);
         alert(error.response.data.message);

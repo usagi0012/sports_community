@@ -46,7 +46,7 @@ function getFaqDetail(faqId) {
 
 function moveToUpdatePage() {
     const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams", urlParams);
+
     let faqId = urlParams.get("id");
 
     window.location.href = `faqUpdate.html?id=${faqId}`;

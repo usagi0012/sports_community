@@ -1,5 +1,6 @@
 //헤더 불러오기
 const sameContainer = document.getElementById("sameContainer");
+
 function loadHeader() {
     // sameContainer.innerHTML = "";
     sameContainer.innerHTML = `
@@ -85,7 +86,7 @@ function getAuthBtn() {
                 })
                 .then(function (response) {
                     const user = response.data.data.userProfile;
-                    console.log(user);
+
                     authBtn.innerHTML = `
                     <div onclick="logout()">Log Out</div>`;
                     miniProfile.innerHTML = `
@@ -93,7 +94,6 @@ function getAuthBtn() {
                     `;
                 })
                 .catch(function (error) {
-                    console.log("이거왔나?", error);
                     if (
                         error.response.data.message == "프로필 정보가 없습니다."
                     ) {
@@ -119,12 +119,12 @@ function getAuthBtn() {
         localStorage.removeItem("refreshToken");
         authBtn.innerHTML = "";
         authBtn.innerHTML = `<div onclick="toLogin()">Log In</div>`;
-        console.log(error);
     }
 }
 
 //푸터 불러오기
 const footer = document.getElementById("footer");
+
 function loadFooter() {
     footer.innerHTML = `
     <div class="footerLogo">
@@ -199,7 +199,7 @@ async function getName(token) {
         })
         .then(function (response) {
             const user = response.data;
-            console.log(user);
+
             authBtn.innerHTML = `
             <div onclick="logout()">Log Out</div>
             `;
@@ -337,7 +337,6 @@ async function toMyClub() {
     if (!token) {
         alert("로그인 후 이용 가능합니다.");
     }
-    console.log("here");
     axios
         .get("/api/club/myClub", {
             headers: {
@@ -345,7 +344,6 @@ async function toMyClub() {
             },
         })
         .then(function (response) {
-            console.log("제발", response);
             if (response.data.data === true) {
                 alert("가입된 동아리가 없습니다.");
                 window.location.href = "myApplication.html";
@@ -355,7 +353,6 @@ async function toMyClub() {
         })
         .catch(function (error) {
             console.log(error);
-            console.log("백에서 return 잘 됐는데 왜 여기로 들어옴?ㄴ");
         });
 }
 //경기장 페이지로 이동

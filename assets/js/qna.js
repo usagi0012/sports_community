@@ -11,7 +11,7 @@ const qnaBoardList = document.querySelector(".qnaBoardListContainer");
 function qna() {
     qnaBoardList.innerHTML = "";
     const accessToken = localStorage.getItem("accessToken");
-    console.log("여기 왔니?", accessToken);
+
     axios
         .get("/api/qna", {
             headers: {
@@ -19,7 +19,6 @@ function qna() {
             },
         })
         .then(function (response) {
-            console.log(response);
             const qnaList = response.data.data;
             qnaList.forEach((qnas) => {
                 const newContent = document.createElement("div");
