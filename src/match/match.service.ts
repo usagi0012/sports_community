@@ -86,10 +86,6 @@ export class MatchService {
             );
         }
 
-        if (findRecruit.progress !== Progress.BEFORE) {
-            throw new NotFoundException("이미 시작한 경기입니다.");
-        }
-
         if (findRecruit.status === Status.Complete) {
             throw new NotFoundException("모집이 완료되었습니다.");
         }
