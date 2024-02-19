@@ -2,16 +2,14 @@ window.onload = async function () {
     loadHeader();
     loadFooter();
     loadNoticeMenu();
-    const urlParams = new URLSearchParams(window.location.search);
-    let qnaId = urlParams.get("id");
-    getQnaDetail(qnaId);
-    showCreateBtn();
-    showCommentDiv();
+    getQnaDetail();
     commentShow();
 };
 
 const qnaBoardDetail = document.querySelector(".detailContainer");
-function getQnaDetail(qnaId) {
+function getQnaDetail() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let qnaId = urlParams.get("id");
     const accessToken = localStorage.getItem("accessToken");
     axios
         .get(`/api/qna/${qnaId}`, {
@@ -52,7 +50,6 @@ function getQnaDetail(qnaId) {
 
 function moveToUpdatePage() {
     const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams", urlParams);
     let qnaId = urlParams.get("id");
 
     window.location.href = `qnaUpdate.html?id=${qnaId}`;
@@ -80,35 +77,12 @@ function deleteCheck() {
             },
         })
         .then(function (response) {
-            console.log(response);
             alert(`${response.data.message}`);
             window.location.href = "qna.html";
         })
         .catch(function (error) {
             console.log(error);
             alert("QNA 삭제에 실패했습니다.");
-        });
-}
-
-function showCreateBtn() {
-    const updateBtn = document.querySelector(".updateBtn");
-    const deleteBtn = document.querySelector(".deleteBtn");
-    const accessToken = localStorage.getItem("accessToken");
-
-    axios
-        .get("/api/qna/isUser", {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        })
-        .then(function (response) {
-            console.log("여기왔니?", response);
-            updateBtn.style.display = "flex";
-            deleteBtn.style.display = "flex";
-        })
-        .catch(function (error) {
-            updateBtn.style.display = "none";
-            deleteBtn.style.display = "none";
         });
 }
 
@@ -121,42 +95,20 @@ function displayComments(comments) {
         const commentDiv = document.createElement("div");
         commentDiv.classList.add("comment");
 
-        // Use innerHTML to set the content of commentDiv
+        const btnDiv = document.createElement("div");
+        btnDiv.classList.add("commentBtn");
+
         commentDiv.innerHTML = `
             <span class="user-name">${comment.masterName} </span>
             <p class="content">${comment.comment}</p>
-			<div class="adminCommentBtn">
-				<div>
-					<button class="commentUpdateBtn" onclick="commentUpdate(${comment.id})">수정</button>
-					<button class="commentDeleteBtn" onclick="commentDelete(${comment.id})">삭제</button>
-				</div>
-			</div>
+            <div class="adminCommentBtnShow">
+                    <button class="commentUpdateBtn" onclick="commentUpdate(${comment.id})">수정</button>
+                    <button class="commentDeleteBtn" onclick="commentDelete(${comment.id})">삭제</button>
+             </div>
         `;
-
+        comment.userName;
         commentsList.appendChild(commentDiv);
     });
-}
-
-function showCommentDiv() {
-    const comment = document.querySelector(".comment");
-    const adminCommentBtn = document.querySelectorAll(".adminCommentBtn");
-
-    const accessToken = localStorage.getItem("accessToken");
-
-    axios
-        .get("/api/qna/comment/isAdmin", {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        })
-        .then(function (response) {
-            comment.style.display = "flex";
-            adminCommentBtn.style.display = "flex";
-        })
-        .catch(function (error) {
-            comment.style.display = "none";
-            adminCommentBtn.style.display = "none";
-        });
 }
 
 function addComment() {
@@ -199,9 +151,9 @@ function commentShow() {
             },
         })
         .then((response) => {
-            console.log(response);
             const comments = response.data.data;
             displayComments(comments);
+            showCreateBtn();
         })
         .catch((error) => console.error("댓글 조회 실패:", error));
 }
@@ -275,4 +227,24 @@ function updateComment() {
             closeModal(); // 업데이트 후 모달 닫기
         })
         .catch((error) => console.error("댓글 수정 실패:", error));
+}
+
+function showCreateBtn() {
+    const commentShow = document.querySelector(".commentShow");
+    let adminCommentBtnShow = document.querySelector(".adminCommentBtnShow");
+    const accessToken = localStorage.getItem("accessToken");
+    axios
+        .get("/api/qna/comment/isAdmin", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+        .then(function (response) {
+            commentShow.style.display = "flex";
+            adminCommentBtnShow.style.display = "flex";
+        })
+        .catch(function (error) {
+            commentShow.style.display = "none";
+            adminCommentBtnShow.style.display = "none";
+        });
 }

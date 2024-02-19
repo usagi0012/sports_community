@@ -17,9 +17,9 @@ import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";
 
 @ApiTags("QNA댓글")
-@Controller("qna")
 @ApiBearerAuth("accessToken")
 @UseGuards(accessTokenGuard)
+@Controller("qna")
 export class QnaCommentController {
     constructor(private readonly qnaCommentService: QnaCommentService) {}
 
@@ -43,8 +43,9 @@ export class QnaCommentController {
         };
     }
 
-    @Get("comment/isAdmin")
+    @Get("/comment/isAdmin")
     async isAdmin(@UserId() userId: number) {
+        console.log(userId);
         return await this.qnaCommentService.verifyAdmin(userId);
     }
 
