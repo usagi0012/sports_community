@@ -1,5 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
 async function initNotification() {
     const accessToken = localStorage.getItem("accessToken");
     const user = await axios.get("/api/user/me", {
@@ -9,7 +7,7 @@ async function initNotification() {
     });
     const userId = user.id;
     const eventSource = new EventSource(
-        `${process.env.LOCAL}:8001/api/sse/${userId}`,
+        `https://o-nong.com:8001/api/sse/${userId}`,
     );
 
     eventSource.onmessage = (event) => {
