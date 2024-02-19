@@ -112,11 +112,39 @@ function closeRecruitModal() {
 }
 
 function createRecurtIdButtonHTML(findRecruit) {
+    if (findRecruit.progress === "경기전") {
+        return `
+    <div>
+    <button type="button" class="btn btn-danger"  onclick="deleteButton(${findRecruit.id})">삭제하기</button>
+    </div>
+`;
+    }
+
+    if (findRecruit.progress === "경기중") {
+        return `
+        <div>
+        </div>
+    `;
+    }
+    if (findRecruit.progress === "평가해주세요") {
+        return `
+        <div> 
+        <button type="button" class="btn btn-success"  onclick="evaluateGuest(${findRecruit.id})">평가완료하기</button>
+        </div>
+    `;
+    }
+
+    if (findRecruit.progress === "평가 완료") {
+        return `
+        <div> 
+        <button type="button" class="btn btn-danger"  onclick="deleteButton(${findRecruit.id})">삭제하기</button>
+        </div>
+    `;
+    }
     return `
     <div>
         <button type="button" class="btn btn-success"  onclick="evaluateGuest(${findRecruit.id})">평가완료하기</button>
         <button type="button" class="btn btn-danger"  onclick="deleteButton(${findRecruit.id})">삭제하기</button>
-
     </div>
 `;
 }
@@ -401,6 +429,8 @@ async function evaluateUser(playOtherUserId, recruitId) {
                 },
             },
         );
+
+        console.log("유저집어넣기 성공");
     } catch (error) {
         console.log(error.response.data);
         alert(error.response.data.message);

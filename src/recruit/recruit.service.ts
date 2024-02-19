@@ -291,24 +291,29 @@ export class RecruitService {
         const matchIds = matchesArray.map((match) => match.guestId);
 
         const recruitUsers = recruit.evaluateUser;
+        if (recruitUsers) {
+            function evaluateUsers(
+                recruitUsers: string[],
+                matchIds: number[],
+            ): void {
+                // 문자열 배열을 숫자 배열로 변환
+                const recruitUsersAsInt: number[] = recruitUsers.map(Number);
 
-        function evaluateUsers(
-            recruitUsers: string[],
-            matchIds: number[],
-        ): void {
-            // 문자열 배열을 숫자 배열로 변환
-            const recruitUsersAsInt: number[] = recruitUsers.map(Number);
-
-            // 배열의 길이와 값이 일치하는지 확인
-            if (
-                recruitUsersAsInt.length !== matchIds.length ||
-                !recruitUsersAsInt.every((value) => matchIds.includes(value))
-            ) {
-                throw new NotFoundException("평가하지 않은 인원이 있습니다.");
+                // 배열의 길이와 값이 일치하는지 확인
+                if (
+                    recruitUsersAsInt.length !== matchIds.length ||
+                    !recruitUsersAsInt.every((value) =>
+                        matchIds.includes(value),
+                    )
+                ) {
+                    throw new NotFoundException(
+                        "평가하지 않은 인원이 있습니다.",
+                    );
+                }
             }
-        }
 
-        evaluateUsers(recruitUsers, matchIds);
+            evaluateUsers(recruitUsers, matchIds);
+        }
 
         recruit.evaluateUser;
         if (recruit.progress === Progress.EVALUATION_COMPLETED) {
@@ -344,13 +349,18 @@ export class RecruitService {
         }
         await this.checkHost(hostId, recruitId);
         const newGameDate = new Date(existingRecruit.gamedate);
+        const ENDDATE = new Date(existingRecruit.endtime);
         newGameDate.setHours(existingRecruit.gamedate.getHours() - 1);
-
+        ENDDATE.setHours(existingRecruit.endtime.getHours());
         if (existingRecruit.progress === Progress.EVALUATION_COMPLETED) {
             return await this.recruitRepository.remove(existingRecruit);
         }
 
-        if (newGameDate < oneHoursAgo) {
+        console.log("newGameDate", newGameDate);
+        console.log("korNow", korNow);
+        console.log("ENDTIME", ENDDATE);
+
+        if (newGameDate < korNow && korNow < ENDDATE) {
             throw new NotFoundException(
                 "1시간전부터는 취소 할 수 없습니다. 경기가 끝난 후 평가해주세요.",
             );
