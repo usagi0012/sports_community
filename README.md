@@ -4,7 +4,7 @@
 
 ### ⛹️‍♂️ TEAM Onong
 
-팀 페이지 보러가기 👉 [TEAM. Onong]([https://www.notion.so/f5428763894c4a9c87f781375cdc12b2](https://teamsparta.notion.site/d0c20ac3aa5d4801b522eba6618551d9))
+팀 페이지 보러가기 👉 [TEAM. Onong](https://www.notion.so/f5428763894c4a9c87f781375cdc12b2)
 
 | 이름   | 담당 업무                   |
 | ------ | --------------------------- |
@@ -59,7 +59,7 @@
 
 ### 1) 실시간 채팅 기능
 
-<img src='https://drive.google.com/file/d/15uFoX9H2cdp7KvISc65gY56q82RFEdRy/view?usp=sharing' width=700px>
+<img src='https://drive.google.com/file/d/15uFoX9H2cdp7KvISc65gY56q82RFEdRy/view?usp=drive_link' width=700px>
 
 - 로그인 된 회원이라면 누구든 이용 가능
 - 한 명의 유저가 여러 개의 채팅방을 생성/관리할 수 있음
@@ -171,7 +171,7 @@
 
 ### 📑 와이어프레임
 
-[figma]https://www.figma.com/file/e1piAokpVNF4Aah71bolbE?embed_host=notion&kind=file&t=tEI1Hm96y5Dw699q-6&type=design&viewer=1
+[figma](https://www.figma.com/file/e1piAokpVNF4Aah71bolbE?embed_host=notion&kind=file&t=tEI1Hm96y5Dw699q-6&type=design&viewer=1)
 
 ### 📎 기술 스택
 
@@ -210,7 +210,7 @@
 
 ### 📌 프로젝트 구조도
 
-<img src='[https://user-images.githubusercontent.com/97580782/167986507-cdddae5f-5f5c-435c-9b68-59b50abac2a9.png](https://drive.google.com/file/d/1sA65jo4NfhSOSxeFKQ_Fodmeh_HRB4IO/view?usp=sharing)' width=600px>
+<img src='https://user-images.githubusercontent.com/97580782/167986507-cdddae5f-5f5c-435c-9b68-59b50abac2a9.png' width=600px>
 
 <br>
 
