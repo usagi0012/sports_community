@@ -11,8 +11,6 @@ import {
     Query,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
 import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { UserId } from "../auth/decorators/userId.decorator";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
@@ -64,7 +62,6 @@ export class UserController {
     @UseGuards(accessTokenGuard)
     @Put("me")
     updateUserById(@UserId() id: string, @Body() changeUserDto: ChangeUserDto) {
-        console.log(changeUserDto);
         return this.userService.updateUser(+id, changeUserDto);
     }
 
@@ -105,27 +102,4 @@ export class UserController {
     ) {
         return this.userService.findUser(+otherUserId, userId);
     }
-    // //수정시 이메일 인증코드 확인
-    // @ApiBearerAuth("accessToken")
-    // @UseGuards(accessTokenGuard)
-    // @Put("me/confirm-email")
-    // checkEmailCode(@UserId() id: string, @Body() changeUserDto: ChangeUserDto) {
-    //     return this.userService.checkEmailCode(+id, changeUserDto);
-    // }
-
-    // //수정시 이메일 인증코드 전송
-    // @ApiBearerAuth("accessToken")
-    // @UseGuards(accessTokenGuard)
-    // @Put("me/request-email-change")
-    // sendEmailCode(@UserId() id: string, @Body() changeUserDto: ChangeUserDto) {
-    //     return this.userService.sendEmailCode(+id, changeUserDto);
-    // }
-
-    // //수정시 이메일 인증코드가 이미 발급되었는지 확인
-    // @ApiBearerAuth("accessToken")
-    // @UseGuards(accessTokenGuard)
-    // @Get("me/check-email-code")
-    // checkExistCode(@UserId() id: string) {
-    //     return this.userService.checkExistCode(+id);
-    // }
 }

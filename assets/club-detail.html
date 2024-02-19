@@ -47,8 +47,6 @@
                 <!-- 동아리 신청 모달창 -->
                 <div id="applyingClubModal" class="modal">
                     <div class="modal-content">
-                        <!-- 기본값으로 클릭한 동아리의 id가 들어가도록 설정하기 
-                하지만 사용자에게 보여주는 값은 동아리 "이름"이 보여질 수 있도록 하기 -->
                         <label for="description" id="applyDescription"
                             >지원 이유</label
                         >
@@ -93,11 +91,7 @@
             const clubNameDisplay = document.querySelector("#clubNameDisplay");
             const clubNameDetail = document.querySelector(".clubNameDetail");
             console.log("클럽네임", clubNameDiv);
-            // console.log(clubNameDetail);
-            // console.log("durl", clubNameDetail.textContent);
-            // console.log("클럽이름", clubNameDiv);
-            // console.log("클럽상세이름", clubNameDiv.children);
-            // console.log(clubNameDiv.children[0].textContent);
+
             clubNameDisplay.innerHTML = ``;
 
             function openModal() {
@@ -125,8 +119,6 @@
                 console.log("urlParams", urlParams);
                 let clubId = urlParams.get("id");
 
-                // const authorized = localStorage.getItem("authorized");
-                // const token = JSON.parse(authorized).accessToken.value;
                 const token = localStorage.getItem("accessToken");
 
                 const inputMessage = document.querySelector("#description1");
@@ -181,8 +173,6 @@
                 console.log("urlParams", urlParams);
                 let clubId = urlParams.get("id");
 
-                // const authorized = localStorage.getItem("authorized");
-                // const token = JSON.parse(authorized).accessToken.value;
                 const token = localStorage.getItem("accessToken");
 
                 axios
@@ -199,10 +189,6 @@
                     .catch(function (error) {
                         console.log(error);
                         alert("동아리 삭제에 실패했습니다.");
-
-                        // if (error.response.data.message === "Unauthorized") {
-                        //     alert("동아리 생성자만 삭제할 수 있습니다.");
-                        // }
                     });
             }
 

@@ -47,7 +47,7 @@ export class KakaoService {
             res.redirect(
                 `${this.configService.get<string>(
                     "LOCAL",
-                )}/api/auth/kakao/success?accessToken=${accessToken}&refreshToken=${refreshToken}`, //받아주는 페이지 만들어야함
+                )}/api/auth/kakao/success?accessToken=${accessToken}&refreshToken=${refreshToken}`,
             );
         } else {
             res.redirect(
@@ -55,7 +55,7 @@ export class KakaoService {
                     "LOCAL",
                 )}/api/auth/login/failure`,
             );
-        } // 로그인에 실폐했을 경우 프론트 페이지를 개설해 줘야함(카카오와 네이버로그인 실패 page를 하나로 묶어서 제작)
+        }
     }
 
     private generateAccessToken(id: number) {

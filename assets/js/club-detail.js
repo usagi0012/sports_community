@@ -31,9 +31,6 @@ const regionData = [
 ];
 
 function getClubDetail(clubId) {
-    // 보내는 순서 알아보기(header, params)
-    // const authorized = localStorage.getItem("authorized");
-    // const token = JSON.parse(authorized).accessToken.value;
     const token = localStorage.getItem("accessToken");
     axios
         .get(`/api/club/${clubId}`, {

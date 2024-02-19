@@ -127,12 +127,4 @@ export class Recruit {
         );
         return adjustedGameDate;
     }
-
-    // setEvaluateUserId(userId: number): void {
-    //     this.evaluateUser = userId.toString();
-    // }
-
-    // getEvaluateUserId(): number {
-    //     return parseInt(this.evaluateUser, 10);
-    // }
 }

@@ -1,11 +1,4 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    ManyToOne,
-    BeforeInsert,
-    BeforeUpdate,
-} from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { Club } from "./club.entity";
 import { IsNotEmpty } from "class-validator";
 
@@ -88,23 +81,6 @@ export class ClubMatch {
         default: Progress.BEFORE,
     })
     progress: Progress;
-
-    // @BeforeInsert()
-    // @BeforeUpdate()
-    // updateProgress() {
-    //     const now = new Date();
-    //     const utc = now.getTime();
-    //     const koreaTimeDiff = 9 * 60 * 60 * 1000;
-    //     const korNow = new Date(utc + koreaTimeDiff);
-
-    //     if (this.gameDate < korNow) {
-    //         this.progress = Progress.DURING;
-    //     }
-
-    //     if (this.endTime < korNow) {
-    //         this.progress = Progress.PLEASE_EVALUATE;
-    //     }
-    // }
 
     static setEndTimeFromNumber(gameDate: Date, durationInHours: number): Date {
         const adjustedGameDate = new Date(

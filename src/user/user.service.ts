@@ -1,25 +1,17 @@
 import {
     BadRequestException,
-    Body,
     ConflictException,
-    HttpStatus,
     Injectable,
-    MethodNotAllowedException,
-    NotAcceptableException,
     NotFoundException,
-    Param,
-    Post,
-    UnauthorizedException,
 } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User, UserType } from "../entity/user.entity";
-import { EntityManager, Repository, Transaction } from "typeorm";
+import { Repository } from "typeorm";
 import { ConfigService } from "@nestjs/config";
 import * as bcrypt from "bcrypt";
 import { ChangeUserDto } from "./dto/change-user.dto";
-import { UserProfile } from "src/entity/user-profile.entity";
 import { CheckPasswordDto } from "./dto/checkPassword.dto";
 import * as nodemailer from "nodemailer";
 import { google } from "googleapis";
@@ -101,7 +93,6 @@ export class UserService {
                 where: { id: userId },
             });
 
-            // Ensure me.friendUser and me.blockUser are not null, and then map them
             const friendIds: number[] = me.friendUser?.map(Number) || [];
             const blockIds: number[] = me.blockUser?.map(Number) || [];
 
@@ -184,8 +175,6 @@ export class UserService {
     // 내 정보 수정
     async updateUser(id: number, changeUserDto: ChangeUserDto) {
         const user = await this.findUserByIdAll(id);
-        console.log(changeUserDto);
-        console.log(user);
 
         if (!user) {
             throw new NotFoundException("존재하지 않는 사용자입니다.");
@@ -208,7 +197,6 @@ export class UserService {
                 const existingEmail = await this.findUserByEmail(
                     changeUserDto.email,
                 );
-                console.log(existingEmail);
                 if (existingEmail) {
                     throw new ConflictException("이미 존재하는 이메일입니다.");
                 }
@@ -274,7 +262,6 @@ export class UserService {
         const token = await this.update(userId, {
             currentRefreshToken: null,
         });
-        console.log(token);
         await this.userRepository.delete({ id: userId });
         return {
             statusCode: 200,
@@ -320,55 +307,4 @@ export class UserService {
         const checkEmailCode = Math.random().toString(36).substring(6);
         return checkEmailCode;
     }
-
-    // async saveCheckEmailCode(
-    //     id: number,
-    //     checkEmailCode: string,
-    // ): Promise<void> {
-    //     await this.userRepository.update(id, { checkEmailCode });
-    // }
-
-    // async sendEmailCode(id, changeUserDto: ChangeUserDto) {
-    //     const user = await this.findUserByIdAll(id);
-    //     const checkEmailCode = this.generateCheckEmailCode();
-    //     // 데이터베이스에 확인 코드 저장
-    //     await this.saveCheckEmailCode(id, checkEmailCode);
-
-    //     // 이메일 보내기
-    //     this.sendCheckEmailCode(changeUserDto.email, checkEmailCode);
-
-    //     user.checkEmailCode = checkEmailCode;
-    //     user.isVerifiedEmail = false;
-    //     await this.userRepository.save(user);
-    // }
-
-    // async checkEmailCode(id, changeUserDto: ChangeUserDto) {
-    //     const user = await this.findUserByIdAll(id);
-    //     if (!user) {
-    //         throw new NotFoundException("존재하지 않는 사용자입니다.");
-    //     }
-    //     if (changeUserDto.checkEmailCode !== user.checkEmailCode) {
-    //         throw new MethodNotAllowedException("인증번호가 틀립니다.");
-    //     }
-    //     user.checkEmailCode = null;
-    //     user.isVerifiedEmail = true;
-
-    //     // 저장
-    //     await this.userRepository.save(user);
-    //     return {
-    //         statusCode: 200,
-    //         message: "인증 완료",
-    //     };
-    // }
-
-    // async checkExistCode(id: number) {
-    //     const user = await this.findUserByIdAll(id);
-    //     const checkEmailCode = user.checkEmailCode;
-    //     const isVerifiedEmail = user.isVerifiedEmail;
-    //     if (!user) {
-    //         throw new NotFoundException("존재하지 않는 사용자입니다.");
-    //     }
-
-    //     return { checkEmailCode, isVerifiedEmail };
-    // }
 }

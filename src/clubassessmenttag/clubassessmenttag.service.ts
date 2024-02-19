@@ -11,11 +11,6 @@ import { Clubtagcounter } from "src/entity/clubtagcounter.entity";
 import { ClubTagCounterDto } from "./dto/clubtagcounter.dto";
 import { ClubMatch, ClubMatchStatus } from "src/entity/club_match.entity";
 import { Club } from "src/entity/club.entity";
-import {
-    ClubApplication,
-    ClubApplicationStatus,
-} from "src/entity/club-application.entity";
-import { User } from "src/entity/user.entity";
 import { ClubRank } from "src/entity/clubRank.entity";
 
 @Injectable()
@@ -91,17 +86,9 @@ export class ClubassessmenttagService {
             where: { id: clubId },
         });
 
-        /* if (!club) {
-            throw new NotFoundException("해당 클럽이 존재하지 않습니다.");
-        } */
-
         const clubTag = await this.clubtagcounterRepository.findOne({
             where: { clubId: club.id },
         });
-
-        /*   if (!clubTag) {
-            throw new NotFoundException("클럽의 태그를 찾을 수 없습니다.");
-        } */
 
         const clubTagClumns = Object.keys(clubTag).filter(
             (key) =>
@@ -150,7 +137,6 @@ export class ClubassessmenttagService {
         let hasClubAssessment = await this.clubscoreRepository.findOne({
             where: { clubId: club.id },
         });
-        console.log("있는게 맞어??????", hasClubAssessment);
         const clubId = club.id;
 
         if (!hasClubAssessment) {
@@ -174,18 +160,6 @@ export class ClubassessmenttagService {
         if (!clubMatch) {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
-
-        // if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
-        //     throw new BadRequestException(
-        //         "시합 신청완료 상태에서는 평가지를 작성할 수 없습니다.",
-        //     );
-        // }
-
-        // if (clubMatch.status === ClubMatchStatus.CANCEL) {
-        //     throw new BadRequestException(
-        //         "시합 취소 상태에서는 평가지를 작성할 수 없습니다.",
-        //     );
-        // }
 
         if (clubMatch.status === ClubMatchStatus.REJECTED) {
             throw new BadRequestException(
@@ -213,8 +187,6 @@ export class ClubassessmenttagService {
         }
 
         clubAssessmentUserData.count += 1;
-
-        console.log(typeof clubAssessmentUserData.count);
 
         clubAssessmentUserData.personalityAmount +=
             createClubAssessmenttagDto.personalityAmount;
@@ -282,24 +254,6 @@ export class ClubassessmenttagService {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
 
-        // if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
-        //     throw new BadRequestException(
-        //         "시합 신청완료 상태에서는 태그를 작성할 수 없습니다.",
-        //     );
-        // }
-
-        // if (clubMatch.status === ClubMatchStatus.CANCEL) {
-        //     throw new BadRequestException(
-        //         "시합 취소 상태에서는 태그를 작성할 수 없습니다.",
-        //     );
-        // }
-
-        // if (clubMatch.status === ClubMatchStatus.REJECTED) {
-        //     throw new BadRequestException(
-        //         "시합 거절 상태에서는 태그를 작성할 수 없습니다.",
-        //     );
-        // }
-
         if (!clubMatch.guest_clubId && !clubMatch.host_clubId) {
             throw new NotFoundException(
                 "해당 클럽은 태그를 작성할 수 없습니다.",
@@ -311,7 +265,6 @@ export class ClubassessmenttagService {
                 "해당 클럽은 태그를 작성할 수 없습니다.",
             );
         }
-        console.log("hasClubTag입니다.", hasClubTag);
         for (const key in clubTagCounterDto) {
             if (clubTagCounterDto.hasOwnProperty(key)) {
                 // 해당 key에 대한 값이 숫자이면서 1일 때만 +1 증가
@@ -332,9 +285,6 @@ export class ClubassessmenttagService {
         clubId: number,
         createClubAssessmenttagDto: CreateClubassessmenttagDto,
     ) {
-        console.log("숫자냐?", clubMatchId);
-        console.log("숫자냐?", clubId);
-
         const clubMatch = await this.clubMatchRepository.findOne({
             where: { id: clubMatchId },
         });

@@ -19,8 +19,6 @@ import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UserId } from "src/auth/decorators/userId.decorator";
 import { FileInterceptor } from "@nestjs/platform-express";
 
-// @ApiBearerAuth("accessToken")
-// @UseGuards(accessTokenGuard)
 @ApiTags("공지사항")
 @Controller("notice")
 export class NoticeController {

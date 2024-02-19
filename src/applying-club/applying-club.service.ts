@@ -186,8 +186,7 @@ export class ApplyingClubService {
         userId: number,
     ) {
         const { permission, nickName } = applicationReviewDto;
-        console.log("허락", permission);
-        console.log("닉네임", nickName);
+
         const club = await this.ClubRepository.findOne({
             where: { masterId: userId },
         });
@@ -206,21 +205,18 @@ export class ApplyingClubService {
             where: { nickname: nickName },
             select: ["id", "nickname", "userId"],
         });
-        console.log("요청한 사람의 정보", userProfile);
         if (!userProfile) {
             throw new NotFoundException("신청한 유저를 찾을 수 없습니다.");
         }
 
         // 요청한 사람의 id
         const memberId = userProfile.userId;
-        console.log("요청한 멤버의 아이디", memberId);
 
         // 요청한 신청서 찾기 ( 신청서는 한 명당 한 개만 가질 수 있기 때문에 memberId면 충분)
         const userApplication = await this.clubApplicationRepository.findOne({
             where: { userId: memberId },
         });
         const applicationId = userApplication.id;
-        console.log("신청서 아이디", applicationId);
 
         if (!permission) {
             // 승인을 거부했을 때의 로직.
@@ -229,7 +225,6 @@ export class ApplyingClubService {
                 await this.clubApplicationRepository.delete({
                     userId: memberId,
                 });
-            console.log(deletedApplication);
 
             // 동호회 신청 거절 알림
             const message = `${club.name}동호회 가입 신청이 거부되었습니다.`;
@@ -244,7 +239,6 @@ export class ApplyingClubService {
         const isJoinedMember = await this.UserRepository.findOne({
             where: { id: memberId },
         });
-        console.log("합류하기로 한 멤버", isJoinedMember);
 
         // 멤버가 이미 가입된 동아리가 있을 경우 에러처리
         // (신청서에서는 못보내지만 동아리 생성시 clubId 생기기 때문)
@@ -257,12 +251,10 @@ export class ApplyingClubService {
                 await this.clubApplicationRepository.delete({
                     userId: memberId,
                 });
-            console.log(deletedApplication);
             throw new Error(
                 "신청자가 가입된 동호회가 있어 승인할 수 없습니다.",
             );
         }
-        console.log("신천한 멤버의 클럽아이디", isJoinedMember.clubId);
 
         // === 2024.02.08 수정 중 ===
 
@@ -292,10 +284,6 @@ export class ApplyingClubService {
             userId: memberId,
             clubId,
         });
-        console.log(deletedApplication);
-        // 요청 승인시 지원서를 작성한 user에게 알림 보내기
-        // 알림 보내기 로직
-
         const message = `${club.name}동호회 가입 신청이 승인되었습니다.`;
         this.alramService.sendAlarm(memberId, message);
 

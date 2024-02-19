@@ -61,8 +61,6 @@ export class UserCalenderService {
             relations: ["user"],
         });
 
-        console.log("찾은 정보", calenders);
-
         if (!calenders || calenders.length === 0) {
             return {
                 statusCode: 200, // 상태 코드를 200으로 변경
@@ -78,8 +76,6 @@ export class UserCalenderService {
             }
             delete calender.user;
         });
-
-        console.log("보내는정보확인", calenders);
 
         return {
             statusCode: 200,

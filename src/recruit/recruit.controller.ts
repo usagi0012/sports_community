@@ -1,4 +1,3 @@
-import { Recruit } from "./../entity/recruit.entity";
 import {
     Controller,
     Body,

@@ -28,7 +28,6 @@ export class NoticeService {
     ) {
         const { ...restOfNotice } = createNoticeDto;
         const adminUser = await this.veryfiyAdmin(userId);
-        console.log(adminUser);
 
         if (file) {
             const faq = await this.noticeReporitory.save({
@@ -137,11 +136,9 @@ export class NoticeService {
         const user = await this.userRepository.findOne({
             where: { id: userId },
         });
-        console.log("===user===", user);
         if (!user) {
             throw new NotFoundException("해당하는 유저가 없습니다.");
         }
-        console.log("===userType===", user.userType);
         if (user.userType !== "admin") {
             throw new UnauthorizedException("관리 권한이 없는 유저입니다.");
         }

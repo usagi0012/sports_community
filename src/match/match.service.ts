@@ -7,11 +7,7 @@ import { Not, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Recruit, Status } from "../entity/recruit.entity";
 import { User, UserType } from "./../entity/user.entity";
-import { userInfo } from "os";
-import { find } from "lodash";
 import { Cron, CronExpression } from "@nestjs/schedule";
-import { match } from "assert";
-import { isUtf8 } from "buffer";
 import { Alarmservice } from "src/alarm/alarm.service";
 
 const now = new Date();
@@ -135,7 +131,7 @@ export class MatchService {
             ...matchDTO,
         });
         await this.matchRepository.save(submitMatch);
-        console.log(recruit);
+
         this.alarmService.sendAlarm(
             recruit.hostId,
             `${user.name}님이 매치를 신청했습니다.`,
@@ -176,10 +172,6 @@ export class MatchService {
             },
         });
 
-        // if (!matches || matches.length === 0) {
-        //     throw new NotFoundException("컴펌된 유저가 없습니다.");
-        // }
-
         return [findmatch, matches];
     }
 
@@ -194,8 +186,6 @@ export class MatchService {
                 id: recruitId,
             },
         });
-
-        console.log(recruit);
 
         if (findMatch.status === MatchStatus.CONFIRM) {
             throw new NotFoundException("이미 참석하기로한 경기입니다.");
@@ -260,10 +250,8 @@ export class MatchService {
         const matchesArray = response[1] as Match[];
 
         const matchIds = matchesArray.map((match) => match.guestId);
-        console.log("matchId", matchIds);
 
         const matchUsers = findMatch.evaluateUser;
-        console.log("matchUser", matchUsers);
 
         function evaluateUsers(matchUsers: string[], matchIds: number[]): void {
             if (!matchUsers) {
@@ -383,7 +371,6 @@ export class MatchService {
 
             return { message: "경기가 취소되었습니다." };
         } catch (error) {
-            console.error(error.message);
             throw new Error(error);
         }
     }
@@ -397,7 +384,6 @@ export class MatchService {
                 },
             });
 
-            console.log("userId", userId);
             myMatch.evaluateUser = myMatch.evaluateUser || [];
 
             if (!myMatch.evaluateUser.includes(guestId.toString())) {

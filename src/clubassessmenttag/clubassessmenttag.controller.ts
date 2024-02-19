@@ -13,7 +13,6 @@ import { CreateClubassessmenttagDto } from "./dto/create-clubassessmenttag.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { ClubTagCounterDto } from "./dto/clubtagcounter.dto";
-import { UserId } from "src/auth/decorators/userId.decorator";
 
 @ApiTags("클럽평가지+태그")
 @ApiBearerAuth("accessToken")
