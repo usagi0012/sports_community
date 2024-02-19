@@ -19,11 +19,10 @@ function notice() {
         .then(function (response) {
             const noticeList = response.data.data;
 
-            noticeList
-                .forEach((notices) => {
-                    const newContent = document.createElement("div");
-                    newContent.classList.add("item");
-                    newContent.innerHTML = `
+            noticeList.forEach((notices) => {
+                const newContent = document.createElement("div");
+                newContent.classList.add("item");
+                newContent.innerHTML = `
                                 <div class="num">${notices.id}</div>
                                 <div class="title"><a href="noticeDetail.html?id=${
                                     notices.id
@@ -35,11 +34,11 @@ function notice() {
                                     10,
                                 )}</div>
                             `;
-                    noticeBoardList.appendChild(newContent);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                noticeBoardList.appendChild(newContent);
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
         });
 }
 
