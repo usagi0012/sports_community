@@ -1,4 +1,3 @@
-import { error } from "console";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./../entity/user.entity";
@@ -60,9 +59,6 @@ export class BanlistService {
             banlist.duration = Banlist.setDurationFromNumber(
                 penaltyDTO.duration,
             );
-
-            console.log(banlist.duration);
-            console.log(korNow);
 
             banListUser.userType = UserType.BANNED_USER;
 
@@ -127,7 +123,6 @@ export class BanlistService {
     async cancelBan(userId: number, banListId: number) {
         try {
             await this.checkAdmin(userId);
-            console.log(banListId);
 
             const banlist = await this.banlistRepository.findOne({
                 where: {

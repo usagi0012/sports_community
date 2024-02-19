@@ -2,6 +2,7 @@ window.onload = function () {
     loadHeader();
     loadFooter();
     loadNoticeMenu();
+    showAndHideBtn();
     const urlParams = new URLSearchParams(window.location.search);
     let noticeId = urlParams.get("id");
     getNoticeDetail(noticeId);
@@ -21,7 +22,6 @@ function getNoticeDetail(noticeId) {
             const noticeDetail = response.data.data;
             noticeBoardDetail.innerHTML = "";
 
-            // Add new content
             const topContent = document.createElement("div");
             topContent.classList.add("top");
             topContent.innerHTML = `
@@ -35,8 +35,16 @@ function getNoticeDetail(noticeId) {
                     </div>
                 </div>
                 <div class="cont">${noticeDetail.description}</div>
-                <img src="${noticeDetail.image}" alt="Uploaded Image">
             `;
+
+            // Check if image is available before appending it
+            if (noticeDetail.image) {
+                const imageElement = document.createElement("img");
+                imageElement.src = noticeDetail.image;
+                imageElement.alt = "Uploaded Image";
+                topContent.appendChild(imageElement);
+            }
+
             noticeBoardDetail.appendChild(topContent);
         })
 
@@ -83,5 +91,29 @@ function deleteCheck() {
         .catch(function (error) {
             console.log(error);
             alert("공지사항 삭제에 실패했습니다.");
+        });
+}
+
+function showAndHideBtn() {
+    const updateBtn = document.querySelector(".updateBtn");
+    const deleteBtn = document.querySelector(".deleteBtn");
+
+    const accessToken = localStorage.getItem("accessToken");
+    axios
+        .get("/api/notice/isAdmin", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+        .then(function (response) {
+            console.log("isAdmin response", response);
+
+            updateBtn.style.display = "flex";
+            deleteBtn.style.display = "flex";
+        })
+        .catch(function (error) {
+            console.log(error);
+            updateBtn.style.display = "none";
+            deleteBtn.style.display = "none";
         });
 }

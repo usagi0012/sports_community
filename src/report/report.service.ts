@@ -1,6 +1,5 @@
-import { BanUsers } from "./../auth/decorators/banUser.decorator";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Not, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ReportDTO } from "./dto/report.dto";
 import { User } from "./../entity/user.entity";
@@ -148,7 +147,6 @@ export class ReportService {
             relations: ["reportUser", "banUser"],
         });
 
-        console.log(ban);
         if (!ban) {
             throw new NotFoundException("Report not found");
         }
@@ -186,7 +184,6 @@ export class ReportService {
             },
         });
 
-        console.log(user.userType);
         if (!user || user.userType !== UserType.ADMIN) {
             throw new NotFoundException("NOT ADMIN");
         }

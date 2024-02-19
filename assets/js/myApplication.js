@@ -51,12 +51,6 @@ function getMyApplication() {
                     confirmDeleteApplcation,
                 );
             }
-
-            // const modifyApplicationBtn = document.createElement("button");
-            // modifyApplicationBtn.innerHTML = "신청서 수정";
-            // clubApplication.appendChild(modifyApplicationBtn);
-
-            // modifyApplicationBtn.addEventListener("click", openModifyModal);
         })
         .catch(function (error) {
             console.log(error);
@@ -67,27 +61,6 @@ function openModifyModal() {
     const modifyModal = document.querySelector("#modal");
     modifyModal.style.display = "flex";
 }
-
-// function modifyApplication() {
-//     const token = localStorage.getItem("accessToken");
-//     const message = document.querySelector("#message").value;
-//     axios
-//         .put(
-//             `/api/applying-club/${clubId}`,
-//             { message },
-//             {
-//                 headers: {
-//                     Authorization: `Bearer ${token}`,
-//                 },
-//             },
-//         )
-//         .then(function (response) {
-//             console.log("==response==", response);
-//         })
-//         .catch(function (error) {
-//             console.log(error);
-//         });
-// }
 
 function deleteApplication() {
     const accessToken = localStorage.getItem("accessToken");

@@ -58,7 +58,15 @@
     cursor: pointer;
 }
 
+
 .updateBtn:hover,
 .deleteBtn:hover {
     box-shadow: 2px 2px 2px gray;
+
+.updateBtn {
+    display: none;
+}
+
+.deleteBtn {
+    display: none;
 }

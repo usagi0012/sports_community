@@ -113,11 +113,9 @@ export class UserPositionService {
 
     //포지션 삭제
     async remove(userId) {
-        console.log(userId);
         const userPosition = await this.userPositionRepository.findOne({
             where: { userId },
         });
-        console.log(userPosition);
         await this.userPositionRepository.remove(userPosition);
     }
 }
