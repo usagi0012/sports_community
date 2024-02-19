@@ -107,8 +107,8 @@ dt {
     margin-top: 8px;
 }
 
-#submit,
-#confirm {
+#register-btn,
+#register-cancel-btn {
     display: inline;
     font-family: "LINESeedKR-Bd";
     width: 85px;
@@ -116,9 +116,10 @@ dt {
     border: 1px solid #ffb13d;
     background-color: #fff;
     border-radius: 10px;
+    height: 30px;
 }
 
-#submit:hover,
-#confirm:hover {
+#register-btn:hover,
+#register-cancel-btn:hover {
     background-color: #ffb13d;
 }

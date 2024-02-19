@@ -23,6 +23,7 @@ window.onload = function () {
     getClubRank();
     loadHeader();
     loadFooter();
+    getFAQ();
 };
 
 // 각 cookie에 대한 토큰값
@@ -348,5 +349,35 @@ function getClubRank() {
         })
         .catch(function (error) {
             console.log(error);
+        });
+}
+
+// function getNotice() {
+//     axios.get;
+// }
+
+function getFAQ() {
+    const token = localStorage.getItem("accessToken");
+    axios
+        .get("/api/faq", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            const faqList = response.data.data;
+            const FAQContainer = document.getElementById("FAQInnerContainer");
+            faqList.slice(0, 4);
+            console.log(faqList);
+            faqList
+                .forEach((faqs) => {
+                    newContent.classList.add("item");
+                    newContent.innerHTML = `
+                            <div class="title"><a href="faqDetail.html?id=${faqs.id}">${faqs.title}</a></div>
+                        `;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         });
 }

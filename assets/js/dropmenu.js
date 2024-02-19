@@ -54,7 +54,7 @@ function loadHeader() {
             <li id="platform">
                 <a href="#">플랫폼 이용안내</a>
                 <ul class="detail" id="detailPlatform">
-                    <li><a href="#" onclick="needUpdateFunction()">이용 안내</a></li>
+                    <li><a href="#" onclick="toInfo()">이용 안내</a></li>
                     <li><a href="#" onclick="toNotice()">공지 사항</a></li>
                     <li><a href="#" onclick="toFAQ()">FAQ</a></li>
                     <li><a href="#" onclick="toQNA()">Q&A</a></li>
@@ -130,8 +130,8 @@ function loadFooter() {
     <div class="footerLogo">
     <img src="resources/logo.png" id="footerLogoImg" />
 </div>
-<a href="#" id="footerAnnounce">커뮤니티 이용 안내</a>
-<a href="#" id="footerPrivacy">개인정보 처리 방침</a>
+<a href="#" onclick="toInfo()" id="footerAnnounce">커뮤니티 이용 안내</a>
+<a href="#" onclick="toPrivacyPolicy()" id="footerPrivacy">개인정보 처리 방침</a>
 <p id="footerCall">문의) usagi001218@gmail.com</p>
 <p id="footerSite">@Onong</p>
     `;
@@ -174,6 +174,19 @@ function loadUserMenu() {
         .catch(function (error) {
             console.error("Error fetching profile:", error);
         });
+}
+
+//편의기능 메뉴바 불러오기
+function loadNoticeMenu() {
+    const noticeMenuContianer = document.getElementById("noticeMenuContianer");
+    noticeMenuContianer.innerHTML = `
+            <ul>
+                <li onclick="toInfo()">이용안내</li>
+                <li onclick="toNotice()">공지사항</li>
+                <li onclick="toFAQ()">FAQ</li>
+                <li onclick="toQNA()">Q&A</li>
+            </ul>
+            `;
 }
 
 //이름 불러오기
@@ -349,6 +362,10 @@ async function toMyClub() {
 async function toPlace() {
     window.location.href = "place.html";
 }
+//이용안내 페이지로 이동
+async function toInfo() {
+    window.location.href = "information.html";
+}
 //공지사항 페이지로 이동
 async function toNotice() {
     window.location.href = "notice.html";
@@ -360,6 +377,10 @@ async function toFAQ() {
 //Q&A 페이지로 이동
 async function toQNA() {
     window.location.href = "qna.html";
+}
+//개인정보 처리방침 페이지로 이동
+async function toPrivacyPolicy() {
+    window.location.href = "privacyPolicy.html";
 }
 
 //로그아웃 하기

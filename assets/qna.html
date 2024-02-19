@@ -15,24 +15,31 @@
         <link rel="icon" href="./resources/favicon.ico" />
         <link rel="stylesheet" href="css/dropBar.css" />
         <link rel="stylesheet" href="css/qna.css" />
+        <link rel="stylesheet" href="css/userMenu.css" />
     </head>
     <body>
         <div id="sameContainer"></div>
-        <div class="mainContainer" id="mainContainer">
-            <button class="createBtn" onclick="toQnaPost()">글 작성</button>
-            <div class="boardContainer">
-                <div class="boardTitleContainer">
-                    <div class="num" id="numTitle">번호</div>
-                    <div class="title" id="titleTitle">제목</div>
-                    <div class="writer" id="writerTitle">작성자</div>
-                    <div class="createDate" id="createDateId">작성날짜</div>
-                    <div class="updateDate" id="updateDateId">수정날짜</div>
+        <div class="bodyContainer">
+            <div class="mainContainer" id="mainContainer">
+                <div class="noticeMenuContianer" id="noticeMenuContianer"></div>
+                <div class="boardContainer">
+                    <button class="createBtn" onclick="toQnaPost()">
+                        글 작성
+                    </button>
+                    <div class="boardTitleContainer">
+                        <div class="num" id="numTitle">번호</div>
+                        <div class="title" id="titleTitle">제목</div>
+                        <div class="writer" id="writerTitle">작성자</div>
+                        <div class="createDate" id="createDateId">작성날짜</div>
+                        <div class="updateDate" id="updateDateId">수정날짜</div>
+                    </div>
+                    <div class="qnaBoardListContainer"></div>
                 </div>
-                <div class="qnaBoardListContainer"></div>
             </div>
         </div>
-
+        <div class="footer" id="footer"></div>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/qna.js"></script>
+        <script src="./js/dropmenu.js"></script>
     </body>
 </html>

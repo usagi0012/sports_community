@@ -1,4 +1,7 @@
 window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadNoticeMenu();
     qna();
     showCreateBtn();
 };

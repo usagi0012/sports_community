@@ -1,4 +1,7 @@
 window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadNoticeMenu();
     const urlParams = new URLSearchParams(window.location.search);
     let faqId = urlParams.get("id");
     getFaqDetail(faqId);
@@ -20,24 +23,14 @@ function getFaqDetail(faqId) {
             const topContent = document.createElement("div");
             topContent.classList.add("top");
             topContent.innerHTML = `
-                <label class="title">${faqDetail.title}</label>
                 <div class="info">
-                <div class="firstRow">
-                    <dl class="hostName">
-                        <dt>작성자</dt>
-                        <dd>${faqDetail.masterName}</dd>
-                    </dl>
-                </div>
-                <div class="secondRow">
-                    <dl class="createDate">
-                        <dt>작성일</dt>
-                        <dd>${faqDetail.createAt.slice(0, 10)}</dd>
-                    </dl>
-					<dl class="updateDate">
-                        <dt>수정일</dt>
-                        <dd>${faqDetail.updatedAt.slice(0, 10)}</dd>
-                    </dl>
-                </div>
+                <label class="title">${faqDetail.title}</label>
+                    <div class="hostName">
+                        ${faqDetail.masterName}
+                    </div>
+                    <div class="createDate">
+                        ${faqDetail.createAt.slice(0, 10)}
+                    </div>
                 </div>
                 <div class="cont">${faqDetail.description}</div>
                 <img src="${faqDetail.image}" alt="Uploaded Image">

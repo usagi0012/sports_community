@@ -1,4 +1,7 @@
 window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadNoticeMenu();
     faq();
     showCreateBtn();
 };
@@ -18,10 +21,11 @@ function faq() {
         .then(function (response) {
             const faqList = response.data.data;
             console.log(faqList);
-            faqList.forEach((faqs) => {
-                const newContent = document.createElement("div");
-                newContent.classList.add("item");
-                newContent.innerHTML = `
+            faqList
+                .forEach((faqs) => {
+                    const newContent = document.createElement("div");
+                    newContent.classList.add("item");
+                    newContent.innerHTML = `
                                 <div class="num">${faqs.id}</div>
                                 <div class="title"><a href="faqDetail.html?id=${
                                     faqs.id
@@ -33,8 +37,11 @@ function faq() {
                                     10,
                                 )}</div>
                             `;
-                faqBoardList.appendChild(newContent);
-            });
+                    faqBoardList.appendChild(newContent);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         });
 }
 
