@@ -1,14 +1,15 @@
 window.onload = function () {
-    // notice();
+    loadHeader();
+    loadFooter();
+    loadNoticeMenu();
+    notice();
     showCreateBtn();
 };
 
-const noticeBoardList = document.querySelector(".noticeBoardListContainer");
-
 function notice() {
+    const noticeBoardList = document.querySelector(".noticeBoardListContainer");
     noticeBoardList.innerHTML = "";
     const accessToken = localStorage.getItem("accessToken");
-
     axios
         .get("/api/notice", {
             headers: {
@@ -16,12 +17,14 @@ function notice() {
             },
         })
         .then(function (response) {
+            console.log(response);
             const noticeList = response.data.data;
 
-            noticeList.forEach((notices) => {
-                const newContent = document.createElement("div");
-                newContent.classList.add("item");
-                newContent.innerHTML = `
+            noticeList
+                .forEach((notices) => {
+                    const newContent = document.createElement("div");
+                    newContent.classList.add("item");
+                    newContent.innerHTML = `
                                 <div class="num">${notices.id}</div>
                                 <div class="title"><a href="noticeDetail.html?id=${
                                     notices.id
@@ -33,8 +36,11 @@ function notice() {
                                     10,
                                 )}</div>
                             `;
-                noticeBoardList.appendChild(newContent);
-            });
+                    noticeBoardList.appendChild(newContent);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         });
 }
 

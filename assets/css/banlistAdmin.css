@@ -1,7 +1,18 @@
-/* 스타일은 필요에 따라 수정 가능 */
+#listGroup > h2 {
+    font-size: 2rem;
+    color: #3f3131;
+}
 
-body {
-    font-family: Arial, sans-serif;
+#listGroup {
+    min-height: 100%;
+    width: 80%;
+    padding: 10px 30px;
+    border-left: 1px solid #dfcec3;
+}
+
+.banDiv {
+    padding: 15px 0px;
+    border-bottom: 1px solid #dfcec3;
 }
 
 .modal {
@@ -28,4 +39,26 @@ body {
     top: 10px;
     right: 10px;
     cursor: pointer;
+}
+
+#adminBanModal > div > #banOptions {
+    border-radius: 5px;
+    border: 1px solid black;
+    font-family: "LINESeedKR-Bd";
+    height: 25px;
+    cursor: pointer;
+}
+
+#adminBanModal > div > button {
+    height: 25px;
+    font-family: "LINESeedKR-Bd";
+    border: 1px solid #ffb13d;
+    background-color: white;
+    border-radius: 5px;
+    padding-top: 2px;
+    cursor: pointer;
+}
+
+#adminBanModal > div > button:hover {
+    background-color: #ffb13d;
 }

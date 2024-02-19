@@ -1,5 +1,5 @@
 .mainContainer > #placeResults {
-    margin-top: 70px;
+    margin-top: 20px;
     display: grid;
     grid-template-columns: repeat(4, minmax(250px, 300px));
     gap: 20px; /* 이미지 사이의 간격 조절 */
@@ -8,7 +8,14 @@
 
 .mainContainer {
     margin-top: 70px;
+    margin-bottom: 50px;
 }
+
+.mainContainer > h2 {
+    border-top: 2px solid #dfcec3;
+    padding-top: 20px;
+}
+
 .placeContainer {
     height: 20rem;
     width: 100%;
@@ -33,4 +40,16 @@ img {
 .address {
     font-size: 0.9rem;
     margin: 0px 5px 3px 7px;
+}
+
+#recruitResults > div,
+#clubResults > div {
+    padding: 10px 15px;
+    border-top: 1px dotted #dfcec3;
+}
+
+#recruitResults > div,
+#clubResults > div,
+#placeResults > div {
+    cursor: pointer;
 }

@@ -54,10 +54,10 @@ function loadHeader() {
             <li id="platform">
                 <a href="#">플랫폼 이용안내</a>
                 <ul class="detail" id="detailPlatform">
-                    <li><a href="#">이용 안내</a></li>
-                    <li><a href="#">공지 사항</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Q&A</a></li>
+                    <li><a href="#" onclick="toInfo()">이용 안내</a></li>
+                    <li><a href="#" onclick="toNotice()">공지 사항</a></li>
+                    <li><a href="#" onclick="toFAQ()">FAQ</a></li>
+                    <li><a href="#" onclick="toQNA()">Q&A</a></li>
                 </ul>
             </li>
             <li id="talk" onclick="toChat()"><a href="#">Talk</a></li>
@@ -130,8 +130,8 @@ function loadFooter() {
     <div class="footerLogo">
     <img src="resources/logo.png" id="footerLogoImg" />
 </div>
-<a href="#" id="footerAnnounce">커뮤니티 이용 안내</a>
-<a href="#" id="footerPrivacy">개인정보 처리 방침</a>
+<a href="#" onclick="toInfo()" id="footerAnnounce">커뮤니티 이용 안내</a>
+<a href="#" onclick="toPrivacyPolicy()" id="footerPrivacy">개인정보 처리 방침</a>
 <p id="footerCall">문의) usagi001218@gmail.com</p>
 <p id="footerSite">@Onong</p>
     `;
@@ -139,15 +139,54 @@ function loadFooter() {
 
 //유저 메뉴바 불러오기
 function loadUserMenu() {
+    const token = localStorage.getItem("accessToken");
     const userMenuContianer = document.getElementById("userMenuContianer");
-    userMenuContianer.innerHTML = `
-    <ul>
-        <li onclick="toUser()">사용자 정보</li>
-        <li onclick="toUserProfile()">프로필</li>
-        <li onclick="toCalender()">캘린더</li>
-        <li onclick="toAlarm()">알림</li>
-    </ul>
-    `;
+    axios
+        .get("/api/user/me", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            const user = response.data;
+            if (user.userType == "admin") {
+                userMenuContianer.innerHTML = `
+            <ul>
+                <li onclick="toUser()">사용자 정보</li>
+                <li onclick="toUserProfile()">프로필</li>
+                <li onclick="toCalender()">캘린더</li>
+                <li onclick="toAlarm()">알림</li>
+                <li onclick="toBanList()">신고 관리</li>
+            </ul>
+            `;
+            } else {
+                userMenuContianer.innerHTML = `
+                <ul>
+                    <li onclick="toUser()">사용자 정보</li>
+                    <li onclick="toUserProfile()">프로필</li>
+                    <li onclick="toCalender()">캘린더</li>
+                    <li onclick="toAlarm()">알림</li>
+                    <li onclick="toMyBanList()">신고 내역</li>
+                </ul>
+                `;
+            }
+        })
+        .catch(function (error) {
+            console.error("Error fetching profile:", error);
+        });
+}
+
+//편의기능 메뉴바 불러오기
+function loadNoticeMenu() {
+    const noticeMenuContianer = document.getElementById("noticeMenuContianer");
+    noticeMenuContianer.innerHTML = `
+            <ul>
+                <li onclick="toInfo()">이용안내</li>
+                <li onclick="toNotice()">공지사항</li>
+                <li onclick="toFAQ()">FAQ</li>
+                <li onclick="toQNA()">Q&A</li>
+            </ul>
+            `;
 }
 
 //이름 불러오기
@@ -250,6 +289,14 @@ async function toAlarm() {
 async function toCalender() {
     window.location.href = "calender.html";
 }
+//신고 관리 페이지 이동
+async function toBanList() {
+    window.location.href = "banlistAdmin.html";
+}
+//신고 내역 페이지 이동
+async function toMyBanList() {
+    window.location.href = "banlistUser.html";
+}
 //모집글 페이지로 이동
 async function toRecruit() {
     window.location.href = "recruit.html";
@@ -314,6 +361,26 @@ async function toMyClub() {
 //경기장 페이지로 이동
 async function toPlace() {
     window.location.href = "place.html";
+}
+//이용안내 페이지로 이동
+async function toInfo() {
+    window.location.href = "information.html";
+}
+//공지사항 페이지로 이동
+async function toNotice() {
+    window.location.href = "notice.html";
+}
+//FAQ 페이지로 이동
+async function toFAQ() {
+    window.location.href = "faq.html";
+}
+//Q&A 페이지로 이동
+async function toQNA() {
+    window.location.href = "qna.html";
+}
+//개인정보 처리방침 페이지로 이동
+async function toPrivacyPolicy() {
+    window.location.href = "privacyPolicy.html";
 }
 
 //로그아웃 하기

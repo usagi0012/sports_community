@@ -3,27 +3,46 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>Onong QNA Detail Page</title>
+        <meta name="description" content="Onong QNA Detail Page" />
+        <link rel="icon" href="./resources/favicon.ico" />
         <link rel="stylesheet" href="./css/qnaDetail.css" />
+        <link rel="stylesheet" href="css/userMenu.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
     </head>
     <body>
-        <button class="updateBtn" onclick="moveToUpdatePage() ">수정</button>
-        <button class="deleteBtn" onclick="deletePage() ">삭제</button>
-        <div>
-            <div class="detailContainer"></div>
-        </div>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer" id="mainContainer">
+                <div class="noticeMenuContianer" id="noticeMenuContianer"></div>
+                <div class="boardContainer">
+                    <div class="btnContainer">
+                        <button class="updateBtn" onclick="moveToUpdatePage() ">
+                            수정
+                        </button>
+                        <button class="deleteBtn" onclick="deletePage() ">
+                            삭제
+                        </button>
+                    </div>
+                    <div>
+                        <div class="detailContainer"></div>
+                    </div>
 
-        <!-- 댓글 기능 -->
-        <div id="comments-container">
-            <div class="comment" id="comment-form">
-                <textarea
-                    id="comment-input"
-                    placeholder="댓글을 작성하세요..."
-                ></textarea>
-                <button onclick="addComment()">작성하기</button>
+                    <!-- 댓글 기능 -->
+                    <div id="comments-container">
+                        <div class="comment" id="comment-form">
+                            <textarea
+                                id="comment-input"
+                                placeholder="댓글을 작성하세요..."
+                            ></textarea>
+                            <button onclick="addComment()">작성하기</button>
+                        </div>
+                        <div id="comments-list"></div>
+                    </div>
+                </div>
             </div>
-            <div id="comments-list"></div>
         </div>
+        <div class="footer" id="footer"></div>
 
         <!-- 모달을 위한 HTML 추가 -->
         <div id="modal-container">
@@ -39,5 +58,6 @@
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/qnaDetail.js"></script>
+        <script src="./js/dropmenu.js"></script>
     </body>
 </html>

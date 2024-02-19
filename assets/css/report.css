@@ -1,4 +1,4 @@
-.modal {
+#reportModal {
     display: none;
     position: fixed;
     top: 0;
@@ -10,11 +10,45 @@
     align-items: center;
 }
 
-.modal-content {
+#reportModal-content {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
+    width: 300px;
+    height: 350px;
+}
+
+#reportSection > label {
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+#reportSection > #title {
+    width: 270px;
+    height: 30px;
+}
+
+#reportSection > #reportContent {
+    width: 270px;
+    height: 50px;
+}
+
+#reportSection > textarea {
+    border-radius: 8px;
+    border: 1px solid gray;
+    font-family: "LINESeedKR-Bd";
+    padding: 5px;
+}
+
+#reportModal-content > button {
+    font-family: "LINESeedKR-Bd";
+    border-radius: 7px;
+    height: 25px;
+    padding-top: 5px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
 }
 
 .close {

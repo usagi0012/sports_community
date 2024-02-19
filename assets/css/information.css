@@ -1,11 +1,10 @@
-#listGroup {
+.mainContainer {
+    margin-top: 70px;
+}
+
+.boardContainer {
     min-height: 100%;
     width: 80%;
     padding: 10px 30px;
     border-left: 1px solid #dfcec3;
-}
-
-.banDiv {
-    padding: 15px 0px;
-    border-bottom: 1px solid #dfcec3;
 }

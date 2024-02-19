@@ -15,7 +15,6 @@
         />
         <link rel="stylesheet" href="css/index.css" />
         <link rel="stylesheet" href="css/dropBar.css" />
-        <link rel="stylesheet" href="css/calender.css" />
     </head>
     <body>
         <div id="sameContainer"></div>
@@ -23,7 +22,7 @@
             <div class="mainContainer">
                 <div class="profileContainer" id="profileContainer"></div>
 
-                <label id="rankLabel">랭킹(업데이트 예정)</label>
+                <label id="rankLabel">랭킹</label>
                 <div class="rankContainer">
                     <div
                         class="rankOuterContainer"
@@ -192,7 +191,10 @@
                             >FAQ</label
                         >
                         <div class="plusInnerContainer">
-                            <div class="plusDataContainer">
+                            <div
+                                class="plusDataContainer"
+                                id="FAQInnerContainer"
+                            >
                                 <div
                                     class="plusData"
                                     onclick="needUpdateFunction()"

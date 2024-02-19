@@ -245,6 +245,22 @@ h3 {
     justify-content: space-between;
 }
 
+#recruitMatch > button {
+    width: 50%;
+    height: 50%;
+    margin: auto;
+    font-family: "LINESeedKR-Bd";
+    text-align: center;
+    background-color: #fff;
+    border-radius: 15px;
+    border: 1px solid #ffb13d;
+    cursor: pointer;
+}
+
+#recruitMatch > button:hover {
+    background-color: #ffb13d;
+}
+
 .userInMatch {
     width: 90%;
     margin: 10px auto;
@@ -276,4 +292,8 @@ h3 {
     color: black;
     box-shadow: 2px 2px 2px gray;
     border: 1px solid #ffb13d;
+}
+
+#btnContainer {
+    text-align: center;
 }

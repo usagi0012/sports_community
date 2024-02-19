@@ -28,8 +28,9 @@ export class NoticeService {
     ) {
         const { ...restOfNotice } = createNoticeDto;
         const adminUser = await this.veryfiyAdmin(userId);
+        console.log(adminUser);
 
-        if (adminUser.userType === "admin" && file) {
+        if (file) {
             const faq = await this.noticeReporitory.save({
                 masterId: adminUser.id,
                 masterName: adminUser.name,
@@ -37,7 +38,7 @@ export class NoticeService {
                 ...restOfNotice,
             });
             return faq;
-        } else if (adminUser.userType === "admin" && !file) {
+        } else if (!file) {
             const faq = await this.noticeReporitory.save({
                 masterId: adminUser.id,
                 masterName: adminUser.name,
@@ -46,7 +47,7 @@ export class NoticeService {
             return faq;
         } else {
             throw new BadRequestException(
-                "공지사항은 관리자만 작성할 수 있습니다.",
+                "예상치 못한 오류가 발생하였습니다. 다시 시도해주세요.",
             );
         }
     }

@@ -140,22 +140,21 @@ async function createModal(userId) {
 function createLikeOrHateHtml(userId, friend, block) {
     if (friend === true) {
         return `
-        <div>
-        <button type="button" onclick="cancelLike(${userId})">Like 유저</button>
-         </div>
+
+        <button type="button" onclick="cancelLike(${userId})"><i class="fas fa-solid fa-thumbs-up" style="color:blue;"></i></button>
+
          `;
     } else if (block === true) {
         return `
-        <div>
-        <button type="button"  onclick="cancelHate(${userId})">Hate 유저</button>
-         </div>
+
+        <button type="button"  onclick="cancelHate(${userId})"><i class="fas fa-solid fa-thumbs-down" style="color:red;"></i></button>
         `;
     } else {
         return `
-        <div>
-        <button type="button" onclick="Like(${userId})">좋아요</button>
-        <button type="button" onclick="Hate(${userId})">싫어요</button>
-         </div>
+
+        <button type="button" onclick="Like(${userId})"><i class="fas fa-regular fa-thumbs-up"></i></button>
+        <button type="button" onclick="Hate(${userId})"><i class="fas fa-regular fa-thumbs-down"></i></button>
+
         `;
     }
 }

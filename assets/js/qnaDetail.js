@@ -1,4 +1,7 @@
 window.onload = async function () {
+    loadHeader();
+    loadFooter();
+    loadNoticeMenu();
     const urlParams = new URLSearchParams(window.location.search);
     let qnaId = urlParams.get("id");
     getQnaDetail(qnaId);
@@ -23,24 +26,14 @@ function getQnaDetail(qnaId) {
             const topContent = document.createElement("div");
             topContent.classList.add("top");
             topContent.innerHTML = `
-                <label class="title">${qnaDetail.title}</label>
                 <div class="info">
-                <div class="firstRow">
-                    <dl class="hostName">
-                        <dt>작성자</dt>
-                        <dd>${qnaDetail.userName}</dd>
-                    </dl>
-                </div>
-                <div class="secondRow">
-                    <dl class="createDate">
-                        <dt>작성일</dt>
-                        <dd>${qnaDetail.createAt.slice(0, 10)}</dd>
-                    </dl>
-					<dl class="createDate">
-                        <dt>작성일</dt>
-                        <dd>${qnaDetail.updatedAt.slice(0, 10)}</dd>
-                    </dl>
-                </div>
+                <label class="title">${qnaDetail.title}</label>
+                    <div class="hostName">
+                        ${qnaDetail.userName}
+                    </div>
+                    <div class="createDate">
+                        ${qnaDetail.createAt.slice(0, 10)}
+                    </div>
                 </div>
                 <div class="cont">${qnaDetail.description}</div>
                 <img src="${qnaDetail.image}" alt="Uploaded Image">
