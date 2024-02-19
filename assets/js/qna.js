@@ -27,7 +27,7 @@ function qna() {
                                 <div class="num">${qnas.id}</div>
                                 <div class="title"><a href="qnaDetail.html?id=${
                                     qnas.id
-                                }&token=${accessToken}">${qnas.title}</a></div>
+                                }">${qnas.title}</a></div>
                                 <div class="writer">${qnas.userName}</div>
 								<div class="createDate">${qnas.createAt.slice(0, 10)}</div>
                                 <div class="updateDate">${qnas.updatedAt.slice(

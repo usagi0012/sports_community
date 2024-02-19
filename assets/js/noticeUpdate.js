@@ -29,7 +29,7 @@ function submitForm() {
 
     axios
         .put(
-            `/api/notice/${noticeId}`,
+            `/api/notices/${noticeId}`,
             {
                 id: noticeId,
                 masterId: userId,
