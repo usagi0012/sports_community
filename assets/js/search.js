@@ -57,6 +57,12 @@ window.onload = async function () {
             );
 
             totalResults = placeResults.data.place.places.length;
+            const loadMoreButton = document.getElementById("loadMoreButton");
+            if (loadMoreButton) {
+                console.log(totalResults);
+                loadMoreButton.style.display =
+                    totalResults > resultsPerPage ? "block" : "none";
+            }
 
             const clubDiv = document.getElementById("clubResults");
             const recruitDiv = document.getElementById("recruitResults");
@@ -78,13 +84,6 @@ window.onload = async function () {
                 placeResults.data.place.places.slice(0, resultsPerPage),
                 "장소",
             );
-        }
-
-        // 불러올 결과가 20개 이상이면 더보기 버튼 활성화
-        const loadMoreButton = document.getElementById("loadMoreButton");
-        if (loadMoreButton) {
-            loadMoreButton.style.display =
-                totalResults > resultsPerPage ? "block" : "none";
         }
     } catch (error) {
         console.error("Error during page load:", error);
