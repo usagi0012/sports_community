@@ -1,11 +1,6 @@
-// let clubId;
-
 window.onload = function () {
     loadHeader();
-    // getClubDetail(clubId);
-    // console.log("****");
-    // hasClub();
-    // isMyClub();
+
     loadFooter();
 };
 const regionData = [
@@ -29,9 +24,6 @@ const regionData = [
 ];
 
 export default function getClubDetail(clubId) {
-    // 보내는 순서 알아보기(header, params)
-    // const authorized = localStorage.getItem("authorized");
-    // const token = JSON.parse(authorized).accessToken.value;
     const token = localStorage.getItem("accessToken");
     axios
         .get(`/api/club/${clubId}`, {
@@ -118,10 +110,7 @@ function getMyClubId() {
         })
         .then(function (response) {
             console.log("clubId 뽑아오는 response", response);
-            // clubId = response.data;
-            // console.log("클럽아이이디", clubId);
-            // console.log(response.data);
-            // console.log(typeof response.data);
+
             getClubDetail(response.data);
             console.log("****");
             hasClub();

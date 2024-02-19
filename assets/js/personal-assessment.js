@@ -139,20 +139,6 @@ async function getPersonalTag(matchId, playOtherUserId) {
     }
 }
 
-// function returnPage() {
-//     document
-//         .getElementById("submit-btn")
-//         .addEventListener("click", function () {
-//             getPersonalAssessment();
-//             getPersonalTag();
-//         });
-// }
-// |
-
-// function returnCancel() {
-//     window.location.href = `/index.html`;
-// }
-
 function openPersonal() {
     var modal = document.getElementById("myPersonal");
     modal.style.display = "block";

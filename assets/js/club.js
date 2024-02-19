@@ -18,14 +18,6 @@ const region = [
     "제주도",
 ];
 
-// function moveToClubDetail(clubId) {
-//     console.log("here");
-//     console.log("clubId", clubId);
-//     window.location.href = `club-detail.html/${clubId}`;
-//     getClubDetail(clubId);
-//     console.log("$$$$$");
-// }
-
 window.onload = function () {
     console.log("start");
     loadHeader();
@@ -56,8 +48,7 @@ function getClub(sortBy) {
                 clubNameP.textContent = club.name;
                 clubNameP.onclick = function () {
                     // 페이지 이동 전에 로그인 된 유저만 이동될 수 있도록 막음.
-                    // const authorized = localStorage.getItem("authorized");
-                    // const token = JSON.parse(authorized).accessToken.value;
+
                     const token = localStorage.getItem("accessToken");
                     axios
                         .get(`/api/club/${club.id}`, {
@@ -81,8 +72,6 @@ function getClub(sortBy) {
                             ) {
                                 alert("로그인이 필요합니다.");
                             }
-                            // access 토큰 만료되면 refresh 토큰으로 다시 재발급 할 수 있게 만들기.
-                            // localStorage에 왜 access Token이랑 refresh Token으로 안들어가는지 확인해보기.
                             if (
                                 error.response.data.message ===
                                 "accessToken expired"
@@ -102,33 +91,10 @@ function getClub(sortBy) {
                 clubRegion.className = "clubRegion";
                 clubRegion.innerHTML = `${region[club.region]}`;
                 clubInfoDiv.appendChild(clubRegion);
-
-                // // 백엔드에서 클럽id에 해당하는 이름 보내줘야 할 듯.
-                // const clubMaster = document.createElement("div");
-                // clubMaster.className = "clubMaster";
-
-                // // 클릭 이벤트를 추가하기 위해 div 엘리먼트 안에 p 엘리먼트를 생성
-                // const clubNameP2 = document.createElement("p");
-                // clubNameP2.textContent = club.masterName;
-
-                // // 클릭 이벤트 추가
-                // clubNameP2.addEventListener("click", function (event) {
-                //     event.stopPropagation(); // 부모 엘리먼트로의 이벤트 전파 방지
-                //     console.log("clubNameP2 clicked");
-                //     createModal(club.masterId);
-                // });
-
-                // // p 엘리먼트를 div 엘리먼트에 추가
-                // clubMaster.appendChild(clubNameP2);
-
-                // 최종적으로 clubInfoDiv에 div 엘리먼트 추가
-                // clubInfoDiv.appendChild(clubMaster);
             });
         })
         .catch(function (error) {
             console.log(error);
-            // console.log(error.request.response);
-            // alert(error.request.response);
         });
 }
 
