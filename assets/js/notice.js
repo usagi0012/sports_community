@@ -11,7 +11,7 @@ function notice() {
     noticeBoardList.innerHTML = "";
     const accessToken = localStorage.getItem("accessToken");
     axios
-        .get("/api/notice", {
+        .get("/api/notices", {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
