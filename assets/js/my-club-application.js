@@ -5,7 +5,6 @@ window.onload = function () {
 };
 
 function getMyClubApplication() {
-    console.log("here");
     const token = localStorage.getItem("accessToken");
 
     axios
@@ -15,10 +14,7 @@ function getMyClubApplication() {
             },
         })
         .then(function (response) {
-            console.log(response);
-
             response.data.data.applications.forEach((application, idx) => {
-                console.log("어플", application);
                 const myClubAppplicationList = document.querySelector(
                     ".my-club-application",
                 );
@@ -62,9 +58,6 @@ function getMyClubApplication() {
                         approveBtn.parentElement.children[0].textContent.slice(
                             5,
                         );
-                    console.log("clicked!!");
-                    console.log("==userId==", userId);
-                    console.log("==clubId==", clubId);
                     axios
                         .put(
                             `/api/applying-club/review`,
@@ -79,7 +72,6 @@ function getMyClubApplication() {
                             },
                         )
                         .then(function (response) {
-                            console.log("신청서 리뷰 리스폰스", response);
                             //폼 제출 후 원래 페이지로 이동
                             alert(`동호회 가입을 승인했습니다.`);
                             let checkToCreateChat = confirm(

@@ -4,7 +4,6 @@ window.onload = async function () {
     try {
         // 현재 페이지 URL에서 query와 from 추출
         const { query, from } = getSearchParams();
-
         let totalResults;
 
         if (from === "club") {
@@ -340,6 +339,7 @@ async function loadSearchResults(page) {
         }
 
         // 불러올 결과가 더 이상 없으면 더보기 버튼 숨김
+
         if (displayedResults + 20 >= totalResults) {
             const loadMoreButton = document.getElementById("loadMoreButton");
             if (loadMoreButton) {

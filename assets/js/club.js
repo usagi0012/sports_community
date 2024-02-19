@@ -30,7 +30,6 @@ function getClub(sortBy) {
     axios
         .get(`/api/club?sortBy=${sortBy}`)
         .then(function (response) {
-            console.log("*******", response);
             response.data.data.forEach((club) => {
                 const clubListDiv = document.querySelector(".club-list");
 
@@ -108,17 +107,13 @@ function isClubMaster() {
             },
         })
         .then(function (response) {
-            console.log("여기 response", response);
-            console.log("들어온거 맞아?");
             if (response.data.statusCode !== 400) {
-                console.log("여기까지?");
                 const myClubApplicationBtn =
                     document.querySelector(".myClubApplication");
                 myClubApplicationBtn.style.display = "block";
             }
         })
         .catch(function (error) {
-            console.log("여기");
             console.log(error);
         });
 }

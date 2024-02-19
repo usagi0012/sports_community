@@ -34,10 +34,6 @@ async function displayNotifications() {
 }
 
 function createNotificationElement(notification) {
-    console.log("확인", notification);
-    console.log("notificationTemplate", notificationTemplate);
-    console.log("없는부분", notificationTemplate.innerHTML);
-
     if (!notificationTemplate || !notificationTemplate.innerHTML) {
         console.error("Notification template or its content is undefined");
         return null;
@@ -45,9 +41,6 @@ function createNotificationElement(notification) {
 
     const templateContent =
         notificationTemplate.content || notificationTemplate;
-
-    // templateContent의 내용 확인
-    console.log("templateContent", templateContent.innerHTML);
 
     // templateContent의 내용을 복사
     const clone = document.importNode(templateContent, true);

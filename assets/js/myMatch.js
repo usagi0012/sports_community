@@ -13,7 +13,6 @@ async function displayMatchInfo() {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-        console.log("myMatch", response.data);
         const myMatch = document.getElementById("myMatch");
         myMatch.innerHTML = "";
 
@@ -134,13 +133,8 @@ async function displayMatchUser(matchId) {
             },
         });
 
-        // console.log(response.data);
         const myMatch = response.data[0];
         const confirmUser = response.data[1];
-
-        console.log("myMatch", myMatch);
-
-        console.log("confirmUser", confirmUser);
 
         const matchUser = document.getElementById("matchUser");
         matchUser.innerHTML = "";
@@ -201,7 +195,6 @@ function createMatchUserHtml(myMatch, user) {
         }
 
         const matchId = myMatch.id;
-        console.log("matchId", matchId);
         const playOtherUserId = user.guestId;
         const isEvaluated =
             myMatch.evaluateUser &&
@@ -253,7 +246,6 @@ async function displayPersonal(matchId, playOtherUserId) {
 }
 
 function createpersonalEvaluationHTML(matchId, playOtherUserId) {
-    console.log("createpersonalEvaluationHTML", matchId, playOtherUserId);
     return `
         <button onclick="submit('${matchId}', '${playOtherUserId}')" class="on">제출</button>
     `;
@@ -267,7 +259,6 @@ function openPersonal(confirmUser) {
 
 async function submit(matchId, playOtherUserId) {
     try {
-        console.log("submit", matchId, playOtherUserId);
         await getPersonalAssessment(matchId, playOtherUserId);
         await getPersonalTag(matchId, playOtherUserId);
         await evaluateUser(matchId, playOtherUserId);
@@ -287,9 +278,6 @@ async function endPersonal() {
 async function evaluateUser(matchId, playOtherUserId) {
     const accessToken = localStorage.getItem("accessToken");
     try {
-        console.log(matchId);
-
-        console.log(playOtherUserId);
         axios.post(
             `/api/match/evaluateUser/${playOtherUserId}/${matchId}`,
             {},
@@ -299,8 +287,6 @@ async function evaluateUser(matchId, playOtherUserId) {
                 },
             },
         );
-
-        console.log("유저집어넣기 성공");
     } catch (error) {
         console.log(error.response.data);
         alert(error.response.data.message);

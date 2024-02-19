@@ -56,7 +56,7 @@ function getNoticeDetail(noticeId) {
 
 function moveToUpdatePage() {
     const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams", urlParams);
+
     let noticeId = urlParams.get("id");
 
     window.location.href = `noticeUpdate.html?id=${noticeId}`;
@@ -84,7 +84,6 @@ function deleteCheck() {
             },
         })
         .then(function (response) {
-            console.log(response);
             alert(`${response.data.message}`);
             window.location.href = "notice.html";
         })

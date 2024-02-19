@@ -138,7 +138,6 @@ function getRecruitDetail(recruitId) {
 
 function openMapModal(gpsData) {
     var modal = document.getElementById("mapModal");
-    console.log(gpsData);
 
     modal.style.display = "flex";
     showWhere(gpsData);
@@ -171,7 +170,7 @@ function submitApplication(recruitId) {
         )
         .then(function (response) {
             // 성공적으로 처리된 경우 추가적인 처리를 할 수 있습니다.
-            console.log(response);
+
             alert("신청 완료");
             window.location.reload();
         })

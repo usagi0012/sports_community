@@ -20,14 +20,10 @@ async function createModal(userId) {
         console.error(error.response.data.error);
         throw error; // Rethrow the error for the calling code to handle
     }
-
-    console.log("user전체", result);
     const user = result.user;
     const userName = user.name;
     const friend = result.isFriend;
     const block = result.isBlocked;
-
-    console.log("이름", userName);
 
     // 프로필 정보 확인
     let userProfile;
@@ -190,8 +186,6 @@ async function Hate(userId) {
                 },
             },
         );
-        console.log("userId", userId);
-        console.log(response);
         window.location.reload();
 
         // Assuming openUserModal is a synchronous function, call it after the page is reloaded
@@ -218,7 +212,6 @@ async function cancelLike(userId) {
             },
         );
 
-        console.log(response);
         window.location.reload();
 
         // Assuming openUserModal is a synchronous function, call it after the page is reloaded
@@ -243,7 +236,6 @@ async function cancelHate(userId) {
                 },
             },
         );
-        console.log(response);
         window.location.reload();
 
         // Assuming openUserModal is a synchronous function, call it after the page is reloaded
@@ -362,7 +354,6 @@ async function openReportModal(userId) {
 
         openReportModalContainer();
     } catch (error) {
-        console.error(error);
         alert(
             (error.response &&
                 error.response.data &&
@@ -387,7 +378,6 @@ function closeReportModal() {
 }
 
 function submitReport(banUserId, titleValue, reportContentValue) {
-    console.log("제출함수시작");
     try {
         const accessToken = localStorage.getItem("accessToken");
 
@@ -520,7 +510,6 @@ async function loadUserProfile(userId) {
                 },
             });
         } catch (error) {
-            console.log(error);
             if (error) {
                 // "없음"을 표시할 요소의 innerText 설정
                 document.getElementById("userClub").innerText = "없음";
@@ -529,7 +518,6 @@ async function loadUserProfile(userId) {
                 console.log("Error fetching user clubs:", error);
             }
         }
-        console.log("불러온 데이터", response.data.data.userProfile);
         const userProfile = response.data.data.userProfile;
         const userTag =
             (responseTag && responseTag.data && responseTag.data) || {};
@@ -564,7 +552,6 @@ async function loadUserProfile(userId) {
             document.getElementById("gender").textContent = "여성";
         }
 
-        console.log(userProfile.nickname);
         // 가져온 정보로 모달창 내의 프로필 부분을 업데이트
         document.getElementById("modalNickname").textContent =
             userProfile.nickname;

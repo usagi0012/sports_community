@@ -13,7 +13,6 @@ function getPlace(page) {
     axios
         .get(`/api/place?page=${page}`)
         .then(function (response) {
-            console.log(response);
             mainContainer.innerHTML = "";
             response.data.data.forEach((place) => {
                 mainContainer.innerHTML += `
@@ -30,7 +29,6 @@ function getPlace(page) {
               </div>
                 `;
             });
-            console.log(response.data.meta);
             renderPagination(response.data.meta);
         })
         .catch(function (error) {

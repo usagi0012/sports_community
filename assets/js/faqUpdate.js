@@ -18,7 +18,7 @@ document
 
 function submitForm() {
     const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams", urlParams);
+
     let faqId = urlParams.get("id");
 
     const title = titleInput.value;
