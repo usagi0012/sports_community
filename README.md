@@ -90,7 +90,7 @@
 
 ### 5) 소셜 로그인 기능
 
-<img src='https://drive.google.com/uc?id=13V19t54uo787CpT3lvuB-OdeW_K9ye37' width=700px>
+<img src='https://drive.google.com/uc?id=13V19t54uo787CpT3lvuB-OdeW_K9ye37' width=700px height=700px>
 
 - 간편한 회원가입을 위한 소셜 로그인 기능 도입
 
