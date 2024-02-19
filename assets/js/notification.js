@@ -5,7 +5,7 @@ async function initNotification() {
             Authorization: `Bearer ${accessToken}`,
         },
     });
-    const userId = user.id;
+    const userId = user.data.id;
     const eventSource = new EventSource(
         `https://o-nong.com:8001/api/sse/${userId}`,
     );
