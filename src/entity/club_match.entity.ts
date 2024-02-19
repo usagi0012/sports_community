@@ -89,23 +89,6 @@ export class ClubMatch {
     })
     progress: Progress;
 
-    // @BeforeInsert()
-    // @BeforeUpdate()
-    // updateProgress() {
-    //     const now = new Date();
-    //     const utc = now.getTime();
-    //     const koreaTimeDiff = 9 * 60 * 60 * 1000;
-    //     const korNow = new Date(utc + koreaTimeDiff);
-
-    //     if (this.gameDate < korNow) {
-    //         this.progress = Progress.DURING;
-    //     }
-
-    //     if (this.endTime < korNow) {
-    //         this.progress = Progress.PLEASE_EVALUATE;
-    //     }
-    // }
-
     static setEndTimeFromNumber(gameDate: Date, durationInHours: number): Date {
         const adjustedGameDate = new Date(
             gameDate.getTime() + 9 * 60 * 60 * 1000,

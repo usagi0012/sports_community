@@ -92,8 +92,6 @@ export class UserProfileService {
             };
         }
 
-        // 이미지 업로드가 없을 경우
-        // 닉네임이 기재되지 않았을 때 디폴트값 이름
         if (!createUserProfileDto.nickname) {
             createUserProfileDto.nickname = user.name;
         }
@@ -311,8 +309,6 @@ export class UserProfileService {
             throw new NotFoundException(error);
         }
     }
-
-    // const recruitUsersAsInt: number[] = recruitUsers.map(Number);
 
     //친구 목록 불러오기
     async getFriend(userId: number) {

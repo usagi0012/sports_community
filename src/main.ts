@@ -15,9 +15,7 @@ async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
     app.useWebSocketAdapter(new SocketIoAdapter(app));
-    // app.useStaticAssets(join(__dirname, "..", "public")); //html,js,css (바닐라)
     app.useStaticAssets(join(__dirname, "..", "assets")); //html,js,css (바닐라)
-    // app.setBaseViewsDir(join(__dirname, "..", "views"));
 
     app.setGlobalPrefix("api", { exclude: ["/view/chat"] });
     app.enableCors({
@@ -30,7 +28,6 @@ async function bootstrap() {
             transform: true,
             transformOptions: { enableImplicitConversion: true },
             whitelist: true,
-            // forbidNonWhitelisted: true,
         }),
     );
 

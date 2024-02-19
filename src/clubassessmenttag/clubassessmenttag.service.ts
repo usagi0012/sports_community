@@ -91,17 +91,9 @@ export class ClubassessmenttagService {
             where: { id: clubId },
         });
 
-        /* if (!club) {
-            throw new NotFoundException("해당 클럽이 존재하지 않습니다.");
-        } */
-
         const clubTag = await this.clubtagcounterRepository.findOne({
             where: { clubId: club.id },
         });
-
-        /*   if (!clubTag) {
-            throw new NotFoundException("클럽의 태그를 찾을 수 없습니다.");
-        } */
 
         const clubTagClumns = Object.keys(clubTag).filter(
             (key) =>
@@ -174,18 +166,6 @@ export class ClubassessmenttagService {
         if (!clubMatch) {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
-
-        // if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
-        //     throw new BadRequestException(
-        //         "시합 신청완료 상태에서는 평가지를 작성할 수 없습니다.",
-        //     );
-        // }
-
-        // if (clubMatch.status === ClubMatchStatus.CANCEL) {
-        //     throw new BadRequestException(
-        //         "시합 취소 상태에서는 평가지를 작성할 수 없습니다.",
-        //     );
-        // }
 
         if (clubMatch.status === ClubMatchStatus.REJECTED) {
             throw new BadRequestException(
@@ -281,24 +261,6 @@ export class ClubassessmenttagService {
         if (!clubMatch) {
             throw new NotFoundException("해당 경기를 진행하지 않았습니다.");
         }
-
-        // if (clubMatch.status === ClubMatchStatus.APPLICATION_COMPLETE) {
-        //     throw new BadRequestException(
-        //         "시합 신청완료 상태에서는 태그를 작성할 수 없습니다.",
-        //     );
-        // }
-
-        // if (clubMatch.status === ClubMatchStatus.CANCEL) {
-        //     throw new BadRequestException(
-        //         "시합 취소 상태에서는 태그를 작성할 수 없습니다.",
-        //     );
-        // }
-
-        // if (clubMatch.status === ClubMatchStatus.REJECTED) {
-        //     throw new BadRequestException(
-        //         "시합 거절 상태에서는 태그를 작성할 수 없습니다.",
-        //     );
-        // }
 
         if (!clubMatch.guest_clubId && !clubMatch.host_clubId) {
             throw new NotFoundException(

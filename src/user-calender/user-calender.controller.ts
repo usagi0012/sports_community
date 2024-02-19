@@ -44,16 +44,6 @@ export class UserCalenderController {
         return this.userCalenderService.findAll(userId);
     }
 
-    // //유저의 특정 일정 가져오기
-    // @Get("/:calenderId")
-    // findCalenderById(
-    //     @UserId() userId: number,
-    //     @Param("calenderId") calenderId: string,
-    // ) {
-    //     console.log(calenderId);
-    //     return this.userCalenderService.findCalenderById(userId, calenderId);
-    // }
-
     //일정 수정하기
     @Put("/:calenderId")
     update(

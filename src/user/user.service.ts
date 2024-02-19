@@ -101,7 +101,6 @@ export class UserService {
                 where: { id: userId },
             });
 
-            // Ensure me.friendUser and me.blockUser are not null, and then map them
             const friendIds: number[] = me.friendUser?.map(Number) || [];
             const blockIds: number[] = me.blockUser?.map(Number) || [];
 
@@ -320,55 +319,4 @@ export class UserService {
         const checkEmailCode = Math.random().toString(36).substring(6);
         return checkEmailCode;
     }
-
-    // async saveCheckEmailCode(
-    //     id: number,
-    //     checkEmailCode: string,
-    // ): Promise<void> {
-    //     await this.userRepository.update(id, { checkEmailCode });
-    // }
-
-    // async sendEmailCode(id, changeUserDto: ChangeUserDto) {
-    //     const user = await this.findUserByIdAll(id);
-    //     const checkEmailCode = this.generateCheckEmailCode();
-    //     // 데이터베이스에 확인 코드 저장
-    //     await this.saveCheckEmailCode(id, checkEmailCode);
-
-    //     // 이메일 보내기
-    //     this.sendCheckEmailCode(changeUserDto.email, checkEmailCode);
-
-    //     user.checkEmailCode = checkEmailCode;
-    //     user.isVerifiedEmail = false;
-    //     await this.userRepository.save(user);
-    // }
-
-    // async checkEmailCode(id, changeUserDto: ChangeUserDto) {
-    //     const user = await this.findUserByIdAll(id);
-    //     if (!user) {
-    //         throw new NotFoundException("존재하지 않는 사용자입니다.");
-    //     }
-    //     if (changeUserDto.checkEmailCode !== user.checkEmailCode) {
-    //         throw new MethodNotAllowedException("인증번호가 틀립니다.");
-    //     }
-    //     user.checkEmailCode = null;
-    //     user.isVerifiedEmail = true;
-
-    //     // 저장
-    //     await this.userRepository.save(user);
-    //     return {
-    //         statusCode: 200,
-    //         message: "인증 완료",
-    //     };
-    // }
-
-    // async checkExistCode(id: number) {
-    //     const user = await this.findUserByIdAll(id);
-    //     const checkEmailCode = user.checkEmailCode;
-    //     const isVerifiedEmail = user.isVerifiedEmail;
-    //     if (!user) {
-    //         throw new NotFoundException("존재하지 않는 사용자입니다.");
-    //     }
-
-    //     return { checkEmailCode, isVerifiedEmail };
-    // }
 }

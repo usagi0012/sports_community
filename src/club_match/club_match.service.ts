@@ -56,8 +56,6 @@ export class ClubMatchService {
         if (me.userType === UserType.USER || me.userType !== UserType.ADMIN) {
             throw new NotFoundException("밴유저는 이용 불가능합니다.");
         }
-
-        // await this.userType(userId);
     }
     //매치 신청하기
 
@@ -479,17 +477,6 @@ export class ClubMatchService {
         }
         return await this.clubMatchRepository.save(clubMatch);
     }
-
-    // @Cron(CronExpression.EVERY_10_SECONDS)
-    // async handleCron() {
-    //     const guestMatches = await this.clubMatchRepository.find();
-
-    //     for (const guestMatch of guestMatches) {
-    //         this.updateProgress(guestMatch);
-    //     }
-
-    //     await this.clubMatchRepository.save(guestMatches);
-    // }
 
     private updateProgress(clubMatch: ClubMatch) {
         if (clubMatch.gameDate.getTime() < korNow.getTime()) {
