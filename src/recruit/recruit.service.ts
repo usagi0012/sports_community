@@ -1,22 +1,13 @@
-import { UserId } from "src/auth/decorators/userId.decorator";
 import { Recruit } from "./../entity/recruit.entity";
-import { error } from "console";
 import { User } from "./../entity/user.entity";
-import {
-    BadRequestException,
-    Injectable,
-    NotFoundException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Progress, Status } from "../entity/recruit.entity";
 import { RecruitDTO, UpdateDto, PutDTO } from "./dto/recruit.dto";
 import { In, Not, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Match, MatchStatus } from "../entity/match.entity";
 import { MatchUpdateDto } from "./dto/checkmatch.dto";
-import { use } from "passport";
 import { Cron, CronExpression } from "@nestjs/schedule";
-import { not } from "cheerio/lib/api/traversing";
-import { match } from "assert";
 import { Alarmservice } from "src/alarm/alarm.service";
 import { UserType } from "./../entity/user.entity";
 
@@ -77,10 +68,6 @@ export class RecruitService {
                 now.getTime() + 1 * 60 * 60 * 1000,
             );
 
-            console.log("gamedate", recruitDTO.gamedate);
-            console.log("korgam", gamedate);
-            console.log("oneHourBeforeNow", oneHourBeforeNow);
-
             if (recruitDTO.gamedate.getTime() < oneHourBeforeNow.getTime()) {
                 throw new NotFoundException(
                     "최소 한 시간 전에 입력 가능합니다.",
@@ -111,7 +98,6 @@ export class RecruitService {
 
             return newRecruit;
         } catch (error) {
-            console.error(error);
             throw new NotFoundException(error);
         }
     }
@@ -191,8 +177,6 @@ export class RecruitService {
 
         const myMatches = await this.findConfirmMatch(recruitId);
 
-        console.log(myMatches);
-
         const matches = await this.matchRepository.find({
             where: {
                 recruitId: recruitId,
@@ -255,7 +239,7 @@ export class RecruitService {
 
             if (matchUpdateDto.status === MatchStatus.APPROVED) {
                 match.status = MatchStatus.APPROVED;
-                console.log(match);
+
                 this.alarmService.sendAlarm(
                     match.guestId,
                     `${recruit.title}에 대한 매치 신청이 승인되었습니다.`,
@@ -267,7 +251,6 @@ export class RecruitService {
             await this.recruitRepository.save(recruit);
             const updatedMatch = await this.matchRepository.save(match);
 
-            console.log(match.guestId);
             return updatedMatch;
         } catch (error) {
             throw error;
@@ -375,10 +358,9 @@ export class RecruitService {
 
         const myMatches = await this.findConfirmMatch(recruitId);
 
-        console.log(myMatches);
         for (const myMatch of myMatches) {
             const matchUserId = myMatch.guestId;
-            console.log(matchUserId);
+
             this.alarmService.sendAlarm(
                 matchUserId,
                 `${existingRecruit.title} 경기가 취소되었습니다.`,
@@ -475,7 +457,8 @@ export class RecruitService {
                 throw new NotFoundException("모집글이 존재하지 않습니다.");
             }
         } catch (error) {
-            console.error(error);
+            console.log("error", error);
+            throw new NotFoundException(error);
         }
     }
     //유저집어넣기
@@ -486,7 +469,6 @@ export class RecruitService {
                     id: recruitId,
                 },
             });
-            console.log("userId", userId);
             myRecruit.evaluateUser = myRecruit.evaluateUser || [];
 
             if (!myRecruit.evaluateUser.includes(guestId.toString())) {
@@ -497,6 +479,7 @@ export class RecruitService {
 
             return myRecruit;
         } catch (error) {
+            console.log("error", error);
             throw new NotFoundException(error);
         }
     }

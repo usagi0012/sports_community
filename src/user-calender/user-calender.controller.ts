@@ -3,10 +3,8 @@ import {
     Get,
     Post,
     Body,
-    Patch,
     Param,
     Delete,
-    Req,
     UseGuards,
     Put,
     Query,
@@ -51,7 +49,6 @@ export class UserCalenderController {
         @Param("calenderId") calenderId: string,
         @Body() updateUserCalenderDto: UpdateUserCalenderDto,
     ) {
-        console.log("들어온 캘린더ID", calenderId);
         // this.alarmService.sendAlarm(userId, "확인");
         return this.userCalenderService.update(
             +userId,
@@ -63,16 +60,13 @@ export class UserCalenderController {
     //일정 삭제하기
     @Delete("/:calenderId")
     remove(@UserId() userId: number, @Param("calenderId") calenderId: string) {
-        console.log(calenderId);
         return this.userCalenderService.remove(+userId, calenderId);
     }
 
     // 유저의 특정 날짜 데이터 가져오기
     @Get("/date")
     findCalenderByDate(@UserId() userId: number, @Query("date") date: string) {
-        console.log(date);
         const parsedDate = new Date(date); // 문자열을 Date로 변환
-        console.log(parsedDate);
         return this.userCalenderService.findCalenderByDate(userId, parsedDate);
     }
 }

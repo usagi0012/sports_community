@@ -1,11 +1,4 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    ManyToOne,
-    BeforeInsert,
-    BeforeUpdate,
-} from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { Club } from "./club.entity";
 import { IsNotEmpty } from "class-validator";
 

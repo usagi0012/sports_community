@@ -1,11 +1,8 @@
 import {
     BadRequestException,
-    HttpException,
-    HttpStatus,
     Injectable,
     NotAcceptableException,
     NotFoundException,
-    Req,
 } from "@nestjs/common";
 import { CreateUserProfileDto } from "./dto/create-user-profile.dto";
 import { UpdateUserProfileDto } from "./dto/update-user-profile.dto";
@@ -13,7 +10,7 @@ import { UserProfile } from "src/entity/user-profile.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/entity/user.entity";
 import { In, Repository } from "typeorm";
-import { NotFoundError } from "rxjs";
+
 import { AwsService } from "../aws/aws.service";
 import { Alarmservice } from "src/alarm/alarm.service";
 
@@ -68,7 +65,6 @@ export class UserProfileService {
         // 이미지 업로드할 경우
         if (file) {
             const uploadedFilePath = await this.awsService.fileupload(file);
-            console.log("이미지", uploadedFilePath);
 
             // 닉네임이 기재되지 않았을 때 디폴트값 이름
             if (!createUserProfileDto.nickname) {
@@ -293,8 +289,6 @@ export class UserProfileService {
             });
 
             me.blockUser = me.blockUser || [];
-
-            console.log("otherUserId", otherUserId);
 
             const index = me.blockUser.indexOf(otherUserId.toString());
 

@@ -10,19 +10,19 @@ import { ConfigService } from "@nestjs/config";
 import { SocketIoAdapter } from "./adapters/socket-io.adapters";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
+import { error } from "console";
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
     app.useWebSocketAdapter(new SocketIoAdapter(app));
-    app.useStaticAssets(join(__dirname, "..", "assets")); //html,js,css (바닐라)
+    app.useStaticAssets(join(__dirname, "..", "assets"));
 
     app.setGlobalPrefix("api", { exclude: ["/view/chat"] });
     app.enableCors({
         origin: true,
         credentials: true,
     });
-
     app.useGlobalPipes(
         new ValidationPipe({
             transform: true,

@@ -6,12 +6,9 @@ import {
 } from "@nestjs/common";
 import { chatRoomListDTO } from "./dto/chatBackEnd.dto";
 import { Socket } from "socket.io";
-import { v4 as uuidv4 } from "uuid";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Chat } from "src/entity/chat.entity";
-import { UserPositionModule } from "src/user-position/user-position.module";
-import { UserId } from "src/auth/decorators/userId.decorator";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { Participants } from "src/entity/participants.entity";
@@ -50,7 +47,6 @@ export class ChatRoomService {
         const chatName = await this.chatRepository.findOne({
             where: { title: roomName },
         });
-        // console.log({ chatName });
         if (chatName) {
             throw new WsException("동일한 이름의 채팅방이 존재합니다.");
         }
@@ -161,7 +157,6 @@ export class ChatRoomService {
             where: { id: userId },
         });
         const userName = userInfo.name;
-        console.log({ userId, roomId });
         // roomId 형태가 아니라 roomId에 title 형태가 들어있어서 roomId 형태로 가져오긴 해야함.
         this.messageRepository.save({
             userId: +userId,
@@ -174,13 +169,10 @@ export class ChatRoomService {
     async getName(client: Socket) {
         // const userId = this.verifyToken(client);
         const userId = client["userId"];
-        console.log("==소켓userId==", userId);
         const userInfo = await this.userRepository.findOne({
             where: { id: userId },
         });
-        console.log("==userInfo==", userInfo);
         const userName = userInfo.name;
-        console.log("==userName==", userName);
         return userName;
     }
 }

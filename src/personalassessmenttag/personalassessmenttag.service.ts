@@ -48,8 +48,6 @@ export class PersonalassessmenttagService {
             });
 
         for (const userScore of topThreeUsersPersonalityAmount) {
-            console.log("===유저 스코어===", userScore);
-            console.log("===인성 점수===", userScore.personality);
             const savedRank = await this.memberRankRepository
                 .save({
                     userId: userScore.userId,
@@ -60,7 +58,6 @@ export class PersonalassessmenttagService {
                 .catch((error) => {
                     console.error("Error saving rank:", error);
                 });
-            console.log("==저장?==", savedRank);
         }
 
         return topThreeUsersPersonalityAmount;
@@ -77,9 +74,6 @@ export class PersonalassessmenttagService {
         });
 
         for (const userScore of topThreeAbilityAmountUser) {
-            console.log("===유저 실력 스코어===", userScore);
-            console.log("===실력 점수===", userScore.ability);
-            console.log("===실력 id===", userScore.userId);
             const savedRank2 = await this.memberRankRepository
                 .save({
                     userId: userScore.userId,
@@ -90,7 +84,6 @@ export class PersonalassessmenttagService {
                 .catch((error) => {
                     console.error("Error saving rank:", error);
                 });
-            console.log("===저장된 실력 점수===", savedRank2);
         }
 
         return topThreeAbilityAmountUser;
@@ -445,9 +438,6 @@ export class PersonalassessmenttagService {
         );
 
         userScoreData.ability = parseFloat(userScoreData.ability.toFixed(3));
-
-        console.log(userScoreData.ability);
-        console.log(userScoreData.personality);
 
         const userScore = await this.userscoreRepository.save(userScoreData);
 

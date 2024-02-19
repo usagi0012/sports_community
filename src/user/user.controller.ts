@@ -11,8 +11,6 @@ import {
     Query,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
 import { accessTokenGuard } from "../auth/guard/access-token.guard";
 import { UserId } from "../auth/decorators/userId.decorator";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
@@ -64,7 +62,6 @@ export class UserController {
     @UseGuards(accessTokenGuard)
     @Put("me")
     updateUserById(@UserId() id: string, @Body() changeUserDto: ChangeUserDto) {
-        console.log(changeUserDto);
         return this.userService.updateUser(+id, changeUserDto);
     }
 

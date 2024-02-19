@@ -9,7 +9,6 @@ import {
 } from "typeorm";
 
 import { User } from "./user.entity";
-import { UserPosition } from "./user-position.entity";
 
 export enum Gender {
     MALE = "male",

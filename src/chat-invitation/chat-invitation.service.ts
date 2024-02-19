@@ -27,19 +27,15 @@ export class ChatInvitationService {
 
     async invitationToRoom(chatInvitationDto, roomId, userId) {
         const { nickName } = chatInvitationDto;
-        console.log("서비스부분 들어옴");
-        console.log("받아온 파라미터 값 확인", nickName, roomId, userId);
         // 방의 생성자가 아니면 초대 불가능 에러
         const isCreator = await this.chatRepository.findOne({
             where: { creator: userId, id: roomId },
         });
-        console.log(isCreator);
         if (!isCreator) {
             throw new ForbiddenException(
                 "채팅방의 생성자만 초대를 할 수 있습니다.",
             );
         }
-        console.log("방의 생성자 확인완료");
         // 존재하지 않는 유저이면 초대 불가능
         const existUser = await this.userProfileRepository.findOne({
             where: { nickname: nickName },
@@ -71,17 +67,15 @@ export class ChatInvitationService {
         userId: number,
     ) {
         const { nickName } = chatExpelMemberDto;
-        console.log("userId임", userId);
+
         const isCreator = await this.chatRepository.findOne({
             where: { creator: userId, id: roomId },
         });
-        console.log(isCreator);
         if (!isCreator) {
             throw new ForbiddenException(
                 "채팅방의 생성자만 초대를 할 수 있습니다.",
             );
         }
-        console.log("방의 생성자 확인완료");
         // 존재하지 않는 유저이면 초대 불가능
         const existUser = await this.userProfileRepository.findOne({
             where: { nickname: nickName },
@@ -90,16 +84,13 @@ export class ChatInvitationService {
         if (!existUser) {
             throw new NotFoundException("존재하지 않는 유저입니다.");
         }
-        console.log("존재하지 않는 유저 확인완료");
 
         const memberId = existUser.userId;
 
-        console.log(memberId, roomId);
         const expeledMember = await this.participantsRepository.delete({
             userId: memberId,
             chatId: roomId,
         });
-        console.log("추방된 멤버", expeledMember);
         return expeledMember;
     }
 

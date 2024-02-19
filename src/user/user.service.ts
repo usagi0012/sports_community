@@ -1,25 +1,17 @@
 import {
     BadRequestException,
-    Body,
     ConflictException,
-    HttpStatus,
     Injectable,
-    MethodNotAllowedException,
-    NotAcceptableException,
     NotFoundException,
-    Param,
-    Post,
-    UnauthorizedException,
 } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User, UserType } from "../entity/user.entity";
-import { EntityManager, Repository, Transaction } from "typeorm";
+import { Repository } from "typeorm";
 import { ConfigService } from "@nestjs/config";
 import * as bcrypt from "bcrypt";
 import { ChangeUserDto } from "./dto/change-user.dto";
-import { UserProfile } from "src/entity/user-profile.entity";
 import { CheckPasswordDto } from "./dto/checkPassword.dto";
 import * as nodemailer from "nodemailer";
 import { google } from "googleapis";
@@ -183,8 +175,6 @@ export class UserService {
     // 내 정보 수정
     async updateUser(id: number, changeUserDto: ChangeUserDto) {
         const user = await this.findUserByIdAll(id);
-        console.log(changeUserDto);
-        console.log(user);
 
         if (!user) {
             throw new NotFoundException("존재하지 않는 사용자입니다.");
@@ -207,7 +197,6 @@ export class UserService {
                 const existingEmail = await this.findUserByEmail(
                     changeUserDto.email,
                 );
-                console.log(existingEmail);
                 if (existingEmail) {
                     throw new ConflictException("이미 존재하는 이메일입니다.");
                 }
@@ -273,7 +262,6 @@ export class UserService {
         const token = await this.update(userId, {
             currentRefreshToken: null,
         });
-        console.log(token);
         await this.userRepository.delete({ id: userId });
         return {
             statusCode: 200,
