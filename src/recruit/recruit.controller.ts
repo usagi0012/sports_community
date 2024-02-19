@@ -1,4 +1,3 @@
-import { Recruit } from "./../entity/recruit.entity";
 import {
     Controller,
     Body,
@@ -124,5 +123,19 @@ export class RecruitController {
         @Body() putDTO: PutDTO,
     ) {
         return await this.recruitService.editMatch(userId, putDTO, recruitId);
+    }
+
+    //유저아이디 집어넣기
+    @Post("post/evaluateUser/:guestId/:recruitId")
+    async evaluateUser(
+        @UserId() userId: number,
+        @Param("guestId") guestId: number,
+        @Param("recruitId") recruitId: number,
+    ) {
+        return await this.recruitService.evaluateUser(
+            guestId,
+            userId,
+            recruitId,
+        );
     }
 }

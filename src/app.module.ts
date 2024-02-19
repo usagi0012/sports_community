@@ -31,6 +31,11 @@ import { ChatInvitationModule } from "./chat-invitation/chat-invitation.module";
 import { MessageModule } from "./message/message.module";
 import { ReportModule } from "./report/report.module";
 import { BanlistModule } from "./banlist/banlist.module";
+import { UpdatedRankModule } from "./updated-rank/updated-rank.module";
+import { FaqModule } from "./faq/faq.module";
+import { NoticeModule } from "./notice/notice.module";
+import { QnaModule } from "./qna/qna.module";
+import { QnaCommentModule } from "./qnaComment/qnaComment.module";
 
 @Module({
     imports: [
@@ -62,6 +67,11 @@ import { BanlistModule } from "./banlist/banlist.module";
         MessageModule,
         ReportModule,
         BanlistModule,
+        UpdatedRankModule,
+        FaqModule,
+        NoticeModule,
+        QnaModule,
+        QnaCommentModule,
     ],
     controllers: [AppController, RecruitController, SseController],
     providers: [AppService],

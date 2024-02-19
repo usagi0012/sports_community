@@ -207,7 +207,6 @@ let selectedDate = null;
 $(".calendar-date").on("click", ".calendar-date__col", function () {
     // 클릭한 날짜 데이터 콘솔 출력
     const clickedDate = $(this).text();
-    console.log("클릭한 날짜:", clickedDate);
 
     // 클릭한 날짜의 전체 날짜 생성
     const clickedFullDate = new Date(
@@ -215,8 +214,6 @@ $(".calendar-date").on("click", ".calendar-date__col", function () {
         init.date.getMonth(),
         parseInt(clickedDate, 10) + 1,
     );
-
-    console.log("클릭한 날짜 전체 날짜", clickedFullDate);
 
     // 클릭한 날짜로 Date 객체 생성
     selectedDate = new Date(
@@ -228,8 +225,6 @@ $(".calendar-date").on("click", ".calendar-date__col", function () {
         0,
         0,
     );
-
-    console.log("선택한 날짜", selectedDate);
 
     // 클릭한 날짜를 기반으로 서버에 요청 보내기
     loadEventForSelectedDate(selectedDate);
@@ -243,8 +238,6 @@ let currentEvent = null; // 전역 변수로 현재 이벤트를 저장할 변�
 
 // 수정 모달창 열기 함수
 function openUpdateModal(event) {
-    console.log("event 안에 내용", event);
-
     // 수정 모달창 열기
     document.getElementById("updateCalendarModal").style.display = "block";
     document.getElementById("updateTitle").value = event.title;
@@ -253,9 +246,6 @@ function openUpdateModal(event) {
 
     // 현재 이벤트를 전역 변수에 저장
     currentEvent = event;
-
-    // 수정 모달창에서 existDate를 반환 (필요한 경우에만 반환)
-    console.log("event 반환하기 전", event);
 }
 
 async function loadEventForSelectedDate(selectedDate) {
@@ -268,7 +258,6 @@ async function loadEventForSelectedDate(selectedDate) {
         });
         const userId = user.data.id;
 
-        console.log("선택한날짜의 함수호출", selectedDate);
         // selectedDate를 이용하여 axios.get 호출
         const response = await axios.get(`/api/user/me/calender/date`, {
             params: {
@@ -278,7 +267,6 @@ async function loadEventForSelectedDate(selectedDate) {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-        console.log("선택한 날짜의 response", response.data);
 
         if (response.data.message === "해당 날짜에 등록된 일정이 없습니다.") {
             console.log("일정을 등록해주세요");
@@ -288,16 +276,12 @@ async function loadEventForSelectedDate(selectedDate) {
             const existDate = response.data.data.calenders;
 
             if (existDate) {
-                // 일정이 이미 존재하는 경우 수정 모달 열기
-                console.log(existDate);
-
                 openTitleModal(existDate); // 해당 선택된 날짜를 전달
             } else {
                 return openModal(selectedDate); // 데이터가 없으면 생성 모달 열기
             }
         }
     } catch (error) {
-        console.log(error);
         if (error.response && error.response.status === 401) {
             alert("로그인 후 이용해주세요.");
             window.location.href = "/login.html";
@@ -328,10 +312,10 @@ function openTitleModal(existDate) {
     existDate.forEach((event) => {
         const listItem = document.createElement("li");
         listItem.textContent = event.title;
-
+        listItem.style.paddingLeft = "10px";
+        listItem.style.borderLeft = `8px solid ${event.color}`;
         // 각각의 일정에 대해 클릭 이벤트 추가
         listItem.addEventListener("click", () => {
-            console.log("openUpdateModal로 들어가기");
             openUpdateModal(event);
             titleModal.style.display = "none";
         });
@@ -397,7 +381,6 @@ async function createCalendar(title, description, color, selectedDate) {
             },
         );
 
-        console.log(response.data);
         alert("생성 완료");
         // 여기에서 성공 시 프론트엔드에서 할 작업을 수행 (예: 새로고침 없이 화면 갱신)
     } catch (error) {
@@ -416,7 +399,6 @@ async function createCalendar(title, description, color, selectedDate) {
 async function updateCalendar(calenderId, title, description, color) {
     try {
         const accessToken = localStorage.getItem("accessToken");
-        console.log("여기", calenderId);
 
         // userId 및 calenderId를 이용하여 axios.put 호출
         const response = await axios.put(
@@ -434,11 +416,8 @@ async function updateCalendar(calenderId, title, description, color) {
             },
         );
 
-        console.log(response);
-        // 수정이 성공하면 true 반환
         return true;
     } catch (error) {
-        console.log("수정실패", error);
         if (error.response && error.response.status === 401) {
             alert("로그인 후 이용해주세요.");
             window.location.href = "/login.html";
@@ -466,11 +445,9 @@ async function deleteCalendar(calenderId) {
             },
         );
 
-        console.log(response.data);
         // 삭제 성공하면 true 반환
         return true;
     } catch (error) {
-        console.log("삭제실패", error);
         if (error.response && error.response.status === 401) {
             alert("로그인 후 이용해주세요.");
             window.location.href = "login.html";
@@ -488,7 +465,6 @@ async function deleteCalendar(calenderId) {
 document
     .getElementById("deleteButtonId")
     .addEventListener("click", async () => {
-        console.log(currentEvent.id);
         const success = await deleteCalendar(currentEvent.id);
 
         if (success) {

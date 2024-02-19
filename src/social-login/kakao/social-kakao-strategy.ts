@@ -9,7 +9,9 @@ export class KakaoStrategy extends PassportStrategy(Strategy, "kakao") {
         super({
             clientID: configService.get<string>("KAKAO_CLIENT_ID"),
             clientSecret: configService.get<string>("KAKAO_CLIENT_SECRET"),
-            callbackURL: configService.get<string>("KAKAO_CALLBACK_URL"),
+            callbackURL: `${configService.get<string>(
+                "LOCAL",
+            )}/api/auth/kakao/callback`,
             scope: ["account_email", "profile_nickname"],
         });
     }
@@ -19,10 +21,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy, "kakao") {
         refreshToken: string,
         profile: Profile,
     ) {
-        // console.log("accessToken", accessToken);
-        // console.log("refreshToken", refreshToken);
-        // console.log(profile);
-
         return {
             accessToken,
             refreshToken,

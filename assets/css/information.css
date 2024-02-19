@@ -1,0 +1,10 @@
+.mainContainer {
+    margin-top: 70px;
+}
+
+.boardContainer {
+    min-height: 100%;
+    width: 80%;
+    padding: 10px 30px;
+    border-left: 1px solid #dfcec3;
+}

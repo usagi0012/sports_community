@@ -16,24 +16,33 @@ document.addEventListener("DOMContentLoaded", async function () {
             },
         });
 
-        console.log(profileResponse);
-
         const profile = profileResponse.data.data.userProfile;
         document.getElementById("nickname").innerText = profile.nickname;
 
         // 이미지를 나타내는 img 태그를 동적으로 생성
         const imageElement = document.createElement("img");
-        imageElement.src = profile.image;
+
+        // profile.image가 비어있을 경우 기본 이미지 설정
+        if (profile.image) {
+            imageElement.src = profile.image;
+        } else {
+            imageElement.src = "./resources/profile.jpeg"; // 기본 이미지 경로 설정
+        }
+
         imageElement.alt = "프로필 이미지";
+
         // 생성한 img 태그를 span에 추가
         document.getElementById("image").appendChild(imageElement);
-        document.getElementById("gender").innerText = profile.gender;
+        if (profile.gender === "male") {
+            document.getElementById("gender").textContent = "남성";
+        } else if (profile.gender === "female") {
+            document.getElementById("gender").textContent = "여성";
+        }
         document.getElementById("description").innerText = profile.description;
         document.getElementById("height").innerText = profile.height;
 
         //선호 포지션 가져오기
         try {
-            console.log("여긴들어오고");
             const positionResponse = await axios.get("/api/user/me/position", {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -86,8 +95,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                 },
             });
 
-            console.log(scoreResponse);
-
             if (scoreResponse.data.message === "개인 점수가 조회되었습니다.") {
                 // 평가 점수가 있는 경우
                 const score = scoreResponse.data.data;
@@ -122,8 +129,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                     },
                 },
             );
-
-            console.log(tagResponse.data);
 
             if (tagResponse.data.message === "개인 태그가 조회되었습니다.") {
                 // 유저 태그가 있는 경우
@@ -173,29 +178,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             console.log(error);
         }
 
-        // //동아리 상세보기 버튼 클릭 이벤트
-        // document
-        //     .getElementById("clubDetailButton")
-        //     .addEventListener("click", async function () {
-        //         const user = await axios.get("/api/user/me", {
-        //             headers: {
-        //                 Authorization: `Bearer ${accessToken}`,
-        //             },
-        //         });
-
-        //         const clubId = +user.data.clubId;
-
-        //         if (!clubId) {
-        //             return alert("가입한 동아리가 없습니다.");
-        //         }
-
-        //         // 동아리 상세페이지 URL 생성
-        //         const clubDetailURL = `/club-detail.html?id=${clubId}`;
-
-        //         // 생성된 URL로 이동
-        //         window.location.href = clubDetailURL;
-        //     });
-
         // 프로필 수정 버튼 클릭 이벤트
         document
             .getElementById("updateProfileButton")
@@ -209,6 +191,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             window.location.href = "/login.html";
         }
         console.error("프로필 정보 및 업데이트 중 에러 발생:", error);
-        console.log(error);
+        if (error.response.data.message === "프로필 정보가 없습니다.") {
+            alert("프로필을 먼저 등록해주세요.");
+            window.location.href = "userProfile-post.html";
+        }
     }
 });

@@ -13,7 +13,11 @@ import { ChatRoomService } from "./chatRoom.service";
 import { setInitDTO, chatRoomListDTO } from "./dto/chatBackEnd.dto";
 import { Observable, map, from } from "rxjs";
 import { UserId } from "src/auth/decorators/userId.decorator";
-import { NotFoundException, UseGuards } from "@nestjs/common";
+import {
+    NotFoundException,
+    UnauthorizedException,
+    UseGuards,
+} from "@nestjs/common";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { JwtService } from "@nestjs/jwt";
@@ -33,35 +37,34 @@ export class ChatBackEndGateway
     @WebSocketServer()
     server: Server;
 
-    //소켓 연결시 유저목록에 추가
+    //소켓 연결시 유저목록에  추가
     public handleConnection(@ConnectedSocket() client: Socket): void {
         try {
             console.log("connected", client.id);
-            // client.leave(client.id);
-            // client.data.roomId = `room:lobby`;
+
             client.join("room:lobby");
-            // (여기서 관리)
-            // client["user"];
-            // db에서 가져온 유저 정보 저장.
-            const token = client.handshake.query;
             const { auth } = client.handshake.query;
-            console.log("&&&&&&&&", auth);
-            // const accessToken = token.auth;
-            // console.log("서버로 가져온 토큰", accessToken);
+            const userId = this.verifyToken(auth);
+
+            if (userId == null) {
+                throw new UnauthorizedException();
+            }
+            client["userId"] = userId;
+            console.log("client", client);
         } catch (error) {
             console.error(error.message);
-            throw new WsException("로그인이 필요합니다.");
         }
     }
 
     //소켓 연결 해제시 유저목록에서 제거 (console.log빼고 없어도 될듯)
     public handleDisconnect(client: Socket): void {
         const { roomId } = client.data;
+        console.log(2);
+
         if (
             roomId != "room:lobby" &&
             !this.server.sockets.adapter.rooms.get(roomId)
         ) {
-            // this.ChatRoomService.deleteChatRoom(roomId);
             this.server.emit(
                 "getChatRoomList",
                 this.ChatRoomService.getChatRoomList(client),
@@ -82,43 +85,42 @@ export class ChatBackEndGateway
         }
     }
 
-    verifyToken(token: string | string[]): boolean {
-        if (typeof token !== "string") {
-            throw new WsException("토큰의 형식이 잘못 되었습니다.");
+    verifyToken(token: string | string[]) {
+        try {
+            if (typeof token !== "string") {
+                throw new WsException("토큰의 형식이 잘못 되었습니다.");
+            }
+            const payload = this.jwtService.verify(token, {
+                secret: this.configService.get<string>(
+                    "JWT_ACCESS_TOKEN_SECRET",
+                ),
+            });
+
+            if (!payload) {
+                throw new WsException("로그인이 필요합니다.");
+            }
+
+            const userId = payload.userId;
+
+            return userId;
+        } catch (error) {
+            console.log(error);
+            if ((error.message = "jwt expired")) {
+                return null;
+            }
         }
-        const payload = this.jwtService.verify(token, {
-            secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
-        });
-
-        if (!payload) {
-            throw new WsException("로그인이 필요합니다.");
-        }
-
-        const userId = payload.userId;
-        console.log({ payload });
-
-        return true;
     }
 
     //메시지가 전송되면 모든 유저에게 메시지 전송
     @SubscribeMessage("sendMessage")
     async sendMessage(client: Socket, data: any) {
         const { roomId, message } = data;
-        // console.log("서버", await this.server.in(roomId).fetchSockets());
-        //client=>this.server
-        // this.server.to(roomId) : 나를 포함한 방 전원에게 보내는 것
-        // client.to(roomId) : 나를 제외한 방 전원에게 보내는 것
 
         // 닉네임 뽑아오기
         const userName = await this.ChatRoomService.getName(client);
-        console.log("==게이트userName==", userName);
-        console.log(client.id, client.data.nickname, message, roomId);
-        const roomName = "room:1";
-        console.log(typeof roomId);
         this.server.to(roomId).emit("getMessage", {
             //실제 데이터로 바꾸기
             id: client.id,
-            // nickname: client.data.nickname,
             nickname: userName,
             message,
             roomId,
@@ -165,14 +167,22 @@ export class ChatBackEndGateway
         client.data.nickname = nickname;
     }
 
-    //채팅방 목록 가져오기 (여기부분 수정해서 내가 포함된 채팅방만 가져와보기)
+    //채팅방 목록 가져오기 (여기 부분 수정해서 내가 포함된 채팅방만 가져와보기)
     @SubscribeMessage("getChatRoomList")
     async getChatRoomList(client: Socket, payload: any) {
-        console.log("here", this.ChatRoomService.getChatRoomList(client));
-        client.emit(
-            "getChatRoomList",
-            await this.ChatRoomService.getChatRoomList(client),
-        );
+        try {
+            if (client["userId"] == null) {
+                throw new UnauthorizedException();
+            }
+            client.emit(
+                "getChatRoomList",
+                await this.ChatRoomService.getChatRoomList(client),
+            );
+        } catch (error) {
+            console.log(error);
+
+            return false;
+        }
     }
 
     //채팅방 생성하기 (프론트에서 받는 곳)
@@ -180,20 +190,10 @@ export class ChatBackEndGateway
     async createChatRoom(client: Socket, roomName: string) {
         //이전 방이 만약 나 혼자있던 방이면 제거
         try {
-            console.log("룸네임222", roomName);
-            // if (
-            //     client.data.roomId != "room:lobby" &&
-            //     this.server.sockets.adapter.rooms.get(client.data.roomId)
-            //         .size == 1
-            // ) {
-            //     this.ChatRoomService.deleteChatRoom(client.data.roomId);
-            // }
-            console.log("여기 찍히나");
             const chatRoom = await this.ChatRoomService.createChatRoom(
                 client,
                 roomName,
             );
-            console.log("챗룸", chatRoom);
             return {
                 roomId: chatRoom.id,
                 roomName: chatRoom.title,
@@ -206,26 +206,10 @@ export class ChatBackEndGateway
     //채팅방 들어가기
     @SubscribeMessage("enterChatRoom")
     enterChatRoom(client: Socket, roomId: string) {
-        console.log("설마", roomId);
-        // 로그인 되어 있지 않은 경우, 룸에 가입된 멤버가 아닐경우 에러 처리
-        // this.ChatRoomService.isRoomMember(client, roomId);
-        // //이미 접속해있는 방 일 경우 재접속 차단
-        // if (client.rooms.has(roomId)) {
-        //     return;
-        // }
-        // //이전 방이 만약 나 혼자있던 방이면 제거
-        // if (
-        //     client.data.roomId != "room:lobby" &&
-        //     this.server.sockets.adapter.rooms.get(client.data.roomId).size == 1
-        // ) {
-        //     // this.ChatRoomService.deleteChatRoom(client.data.roomId);
-        // }
-        // this.ChatRoomService.enterChatRoom(client, roomId);
         client.rooms.clear();
         client.join(roomId);
         return {
             roomId: roomId,
-            // roomName: this.ChatRoomService.getChatRoom(roomId).roomName,
             roomName: "??",
         };
     }

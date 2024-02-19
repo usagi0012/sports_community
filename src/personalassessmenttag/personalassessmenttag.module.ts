@@ -10,6 +10,7 @@ import { Match } from "src/entity/match.entity";
 import { AlarmserviceModule } from "src/alarm/alarm.module";
 import { UserProfile } from "src/entity/user-profile.entity";
 import { User } from "src/entity/user.entity";
+import { MemberRank } from "src/entity/memberRank.entity";
 
 @Module({
     imports: [
@@ -20,11 +21,13 @@ import { User } from "src/entity/user.entity";
             Match,
             UserProfile,
             User,
+            MemberRank,
         ]),
         AuthModule,
         AlarmserviceModule,
     ],
     controllers: [PersonalassessmenttagController],
     providers: [PersonalassessmenttagService],
+    exports: [PersonalassessmenttagService],
 })
 export class PersonalassessmenttagModule {}

@@ -1,19 +1,16 @@
 import {
     BadRequestException,
-    HttpException,
-    HttpStatus,
     Injectable,
     NotAcceptableException,
     NotFoundException,
-    Req,
 } from "@nestjs/common";
 import { CreateUserProfileDto } from "./dto/create-user-profile.dto";
 import { UpdateUserProfileDto } from "./dto/update-user-profile.dto";
 import { UserProfile } from "src/entity/user-profile.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/entity/user.entity";
-import { Repository } from "typeorm";
-import { NotFoundError } from "rxjs";
+import { In, Repository } from "typeorm";
+
 import { AwsService } from "../aws/aws.service";
 import { Alarmservice } from "src/alarm/alarm.service";
 
@@ -68,7 +65,6 @@ export class UserProfileService {
         // 이미지 업로드할 경우
         if (file) {
             const uploadedFilePath = await this.awsService.fileupload(file);
-            console.log("이미지", uploadedFilePath);
 
             // 닉네임이 기재되지 않았을 때 디폴트값 이름
             if (!createUserProfileDto.nickname) {
@@ -92,8 +88,6 @@ export class UserProfileService {
             };
         }
 
-        // 이미지 업로드가 없을 경우
-        // 닉네임이 기재되지 않았을 때 디폴트값 이름
         if (!createUserProfileDto.nickname) {
             createUserProfileDto.nickname = user.name;
         }
@@ -214,5 +208,193 @@ export class UserProfileService {
             message: "프로필을 수정했습니다.",
             data: { updatedProfile },
         };
+    }
+
+    //친구 추가하기
+    async friednUser(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            me.friendUser = me.friendUser || [];
+
+            if (!me.friendUser.includes(otherUserId.toString())) {
+                me.friendUser.push(otherUserId.toString());
+
+                return await this.userRepository.save(me);
+            }
+
+            return me;
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+    }
+
+    //block fried
+    async blockUser(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            me.blockUser = me.blockUser || [];
+
+            if (!me.blockUser.includes(otherUserId.toString())) {
+                me.blockUser.push(otherUserId.toString());
+
+                return await this.userRepository.save(me);
+            }
+
+            return me;
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+    }
+
+    // 친구 삭제하기
+    async deleteFriend(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+
+            me.friendUser = me.friendUser || [];
+
+            const index = me.friendUser.indexOf(otherUserId.toString());
+
+            if (index !== -1) {
+                me.friendUser.splice(index, 1);
+
+                await this.userRepository.save(me);
+            }
+
+            return me;
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+    }
+
+    //dlelteblock fried
+    async deleteBlock(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+
+            me.blockUser = me.blockUser || [];
+
+            const index = me.blockUser.indexOf(otherUserId.toString());
+
+            if (index !== -1) {
+                me.blockUser.splice(index, 1);
+
+                await this.userRepository.save(me);
+            }
+
+            return me;
+        } catch (error) {
+            throw new NotFoundException(error);
+        }
+    }
+
+    //친구 목록 불러오기
+    async getFriend(userId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            const friendIds: number[] = me.friendUser.map(Number);
+
+            const friends = await this.userRepository.find({
+                where: { id: In(friendIds) },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                },
+            });
+
+            return friends;
+        } catch (error) {}
+    }
+
+    //친구인지 아닌지
+
+    async findFriend(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            const friendIds: number[] = me.friendUser.map(Number);
+
+            const isOtherUserFriend = friendIds.includes(otherUserId);
+
+            if (isOtherUserFriend) {
+                return true;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.log("Error:", error);
+            return null;
+        }
+    }
+
+    //블락유저 목록 불러오기
+    async getBlock(userId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            const bolckIds: number[] = me.blockUser.map(Number);
+
+            const friends = await this.userRepository.find({
+                where: { id: In(bolckIds) },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                },
+            });
+
+            return friends;
+        } catch (error) {}
+    }
+
+    //블락 인지 아닌지
+
+    async findBlock(userId: number, otherUserId: number) {
+        try {
+            const me = await this.userRepository.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            const blockIds: number[] = me.blockUser.map(Number);
+
+            const isOtherBlockIds = blockIds.includes(otherUserId);
+
+            if (isOtherBlockIds) {
+                return { message: "블락유저" };
+            } else {
+                return { message: "블락유저아님" };
+            }
+        } catch (error) {
+            console.error("에러 발생:", error);
+            throw error;
+        }
     }
 }

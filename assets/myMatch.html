@@ -1,23 +1,20 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onong My Match</title>
-        <meta name="description" content="Onong MyMatchPage" />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-        />
-        <link rel="stylesheet" href="css/dropBar.css" />
-        <link rel="stylesheet" href="./css/myMatch.css" />
-        <link rel="stylesheet" href="./css/customModal.css" />
-      <link rel="stylesheet" href="./css/personal-assessment.css" />
-        <link rel="stylesheet" href="./css/otherUser-modal.css" />
-    </head>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Onong My Match</title>
+    <meta name="description" content="Onong MyMatchPage" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="css/dropBar.css" />
+    <link rel="stylesheet" href="./css/myMatch.css" />
+    <link rel="stylesheet" href="./css/customModal.css" />
+    <link rel="stylesheet" href="./css/personal-assessment.css" />
+    <link rel="stylesheet" href="./css/otherUser-modal.css" />
+    <link rel="stylesheet" href="css/report.css" />
+</head>
 
 <body>
     <div id="sameContainer"></div>
@@ -28,7 +25,7 @@
                     내 모집글
                 </h3>
                 <h3 id="myApplyRecruit" onclick="toMyMatch()">
-                    내가 신청한 매치
+                    내가 신청한 경기
                 </h3>
             </div>
         </div>
@@ -36,6 +33,11 @@
             <div id="myMatch-info">
                 <div id="myMatch"></div>
             </div>
+        </div>
+        <div class="BtnContainer">
+            <button class="createBtn" onclick="toRecruitPost()">
+                글 작성
+            </button>
         </div>
     </div>
 
@@ -119,12 +121,23 @@
             </div>
         </div>
     </div>
-  
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="./js/myMatch.js"></script>
-        <script src="./js/dropmenu.js"></script>
-        <script src="./js/notification.js"></script>
-        <script src="./js/otherUser-modal.js"></script>
-      <script src="./js/personal-assessment.js"></script>
-    </body>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./js/myMatch.js"></script>
+    <script src="./js/dropmenu.js"></script>
+    <script src="./js/notification.js"></script>
+    <script src="./js/otherUser-modal.js"></script>
+    <script src="./js/personal-assessment.js"></script>
+    <script>
+        function toRecruitPost() {
+            const accessToken = localStorage.getItem("accessToken");
+            if (!accessToken) {
+                alert("로그인 후 이용 가능합니다.");
+            } else {
+                window.location.href = "recruit-post.html";
+            }
+        }
+    </script>
+</body>
+
 </html>

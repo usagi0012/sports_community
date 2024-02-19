@@ -22,7 +22,6 @@ function toggleButton(button) {
     button.classList.toggle("on");
 
     const value = button.classList.contains("on") ? 1 : 0;
-    console.log(`버튼 값: ${value}`);
 
     if (value === 1) {
         button.style.background = "rgb(208, 72, 72)";
@@ -44,7 +43,6 @@ async function getPersonalAssessment(matchId, playOtherUserId) {
         const ratingInputFirst = document.querySelector(".rating1 input");
         const ratingInputTwo = document.querySelector(".rating2 input");
 
-        console.log(matchId, playOtherUserId);
         const personalityAmount = +ratingInputFirst.value;
         const abilityAmount = +ratingInputTwo.value;
 
@@ -62,7 +60,6 @@ async function getPersonalAssessment(matchId, playOtherUserId) {
                 },
             },
         );
-        console.log("개인평가 완료됨");
     } catch (error) {
         console.error(error);
         alert(error.response.data.message);
@@ -132,26 +129,10 @@ async function getPersonalTag(matchId, playOtherUserId) {
                 },
             },
         );
-
-        console.log("태그평가 완료됨");
     } catch (error) {
         alert(error.response.data.message);
     }
 }
-
-// function returnPage() {
-//     document
-//         .getElementById("submit-btn")
-//         .addEventListener("click", function () {
-//             getPersonalAssessment();
-//             getPersonalTag();
-//         });
-// }
-// |
-
-// function returnCancel() {
-//     window.location.href = `/index.html`;
-// }
 
 function openPersonal() {
     var modal = document.getElementById("myPersonal");

@@ -12,7 +12,7 @@ async function submitForm(event) {
         .then(function (response) {
             localStorage.setItem("accessToken", response.data.accessToken);
             localStorage.setItem("refreshToken", response.data.refreshToken);
-            console.log(response);
+            console.log("이거확인?????", response);
             window.location.href = "index.html";
         })
         .catch(function (error) {
@@ -22,13 +22,11 @@ async function submitForm(event) {
 }
 
 document.getElementById("Kakao").addEventListener("click", function () {
-    // kakaoLogin();
-    needUpdateFunction();
+    kakaoLogin();
 });
 
 document.getElementById("Naver").addEventListener("click", function () {
-    // naverLogin();
-    needUpdateFunction();
+    naverLogin();
 });
 
 //준비중

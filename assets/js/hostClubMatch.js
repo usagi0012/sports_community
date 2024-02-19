@@ -14,8 +14,6 @@ async function displayHostClubMatchInfo() {
             },
         });
 
-        console.log(response.data);
-
         const hostMatchContainer = document.getElementById("hostClub-match");
         hostMatchContainer.innerHTML = "";
 
@@ -106,10 +104,12 @@ async function getGuestClub(hostMatchId) {
             document.getElementById("hostClubButton");
         const guestClub = response.data[1];
         const clubMatch = response.data[0];
-        console.log("guest", guestClub);
-        console.log("match", clubMatch);
+
         const guestClubHTML = createGuestClubHTML(guestClub, clubMatch);
-        const hostClubButtonHTML = createHostClubButtonHTML(hostMatchId);
+        const hostClubButtonHTML = createHostClubButtonHTML(
+            clubMatch,
+            hostMatchId,
+        );
         const clubMatchHTML = createClubMatchHTML(clubMatch);
         const deleteButtonHTML = createDeleteButtonHTML(hostMatchId);
 
@@ -128,13 +128,40 @@ function createDeleteButtonHTML(hostMatchId) {
 }
 
 function createGuestClubHTML(guestClub, clubMatch) {
+    if (clubMatch.host_evaluate === true) {
+        return `
+        <div>
+        <h2>FROM. ${guestClub.name}</h2>
+        <p><strong>지역: </strong> ${guestClub.region}</p>
+        <p><strong>점수: </strong> ${guestClub.score}</p>
+        <p><strong>설명: </strong> ${guestClub.information}</p>
+        <p><strong>멤버 수: </strong> ${guestClub.members}</p>
+        </div>
+        <button>완료</button>
+
+        `;
+    }
+
+    if (clubMatch.progress !== "평가해주세요") {
+        return `
+        <div>
+        <h2>FROM. ${guestClub.name}</h2>
+        <p><strong>지역: </strong> ${guestClub.region}</p>
+        <p><strong>점수: </strong> ${guestClub.score}</p>     
+        <p><strong>설명: </strong> ${guestClub.information}</p>
+        <p><strong>멤버 수: </strong> ${guestClub.members}</p>
+        </div>
+        `;
+    }
+
     const clubMatchId = clubMatch.id;
     const myClubId = clubMatch.guest_clubId;
     return `
         <div>
             <h2>FROM. ${guestClub.name}</h2>
             <p><strong>지역: </strong> ${guestClub.region}</p>
-            <p><strong>점수: </strong> ${guestClub.score}</p>
+            <p><strong>점수: </strong> ${guestClub.score}</p>       
+            <p><strong>설명: </strong> ${guestClub.information}</p>
             <p><strong>멤버 수: </strong> ${guestClub.members}</p>
         </div>
         <button onclick="displayClubAss('${clubMatchId}', '${myClubId}')"  >평가</button>
@@ -142,7 +169,56 @@ function createGuestClubHTML(guestClub, clubMatch) {
     `;
 }
 
-function createHostClubButtonHTML(hostMatchId) {
+function createHostClubButtonHTML(clubMatch, hostMatchId) {
+    if (clubMatch.status === "경기중") {
+        return `
+
+    `;
+    }
+    if (clubMatch.status === "취소") {
+        return `
+        <div class="hostClubButton">\
+            <button class="deleteButton btn btn-danger" data-matchId="${hostMatchId}" onclick="deleteClubMatch(${hostMatchId})">삭제하기</button>   
+        </div>
+    `;
+    }
+    if (clubMatch.host_evaluate === true) {
+        return `
+        <div class="hostClubButton">\
+            <button class="deleteButton btn btn-danger" data-matchId="${hostMatchId}" onclick="deleteClubMatch(${hostMatchId})">삭제하기</button>   
+        </div>
+    `;
+    }
+    if (clubMatch.status === "매치 성사") {
+        return ``;
+    }
+    if (clubMatch.status === "호스트 승인(게스트 클럽은 컴펌을 눌러주세요!)") {
+        return ``;
+    }
+    if (clubMatch.status === "거절") {
+        return `
+        <div class="hostClubButton">
+            <button class="approveButton btn btn-success" onclick="approvebutton(${hostMatchId})">승인</button>
+            <button class="confirmButton btn btn-success" data-matchId="${hostMatchId}" onclick="confirmButton(${hostMatchId})">컴펌하기</button>
+        </div>
+    `;
+    }
+    if (clubMatch.status === "승인") {
+        return `
+        <div class="hostClubButton">
+            <button class="rejectButton btn btn-danger" onclick="rejectbutton(${hostMatchId})">거절</button>
+            <button class="confirmButton btn btn-success" data-matchId="${hostMatchId}" onclick="confirmButton(${hostMatchId})">컴펌하기</button>
+        </div>
+    `;
+    }
+    if (clubMatch.status === "신청완료") {
+        return `
+        <div class="hostClubButton">
+            <button class="approveButton btn btn-success" onclick="approvebutton(${hostMatchId})">승인</button>
+            <button class="rejectButton btn btn-danger" onclick="rejectbutton(${hostMatchId})">거절</button> 
+        </div>
+    `;
+    }
     return `
         <div class="hostClubButton">
             <button class="approveButton btn btn-success" onclick="approvebutton(${hostMatchId})">승인</button>
@@ -152,6 +228,7 @@ function createHostClubButtonHTML(hostMatchId) {
         </div>
     `;
 }
+
 function createClubMatchHTML(clubMatch) {
     return `
         <div class="matchInfo">
@@ -168,7 +245,6 @@ function createClubMatchHTML(clubMatch) {
             )}</p>
             <p><strong>과정: </strong> ${clubMatch.progress}</p>
             <p><strong>상태: </strong> ${clubMatch.status}</p>
-            <p><strong>평가 완료 여부:</strong> ${clubMatch.host_evaluate}</p>
         </div>
         
     `;
@@ -187,8 +263,7 @@ async function approvebutton(hostMatchId) {
                 },
             },
         );
-        alert("승인을 완료하였습니다.");
-        window.location.reload();
+        alert("결정을 컴펌해주세요! 컴펌후에는 변경할 수 없습니다!");
     } catch (error) {
         console.log(error.response.data);
         alert(error.response.data.message);
@@ -229,7 +304,6 @@ function closeHostMatchModal() {
 //평가하기
 async function displayClubAss(clubMatchId, myClubId) {
     try {
-        console.log("displayPersonal", clubMatchId, myClubId);
         const personalEvaluation = document.getElementById("submit-btn");
         personalEvaluation.innerHTML = "";
         const personalEvaluationHTML = createpersonalEvaluationHTML(
@@ -242,7 +316,6 @@ async function displayClubAss(clubMatchId, myClubId) {
 }
 
 function createpersonalEvaluationHTML(clubMatchId, myClubId) {
-    console.log("createpersonalEvaluationHTML", clubMatchId, myClubId);
     return `
         <button onclick="submit('${clubMatchId}', '${myClubId}')" class="on">제출</button>
     `;
@@ -254,13 +327,35 @@ function openclubAssessment() {
 }
 async function submit(clubMatchId, myClubId) {
     try {
-        console.log("submit", clubMatchId, myClubId);
         await getClubAssessment(clubMatchId, myClubId);
         await getClubTag(clubMatchId, myClubId);
+        putEvaluate(clubMatchId);
 
         alert("평가완료");
         window.location.reload();
     } catch (error) {
         console.error(error);
+
+        window.location.reload();
+    }
+}
+
+function putEvaluate(clubMatchId) {
+    try {
+        const accessToken = localStorage.getItem("accessToken");
+
+        const response = axios.put(
+            `/api/clubmatch/put/evaluate/${clubMatchId}/`,
+            null,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+    } catch (error) {
+        console.error(error.response.data);
+        alert(error.response.data.message);
+        window.location.reload();
     }
 }

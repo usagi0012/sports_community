@@ -11,7 +11,6 @@ var infoWindow = new naver.maps.InfoWindow();
 
 function showWhere() {
     var address = document.getElementById("address").innerText;
-    console.log(address);
 
     naver.maps.Service.geocode(
         {

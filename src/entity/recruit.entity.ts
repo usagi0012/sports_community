@@ -86,6 +86,9 @@ export class Recruit {
     })
     progress: Progress;
 
+    @Column("simple-array", { nullable: true })
+    evaluateUser: string[];
+
     @ManyToOne(() => User, (user) => user.recruits)
     @JoinColumn({ name: "hostId" })
     host: User;

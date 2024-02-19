@@ -89,7 +89,6 @@ export class AuthService {
             subject: "[오농] 회원가입 인증 링크",
             html: `회원가입을 위한 인증을 완료하려면 다음 링크를 클릭하세요: <a href="${verificationLink}">인증하기</a>`,
         };
-        console.log(verificationLink);
         smtpTransport.sendMail(mailOptions, (error, response) => {
             error ? console.log(error) : console.log(response);
             smtpTransport.close();
@@ -111,14 +110,10 @@ export class AuthService {
                     "JWT_ACCESS_TOKEN_SECRET",
                 ),
             });
-            console.log("Token Payload:", payload);
-            // 토큰이 유효하면 이메일 인증 처리 로직을 수행합니다.
             const userId = payload.userId;
 
-            // 사용자의 isVerified를 true로 업데이트합니다.
             await this.userService.update(userId, { isVerified: true });
 
-            // 인증이 성공한 경우 리다이렉트할 URL 반환
             return `${this.configService.get<string>("LOCAL")}/login.html`;
         } catch (error) {
             // 토큰이 유효하지 않은 경우 예외 처리
@@ -157,7 +152,7 @@ export class AuthService {
 
     //임시 비밀번호 생성하기
     private generateTemporaryPassword(): string {
-        const temporaryPassword = Math.random().toString(36).substring(7);
+        const temporaryPassword = Math.random().toString(36).substring(2, 10);
         return temporaryPassword;
     }
 
@@ -203,7 +198,7 @@ export class AuthService {
         const { email, password } = loginUserDto;
 
         const user = await this.userService.findUserByEmail(email);
-        console.log("user", user);
+
         if (!user) {
             throw new NotFoundException("회원가입되지 않은 이메일입니다.");
         }

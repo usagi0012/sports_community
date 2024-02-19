@@ -9,11 +9,10 @@ window.onload = function () {
     loadFooter();
 };
 
-function getPlace(page, size = 28) {
+function getPlace(page) {
     axios
-        .get(`/api/place?page=${page}&size=${size}`)
+        .get(`/api/place?page=${page}`)
         .then(function (response) {
-            console.log(response);
             mainContainer.innerHTML = "";
             response.data.data.forEach((place) => {
                 mainContainer.innerHTML += `
@@ -30,7 +29,6 @@ function getPlace(page, size = 28) {
               </div>
                 `;
             });
-            console.log(response.data.meta);
             renderPagination(response.data.meta);
         })
         .catch(function (error) {

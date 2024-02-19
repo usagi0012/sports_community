@@ -67,8 +67,6 @@ async function findRecruit(recruitId) {
             },
         );
 
-        console.log(response.data); // 확인용 로그
-
         const confirmUsers = response.data[1];
         const findRecruit = response.data[0];
 
@@ -82,7 +80,10 @@ async function findRecruit(recruitId) {
 
         //경기에 참석하는 유저 정보
         confirmUsers.forEach((confirmUser) => {
-            const confirmUsersHTML = createConfirmUsersHTML(confirmUser);
+            const confirmUsersHTML = createConfirmUsersHTML(
+                findRecruit,
+                confirmUser,
+            );
             myRecruitUser.innerHTML += confirmUsersHTML;
         });
         //매치 상세정보
@@ -111,24 +112,71 @@ function closeRecruitModal() {
 }
 
 function createRecurtIdButtonHTML(findRecruit) {
+    if (findRecruit.progress === "경기전") {
+        return `
+    <div>
+    <button type="button" class="btn btn-danger"  onclick="deleteButton(${findRecruit.id})">삭제하기</button>
+    </div>
+`;
+    }
+
+    if (findRecruit.progress === "경기중") {
+        return `
+        <div>
+        </div>
+    `;
+    }
+    if (findRecruit.progress === "평가해주세요") {
+        return `
+        <div> 
+        <button type="button" class="btn btn-success"  onclick="evaluateGuest(${findRecruit.id})">평가완료하기</button>
+        </div>
+    `;
+    }
+
+    if (findRecruit.progress === "평가 완료") {
+        return `
+        <div> 
+        <button type="button" class="btn btn-danger"  onclick="deleteButton(${findRecruit.id})">삭제하기</button>
+        </div>
+    `;
+    }
     return `
     <div>
         <button type="button" class="btn btn-success"  onclick="evaluateGuest(${findRecruit.id})">평가완료하기</button>
         <button type="button" class="btn btn-danger"  onclick="deleteButton(${findRecruit.id})">삭제하기</button>
-
     </div>
 `;
 }
 
-function createConfirmUsersHTML(confirmUser) {
+function createConfirmUsersHTML(findRecruit, confirmUser) {
+    if (findRecruit.progress !== "평가해주세요") {
+        return `
+            <div type="button" class="userInMatch">
+                <p><strong>Name:</strong> ${confirmUser.guestName}</p>
+                <p><strong>Status:</strong> ${confirmUser.status}</p>
+            </div>
+        `;
+    }
+
     const matchId = confirmUser.id;
     const playOtherUserId = confirmUser.guestId;
+    const recruitId = confirmUser.recruitId;
+
+    const isEvaluated =
+        findRecruit.evaluateUser &&
+        findRecruit.evaluateUser.includes(playOtherUserId.toString());
+
+    const buttonText = isEvaluated ? "평가완료" : "평가";
+
+    const buttonDisabled = isEvaluated ? "disabled" : "";
+
     return `
-        <div type="button"  class="userInMatch">
+        <div type="button" class="userInMatch">
             <p><strong>Name:</strong> ${confirmUser.guestName}</p>
             <p><strong>Status:</strong> ${confirmUser.status}</p>
         </div>
-        <button onclick="displayPersonal('${matchId}', '${playOtherUserId}')">평가</button> 
+        <button onclick="displayPersonal('${recruitId}','${matchId}', '${playOtherUserId}')" ${buttonDisabled}>${buttonText}</button> 
     `;
 }
 
@@ -159,7 +207,7 @@ function createmyRecruitMatchHTML(findRecruit) {
 // 모집글 삭제하기
 async function deleteButton(recruitId) {
     const accessToken = localStorage.getItem("accessToken");
-    console.log(recruitId);
+
     try {
         await axios.delete(`/api/recruit/my/post/${recruitId}`, {
             headers: {
@@ -208,8 +256,6 @@ async function application(recruitId) {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-
-        console.log(response.data);
         const guestData = response.data[1];
 
         const modalContentContainer = document.getElementById("recruitUser");
@@ -237,7 +283,6 @@ function createGuestHTML(guest) {
     </button>
     `;
 }
-
 
 function createButtonHTML(guest) {
     return `
@@ -300,7 +345,6 @@ async function rejectbutton(matchId) {
 
 //
 function createRecruitUserHtml(user) {
-    console.log(user);
     return `
         <div>
             guestName: ${user.guestName}, progress: ${user.progress}
@@ -328,12 +372,12 @@ function closeRecruitUserModal() {
 }
 
 //평가하기
-async function displayPersonal(matchId, playOtherUserId) {
+async function displayPersonal(recruitId, matchId, playOtherUserId) {
     try {
-        console.log("displayPersonal", matchId, playOtherUserId);
         const personalEvaluation = document.getElementById("submit-btn");
         personalEvaluation.innerHTML = "";
         const personalEvaluationHTML = createpersonalEvaluationHTML(
+            recruitId,
             matchId,
             playOtherUserId,
         );
@@ -342,27 +386,26 @@ async function displayPersonal(matchId, playOtherUserId) {
     } catch (error) {}
 }
 
-function createpersonalEvaluationHTML(matchId, playOtherUserId) {
-    console.log("createpersonalEvaluationHTML", matchId, playOtherUserId);
+function createpersonalEvaluationHTML(recruitId, matchId, playOtherUserId) {
     return `
-        <button onclick="submit('${matchId}', '${playOtherUserId}')" class="on">제출</button>
+        <button onclick="submit('${recruitId}','${matchId}', '${playOtherUserId}')" class="on">제출</button>
     `;
 }
 
 function openPersonal(confirmUser) {
     var modal = document.getElementById("myPersonal");
-    console.log(confirmUser);
+
     modal.style.display = "block";
 }
 
-async function submit(matchId, playOtherUserId) {
+async function submit(recruitId, matchId, playOtherUserId) {
     try {
-        console.log("submit", matchId, playOtherUserId);
         await getPersonalAssessment(matchId, playOtherUserId);
         await getPersonalTag(matchId, playOtherUserId);
+        await evaluateUser(playOtherUserId, recruitId);
 
         alert("평가완료");
-        endPersonal();
+        window.location.reload();
     } catch (error) {
         console.error(error);
     }
@@ -371,4 +414,26 @@ async function submit(matchId, playOtherUserId) {
 function endPersonal() {
     var modal = document.getElementById("myPersonal");
     modal.style.display = "none";
+}
+
+//유저집어넣기
+async function evaluateUser(playOtherUserId, recruitId) {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+        axios.post(
+            `/api/recruit/post/evaluateUser/${playOtherUserId}/${recruitId}`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+
+        console.log("유저집어넣기 성공");
+    } catch (error) {
+        console.log(error.response.data);
+        alert(error.response.data.message);
+        window.location.reload();
+    }
 }

@@ -1,9 +1,10 @@
-import { Controller, Param, Sse, UseGuards } from "@nestjs/common";
+import { Controller, Param, Req, Sse, UseGuards } from "@nestjs/common";
 import { Alarmservice } from "./alarm.service";
 import { Observable } from "rxjs";
-import { CustomMessageEvent } from "./alarm.service"; // 이 부분을 추가
+import { CustomMessageEvent } from "./alarm.service";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
+import { Request } from "express";
 
 @Controller("sse")
 export class SseController {
@@ -11,8 +12,13 @@ export class SseController {
 
     @Sse(":userId")
     sendCustomAlarm(
-        @Param("userId") userId: string,
+        @Req() req: Request,
+        @Param("userId")
+        userId: string,
     ): Observable<CustomMessageEvent> {
+        req.on("close", () => {
+            console.log(`${userId} 사용자가 접속을 종료했습니다.`);
+        });
         return this.alarmService.getAlarmObservable(+userId);
     }
 }

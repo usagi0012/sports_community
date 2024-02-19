@@ -34,10 +34,6 @@ async function displayNotifications() {
 }
 
 function createNotificationElement(notification) {
-    console.log("확인", notification);
-    console.log("notificationTemplate", notificationTemplate);
-    console.log("없는부분", notificationTemplate.innerHTML);
-
     if (!notificationTemplate || !notificationTemplate.innerHTML) {
         console.error("Notification template or its content is undefined");
         return null;
@@ -45,9 +41,6 @@ function createNotificationElement(notification) {
 
     const templateContent =
         notificationTemplate.content || notificationTemplate;
-
-    // templateContent의 내용 확인
-    console.log("templateContent", templateContent.innerHTML);
 
     // templateContent의 내용을 복사
     const clone = document.importNode(templateContent, true);
@@ -87,7 +80,7 @@ async function deleteNotification(deleteButton) {
         // 서버에 알림 삭제를 요청하는 DELETE 요청
         await axios.delete(`/api/userAlarm/${notificationId}`, {
             headers: {
-                Authorization: `Bearer ${accessToken}`, // Access Token을 헤더에 추가
+                Authorization: `Bearer ${accessToken}`,
             },
         });
 
@@ -100,7 +93,7 @@ async function deleteNotification(deleteButton) {
 
 function convertUtcToKst(utcDateString) {
     const utcDate = new Date(utcDateString);
-    const kstOffset = 9 * 60; // 한국은 UTC+9
+    const kstOffset = 9 * 60;
     const kstDate = new Date(utcDate.getTime() + kstOffset * 60000);
 
     // kstDate를 원하는 형식으로 포맷팅
@@ -119,38 +112,6 @@ function convertUtcToKst(utcDateString) {
 
 // 페이지 로드 시 알림 목록을 가져와서 표시
 displayNotifications();
-
-// 복붙해서 사용
-
-//알람 부분
-
-// 토큰을 디코딩
-// const accessToken = localStorage.getItem("accessToken");
-// const tokenPayload = JSON.parse(atob(accessToken.split(".")[1]));
-// const userId = tokenPayload.userId;
-// const eventSource = new EventSource(`http://localhost:8001/api/sse/${userId}`);
-
-// eventSource.onmessage = (event) => {
-//     const data = JSON.parse(event.data);
-//     showNotification(data.message);
-// };
-
-// eventSource.onerror = (error) => {
-//     console.error("SSE Error:", error);
-// };
-
-// function showNotification(message) {
-//     // 브라우저 알림을 표시하는 로직
-//     if (Notification.permission === "granted") {
-//         new Notification("알림", { body: message });
-//     } else if (Notification.permission !== "denied") {
-//         Notification.requestPermission().then((permission) => {
-//             if (permission === "granted") {
-//                 new Notification("알림", { body: message });
-//             }
-//         });
-//     }
-// }
 
 async function toUp() {
     window.scrollTo({

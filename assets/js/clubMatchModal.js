@@ -1,11 +1,6 @@
 function openClubMatchModal() {
     urlParams = new URLSearchParams(window.location.search);
 
-    // console.log("urlParams", urlParams);
-
-    // const clubId = urlParams.get("id");
-    // console.log("clubID", clubId);
-
     document.getElementById("clubMatchModal").style.display = "flex";
 }
 
@@ -43,7 +38,6 @@ async function clubMatchApplication(event) {
             },
         );
 
-        console.log(response.data);
         alert("매치를 신청하셨습니다.");
         window.location.reload();
     } catch (error) {

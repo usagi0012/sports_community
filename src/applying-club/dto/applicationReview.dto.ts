@@ -6,4 +6,7 @@ export class ApplicationReviewDto {
     @IsNotEmpty({ message: "승인여부를 입력해주세요." })
     @ApiProperty({ description: "승인여부", example: true })
     permission: boolean;
+
+    @ApiProperty({ description: "닉네임", example: "철수" })
+    nickName: string;
 }

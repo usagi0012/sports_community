@@ -3,18 +3,27 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Modal Example</title>
-
+        <title>Onong BanList</title>
+        <meta name="description" content="Onong BanListPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
         <link rel="stylesheet" href="css/banlistAdmin.css" />
-
+        <link rel="stylesheet" href="css/dropBar.css" />
+        <link rel="stylesheet" href="css/userMenu.css" />
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     </head>
 
-    <body onload="displayList()">
-        <h2>관리자 밴리스트</h2>
-        <listgroup>
-            <list style="margin-top: 10px" id="adminList"> </list>
-        </listgroup>
+    <body>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer">
+                <div class="userMenuContianer" id="userMenuContianer"></div>
+                <listgroup id="listGroup">
+                    <h2>관리자 밴리스트</h2>
+                    <list style="margin-top: 10px" id="adminList"> </list>
+                </listgroup>
+            </div>
+        </div>
+        <div class="footer" id="footer"></div>
 
         <div id="myModal" class="modal">
             <div id="adminBanModal" class="modal-content">
@@ -24,4 +33,5 @@
     </body>
 
     <script src="./js/banlistAdmin.js"></script>
+    <script src="./js/dropmenu.js" defer></script>
 </html>

@@ -1,0 +1,183 @@
+.mainContainer {
+    margin-top: 70px;
+}
+
+.boardContainer {
+    min-height: 100%;
+    width: 80%;
+    padding: 10px 30px;
+    border-left: 1px solid #dfcec3;
+}
+
+.detailContainer {
+    border-top: 3px solid #4c3c36;
+    padding: 10px 0px;
+}
+
+.btnContainer {
+    display: flex;
+}
+
+.info {
+    display: grid;
+    grid-template-areas: "title . name date";
+    grid-template-columns: 3fr 0.5fr 1fr 1fr;
+    padding: 15px;
+    border-bottom: 1px solid #4c3c36;
+}
+
+.title {
+    grid-area: title;
+    font-size: 1.7rem;
+}
+
+.hostName {
+    grid-area: name;
+    text-align: end;
+}
+
+.createDate {
+    grid-area: date;
+    text-align: end;
+}
+
+.cont {
+    padding: 20px;
+}
+
+.top > img {
+    max-width: 400px;
+    max-height: 400px;
+}
+
+.updateBtn,
+.deleteBtn {
+    font-family: "LINESeedKR-Bd";
+    margin: 10px 15px;
+    height: 25px;
+    padding-top: 5px;
+    border-radius: 7px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.updateBtn:hover,
+.deleteBtn:hover {
+    box-shadow: 2px 2px 2px gray;
+}
+
+#comments-container {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+#comments-list {
+    margin-bottom: 10px;
+}
+
+.comment {
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+}
+
+#comment-form {
+    display: flex;
+    align-items: center;
+}
+
+#comment-input {
+    flex: 1;
+    margin-right: 10px;
+    border-radius: 3px;
+    font-family: "LINESeedKR-Bd";
+    padding: 5px;
+}
+
+#comment-form > button {
+    display: inline;
+    font-family: "LINESeedKR-Bd";
+    width: 85px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    border-radius: 10px;
+    height: 30px;
+    cursor: pointer;
+}
+
+#comment-form > button:hover {
+    background-color: #ffb13d;
+}
+
+/* 모달 스타일 */
+#modal-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modal {
+    width: 300px;
+    height: 500px;
+    background-color: white;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#edit-comment-input {
+    width: 95%;
+    height: 430px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    font-family: "LINESeedKR-Bd";
+    padding: 5px;
+}
+
+#modal > button {
+    display: inline;
+    font-family: "LINESeedKR-Bd";
+    width: 85px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    border-radius: 10px;
+    height: 30px;
+    cursor: pointer;
+}
+
+#modal > button:hover {
+    background-color: #ffb13d;
+}
+
+button {
+    cursor: pointer;
+}
+
+.adminCommentBtnShow {
+    display: flex;
+}
+
+.commentUpdateBtn,
+.commentDeleteBtn {
+    display: inline;
+    font-family: "LINESeedKR-Bd";
+    width: 50px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    border-radius: 10px;
+    margin-right: 10px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.commentUpdateBtn:hover,
+.commentDeleteBtn:hover {
+    background-color: #ffb13d;
+}

@@ -1,10 +1,8 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
-import * as cheerio from "cheerio";
+import { Injectable } from "@nestjs/common";
 import axios from "axios";
 import { Place } from "../entity/place.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Cron } from "@nestjs/schedule";
 
 @Injectable()
 export class PlaceService {

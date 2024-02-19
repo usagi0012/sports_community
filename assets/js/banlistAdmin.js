@@ -1,17 +1,20 @@
+window.onload = function () {
+    loadHeader();
+    loadFooter();
+    loadUserMenu();
+    displayList();
+};
+
 //본인이 신청한 벤 조회하기
 async function displayList() {
     try {
         const accessToken = localStorage.getItem("accessToken");
 
-        console.log(accessToken);
         const response = await axios.get("/api/report/admin/banlist", {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-
-        console.log(response.data);
-        console.log(response.data);
         const adminList = document.getElementById("adminList");
         adminList.innerHTML = "";
 
@@ -26,7 +29,7 @@ async function displayList() {
 
 function createAdminListHTML(item) {
     return `
-        <div id="${item.id}" onclick="openModal(${item.id})">
+        <div class="banDiv" id="${item.id}" onclick="openModal(${item.id})">
             <div id="${item.reportUserId}">신고 유저 이름: <span>${item.reportUserName}</span></div>
             <div id="${item.banUserId}">밴 유저 이름: <span>${item.banUserName}</span></div>
             <div>제목: <span>${item.title}</span></div>
@@ -40,7 +43,6 @@ async function openModal(reportId) {
     try {
         const accessToken = localStorage.getItem("accessToken");
 
-        console.log(accessToken);
         const response = await axios.get(`/api/report/admin/find/${reportId}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -52,8 +54,6 @@ async function openModal(reportId) {
         const adminBanModal = document.getElementById("adminBanModal");
         adminBanModal.innerHTML = "";
 
-        console.log(report);
-        console.log(report.id);
         const adminBanHTML = createAdminBan(report);
         adminBanModal.innerHTML = adminBanHTML;
         const banOptions = document.getElementById("banOptions");
@@ -151,10 +151,12 @@ async function confirmAction(banUserId, reportId) {
             case "penalty":
                 await handleAction("penalty", banUserId, reportId);
                 showFeedback("징계 처리 완료하였습니다.");
+                window.location.reload();
                 break;
             case "permanentBan":
                 await handleAction("permanentBan", banUserId, reportId);
                 showFeedback("영구 벤 처리 완료하였습니다.");
+                window.location.reload();
                 break;
             default:
                 console.error("Invalid option");
@@ -176,8 +178,6 @@ async function handleAction(actionType, banUserId, reportId) {
                 duration: document.getElementById("disciplinaryPeriod").value,
             };
         }
-
-        console.log(requestData);
 
         // 첫 번째 요청: 밴 처리
         const response = await axios.post(
@@ -202,8 +202,6 @@ async function handleAction(actionType, banUserId, reportId) {
                 },
             },
         );
-
-        console.log(approve);
 
         return response.data;
     } catch (error) {

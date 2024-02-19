@@ -138,7 +138,6 @@ function getRecruitDetail(recruitId) {
 
 function openMapModal(gpsData) {
     var modal = document.getElementById("mapModal");
-    console.log(gpsData);
 
     modal.style.display = "flex";
     showWhere(gpsData);
@@ -171,15 +170,14 @@ function submitApplication(recruitId) {
         )
         .then(function (response) {
             // 성공적으로 처리된 경우 추가적인 처리를 할 수 있습니다.
-            console.log(response);
+
             alert("신청 완료");
-            document
-                .getElementById("applyModal")
-                .setAttribute("hidden", "true");
+            window.location.reload();
         })
         .catch(function (error) {
             console.error(error.response.data);
             alert(error.response.data.message);
+            window.location.reload();
         });
 }
 
@@ -215,20 +213,6 @@ function showWhere(gpsData) {
             var point = new naver.maps.Point(item.x, item.y);
 
             marker.setPosition(point);
-
-            // var htmlAddresses = [];
-
-            // if (item.roadAddress) {
-            //     htmlAddresses.push("[도로명 주소] " + item.roadAddress);
-            // }
-
-            // if (item.jibunAddress) {
-            //     htmlAddresses.push("[지번 주소] " + item.jibunAddress);
-            // }
-
-            // if (item.englishAddress) {
-            //     htmlAddresses.push("[영문명 주소] " + item.englishAddress);
-            // }
 
             infoWindow.setContent(
                 [

@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="css/createClub.css" />
         <link rel="stylesheet" href="css/dropBar.css" />
     </head>
+
     <body>
         <div id="sameContainer"></div>
         <div class="bodyContainer">
@@ -84,12 +85,15 @@
                     document.getElementById("description").value;
                 const file = document.getElementById("fileInput").files[0];
 
+                if (name === "") {
+                    alert("동아리 이름을 입력해주세요.");
+                    return;
+                }
+
                 const urlParams = new URLSearchParams(window.location.search);
                 console.log("urlParams", urlParams);
                 let clubId = urlParams.get("id");
 
-                // const authorized = localStorage.getItem("authorized");
-                // const token = JSON.parse(authorized).accessToken.value;
                 const token = localStorage.getItem("accessToken");
                 axios
                     .put(

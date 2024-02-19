@@ -1,5 +1,4 @@
 import { Recruit } from "./../entity/recruit.entity";
-import { error } from "console";
 import { User } from "./../entity/user.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Progress, Status } from "../entity/recruit.entity";
@@ -8,11 +7,9 @@ import { In, Not, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Match, MatchStatus } from "../entity/match.entity";
 import { MatchUpdateDto } from "./dto/checkmatch.dto";
-import { use } from "passport";
 import { Cron, CronExpression } from "@nestjs/schedule";
-import { not } from "cheerio/lib/api/traversing";
-import { match } from "assert";
 import { Alarmservice } from "src/alarm/alarm.service";
+import { UserType } from "./../entity/user.entity";
 
 const now = new Date();
 const utc = now.getTime();
@@ -34,6 +31,20 @@ export class RecruitService {
         private alarmService: Alarmservice,
     ) {}
 
+    private async userType(UserId: number) {
+        const me = await this.userRepository.findOne({
+            where: { id: UserId },
+        });
+
+        if (!me) {
+            throw new NotFoundException("유저를 찾을 수 없습니다.");
+        }
+
+        if (me.userType === UserType.USER || me.userType !== UserType.ADMIN) {
+            throw new NotFoundException("밴유저는 이용 불가능합니다.");
+        }
+    }
+
     //모집 글 등록
     async postRecruit(userId: number, recruitDTO: RecruitDTO) {
         try {
@@ -45,13 +56,33 @@ export class RecruitService {
                 },
             });
 
+            await this.userType(userId);
+
             const endtimeDate = Recruit.setEndTimeFromNumber(
                 recruitDTO.gamedate,
                 recruitDTO.endtime,
             );
 
             const gameDate = Recruit.korGameDate(recruitDTO.gamedate);
+            const oneHourBeforeNow = new Date(
+                now.getTime() + 1 * 60 * 60 * 1000,
+            );
 
+            if (recruitDTO.gamedate.getTime() < oneHourBeforeNow.getTime()) {
+                throw new NotFoundException(
+                    "최소 한 시간 전에 입력 가능합니다.",
+                );
+            }
+
+            if (recruitDTO.totalmember > 20) {
+                throw new NotFoundException("최대인원 20명을 초과하셨습니다.");
+            }
+
+            if (recruitDTO.endtime > 8) {
+                throw new NotFoundException(
+                    "최대인원 런닝탐임 8시간을 초과하셨습니다.",
+                );
+            }
             const totalMember = recruitDTO.totalmember - 1;
             const newRecruit = this.recruitRepository.create({
                 basictotalmember: recruitDTO.totalmember,
@@ -65,13 +96,9 @@ export class RecruitService {
 
             await this.recruitRepository.save(newRecruit);
 
-            return {
-                message: "모집글이 등록되었습니다.",
-                newRecruit,
-            };
+            return newRecruit;
         } catch (error) {
-            console.error(error);
-            throw new Error("모집글 등록 중 오류가 발생했습니다.");
+            throw new NotFoundException(error);
         }
     }
 
@@ -150,8 +177,6 @@ export class RecruitService {
 
         const myMatches = await this.findConfirmMatch(recruitId);
 
-        console.log(myMatches);
-
         const matches = await this.matchRepository.find({
             where: {
                 recruitId: recruitId,
@@ -214,7 +239,7 @@ export class RecruitService {
 
             if (matchUpdateDto.status === MatchStatus.APPROVED) {
                 match.status = MatchStatus.APPROVED;
-                console.log(match);
+
                 this.alarmService.sendAlarm(
                     match.guestId,
                     `${recruit.title}에 대한 매치 신청이 승인되었습니다.`,
@@ -226,7 +251,6 @@ export class RecruitService {
             await this.recruitRepository.save(recruit);
             const updatedMatch = await this.matchRepository.save(match);
 
-            console.log(match.guestId);
             return updatedMatch;
         } catch (error) {
             throw error;
@@ -260,6 +284,38 @@ export class RecruitService {
         const hostId = userId;
         const recruit = await this.checkHost(hostId, recurtId);
 
+        const response = await this.getGameUser(userId, recurtId);
+
+        const matchesArray = response[1] as Match[];
+
+        const matchIds = matchesArray.map((match) => match.guestId);
+
+        const recruitUsers = recruit.evaluateUser;
+        if (recruitUsers) {
+            function evaluateUsers(
+                recruitUsers: string[],
+                matchIds: number[],
+            ): void {
+                // 문자열 배열을 숫자 배열로 변환
+                const recruitUsersAsInt: number[] = recruitUsers.map(Number);
+
+                // 배열의 길이와 값이 일치하는지 확인
+                if (
+                    recruitUsersAsInt.length !== matchIds.length ||
+                    !recruitUsersAsInt.every((value) =>
+                        matchIds.includes(value),
+                    )
+                ) {
+                    throw new NotFoundException(
+                        "평가하지 않은 인원이 있습니다.",
+                    );
+                }
+            }
+
+            evaluateUsers(recruitUsers, matchIds);
+        }
+
+        recruit.evaluateUser;
         if (recruit.progress === Progress.EVALUATION_COMPLETED) {
             throw new NotFoundException("이미평가를 완료하였습니다.");
         }
@@ -267,6 +323,7 @@ export class RecruitService {
         if (recruit.progress !== Progress.PLEASE_EVALUATE) {
             throw new NotFoundException("경기가 끝난 후에 평가 가능합니다.");
         }
+        recruit.evaluateUser;
 
         recruit.progress = Progress.EVALUATION_COMPLETED;
 
@@ -292,13 +349,18 @@ export class RecruitService {
         }
         await this.checkHost(hostId, recruitId);
         const newGameDate = new Date(existingRecruit.gamedate);
+        const ENDDATE = new Date(existingRecruit.endtime);
         newGameDate.setHours(existingRecruit.gamedate.getHours() - 1);
-
+        ENDDATE.setHours(existingRecruit.endtime.getHours());
         if (existingRecruit.progress === Progress.EVALUATION_COMPLETED) {
             return await this.recruitRepository.remove(existingRecruit);
         }
 
-        if (newGameDate < oneHoursAgo) {
+        console.log("newGameDate", newGameDate);
+        console.log("korNow", korNow);
+        console.log("ENDTIME", ENDDATE);
+
+        if (newGameDate < korNow && korNow < ENDDATE) {
             throw new NotFoundException(
                 "1시간전부터는 취소 할 수 없습니다. 경기가 끝난 후 평가해주세요.",
             );
@@ -306,10 +368,9 @@ export class RecruitService {
 
         const myMatches = await this.findConfirmMatch(recruitId);
 
-        console.log(myMatches);
         for (const myMatch of myMatches) {
             const matchUserId = myMatch.guestId;
-            console.log(matchUserId);
+
             this.alarmService.sendAlarm(
                 matchUserId,
                 `${existingRecruit.title} 경기가 취소되었습니다.`,
@@ -349,7 +410,7 @@ export class RecruitService {
         return checkrecruit;
     }
 
-    @Cron(CronExpression.EVERY_HOUR)
+    @Cron(CronExpression.EVERY_10_MINUTES)
     async handleCron() {
         const recruits = await this.recruitRepository.find();
 
@@ -406,7 +467,30 @@ export class RecruitService {
                 throw new NotFoundException("모집글이 존재하지 않습니다.");
             }
         } catch (error) {
-            console.error(error);
+            console.log("error", error);
+            throw new NotFoundException(error);
+        }
+    }
+    //유저집어넣기
+    async evaluateUser(guestId: number, userId: number, recruitId: number) {
+        try {
+            const myRecruit = await this.recruitRepository.findOne({
+                where: {
+                    id: recruitId,
+                },
+            });
+            myRecruit.evaluateUser = myRecruit.evaluateUser || [];
+
+            if (!myRecruit.evaluateUser.includes(guestId.toString())) {
+                myRecruit.evaluateUser.push(guestId.toString());
+
+                return await this.recruitRepository.save(myRecruit);
+            }
+
+            return myRecruit;
+        } catch (error) {
+            console.log("error", error);
+            throw new NotFoundException(error);
         }
     }
 }

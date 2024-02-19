@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Onong NoticeDetail</title>
+        <meta name="description" content="Onong NoticeDetailPage" />
+        <link rel="icon" href="./resources/favicon.ico" />
+        <link rel="stylesheet" href="./css/noticeDetail.css" />
+        <link rel="stylesheet" href="css/dropBar.css" />
+        <link rel="stylesheet" href="css/userMenu.css" />
+    </head>
+    <body>
+        <div id="sameContainer"></div>
+        <div class="bodyContainer">
+            <div class="mainContainer" id="mainContainer">
+                <div class="noticeMenuContianer" id="noticeMenuContianer"></div>
+                <div class="boardContainer">
+                    <button class="updateBtn" onclick="moveToUpdatePage() ">
+                        수정
+                    </button>
+                    <button class="deleteBtn" onclick="deletePage() ">
+                        삭제
+                    </button>
+                    <div class="detailContainer"></div>
+                </div>
+            </div>
+        </div>
+        <div class="footer" id="footer"></div>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="./js/noticeDetail.js"></script>
+        <script src="./js/dropmenu.js"></script>
+    </body>
+</html>

@@ -76,8 +76,9 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="./js/club.js"></script>
         <script src="./js/dropmenu.js"></script>
-        <script src="./js/search.js"></script>
+        <!-- <script src="./js/search.js"></script> -->
         <script src="./js/otherUser-modal.js"></script>
+        <link rel="stylesheet" href="css/report.css" />
         <!-- <script src="./js/club-detail.js"></script> -->
         <script>
             const regions = [
@@ -115,6 +116,7 @@
                     .then(function (response) {
                         console.log("*******", response);
                         response.data.data.forEach((club) => {
+                            console.log("===club===", club);
                             const clubListDiv =
                                 document.querySelector(".club-list");
 
@@ -184,7 +186,11 @@
                             // 백엔드에서 클럽id에 해당하는 이름 보내줘야 할 듯.
                             const clubMaster = document.createElement("div");
                             const clubNameP2 = document.createElement("p");
-                            clubNameP2.textContent = club.masterName;
+                            if (club.nickName) {
+                                clubNameP2.textContent = club.nickName;
+                            } else {
+                                clubNameP2.textContent = club.userName;
+                            }
 
                             // 클릭 이벤트 추가
                             clubNameP2.addEventListener(

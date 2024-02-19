@@ -78,6 +78,9 @@ export class Match {
     })
     progress: Progress;
 
+    @Column("simple-array", { nullable: true })
+    evaluateUser: string[];
+
     @ManyToOne(() => User, (user) => user.matches)
     @JoinColumn({ name: "guestId" })
     guest: User;

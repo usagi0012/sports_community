@@ -1,4 +1,3 @@
-// custom-validators.ts
 import {
     ValidationArguments,
     ValidationOptions,
@@ -14,7 +13,6 @@ export class IsFutureDateConstraint implements ValidatorConstraintInterface {
         return value >= currentDate;
     }
 
-    // Update the parameter type to ValidationArguments
     defaultMessage(validationArguments?: ValidationArguments): string {
         return `기간을 다시 입력해주세요`;
     }

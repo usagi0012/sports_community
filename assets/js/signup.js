@@ -12,7 +12,6 @@ async function submitForm(event) {
             isVerified: false,
         })
         .then(function (response) {
-            console.log(response.data);
             alert(
                 "인증 메일이 전송되었습니다. 회원가입 완료를 위해 메일에서 인증을 진행해주세요.",
             );

@@ -15,8 +15,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             },
         });
 
-        console.log(profileResponse);
-
         // 기존 프로필 정보를 변수에 저장
         const profile = profileResponse.data.data.userProfile;
 
@@ -52,7 +50,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                     Authorization: `Bearer ${accessToken}`,
                 },
             });
-            console.log("포지션", positionResponse);
         } catch (positionError) {
             // 서버가 404를 반환하는 경우에 대한 추가 처리
             if (
@@ -106,6 +103,10 @@ document.addEventListener("DOMContentLoaded", async function () {
                     // 닉네임, 성별, 자기소개, 키 등의 입력 값을 읽어와서 객체에 추가
                     updatedProfile.nickname =
                         document.getElementById("nickname").value;
+                    if (updatedProfile.nickname === "") {
+                        alert("닉네임을 입력해주세요.");
+                        return;
+                    }
                     updatedProfile.description =
                         document.getElementById("description").value;
                     updatedProfile.height =
@@ -151,11 +152,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                                 Authorization: `Bearer ${accessToken}`,
                             },
                         },
-                    );
-
-                    console.log(
-                        "updatePositionResponse",
-                        updatePositionResponse.data.data.updatedUserPosition,
                     );
 
                     // 성공적으로 업데이트되었다면, 페이지를 새로고침하거나 다른 조치를 취할 수 있습니다.

@@ -1,0 +1,71 @@
+.mainContainer {
+    margin-top: 70px;
+}
+
+.boardContainer {
+    min-height: 100%;
+    width: 80%;
+    padding: 10px 30px;
+    border-left: 1px solid #dfcec3;
+}
+
+.detailContainer {
+    border-top: 3px solid #4c3c36;
+    padding: 10px 0px;
+}
+
+.info {
+    display: grid;
+    grid-template-areas: "title . name date";
+    grid-template-columns: 3fr 0.5fr 1fr 1fr;
+    padding: 15px;
+    border-bottom: 1px solid #4c3c36;
+}
+
+.title {
+    grid-area: title;
+    font-size: 1.7rem;
+}
+
+.hostName {
+    grid-area: name;
+    text-align: end;
+}
+
+.cont {
+    padding: 20px;
+}
+
+.createDate {
+    grid-area: date;
+    text-align: end;
+}
+
+.top > img {
+    max-width: 400px;
+    max-height: 400px;
+}
+
+.updateBtn,
+.deleteBtn {
+    font-family: "LINESeedKR-Bd";
+    margin: 10px 15px;
+    height: 25px;
+    padding-top: 5px;
+    border-radius: 7px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.updateBtn:hover,
+.deleteBtn:hover {
+    box-shadow: 2px 2px 2px gray;
+}
+.updateBtn {
+    display: none;
+}
+
+.deleteBtn {
+    display: none;
+}

@@ -1,5 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsEnum, IsNotEmpty, IsString } from "class-validator";
+import {
+    IsDate,
+    IsEnum,
+    IsNotEmpty,
+    IsNumber,
+    IsString,
+} from "class-validator";
 import { ClubMatchStatus } from "src/entity/club_match.entity";
 
 export class ClubMatchDTO {
@@ -19,9 +25,9 @@ export class ClubMatchDTO {
     gameDate: Date;
 
     @IsNotEmpty()
-    @ApiProperty({ description: "끝나는시간", example: "2024-01-23T00:30:00Z" })
-    @IsDate()
-    endTime: Date;
+    @ApiProperty({ description: "끝나는시간", example: 2 })
+    @IsNumber()
+    endTime: number;
 }
 
 export class CheckClubMatchDTO {

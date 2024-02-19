@@ -13,7 +13,6 @@ async function displayMatchInfo() {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-        console.log(response.data);
         const myMatch = document.getElementById("myMatch");
         myMatch.innerHTML = "";
 
@@ -30,11 +29,15 @@ async function displayMatchInfo() {
 function createMatchHTML(match) {
     return `
     <button type="button" >
-        <div id="match-${match.id}" matchId="${match.id}" onclick="displayMatchUser(${match.id})">
+        <div id="match-${match.id}" matchId="${
+            match.id
+        }" onclick="displayMatchUser(${match.id})">
             <h1>${match.recruitTitle}</h1>
             <div><strong>모집장: </strong> ${match.hostName} </div>
-            <p><strong>경기 날짜: </strong> ${match.gamedate}</p>
+            <p><strong>경기 날짜: </strong> ${match.gameDate.slice(0, 10)}</p>
+
             <p><strong>상태: </strong> ${match.status}</p>
+            <p><strong>진행상황: </strong> ${match.progress}</p>
         </div>
     </button>
     `;
@@ -130,22 +133,20 @@ async function displayMatchUser(matchId) {
             },
         });
 
-        console.log(response.data);
+        console.log(response);
         const myMatch = response.data[0];
         const confirmUser = response.data[1];
-
-        console.log("confirmUser", confirmUser);
 
         const matchUser = document.getElementById("matchUser");
         matchUser.innerHTML = "";
         const userButton = document.getElementById("userButton");
         const matchInfo = document.getElementById("matchInfo");
 
-        const matchUserButtonHtml = createMatchUserButtonHtml(matchId);
+        const matchUserButtonHtml = createMatchUserButtonHtml(myMatch, matchId);
         const matchInfoHtml = createMatchInfoHtml(myMatch);
 
         confirmUser.forEach((user) => {
-            const matchUserHtml = createMatchUserHtml(user);
+            const matchUserHtml = createMatchUserHtml(myMatch, user);
 
             matchUser.innerHTML += matchUserHtml;
         });
@@ -156,7 +157,7 @@ async function displayMatchUser(matchId) {
         document.getElementById("exampleModal").style.display = "block";
     } catch (error) {
         console.log(error);
-        // alert(error.response.data.message);
+        alert(error.response.data.message);
         window.location.reload();
     }
 }
@@ -184,16 +185,35 @@ function createMatchInfoHtml(myMatch) {
     `;
 }
 
-function createMatchUserHtml(user) {
-    console.log("createMatchUserHtml", user);
-    const matchId = user.id;
-    const playOtherUserId = user.guestId;
-    return `
-        <button type="button" class="userInMatch" onclick="handleUserButtonClick('${user.guestId}')">
-            <p>${user.guestName}</p>
-        </button>
-            <button class="userEvaluate" onclick="displayPersonal('${matchId}', '${playOtherUserId}')">평가 </button>
+function createMatchUserHtml(myMatch, user) {
+    try {
+        if (myMatch.progress !== "평가해주세요") {
+            return `
+            <div type="button" class="userInMatch">
+             <p>${user.guestName}</p>
+            </div>
+            `;
+        }
+
+        const matchId = myMatch.id;
+        const playOtherUserId = user.guestId;
+        const isEvaluated =
+            myMatch.evaluateUser &&
+            myMatch.evaluateUser.includes(playOtherUserId.toString());
+
+        const buttonText = isEvaluated ? "평가완료" : "평가";
+
+        const buttonDisabled = isEvaluated ? "disabled" : "";
+
+        return `
+            <div type="button" class="userInMatch">
+             <p>${user.guestName}</p>
+            </div>
+            <button class="userEvaluate"  onclick="displayPersonal('${matchId}', '${playOtherUserId}')" ${buttonDisabled}>${buttonText}</button>
         `;
+    } catch (error) {
+        alert(error);
+    }
 }
 
 // 새로운 함수 추가
@@ -201,7 +221,37 @@ function handleUserButtonClick(userId) {
     createModal(userId);
 }
 
-function createMatchUserButtonHtml(matchId) {
+function createMatchUserButtonHtml(myMatch, matchId) {
+    if (myMatch.progress === "평가해주세요") {
+        return `
+        <div>
+        <button  data-matchId="${matchId}" onclick="evaluateButton(${matchId})">평가완료</button>       
+        <div>
+        `;
+    }
+    if (myMatch.status === "취소한 매치") {
+        return `
+        <div>
+        <button  data-matchId="${matchId}" onclick="deleteButton(${matchId})">삭제하기</button>
+        <div>
+        `;
+    }
+
+    if (myMatch.progress === "평가 완료") {
+        return `
+        <div>
+        <button  data-matchId="${matchId}" onclick="deleteButton(${matchId})">삭제하기</button>
+        <div>
+        `;
+    }
+    if (myMatch.progress === "경기전") {
+        return `
+        <div>
+        <button  data-matchId="${matchId}" onclick="cancelButton(${matchId})">취소하기</button>
+        <button  data-matchId="${matchId}" onclick="confirmButton(${matchId})">승인 확인</button>
+        <div>
+        `;
+    }
     return `
         <div>
             <button  data-matchId="${matchId}" onclick="cancelButton(${matchId})">취소하기</button>
@@ -215,7 +265,6 @@ function createMatchUserButtonHtml(matchId) {
 
 async function displayPersonal(matchId, playOtherUserId) {
     try {
-        console.log("displayPersonal", matchId, playOtherUserId);
         const personalEvaluation = document.getElementById("submit-btn");
         personalEvaluation.innerHTML = "";
         const personalEvaluationHTML = createpersonalEvaluationHTML(
@@ -228,7 +277,6 @@ async function displayPersonal(matchId, playOtherUserId) {
 }
 
 function createpersonalEvaluationHTML(matchId, playOtherUserId) {
-    console.log("createpersonalEvaluationHTML", matchId, playOtherUserId);
     return `
         <button onclick="submit('${matchId}', '${playOtherUserId}')" class="on">제출</button>
     `;
@@ -236,18 +284,17 @@ function createpersonalEvaluationHTML(matchId, playOtherUserId) {
 
 function openPersonal(confirmUser) {
     var modal = document.getElementById("myPersonal");
-    console.log(confirmUser);
+
     modal.style.display = "block";
 }
 
 async function submit(matchId, playOtherUserId) {
     try {
-        console.log("submit", matchId, playOtherUserId);
         await getPersonalAssessment(matchId, playOtherUserId);
         await getPersonalTag(matchId, playOtherUserId);
+        await evaluateUser(matchId, playOtherUserId);
         alert("평가 완료");
-
-        endPersonal();
+        window.location.reload();
     } catch (error) {
         console.error(error);
     }
@@ -256,4 +303,24 @@ async function submit(matchId, playOtherUserId) {
 async function endPersonal() {
     const modal = document.getElementById("myPersonal");
     modal.style.display = "none";
+}
+
+//유저집어넣기
+async function evaluateUser(matchId, playOtherUserId) {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+        axios.post(
+            `/api/match/evaluateUser/${playOtherUserId}/${matchId}`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+    } catch (error) {
+        console.log(error.response.data);
+        alert(error.response.data.message);
+        window.location.reload();
+    }
 }

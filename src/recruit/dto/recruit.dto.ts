@@ -38,7 +38,7 @@ export class RecruitDTO {
     gamedate: Date;
 
     @IsNotEmpty()
-    @ApiProperty({ description: "끝나는시간", example: "2024-01-24T00:30:00Z" })
+    @ApiProperty({ description: "끝나는시간", example: 2 })
     @IsNumber()
     endtime: number;
 

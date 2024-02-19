@@ -7,16 +7,19 @@
     min-height: 40rem;
 }
 
-.userMenuContianer {
+.userMenuContianer,
+.noticeMenuContianer {
     width: 20%;
 }
 
-.userMenuContianer > ul {
+.userMenuContianer > ul,
+.noticeMenuContianer > ul {
     padding: 0px;
     margin-top: 0px;
 }
 
-.userMenuContianer > ul > li {
+.userMenuContianer > ul > li,
+.noticeMenuContianer > ul > li {
     height: 40px;
     text-align: center;
     padding-top: 20px;
@@ -24,6 +27,7 @@
     cursor: pointer;
 }
 
-.userMenuContianer > ul > li:hover {
+.userMenuContianer > ul > li:hover,
+.noticeMenuContianer > ul > li:hover {
     background-color: #ff8737;
 }

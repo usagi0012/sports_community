@@ -159,14 +159,24 @@
                 </div>
                 <div class="modal-body">
                     <div id="map" style="width: 450px; height: 450px"></div>
-                    <input
-                        type="text"
-                        id="address"
-                        placeholder="주소를 입력하세요"
-                        maxlength="30"
-                    />
-                    <button id="submit">검색</button>
-                    <button id="confirm">확인</button>
+                    <label class="mapLabel"
+                        >1. 지도에서 위치를 찾거나 검색을 통해 주소를
+                        선택해주세요.</label
+                    >
+                    <div>
+                        <input
+                            type="text"
+                            id="address"
+                            placeholder="주소 검색"
+                            maxlength="30"
+                        />
+                        <button id="submit">검색</button>
+                        <button id="confirm">주소 선택</button>
+                    </div>
+                    <label class="mapLabel"
+                        >2. 아래 도로명 주소와 지번 주소중 하나를
+                        선택해주세요.</label
+                    >
                     <button id="confirmDORO" onclick="roadAddress()">
                         도로명 주소
                     </button>

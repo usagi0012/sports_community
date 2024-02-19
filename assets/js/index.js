@@ -7,7 +7,6 @@ window.onload = function () {
         localStorage.setItem("accessToken", cookieaccess);
         localStorage.setItem("refreshToken", cookierefresh);
 
-        // localStorage.setItem("accessToken");
         document.cookie =
             "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         document.cookie =
@@ -19,8 +18,12 @@ window.onload = function () {
     } else {
         getProfile("login");
     }
+    getPersonalRank();
+    getClubRank();
     loadHeader();
     loadFooter();
+    getFAQ();
+    getNotice();
 };
 
 // 각 cookie에 대한 토큰값
@@ -32,6 +35,7 @@ function getCookie(name) {
 
 //프로필 불러오기
 const profileContainer = document.getElementById("profileContainer");
+
 function getProfile(token) {
     let profile = "";
     if (token === "home") {
@@ -45,7 +49,6 @@ function getProfile(token) {
                 },
             })
             .then(function (response) {
-                console.log(response.data.data.userProfile);
                 const user = response.data.data.userProfile;
                 //프로필 이미지
                 //성별
@@ -54,12 +57,12 @@ function getProfile(token) {
                     <img src="${user.image}" id="profileImage" />
                 </div>
                 <div class="nickname">${user.nickname}</div>
-                <div class="gender">
+                <div class="gender" id="gender">
                 </div>
                 <div class="tag">
-                    <span id="tag1"> #커리 </span>
-                    <span id="tag2"> #조던 </span>
-                    <span id="tag3"> #지각 </span>
+                    <span id="tag1"></span>
+                    <span id="tag2"></span>
+                    <span id="tag3"></span>
                 </div>
                 <div class="height">키: ${user.height}</div>
                 <div class="position" id="position"></div>
@@ -78,12 +81,13 @@ function getProfile(token) {
                     수정하기
                 </button>
                 <div class="calenderContainer">
-                    <button type="button" id="calenderBtn" onclick="needUpdateFunction()">캘린더 →</button>
-
+                    <button type="button" id="calenderBtn" onclick="toCalender()">캘린더 →</button>
                 </div>`;
                 profileContainer.innerHTML = profile;
+                getGender(user.gender);
                 getPosition(accessToken);
                 getScore(accessToken);
+                getTag(accessToken);
             })
             .catch(function (error) {
                 console.log(error);
@@ -97,6 +101,20 @@ function getProfile(token) {
                     profileContainer.innerHTML = profile;
                 }
             });
+    }
+}
+
+async function getGender(gender) {
+    const genderContainer = document.getElementById("gender");
+    if (gender == "male") {
+        genderContainer.innerHTML = `
+        <i
+        class="fas fa-solid fa-mars"
+        style="color: #0860a8"
+        ></i>
+        `;
+    } else if (gender == "female") {
+        genderContainer.innerHTML = `<i class="fas fa-solid fa-venus" style="color: #cc679f"></i>`;
     }
 }
 
@@ -141,8 +159,6 @@ async function getScore(accessToken) {
             },
         });
 
-        console.log(scoreResponse);
-
         if (scoreResponse.data.message === "개인 점수가 조회되었습니다.") {
             // 평가 점수가 있는 경우
             const score = scoreResponse.data.data;
@@ -173,4 +189,222 @@ async function getScore(accessToken) {
                 "점수를 가져오는데 에러가 발생하였습니다.";
         }
     }
+}
+
+async function getTag(accessToken) {
+    try {
+        // 유저 태그 가져오기
+        const tagResponse = await axios.get("/api/assessment/personal/tag", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        if (tagResponse.data.message === "개인 태그가 조회되었습니다.") {
+            // 유저 태그가 있는 경우
+            const tag = tagResponse.data.data;
+
+            document.getElementById("tag1").innerText = tag[0];
+            document.getElementById("tag2").innerText = tag[1];
+            document.getElementById("tag3").innerText = tag[2];
+        } else {
+            // 유저 태그가 없는 경우
+            document.getElementById("tag1").innerText = "태그: 없음";
+        }
+    } catch (error) {
+        // 에러 핸들링
+        document.getElementById("tag1").innerText = "태그: 없음";
+
+        // 서버 응답이 404일 때
+        if (error.response && error.response.status === 404) {
+            document.getElementById("tag1").innerText = "태그: 없음";
+        } else {
+            // 기타 에러 처리
+            document.getElementById("tag").innerText = "에러 발생";
+        }
+    }
+}
+
+function getPersonalRank() {
+    axios
+        .get("/api/updated-rank/personal")
+        .then(function (response) {
+            const personalityRankInnerContainner = document.querySelector(
+                ".personalityRankInnerContainer",
+            );
+            const abilityRankInnerContainner = document.querySelector(
+                ".abilityRankInnerContainer",
+            );
+            const personalityRightDiv =
+                document.querySelector(".personalityRight");
+
+            const abilityRightDiv = document.querySelector(".abilityRight");
+
+            // 인성 div 만들기
+            const personality = response.data.filter(
+                (score) => score.isPersonality,
+            );
+
+            const orderedPersonality = personality.sort(
+                (a, b) => b.personalityScore - a.personalityScore,
+            );
+
+            orderedPersonality.forEach((personalityRank, index) => {
+                const rankCard = document.createElement("div");
+                rankCard.className = "rankCard";
+
+                const rankNumber = document.createElement("div");
+                rankNumber.className = `rankNumber${index + 1}`;
+                rankNumber.innerHTML = ``;
+                rankCard.appendChild(rankNumber);
+
+                const rankNickName = document.createElement("div");
+                rankNickName.className = "rankNickName";
+                rankNickName.innerHTML = `${personalityRank.nickname}`;
+                rankCard.appendChild(rankNickName);
+
+                const rankScore = document.createElement("div");
+                rankScore.className = "rankScore";
+                rankScore.innerHTML = `<i class="fas fa-solid fa-star"></i> ${personalityRank.personalityScore.slice(
+                    0,
+                    3,
+                )}`;
+                rankCard.appendChild(rankScore);
+
+                const rankDiv = document.querySelector(".rank");
+                personalityRightDiv.appendChild(rankCard);
+            });
+
+            // 실력 div 만들기
+            const ability = response.data.filter((score) => score.isAbility);
+
+            const orderedAbility = ability.sort(
+                (a, b) => b.abilityScore - a.abilityScore,
+            );
+
+            orderedAbility.forEach((abilityRank) => {
+                const rankCard = document.createElement("div");
+                rankCard.className = "rankCard";
+                const rankNickName = document.createElement("div");
+                rankNickName.className = "rankNickName";
+                rankNickName.innerHTML = `${abilityRank.nickname}`;
+                rankCard.appendChild(rankNickName);
+
+                const rankScore = document.createElement("div");
+                rankScore.className = "rankScore";
+                rankScore.innerHTML = `<i class="fas fa-solid fa-star"></i>${abilityRank.abilityScore.slice(
+                    0,
+                    3,
+                )}`;
+                rankCard.appendChild(rankScore);
+
+                abilityRightDiv.appendChild(rankCard);
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function getClubRank() {
+    axios
+        .get("/api/updated-rank/club")
+        .then(function (response) {
+            const clubRankInnerContainner = document.querySelector(
+                ".clubRankInnerContainer",
+            );
+            const clubLeftDiv = document.querySelector(".clubLeft");
+
+            // 클럽 div 만들기
+            const orderedClubRank = response.data.sort(
+                (a, b) => b.totalScore - a.totalScore,
+            );
+
+            orderedClubRank.forEach((clubRank) => {
+                const rankCard = document.createElement("div");
+                rankCard.className = "rankCard";
+                const rankNickName = document.createElement("div");
+                rankNickName.className = "rankNickName";
+                rankNickName.innerHTML = `${clubRank.clubId}`;
+                rankCard.appendChild(rankNickName);
+
+                const rankScore = document.createElement("div");
+                rankScore.className = "rankScore";
+                rankScore.innerHTML = `<i class="fas fa-solid fa-star"></i>${clubRank.personalityScore}`;
+                rankCard.appendChild(rankScore);
+
+                clubLeftDiv.appendChild(rankCard);
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function getNotice() {
+    const accessToken = localStorage.getItem("accessToken");
+    axios
+        .get("/api/notices", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+        .then(function (response) {
+            const noticeList = response.data.data;
+            noticeList.slice(0, 3);
+            console.log(noticeList);
+            noticeList
+                .forEach((notices, index) => {
+                    let noticeData = document.getElementById(
+                        `noticeData${index + 1}`,
+                    );
+                    noticeData.innerHTML = `
+                            ${notices.title}
+                        `;
+                    noticeData.addEventListener("click", function () {
+                        toNoticeData(notices.id);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        });
+}
+
+function getFAQ() {
+    const token = localStorage.getItem("accessToken");
+    axios
+        .get("/api/faq", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then(function (response) {
+            const faqList = response.data.data;
+            faqList.slice(0, 3);
+            console.log(faqList);
+            faqList
+                .forEach((faqs, index) => {
+                    let faqData = document.getElementById(
+                        `faqData${index + 1}`,
+                    );
+                    faqData.innerHTML = `
+                            ${faqs.title}
+                        `;
+                    faqData.addEventListener("click", function () {
+                        toFAQData(faqs.id);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        });
+}
+
+function toNoticeData(num) {
+    window.location.href = `noticeDetail.html?id=${num}`;
+}
+
+function toFAQData(num) {
+    window.location.href = `faqDetail.html?id=${num}`;
 }
