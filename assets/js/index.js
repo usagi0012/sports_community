@@ -59,10 +59,8 @@ function getProfile(token) {
                 <div class="nickname">${user.nickname}</div>
                 <div class="gender" id="gender">
                 </div>
-                <div class="tag">
-                    <span id="tag1"></span>
-                    <span id="tag2"></span>
-                    <span id="tag3"></span>
+                <div class="tag" id="tag1">
+                    
                 </div>
                 <div class="height">키: ${user.height}</div>
                 <div class="position" id="position"></div>
@@ -168,6 +166,10 @@ async function getScore(accessToken) {
                 실력: <i class="fas fa-solid fa-star"></i> ${score.ability}`;
             document.getElementById("MVPCount").innerHTML = `
             MVP: ${score.mvp} 회 `;
+            if (!score.mvp) {
+                document.getElementById("MVPCount").innerHTML = `
+                MVP: 없음 `;
+            }
         } else {
             // 평가 점수가 없는 경우
             document.getElementById("personalityAmount").innerHTML =
@@ -204,9 +206,8 @@ async function getTag(accessToken) {
             // 유저 태그가 있는 경우
             const tag = tagResponse.data.data;
 
-            document.getElementById("tag1").innerText = tag[0];
-            document.getElementById("tag2").innerText = tag[1];
-            document.getElementById("tag3").innerText = tag[2];
+            const tagsText = Object.keys(tag).join(", ");
+            document.getElementById("tag1").innerText = tagsText;
         } else {
             // 유저 태그가 없는 경우
             document.getElementById("tag1").innerText = "태그: 없음";
