@@ -202,6 +202,7 @@
     grid-area: nickname;
 }
 .rankScore {
+    grid-area: score;
     text-align: center;
     width: 80px;
     margin: 10px;
@@ -314,7 +315,7 @@
     width: 80px;
     margin: 10px;
     font-size: 20px;
-    margin-left: 50px;
+    margin-left: 20px;
 }
 
 .rankScore > i {
@@ -324,4 +325,5 @@
 .rankNickName {
     margin: 10px;
     font-size: 20px;
+    min-width: 150px;
 }
