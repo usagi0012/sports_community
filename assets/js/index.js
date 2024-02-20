@@ -354,21 +354,20 @@ function getNotice() {
             const noticeList = response.data.data;
             noticeList.slice(0, 3);
             console.log(noticeList);
-            noticeList
-                .forEach((notices, index) => {
-                    let noticeData = document.getElementById(
-                        `noticeData${index + 1}`,
-                    );
-                    noticeData.innerHTML = `
+            noticeList.forEach((notices, index) => {
+                let noticeData = document.getElementById(
+                    `noticeData${index + 1}`,
+                );
+                noticeData.innerHTML = `
                             ${notices.title}
                         `;
-                    noticeData.addEventListener("click", function () {
-                        toNoticeData(notices.id);
-                    });
-                })
-                .catch(function (error) {
-                    console.log(error);
+                noticeData.addEventListener("click", function () {
+                    toNoticeData(notices.id);
                 });
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
         });
 }
 
@@ -384,21 +383,18 @@ function getFAQ() {
             const faqList = response.data.data;
             faqList.slice(0, 3);
             console.log(faqList);
-            faqList
-                .forEach((faqs, index) => {
-                    let faqData = document.getElementById(
-                        `faqData${index + 1}`,
-                    );
-                    faqData.innerHTML = `
+            faqList.forEach((faqs, index) => {
+                let faqData = document.getElementById(`faqData${index + 1}`);
+                faqData.innerHTML = `
                             ${faqs.title}
                         `;
-                    faqData.addEventListener("click", function () {
-                        toFAQData(faqs.id);
-                    });
-                })
-                .catch(function (error) {
-                    console.log(error);
+                faqData.addEventListener("click", function () {
+                    toFAQData(faqs.id);
                 });
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
         });
 }
 
