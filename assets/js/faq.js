@@ -20,7 +20,6 @@ function faq() {
         })
         .then(function (response) {
             const faqList = response.data.data;
-            console.log(faqList);
             faqList
                 .forEach((faqs) => {
                     const newContent = document.createElement("div");
@@ -65,8 +64,6 @@ function showCreateBtn() {
             },
         })
         .then(function (response) {
-            console.log("notice response", response);
-
             createBtn.style.display = "flex";
         })
         .catch(function (error) {

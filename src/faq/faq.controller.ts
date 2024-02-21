@@ -22,10 +22,10 @@ import { UpdateFaqDto } from "./dto/updateFaq.dto";
 @ApiTags("FAQ")
 @ApiBearerAuth("accessToken")
 @Controller("faq")
-@UseGuards(accessTokenGuard)
 export class FaqController {
     constructor(private readonly faqService: FaqService) {}
 
+    @UseGuards(accessTokenGuard)
     @UseInterceptors(FileInterceptor("file"))
     @Post()
     async createFaq(
@@ -66,6 +66,7 @@ export class FaqController {
         };
     }
 
+    @UseGuards(accessTokenGuard)
     @UseInterceptors(FileInterceptor("file"))
     @Put(":faqid")
     async updateFaq(
@@ -87,6 +88,7 @@ export class FaqController {
         };
     }
 
+    @UseGuards(accessTokenGuard)
     @Delete(":faqId")
     async deleteFaq(@UserId() userId: number, @Param("faqId") faqId: number) {
         const data = await this.faqService.deleteFaq(userId, faqId);

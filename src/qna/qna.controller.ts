@@ -22,10 +22,10 @@ import { UserId } from "src/auth/decorators/userId.decorator";
 @ApiTags("QNA")
 @Controller("qna")
 @ApiBearerAuth("accessToken")
-@UseGuards(accessTokenGuard)
 export class QnaController {
     constructor(private readonly qnaService: QnaService) {}
 
+    @UseGuards(accessTokenGuard)
     @UseInterceptors(FileInterceptor("file"))
     @Post()
     async createQna(
@@ -72,6 +72,7 @@ export class QnaController {
         };
     }
 
+    @UseGuards(accessTokenGuard)
     @UseInterceptors(FileInterceptor("file"))
     @Put(":qnaId")
     async updateQna(
@@ -94,6 +95,7 @@ export class QnaController {
         };
     }
 
+    @UseGuards(accessTokenGuard)
     @Delete(":qnaId")
     async deleteQna(@Param("qnaId") qnaId: number, @UserId() userId: number) {
         const data = await this.qnaService.deleteQna(qnaId, userId);

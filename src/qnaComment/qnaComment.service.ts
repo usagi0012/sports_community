@@ -32,8 +32,8 @@ export class QnaCommentService {
 
         const admin = await this.veryfiyAdmin(userId);
 
-        const qna = await this.veryfiyQna(qnaId);
-        console.log(qna);
+        await this.veryfiyQna(qnaId);
+
         if (admin.userType === "admin") {
             const qnaComment = await this.qnaCommentRepository.save({
                 masterId: admin.id,

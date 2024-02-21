@@ -11,7 +11,7 @@ export class NaverStrategy extends PassportStrategy(Strategy, "naver") {
             clientSecret: configService.get<string>("NAVER_CLIENT_SECRET"),
             callbackURL: `${configService.get<string>(
                 "LOCAL",
-            )}api/auth/naver/callback`,
+            )}/api/auth/naver/callback`,
         });
     }
 
@@ -20,10 +20,6 @@ export class NaverStrategy extends PassportStrategy(Strategy, "naver") {
         refreshToken: string,
         profile: Profile,
     ) {
-        // console.log("accessToken", accessToken);
-        // console.log("refreshToken", refreshToken);
-        // console.log("profile", profile);
-
         return {
             name: profile.name,
             email: profile.email,

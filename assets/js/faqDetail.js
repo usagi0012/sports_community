@@ -4,7 +4,6 @@ window.onload = function () {
     loadNoticeMenu();
     const urlParams = new URLSearchParams(window.location.search);
     let faqId = urlParams.get("id");
-    console.log("야 너 왜 안나와?dddddddddd", userId);
     getFaqDetail(faqId);
 };
 
@@ -40,14 +39,12 @@ function getFaqDetail(faqId) {
         })
 
         .catch(function (error) {
-            console.log(error.response.data);
             alert(error.response.data.message);
         });
 }
 
 function moveToUpdatePage() {
     const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams", urlParams);
     let faqId = urlParams.get("id");
 
     window.location.href = `faqUpdate.html?id=${faqId}`;
@@ -75,12 +72,10 @@ function deleteCheck() {
             },
         })
         .then(function (response) {
-            console.log(response);
             alert(`${response.data.message}`);
             window.location.href = "faq.html";
         })
         .catch(function (error) {
-            console.log(error);
             alert("FAQ 삭제에 실패했습니다.");
         });
 }
