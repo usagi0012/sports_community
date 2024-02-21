@@ -44,7 +44,6 @@ function submitForm() {
             returnPage();
         })
         .catch(function (error) {
-            console.log(error.response.data);
             alert(error.response.data.message);
         });
 }

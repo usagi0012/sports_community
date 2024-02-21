@@ -49,7 +49,6 @@ function getFaqDetail(faqId) {
         })
 
         .catch(function (error) {
-            console.log(error.response.data);
             alert(error.response.data.message);
         });
 }
@@ -80,7 +79,6 @@ function showAndHideBtn() {
 
 function moveToUpdatePage() {
     const urlParams = new URLSearchParams(window.location.search);
-
     let faqId = urlParams.get("id");
 
     window.location.href = `faqUpdate.html?id=${faqId}`;
@@ -108,12 +106,10 @@ function deleteCheck() {
             },
         })
         .then(function (response) {
-            console.log(response);
             alert(`${response.data.message}`);
             window.location.href = "faq.html";
         })
         .catch(function (error) {
-            console.log(error);
             alert("FAQ 삭제에 실패했습니다.");
         });
 }

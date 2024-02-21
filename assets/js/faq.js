@@ -65,8 +65,6 @@ function showCreateBtn() {
             },
         })
         .then(function (response) {
-            console.log("notice response", response);
-
             createBtn.style.display = "flex";
         })
         .catch(function (error) {

@@ -20,7 +20,6 @@ import { UserId } from "src/auth/decorators/userId.decorator";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 @ApiBearerAuth("accessToken")
-@UseGuards(accessTokenGuard)
 @ApiTags("공지사항")
 @Controller("notices")
 export class NoticeController {
@@ -37,6 +36,7 @@ export class NoticeController {
     }
 
     @UseInterceptors(FileInterceptor("file"))
+    @UseGuards(accessTokenGuard)
     @Post()
     async createNotice(
         @UserId() userId: number,
@@ -56,9 +56,9 @@ export class NoticeController {
         };
     }
 
+    @UseGuards(accessTokenGuard)
     @Get("/isAdmin")
     async isAdmin(@UserId() userId: number) {
-        console.log("here");
         return await this.noticeService.verifyAdmin(userId);
     }
 
@@ -72,6 +72,7 @@ export class NoticeController {
         };
     }
 
+    @UseGuards(accessTokenGuard)
     @UseInterceptors(FileInterceptor("file"))
     @Put(":noticeId")
     async updateNotice(
@@ -93,6 +94,7 @@ export class NoticeController {
         };
     }
 
+    @UseGuards(accessTokenGuard)
     @Delete(":noticeId")
     async deleteNotice(
         @Param("noticeId") noticeId: number,

@@ -18,11 +18,11 @@ import { UserId } from "src/auth/decorators/userId.decorator";
 
 @ApiTags("QNA댓글")
 @ApiBearerAuth("accessToken")
-@UseGuards(accessTokenGuard)
 @Controller("qna")
 export class QnaCommentController {
     constructor(private readonly qnaCommentService: QnaCommentService) {}
 
+    @UseGuards(accessTokenGuard)
     @Post("/:qnaId/comment")
     async createQnaComment(
         @UserId() userId: number,
@@ -45,7 +45,6 @@ export class QnaCommentController {
 
     @Get("/comment/isAdmin")
     async isAdmin(@UserId() userId: number) {
-        console.log(userId);
         return await this.qnaCommentService.verifyAdmin(userId);
     }
 
@@ -60,6 +59,7 @@ export class QnaCommentController {
         };
     }
 
+    @UseGuards(accessTokenGuard)
     @Put("/:qnaId/comment/:qnaCommentId")
     async updateQnaComment(
         @UserId() userId: number,
@@ -81,6 +81,7 @@ export class QnaCommentController {
         };
     }
 
+    @UseGuards(accessTokenGuard)
     @Delete("/:qnaId/comment/:qnaCommentId")
     async deleteQnaComment(
         @UserId() userId: number,
