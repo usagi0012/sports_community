@@ -12,24 +12,15 @@ import { ClubMatch, Progress } from "../entity/club_match.entity";
 import { Club } from "../entity/club.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { NotFoundError } from "rxjs";
 import { ClubMatchStatus } from "../entity/club_match.entity";
-import { MatchStatus } from "src/entity/match.entity";
-import { Status } from "src/entity/recruit.entity";
 import { Alarmservice } from "src/alarm/alarm.service";
 import { ConfigService } from "@nestjs/config";
-import { Cron, CronExpression } from "@nestjs/schedule";
-import { NestApplication } from "@nestjs/core";
 import { User, UserType } from "../entity/user.entity";
 
 const now = new Date();
 const utc = now.getTime();
 const koreaTimeDiff = 9 * 60 * 60 * 1000;
 const korNow = new Date(utc + koreaTimeDiff);
-
-const updateNow = new Date(korNow.getTime() + 9 * 60 * 60 * 1000);
-
-const oneHoursAgo = new Date(korNow);
 
 @Injectable()
 export class ClubMatchService {
@@ -53,11 +44,12 @@ export class ClubMatchService {
             throw new NotFoundException("유저를 찾을 수 없습니다.");
         }
 
-        if (me.userType === UserType.USER || me.userType !== UserType.ADMIN) {
+        if (
+            me.userType === UserType.BANNED_USER ||
+            me.userType !== UserType.PERMANENT_BAN
+        ) {
             throw new NotFoundException("밴유저는 이용 불가능합니다.");
         }
-
-        // await this.userType(userId);
     }
     //매치 신청하기
 
@@ -98,9 +90,6 @@ export class ClubMatchService {
             korNow.getTime() + 1 * 60 * 60 * 1000,
         );
 
-        console.log("gamedate", gamedate);
-        console.log("oneHourBeforeNow", oneHourBeforeNow);
-
         if (gamedate.getTime() < oneHourBeforeNow.getTime()) {
             throw new NotFoundException("최소 한 시간 전에 입력 가능합니다.");
         }
@@ -119,10 +108,7 @@ export class ClubMatchService {
 
             ...restclubMatchDTO,
         });
-        console.log(hostClub.masterId);
-        console.log(guestClub.name);
         const link = `${this.configService.get("LOCALHOSt_URL")}/index.html`;
-        console.log(this.configService.get("LOCALHOST_URL"));
         this.alarmService.sendAlarm(
             hostClub.masterId,
             `${guestClub.name}동아리에게 매치 신청이 왔습니다.`,
@@ -153,8 +139,6 @@ export class ClubMatchService {
             this.updateProgress(match);
         }
 
-        console.log("now", now);
-
         return await this.clubMatchRepository.save(matches);
     }
 
@@ -169,8 +153,6 @@ export class ClubMatchService {
                 guestClub: true,
             },
         });
-
-        console.log("matchTime", match.endTime, match.gameDate);
 
         if (!match) {
             throw new NotFoundException(`Match ${id}을 찾을 수 없습니다.`);
@@ -308,11 +290,6 @@ export class ClubMatchService {
         for (const match of matches) {
             this.updateProgress(match);
         }
-
-        console.log("now", now);
-        console.log("korNOw", korNow);
-
-        console.log("updateNow", updateNow);
 
         return await this.clubMatchRepository.save(matches);
     }
@@ -479,17 +456,6 @@ export class ClubMatchService {
         }
         return await this.clubMatchRepository.save(clubMatch);
     }
-
-    // @Cron(CronExpression.EVERY_10_SECONDS)
-    // async handleCron() {
-    //     const guestMatches = await this.clubMatchRepository.find();
-
-    //     for (const guestMatch of guestMatches) {
-    //         this.updateProgress(guestMatch);
-    //     }
-
-    //     await this.clubMatchRepository.save(guestMatches);
-    // }
 
     private updateProgress(clubMatch: ClubMatch) {
         if (clubMatch.gameDate.getTime() < korNow.getTime()) {

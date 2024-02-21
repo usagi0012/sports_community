@@ -14,11 +14,8 @@ function getMyApplication() {
             },
         })
         .then(function (response) {
-            console.log(response);
-
             const mainContainer = document.querySelector(".mainContainer");
             if (response.data.error == "지원서가 존재하지 않습니다.") {
-                console.log("hi");
                 return (mainContainer.innerHTML = `동아리 지원 내역이 없습니다.`);
             } else {
                 const clubApplication = document.createElement("div");
@@ -51,12 +48,6 @@ function getMyApplication() {
                     confirmDeleteApplcation,
                 );
             }
-
-            // const modifyApplicationBtn = document.createElement("button");
-            // modifyApplicationBtn.innerHTML = "신청서 수정";
-            // clubApplication.appendChild(modifyApplicationBtn);
-
-            // modifyApplicationBtn.addEventListener("click", openModifyModal);
         })
         .catch(function (error) {
             console.log(error);
@@ -67,27 +58,6 @@ function openModifyModal() {
     const modifyModal = document.querySelector("#modal");
     modifyModal.style.display = "flex";
 }
-
-// function modifyApplication() {
-//     const token = localStorage.getItem("accessToken");
-//     const message = document.querySelector("#message").value;
-//     axios
-//         .put(
-//             `/api/applying-club/${clubId}`,
-//             { message },
-//             {
-//                 headers: {
-//                     Authorization: `Bearer ${token}`,
-//                 },
-//             },
-//         )
-//         .then(function (response) {
-//             console.log("==response==", response);
-//         })
-//         .catch(function (error) {
-//             console.log(error);
-//         });
-// }
 
 function deleteApplication() {
     const accessToken = localStorage.getItem("accessToken");
@@ -109,10 +79,8 @@ function deleteApplication() {
 function confirmDeleteApplcation() {
     let result = confirm("신청서를 정말로 삭제하시겠습니까?");
     if (result) {
-        console.log("확인 누름");
         deleteApplication();
     } else {
-        console.log("취소 누름");
         alert("신청서 삭제를 취소했습니다.");
     }
 }

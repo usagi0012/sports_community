@@ -11,13 +11,12 @@ function notice() {
     noticeBoardList.innerHTML = "";
     const accessToken = localStorage.getItem("accessToken");
     axios
-        .get("/api/notice", {
+        .get("/api/notices", {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         })
         .then(function (response) {
-            console.log(response);
             const noticeList = response.data.data;
 
             noticeList
@@ -64,8 +63,6 @@ function showCreateBtn() {
             },
         })
         .then(function (response) {
-            console.log("notice response", response);
-
             createBtn.style.display = "flex";
         })
         .catch(function (error) {

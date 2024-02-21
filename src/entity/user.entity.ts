@@ -7,24 +7,18 @@ import {
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
-    Relation,
     ManyToOne,
     JoinTable,
 } from "typeorm";
 import { Club } from "./club.entity";
 import { UserCalender } from "./user-calender.entity";
-import { UserProfile } from "./user-profile.entity";
 import { Recruit } from "./recruit.entity";
 import { Match } from "./match.entity";
 import { ClubApplication } from "./club-application.entity";
 import { UserPosition } from "./user-position.entity";
-import { IsBoolean } from "class-validator";
 import { Report } from "./report.entity";
-import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
-import { Observable } from "rxjs";
 import { Banlist } from "./banlist.entity";
 import { UserAlarm } from "./userAlarm.entity";
-// import { Alarm } from "./alarm.entity";
 
 export enum UserType {
     USER = "user",

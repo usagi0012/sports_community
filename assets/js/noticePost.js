@@ -25,7 +25,7 @@ function submitForm() {
 
     axios
         .post(
-            `/api/notice`,
+            `/api/notices`,
             {
                 masterId: userId,
                 title: title,

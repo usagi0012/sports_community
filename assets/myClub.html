@@ -1,95 +1,79 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Onong Club Details</title>
-        <meta name="description" content="Onong ClubDetailPage" />
-        <link rel="icon" href="./resources/favicon.ico" />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-        />
-        <link rel="stylesheet" href="css/club-detail.css" />
-        <link rel="stylesheet" href="css/dropBar.css" />
-        <link rel="stylesheet" href="css/otherUser-modal.css" />
-        <link rel="stylesheet" href="css/report.css" />
-    </head>
-    <body>
-        <div id="sameContainer"></div>
-        <div class="bodyContainer">
-            <div class="mainContainer" id="mainContainer">
-                <div class="buttonContainer" id="buttonContainer">
-                    <button
-                        class="myClubApplication"
-                        onclick="moveToGetMyClubApplication()"
-                    >
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Onong Club Details</title>
+    <meta name="description" content="Onong ClubDetailPage" />
+    <link rel="icon" href="./resources/favicon.ico" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="css/club-detail.css" />
+    <link rel="stylesheet" href="css/dropBar.css" />
+    <link rel="stylesheet" href="css/otherUser-modal.css" />
+    <link rel="stylesheet" href="css/report.css" />
+</head>
+
+<body>
+    <div id="sameContainer"></div>
+    <div class="bodyContainer">
+        <div class="mainContainer" id="mainContainer">
+            <div class="buttonContainer" id="buttonContainer">
+                <button class="myClubApplication" onclick="moveToGetMyClubApplication()">
                         신청서 조회
                     </button>
 
-                    <button class="updateBtn" onclick="moveToUpdatePage() ">
+                <button class="updateBtn" onclick="moveToUpdatePage() ">
                         동아리 정보 수정
                     </button>
 
-                    <button class="deleteBtn" onclick="confirmDelete()">
+                <button class="deleteBtn" onclick="confirmDelete()">
                         동아리 삭제
                     </button>
 
-                    <button class="withdrawBtn" onclick="confirmWithdraw()">
+                <button class="withdrawBtn" onclick="confirmWithdraw()">
                         동아리 탈퇴
                     </button>
-                    <button
-                        class="expelMemberBtn"
-                        onclick="openExpelMemberModal()"
-                    >
+                <button class="expelMemberBtn" onclick="openExpelMemberModal()">
                         멤버 추방
                     </button>
 
-                    <button class="matchManagement" onclick="toMyClubMatch()">
+                <button class="matchManagement" onclick="toMyClubMatch()">
                         대결 관리
                     </button>
+            </div>
+            <div class="clubDetailContainer" id="clubDetailContainer">
+                <div class="firstRow">
+                    <div class="name">이름</div>
+                    <div class="region">지역</div>
+                    <div class="createdAt">생성일자</div>
                 </div>
-                <div class="clubDetailContainer" id="clubDetailContainer">
-                    <div class="firstRow">
-                        <div class="name">이름</div>
-                        <div class="region">지역</div>
-                        <div class="createdAt">생성일자</div>
-                    </div>
-                    <div class="secondRow">
-                        <div class="clubMaster">동호회장</div>
-                        <div class="member">회원수</div>
-                        <div class="score">점수</div>
-                    </div>
-                    <div class="detialRow">
-                        <div class="details">상세설명</div>
-                    </div>
+                <div class="secondRow">
+                    <div class="clubMaster">동호회장</div>
+                    <div class="member">회원수</div>
+                    <div class="score">점수</div>
+                </div>
+                <div class="detialRow">
+                    <div class="details">상세설명</div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
 
     <div class="footer" id="footer"></div>
-            <div class="modal" id="expelMember-modal-overlay">
-                <div class="modal-content" id="modal">
-                    <label for="nickname">추방할 유저 닉네임 </label>
-                    <input
-                        type="text"
-                        id="nickname"
-                        placeholder="닉네임을 입력하세요"
-                    />
-                    <div class="modalBtnContainer">
-                        <button id="submit-btn" onclick="confirmExpel()">제출</button>
-                        <button
-                            id="close-btn"
-                            onclick="closeExpelMemberModal()"
-                        >
+    <div class="modal" id="expelMember-modal-overlay">
+        <div class="modal-content" id="modal">
+            <label for="nickname">추방할 유저 닉네임 </label>
+            <input type="text" id="nickname" placeholder="닉네임을 입력하세요" />
+            <div class="modalBtnContainer">
+                <button id="submit-btn" onclick="confirmExpel()">제출</button>
+                <button id="close-btn" onclick="closeExpelMemberModal()">
                             닫기
                         </button>
-                    </div>
-                </div>
+            </div>
+        </div>
 
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -141,7 +125,7 @@
                             Authorization: `Bearer ${token}`,
                         },
                     })
-                    .then(function (response) {
+                    .then(function(response) {
                         console.log("clubId 뽑아오는 response1", response);
                         axios
                             .delete(`api/club/${response.data}`, {
@@ -149,21 +133,19 @@
                                     Authorization: `Bearer ${token}`,
                                 },
                             })
-                            .then(function (response) {
+                            .then(function(response) {
                                 console.log(response);
                                 alert(`${response.data.message}`);
                                 window.location.href = "club.html";
                             })
-                            .catch(function (error) {
+                            .catch(function(error) {
                                 console.log(error);
                                 alert("동아리 삭제에 실패했습니다.");
 
-                                // if (error.response.data.message === "Unauthorized") {
-                                //     alert("동아리 생성자만 삭제할 수 있습니다.");
-                                // }
+
                             });
                     })
-                    .catch(function (error) {
+                    .catch(function(error) {
                         console.log("??");
                         console.log(error);
                     });
@@ -181,7 +163,7 @@
                             Authorization: `Bearer ${token}`,
                         },
                     })
-                    .then(function (response) {
+                    .then(function(response) {
                         console.log(response);
                         if (response.data.statusCode !== 200) {
                             alert(`${response.data.error}`);
@@ -189,7 +171,7 @@
                         }
                         window.location.href = "my-club-application.html";
                     })
-                    .catch(function (error) {
+                    .catch(function(error) {
                         console.log(error);
                         alert("동아리 장만 조회할 수 있습니다.");
                         return;
@@ -200,22 +182,20 @@
                 const token = localStorage.getItem("accessToken");
                 axios
                     .put(
-                        "/api/club/withdraw",
-                        {},
-                        {
+                        "/api/club/withdraw", {}, {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                             },
                         },
                     )
-                    .then(function (response) {
+                    .then(function(response) {
                         console.log(response);
                         console.log("button clicked");
 
                         alert("동아리 탈퇴가 완료되었습니다.");
                         window.location.href = "club.html";
                     })
-                    .catch(function (error) {
+                    .catch(function(error) {
                         console.log("3", error);
                         if (
                             error.message ==
@@ -237,15 +217,15 @@
                 console.log("닉네임", nickName);
                 axios
                     .put(
-                        "/api/club/expelMember",
-                        { nickName },
-                        {
+                        "/api/club/expelMember", {
+                            nickName
+                        }, {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                             },
                         },
                     )
-                    .then(function (response) {
+                    .then(function(response) {
                         console.log(response);
                         console.log("button clicked");
 
@@ -253,7 +233,7 @@
 
                         closeExpelMemberModal();
                     })
-                    .catch(function (error) {
+                    .catch(function(error) {
                         console.log(error);
                         if (
                             error.message ==
@@ -284,5 +264,6 @@
         </script>
         <script src="./js/notification.js"></script>
         <script src="./js/otherUser-modal.js"></script>
-    </body>
+</body>
+
 </html>

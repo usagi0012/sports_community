@@ -3,19 +3,16 @@ import {
     Get,
     Post,
     Body,
-    Patch,
-    Param,
     Delete,
     UseGuards,
     Req,
     Put,
-    Query,
 } from "@nestjs/common";
 import { UserPositionService } from "./user-position.service";
 import { CreateUserPositionDto } from "./dto/create-user-position.dto";
 import { UpdateUserPositionDto } from "./dto/update-user-position.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { AuthGuard } from "@nestjs/passport";
+
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 
 @ApiTags("개인 포지션")

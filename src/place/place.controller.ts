@@ -8,7 +8,6 @@ import axios from "axios";
 export class PlaceController {
     constructor(private readonly placeService: PlaceService) {}
 
-    // 매달 1일 새벽 3시 0 3 1 * *
     @Cron("0 3 1 * *")
     async getData() {
         console.log("hi");
@@ -17,7 +16,6 @@ export class PlaceController {
         );
     }
 
-    //장소 R
     @Get()
     async showData(@Query("page") page: number, @Query("size") size: number) {
         return await this.placeService.showSpaces(+page, +size);

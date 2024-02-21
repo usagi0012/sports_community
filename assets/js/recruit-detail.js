@@ -1,4 +1,4 @@
-window.onload = function() {
+window.onload = function () {
     loadHeader();
     loadFooter();
     const urlParams = new URLSearchParams(window.location.search);
@@ -7,7 +7,7 @@ window.onload = function() {
 
     document
         .getElementById("modalOpenButton")
-        .addEventListener("click", function() {
+        .addEventListener("click", function () {
             openApplyingModal();
         });
 
@@ -21,13 +21,13 @@ window.onload = function() {
 
     document
         .getElementById("submit-application")
-        .addEventListener("click", function() {
+        .addEventListener("click", function () {
             submitApplication(recruitId);
         });
 
     document
         .getElementById("close-modal")
-        .addEventListener("click", function() {
+        .addEventListener("click", function () {
             closeApplyingModal();
         });
 };
@@ -63,7 +63,7 @@ function getRecruitDetail(recruitId) {
                 Authorization: `Bearer ${accessToken}`,
             },
         })
-        .then(function(response) {
+        .then(function (response) {
             const recruitDetail = response.data;
 
             feedBoardDetail.innerHTML = "";
@@ -130,15 +130,14 @@ function getRecruitDetail(recruitId) {
             }
         })
 
-    .catch(function(error) {
-        console.log(error.response.data);
-        alert(error.response.data.message);
-    });
+        .catch(function (error) {
+            console.log(error.response.data);
+            alert(error.response.data.message);
+        });
 }
 
 function openMapModal(gpsData) {
     var modal = document.getElementById("mapModal");
-    console.log(gpsData);
 
     modal.style.display = "flex";
     showWhere(gpsData);
@@ -159,21 +158,23 @@ function submitApplication(recruitId) {
     // 신청을 서버에 전송하는 Axios 코드를 추가합니다.
     axios
         .post(
-            `/api/match/post/${recruitId}`, {
+            `/api/match/post/${recruitId}`,
+            {
                 message,
-            }, {
+            },
+            {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
             },
         )
-        .then(function(response) {
+        .then(function (response) {
             // 성공적으로 처리된 경우 추가적인 처리를 할 수 있습니다.
-            console.log(response);
+
             alert("신청 완료");
             window.location.reload();
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.error(error.response.data);
             alert(error.response.data.message);
             window.location.reload();
@@ -193,10 +194,11 @@ var infoWindow = new naver.maps.InfoWindow();
 
 function showWhere(gpsData) {
     var address = gpsData;
-    naver.maps.Service.geocode({
+    naver.maps.Service.geocode(
+        {
             query: address,
         },
-        function(status, response) {
+        function (status, response) {
             if (status === naver.maps.Service.Status.ERROR) {
                 console.error("Something went wrong:", response);
                 return;
@@ -212,26 +214,12 @@ function showWhere(gpsData) {
 
             marker.setPosition(point);
 
-            // var htmlAddresses = [];
-
-            // if (item.roadAddress) {
-            //     htmlAddresses.push("[도로명 주소] " + item.roadAddress);
-            // }
-
-            // if (item.jibunAddress) {
-            //     htmlAddresses.push("[지번 주소] " + item.jibunAddress);
-            // }
-
-            // if (item.englishAddress) {
-            //     htmlAddresses.push("[영문명 주소] " + item.englishAddress);
-            // }
-
             infoWindow.setContent(
                 [
                     '<div style="padding:10px;min-width:100px;line-height:100%;">',
                     '<h4 style="margin-top:5px;">검색 주소 : ' +
-                    address +
-                    "</div>",
+                        address +
+                        "</div>",
                 ].join("\n"),
             );
 

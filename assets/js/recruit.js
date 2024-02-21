@@ -1,5 +1,3 @@
-// import { createModal } from "./otherUser-modal.js";
-
 window.onload = function () {
     loadHeader();
     feed();

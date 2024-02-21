@@ -10,14 +10,12 @@ async function displayList() {
     try {
         const accessToken = localStorage.getItem("accessToken");
 
-        console.log(accessToken);
         const response = await axios.get("/api/report/banlist/me", {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
 
-        console.log(response.data);
         const list = document.getElementById("list");
         list.innerHTML = "";
         response.data.forEach((item) => {
@@ -53,7 +51,6 @@ async function confirm(reportId) {
     try {
         const accessToken = localStorage.getItem("accessToken");
 
-        console.log(accessToken);
         const response = await axios.delete(
             `/api/report/me/confirm/${reportId}`,
             {

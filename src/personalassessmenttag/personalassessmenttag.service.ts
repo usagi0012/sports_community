@@ -41,15 +41,13 @@ export class PersonalassessmenttagService {
                     personality: true,
                 },
                 where: {
-                    count: MoreThanOrEqual(10), // count가 10 이상인 경우만 필터링
+                    count: MoreThanOrEqual(10),
                 },
                 order: { personalityAmount: "DESC" },
                 take: 3,
             });
 
         for (const userScore of topThreeUsersPersonalityAmount) {
-            console.log("===유저 스코어===", userScore);
-            console.log("===인성 점수===", userScore.personality);
             const savedRank = await this.memberRankRepository
                 .save({
                     userId: userScore.userId,
@@ -60,7 +58,6 @@ export class PersonalassessmenttagService {
                 .catch((error) => {
                     console.error("Error saving rank:", error);
                 });
-            console.log("==저장?==", savedRank);
         }
 
         return topThreeUsersPersonalityAmount;
@@ -70,16 +67,13 @@ export class PersonalassessmenttagService {
         const topThreeAbilityAmountUser = await this.userscoreRepository.find({
             select: { abilityAmount: true, userId: true, ability: true },
             where: {
-                count: MoreThanOrEqual(10), // count가 10 이상인 경우만 필터링
+                count: MoreThanOrEqual(10),
             },
             order: { abilityAmount: "DESC" },
             take: 3,
         });
 
         for (const userScore of topThreeAbilityAmountUser) {
-            console.log("===유저 실력 스코어===", userScore);
-            console.log("===실력 점수===", userScore.ability);
-            console.log("===실력 id===", userScore.userId);
             const savedRank2 = await this.memberRankRepository
                 .save({
                     userId: userScore.userId,
@@ -90,7 +84,6 @@ export class PersonalassessmenttagService {
                 .catch((error) => {
                     console.error("Error saving rank:", error);
                 });
-            console.log("===저장된 실력 점수===", savedRank2);
         }
 
         return topThreeAbilityAmountUser;
@@ -123,7 +116,6 @@ export class PersonalassessmenttagService {
             throw new NotFoundException("유저의 개인 태그를 찾을 수 없습니다.");
         }
 
-        // 공통 열을 제외한 열 이름 추출
         const tagColumns = Object.keys(userTag).filter(
             (key) =>
                 key !== "id" &&
@@ -133,7 +125,6 @@ export class PersonalassessmenttagService {
                 key !== "userProfile",
         );
 
-        // 태그 열 중에서 최댓값을 가진 열 찾기
         tagColumns.reduce((maxColumn, currentColumn) => {
             if (userTag[currentColumn] > userTag[maxColumn]) {
                 return currentColumn;
@@ -141,13 +132,11 @@ export class PersonalassessmenttagService {
             return maxColumn;
         }, tagColumns[0]);
 
-        // 최대값을 기준으로 상위 3개 태그 추출
         const topThreeTags = tagColumns
             .filter((column) => column)
             .sort((a, b) => userTag[b] - userTag[a])
             .slice(0, 3);
 
-        // 상위 3개 태그 및 그 값들을 가진 객체 생성
         const topThreeTagsObject = topThreeTags.reduce((result, tag) => {
             result[tag] = userTag[tag];
             return result;
@@ -191,7 +180,6 @@ export class PersonalassessmenttagService {
             throw new NotFoundException("유저의 개인 태그를 찾을 수 없습니다.");
         }
 
-        // 공통 열을 제외한 열 이름 추출
         const tagColumns = Object.keys(userTag).filter(
             (key) =>
                 key !== "id" &&
@@ -201,7 +189,6 @@ export class PersonalassessmenttagService {
                 key !== "userProfile",
         );
 
-        // 태그 열 중에서 최댓값을 가진 열 찾기
         tagColumns.reduce((maxColumn, currentColumn) => {
             if (userTag[currentColumn] > userTag[maxColumn]) {
                 return currentColumn;
@@ -209,13 +196,11 @@ export class PersonalassessmenttagService {
             return maxColumn;
         }, tagColumns[0]);
 
-        // 최대값을 기준으로 상위 3개 태그 추출
         const topThreeTags = tagColumns
             .filter((column) => column)
             .sort((a, b) => userTag[b] - userTag[a])
             .slice(0, 3);
 
-        // 상위 3개 태그 및 그 값들을 가진 객체 생성
         const topThreeTagsObject = topThreeTags.reduce((result, tag) => {
             result[tag] = userTag[tag];
             return result;
@@ -370,7 +355,6 @@ export class PersonalassessmenttagService {
 
         for (const key in personalTagCounterDto) {
             if (personalTagCounterDto.hasOwnProperty(key)) {
-                // 해당 key에 대한 값이 숫자이면서 1일 때만 +1 증가
                 if (personalTagCounterDto[key] === 1) {
                     personalTagUser[key] += 1;
                 }
@@ -443,7 +427,6 @@ export class PersonalassessmenttagService {
             ...restOfUserscore,
         });
 
-        // 새로운 데이터가 추가될 때마다 기존 점수와 횟수를 업데이트합니다.
         userScoreData.count += 1;
         userScoreData.personality =
             userScoreData.personalityAmount / userScoreData.count;
@@ -455,9 +438,6 @@ export class PersonalassessmenttagService {
         );
 
         userScoreData.ability = parseFloat(userScoreData.ability.toFixed(3));
-
-        console.log(userScoreData.ability);
-        console.log(userScoreData.personality);
 
         const userScore = await this.userscoreRepository.save(userScoreData);
 

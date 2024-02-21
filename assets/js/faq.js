@@ -20,6 +20,7 @@ function faq() {
         })
         .then(function (response) {
             const faqList = response.data.data;
+
             faqList
                 .forEach((faqs) => {
                     const newContent = document.createElement("div");

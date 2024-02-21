@@ -68,7 +68,7 @@
 }
 
 #comments-container {
-    max-width: 600px;
+    width: 100%;
     margin: 20px auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -91,6 +91,24 @@
 #comment-input {
     flex: 1;
     margin-right: 10px;
+    border-radius: 3px;
+    font-family: "LINESeedKR-Bd";
+    padding: 5px;
+}
+
+#comment-form > button {
+    display: inline;
+    font-family: "LINESeedKR-Bd";
+    width: 85px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    border-radius: 10px;
+    height: 30px;
+    cursor: pointer;
+}
+
+#comment-form > button:hover {
+    background-color: #ffb13d;
 }
 
 /* 모달 스타일 */
@@ -106,6 +124,7 @@
 
 #modal {
     width: 300px;
+    height: 500px;
     background-color: white;
     margin: 100px auto;
     padding: 20px;
@@ -114,10 +133,51 @@
 }
 
 #edit-comment-input {
-    width: 100%;
+    width: 95%;
+    height: 430px;
     margin-bottom: 10px;
+    border-radius: 3px;
+    font-family: "LINESeedKR-Bd";
+    padding: 5px;
+}
+
+#modal > button {
+    display: inline;
+    font-family: "LINESeedKR-Bd";
+    width: 85px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    border-radius: 10px;
+    height: 30px;
+    cursor: pointer;
+}
+
+#modal > button:hover {
+    background-color: #ffb13d;
 }
 
 button {
     cursor: pointer;
+}
+
+.adminCommentBtnShow {
+    display: flex;
+}
+
+.commentUpdateBtn,
+.commentDeleteBtn {
+    display: inline;
+    font-family: "LINESeedKR-Bd";
+    width: 50px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
+    border-radius: 10px;
+    margin-right: 10px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.commentUpdateBtn:hover,
+.commentDeleteBtn:hover {
+    background-color: #ffb13d;
 }

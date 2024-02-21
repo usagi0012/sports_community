@@ -1,6 +1,6 @@
 window.onload = function () {
     const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams", urlParams);
+
     let clubId = urlParams.get("id");
     loadHeader();
     getClubDetail(clubId);
@@ -31,9 +31,6 @@ const regionData = [
 ];
 
 function getClubDetail(clubId) {
-    // 보내는 순서 알아보기(header, params)
-    // const authorized = localStorage.getItem("authorized");
-    // const token = JSON.parse(authorized).accessToken.value;
     const token = localStorage.getItem("accessToken");
     axios
         .get(`/api/club/${clubId}`, {
@@ -121,8 +118,6 @@ function isClubMaster() {
             },
         })
         .then(function (response) {
-            console.log("dsfdf", response);
-            console.log(response.data.statusCode);
             if (response.data.statusCode === 200) {
                 const applyingClubMatch =
                     document.querySelector(".applyingClubMatch");
@@ -147,8 +142,6 @@ function isMyClub() {
             },
         })
         .then(function (response) {
-            console.log("dsfdf", response);
-            console.log(response.data.statusCode);
             if (response.data.statusCode === 200) {
                 const updateBtn = document.querySelector(".updateBtn");
                 updateBtn.style.display = "block";
@@ -167,7 +160,7 @@ function isMyClub() {
 
 function hasClub() {
     const token = localStorage.getItem("accessToken");
-    console.log("token", token);
+
     axios
         .get("/api/club/myClub", {
             headers: {
@@ -183,7 +176,6 @@ function hasClub() {
         .catch(function (error) {
             console.log(error);
             console.log(error.message);
-            console.log("에러메세지");
         });
 }
 
@@ -205,9 +197,7 @@ async function getMember(clubId) {
             },
         });
 
-        console.log("멤버", membersResponse);
         membersResponse.data.forEach((info, index) => {
-            console.log("==info==", info);
             if (info.nickname) {
                 const memberListDiv = document.querySelector(".memberList");
                 const nickNameDiv = document.createElement("div");

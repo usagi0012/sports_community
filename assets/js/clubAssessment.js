@@ -60,8 +60,6 @@ async function getClubAssessment(clubMatchId, myClubId) {
                 },
             },
         );
-
-        console.log("클럽평가 완료");
     } catch (error) {
         alert(error.response.data.message);
     }
@@ -138,29 +136,10 @@ async function getClubTag(clubMatchId, myClubId) {
                 },
             },
         );
-        console.log("클럽태그평가완료");
     } catch (error) {
         alert(error.response.data.message);
     }
 }
-
-// function returnPage() {
-//     document
-//         .getElementById("submit-btn")
-//         .addEventListener("click", function () {
-//             getClubAssessment(1, 3);
-//             getClubTag(1, 3);
-//         });
-// }
-
-// function returnCancel() {
-//     window.location.reload();
-// // }
-
-// function openclubAssessment() {
-//     var clubAssessmentModal = document.getElementById("clubAssessment");
-//     clubAssessmentModal.style.display = "block";
-// }
 
 // closeModal 함수 정의
 function closeclubAssessment() {

@@ -1,37 +1,71 @@
-body {
-    font-family: Arial, sans-serif;
+.mainContainer {
+    margin-top: 70px;
 }
 
-/* 배경을 어둡게 만들기 위한 스타일 */
-.modal-background {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 색상 및 투명도 조절 */
-    justify-content: center;
-    align-items: center;
+.boardContainer {
+    min-height: 100%;
+    width: 80%;
+    padding: 10px 30px;
+    border-left: 1px solid #dfcec3;
 }
 
-/* 모달 창을 위한 스타일 */
-.modal-content {
-    background-color: #fff;
+.detailContainer {
+    border-top: 3px solid #4c3c36;
+    padding: 10px 0px;
+}
+
+.info {
+    display: grid;
+    grid-template-areas: "title . name date";
+    grid-template-columns: 3fr 0.5fr 1fr 1fr;
+    padding: 15px;
+    border-bottom: 1px solid #4c3c36;
+}
+
+.title {
+    grid-area: title;
+    font-size: 1.7rem;
+}
+
+.hostName {
+    grid-area: name;
+    text-align: end;
+}
+
+.cont {
     padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
-    margin: 0 auto;
-    text-align: center;
 }
 
-/* 닫기 버튼 스타일 */
-.close-btn {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 3px;
+.createDate {
+    grid-area: date;
+    text-align: end;
+}
+
+.top > img {
+    max-width: 400px;
+    max-height: 400px;
+}
+
+.updateBtn,
+.deleteBtn {
+    font-family: "LINESeedKR-Bd";
+    margin: 10px 15px;
+    height: 25px;
+    padding-top: 5px;
+    border-radius: 7px;
+    border: 1px solid #ffb13d;
+    background-color: #fff;
     cursor: pointer;
+}
+
+.updateBtn:hover,
+.deleteBtn:hover {
+    box-shadow: 2px 2px 2px gray;
+}
+.updateBtn {
+    display: none;
+}
+
+.deleteBtn {
+    display: none;
 }

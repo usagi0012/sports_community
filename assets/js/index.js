@@ -7,7 +7,6 @@ window.onload = function () {
         localStorage.setItem("accessToken", cookieaccess);
         localStorage.setItem("refreshToken", cookierefresh);
 
-        // localStorage.setItem("accessToken");
         document.cookie =
             "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         document.cookie =
@@ -24,6 +23,7 @@ window.onload = function () {
     loadHeader();
     loadFooter();
     getFAQ();
+    getNotice();
 };
 
 // 각 cookie에 대한 토큰값
@@ -35,6 +35,7 @@ function getCookie(name) {
 
 //프로필 불러오기
 const profileContainer = document.getElementById("profileContainer");
+
 function getProfile(token) {
     let profile = "";
     if (token === "home") {
@@ -48,7 +49,6 @@ function getProfile(token) {
                 },
             })
             .then(function (response) {
-                console.log(response.data.data.userProfile);
                 const user = response.data.data.userProfile;
                 //프로필 이미지
                 //성별
@@ -59,10 +59,8 @@ function getProfile(token) {
                 <div class="nickname">${user.nickname}</div>
                 <div class="gender" id="gender">
                 </div>
-                <div class="tag">
-                    <span id="tag1"></span>
-                    <span id="tag2"></span>
-                    <span id="tag3"></span>
+                <div class="tag" id="tag1">
+                    
                 </div>
                 <div class="height">키: ${user.height}</div>
                 <div class="position" id="position"></div>
@@ -159,8 +157,6 @@ async function getScore(accessToken) {
             },
         });
 
-        console.log(scoreResponse);
-
         if (scoreResponse.data.message === "개인 점수가 조회되었습니다.") {
             // 평가 점수가 있는 경우
             const score = scoreResponse.data.data;
@@ -170,6 +166,10 @@ async function getScore(accessToken) {
                 실력: <i class="fas fa-solid fa-star"></i> ${score.ability}`;
             document.getElementById("MVPCount").innerHTML = `
             MVP: ${score.mvp} 회 `;
+            if (!score.mvp) {
+                document.getElementById("MVPCount").innerHTML = `
+                MVP: 없음 `;
+            }
         } else {
             // 평가 점수가 없는 경우
             document.getElementById("personalityAmount").innerHTML =
@@ -202,15 +202,12 @@ async function getTag(accessToken) {
             },
         });
 
-        console.log(tagResponse.data);
-
         if (tagResponse.data.message === "개인 태그가 조회되었습니다.") {
             // 유저 태그가 있는 경우
             const tag = tagResponse.data.data;
-            console.log("태그태그태그" + tag);
-            document.getElementById("tag1").innerText = tag[0];
-            document.getElementById("tag2").innerText = tag[1];
-            document.getElementById("tag3").innerText = tag[2];
+
+            const tagsText = Object.keys(tag).join(", ");
+            document.getElementById("tag1").innerText = tagsText;
         } else {
             // 유저 태그가 없는 경우
             document.getElementById("tag1").innerText = "태그: 없음";
@@ -233,7 +230,6 @@ function getPersonalRank() {
     axios
         .get("/api/updated-rank/personal")
         .then(function (response) {
-            console.log("===개인 랭크===", response);
             const personalityRankInnerContainner = document.querySelector(
                 ".personalityRankInnerContainer",
             );
@@ -249,12 +245,10 @@ function getPersonalRank() {
             const personality = response.data.filter(
                 (score) => score.isPersonality,
             );
-            console.log("===인성값만 뽑은 결과===", personality);
 
             const orderedPersonality = personality.sort(
                 (a, b) => b.personalityScore - a.personalityScore,
             );
-            console.log("===인성 정렬===", orderedPersonality);
 
             orderedPersonality.forEach((personalityRank, index) => {
                 const rankCard = document.createElement("div");
@@ -284,12 +278,10 @@ function getPersonalRank() {
 
             // 실력 div 만들기
             const ability = response.data.filter((score) => score.isAbility);
-            console.log("===실력값만 뽑은 결과===", personality);
 
             const orderedAbility = ability.sort(
                 (a, b) => b.abilityScore - a.abilityScore,
             );
-            console.log("===실력 정렬===", orderedAbility);
 
             orderedAbility.forEach((abilityRank) => {
                 const rankCard = document.createElement("div");
@@ -319,7 +311,6 @@ function getClubRank() {
     axios
         .get("/api/updated-rank/club")
         .then(function (response) {
-            console.log("===클럽 랭크===", response);
             const clubRankInnerContainner = document.querySelector(
                 ".clubRankInnerContainer",
             );
@@ -329,7 +320,6 @@ function getClubRank() {
             const orderedClubRank = response.data.sort(
                 (a, b) => b.totalScore - a.totalScore,
             );
-            console.log("===클럽 정렬===", orderedClubRank);
 
             orderedClubRank.forEach((clubRank) => {
                 const rankCard = document.createElement("div");
@@ -352,9 +342,35 @@ function getClubRank() {
         });
 }
 
-// function getNotice() {
-//     axios.get;
-// }
+function getNotice() {
+    const accessToken = localStorage.getItem("accessToken");
+    axios
+        .get("/api/notices", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+        .then(function (response) {
+            const noticeList = response.data.data;
+            noticeList.slice(0, 3);
+            console.log(noticeList);
+            noticeList
+                .forEach((notices, index) => {
+                    let noticeData = document.getElementById(
+                        `noticeData${index + 1}`,
+                    );
+                    noticeData.innerHTML = `
+                            ${notices.title}
+                        `;
+                    noticeData.addEventListener("click", function () {
+                        toNoticeData(notices.id);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        });
+}
 
 function getFAQ() {
     const token = localStorage.getItem("accessToken");
@@ -366,18 +382,30 @@ function getFAQ() {
         })
         .then(function (response) {
             const faqList = response.data.data;
-            const FAQContainer = document.getElementById("FAQInnerContainer");
-            faqList.slice(0, 4);
+            faqList.slice(0, 3);
             console.log(faqList);
             faqList
-                .forEach((faqs) => {
-                    newContent.classList.add("item");
-                    newContent.innerHTML = `
-                            <div class="title"><a href="faqDetail.html?id=${faqs.id}">${faqs.title}</a></div>
+                .forEach((faqs, index) => {
+                    let faqData = document.getElementById(
+                        `faqData${index + 1}`,
+                    );
+                    faqData.innerHTML = `
+                            ${faqs.title}
                         `;
+                    faqData.addEventListener("click", function () {
+                        toFAQData(faqs.id);
+                    });
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
         });
+}
+
+function toNoticeData(num) {
+    window.location.href = `noticeDetail.html?id=${num}`;
+}
+
+function toFAQData(num) {
+    window.location.href = `faqDetail.html?id=${num}`;
 }

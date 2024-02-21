@@ -62,7 +62,6 @@ async function submitForm() {
                 },
             },
         );
-        console.log(response);
         alert("모집글이 등록되었습니다.");
         returnPage();
     } catch (error) {
@@ -78,14 +77,6 @@ function returnPage() {
 function returnCencel() {
     window.location.href = `/recruit.html`;
 }
-
-// 사용자가 선택한 값이 Enum에 속하는지 확인하고 Enum 값으로 변환하는 함수
-// function validateRegion(value) {
-//     if (value === "Region1" || value === "Region2") {
-//         return value;
-//     }
-//     return null;
-// }
 
 function validateRule(value) {
     if (value === "3대3" || value === "4대4" || value === "5대5") {

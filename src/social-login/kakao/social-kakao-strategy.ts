@@ -21,10 +21,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy, "kakao") {
         refreshToken: string,
         profile: Profile,
     ) {
-        // console.log("accessToken", accessToken);
-        // console.log("refreshToken", refreshToken);
-        // console.log(profile);
-
         return {
             accessToken,
             refreshToken,

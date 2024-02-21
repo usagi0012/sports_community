@@ -24,9 +24,6 @@ async function postProfile() {
         acc[checkbox.value] = true;
         return acc;
     }, {});
-    console.log(position);
-
-    console.log(image);
     // FormData 객체 생성
     const formData = new FormData();
     formData.append("nickname", nickname);
@@ -38,7 +35,7 @@ async function postProfile() {
     try {
         // Access token 가져오기
         const accessToken = localStorage.getItem("accessToken");
-        console.log(formData);
+
         // Axios를 사용하여 서버에 POST 요청 보내기
         const response = await axios.post("/api/user/me/profile", formData, {
             headers: {
@@ -53,9 +50,6 @@ async function postProfile() {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-
-        // 서버 응답 확인
-        console.log(response, response2);
 
         // 성공적으로 처리된 경우에 대한 로직 추가
         alert("프로필이 성공적으로 업데이트되었습니다.");

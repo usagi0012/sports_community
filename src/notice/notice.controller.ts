@@ -21,9 +21,19 @@ import { FileInterceptor } from "@nestjs/platform-express";
 
 @ApiBearerAuth("accessToken")
 @ApiTags("공지사항")
-@Controller("notice")
+@Controller("notices")
 export class NoticeController {
     constructor(private readonly noticeService: NoticeService) {}
+
+    @Get()
+    async findAllNotice() {
+        const data = await this.noticeService.findAllNotice();
+        return {
+            statusCode: HttpStatus.OK,
+            message: "공지사항이 전체조회되었습니다.",
+            data,
+        };
+    }
 
     @UseInterceptors(FileInterceptor("file"))
     @UseGuards(accessTokenGuard)
@@ -50,16 +60,6 @@ export class NoticeController {
     @Get("/isAdmin")
     async isAdmin(@UserId() userId: number) {
         return await this.noticeService.verifyAdmin(userId);
-    }
-
-    @Get()
-    async findAllNotice() {
-        const data = await this.noticeService.findAllNotice();
-        return {
-            statusCode: HttpStatus.OK,
-            message: "공지사항이 전체조회되었습니다.",
-            data,
-        };
     }
 
     @Get(":noticeId")

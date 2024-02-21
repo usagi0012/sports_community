@@ -26,14 +26,6 @@ export class refreshTokenStrategy extends PassportStrategy(
 
     async validate(req: Request, payload: any) {
         try {
-            // const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-
-            // await this.jwtService.verify(token, {
-            //     secret: this.configService.get<string>(
-            //         "JWT_REFRESH_TOKEN_SECRET",
-            //     ),
-            // });
-
             const user = payload;
 
             return user;
